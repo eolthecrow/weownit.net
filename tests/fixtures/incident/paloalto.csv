@@ -1,0 +1,2 @@
+0,2026/10/04 09:00:00,PAN-SYNTHETIC,CONFIG,0,0,2026/10/04 09:00:00,192.0.2.54,vsys1,edit,pa-admin,CLI,Succeeded,vsys vsys1 rulebase security rules LAB,,,100,0,0,0,0,0,vsys1,LAB-PAN,0,,0,2026-10-04T09:00:00Z
+0,2026/10/04 09:01:00,PAN-SYNTHETIC,THREAT,vulnerability,0,2026/10/04 09:01:00,192.0.2.54,198.51.100.10,0.0.0.0,0.0.0.0,LAB-IPS,lab-user,,ssl,vsys1,TRUST,UNTRUST,ethernet1/1,ethernet1/2,forward,0,99,1,41000,443,0,0,0,tcp,reset-both,example.invalid,Synthetic Test Signature(99999),any,high,client-to-server,101

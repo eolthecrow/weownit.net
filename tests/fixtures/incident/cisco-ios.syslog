@@ -1,0 +1,8 @@
+<165>1 2026-10-04T09:00:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: net-admin] [Source: 192.0.2.50] [localport: 22] [Reason: Login Authentication Failed]
+<165>1 2026-10-04T09:01:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: net-admin] [Source: 192.0.2.50] [localport: 22] [Reason: Login Authentication Failed]
+<165>1 2026-10-04T09:02:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: net-admin] [Source: 192.0.2.50] [localport: 22] [Reason: Login Authentication Failed]
+<165>1 2026-10-04T09:03:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: net-admin] [Source: 192.0.2.50] [localport: 22] [Reason: Login Authentication Failed]
+<165>1 2026-10-04T09:04:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-4-LOGIN_FAILED: Login failed [user: net-admin] [Source: 192.0.2.50] [localport: 22] [Reason: Login Authentication Failed]
+<165>1 2026-10-04T09:05:00Z LAB-CISCO-IOS ios - - - %SEC_LOGIN-5-LOGIN_SUCCESS: Login Success [user: net-admin] [Source: 192.0.2.50] [localport: 22]
+<165>1 2026-10-04T09:06:00Z LAB-CISCO-IOS ios - - - %PARSER-5-CFGLOG_LOGGEDCMD: User:net-admin logged command:no logging on
+<165>1 2026-10-04T09:07:00Z LAB-CISCO-IOS ios - - - %SYS-5-CONFIG_I: Configured from console by net-admin on vty0 (192.0.2.50)

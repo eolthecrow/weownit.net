@@ -1,0 +1,24 @@
+[
+  {
+    "product": "Check Point IPS",
+    "origin": "LAB-CP",
+    "loguid": "synthetic-cp-1",
+    "time": "1791104400",
+    "action": "Prevent",
+    "severity": "high",
+    "protection_name": "Synthetic IPS signature",
+    "src": "192.0.2.55",
+    "dst": "198.51.100.11",
+    "service": "443"
+  },
+  {
+    "product": "Check Point Firewall",
+    "origin": "LAB-CP",
+    "loguid": "synthetic-cp-2",
+    "time": "1791104460",
+    "action": "Accept",
+    "src": "192.0.2.55",
+    "dst": "198.51.100.11",
+    "service": "443"
+  }
+]
