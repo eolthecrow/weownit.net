@@ -41,7 +41,7 @@ test('Scenario JSON packs round-trip and malformed packs keep existing data',asy
 
 test('Advanced lab evaluates subnet and port contracts and CSV packs round-trip',async()=>{
   const ui=await harness('ro');await ui.demo(true);
-  let r=JSON.parse(await ui.export('json'));assert.equal(r.changeReview.summary.total,5);assert.equal(r.changeReview.flows[3].before.verdict,'mixed');assert.equal(r.changeReview.flows[4].status,'regression');assert.equal(r.changeReview.objectImpact[0].addressDelta.addedCount,'1792');
+  let r=JSON.parse(await ui.export('json'));assert.equal(r.changeReview.summary.total,5);assert.equal(r.changeReview.flows[3].before.verdict,'mixed');assert.equal(r.changeReview.flows[4].status,'regression');assert.equal(r.changeReview.objectImpact[0].addressDelta.addedCount,'1792');assert.ok(ui.element('fc-results').innerHTML.includes('Adrese adăugate: 1792'));assert.ok(ui.element('fc-results').innerHTML.includes('Cerință inițială: Rezultat dorit'));assert.ok((await ui.export('html')).includes('Adrese adăugate: 1792'));
   ui.element('fc-export-csv').handlers.click();const csv=await ui.blobs.at(-1).text();assert.ok(csv.includes('expectedBefore'));
   ui.element('fc-import').files=[{name:'scenarios.csv',size:csv.length,text:async()=>csv}];await ui.element('fc-import').handlers.change();await ui.review();r=JSON.parse(await ui.export('json'));assert.equal(r.changeReview.summary.total,5);assert.equal(r.changeReview.flows[4].scenario.port,'440-450');
   ui.element('fc-results').handlers.change({target:{id:'fc-filter',value:'regression'}});assert.ok(!ui.element('fc-results').innerHTML.includes('Existing user → Application HTTPS'));assert.ok((await ui.export('html')).includes('Existing user → Application HTTPS'));
