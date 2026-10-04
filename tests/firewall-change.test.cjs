@@ -59,3 +59,47 @@ test('Scenario input validates IPv4 / ports / count / shape',()=>{
   for(const s of [{sourceIP:'999.1.1.1'},{sourceIP:'::1'},{port:0},{port:65536},{protocol:'icmp'},{expected:'allow'},{afterScope:''},{sourcePort:1.5}])assert.throws(()=>change.scenarios([scenario(s)]),e=>e.code==='invalidScenarios');
   assert.throws(()=>change.scenarios(Array.from({length:101},()=>scenario())),e=>e.code==='invalidScenarios');assert.throws(()=>change.scenarios([]));assert.equal(change.scenarios([scenario({port:65535})]).length,1);
 });
+test('Range partitions expose mixed decisions, exact address changes and baseline assertions',()=>{
+  const a=core.parse(config()),b=core.parse(config('255.255.248.0'));
+  const r=review(a,b,[scenario({sourceIP:'10.20.8.0/21',port:'440-450',expected:'block',expectedBefore:'block'})]),f=r.flows[0];
+  assert.equal(f.before.verdict,'mixed');assert.equal(f.after.verdict,'mixed');assert.equal(f.status,'regression');assert.equal(f.baselineStatus,'regression');assert.equal(f.coverage.cells,6);assert.equal(f.coverage.combinations,'22528');
+  assert.equal(f.regions.filter(c=>c.after.verdict==='permit').reduce((n,c)=>n+BigInt(c.combinations),0n),2048n);
+  assert.deepEqual(r.objectImpact.find(d=>d.name==='Clients').addressDelta,{beforeCount:'256',afterCount:'2048',addedCount:'1792',removedCount:'0',added:[['10.20.9.0','10.20.15.255']],removed:[]});
+  assert.equal(r.matrix[0].denyViolations,1);assert.equal(f.relatedObjects[0].name,'Clients');
+});
+test('Full IPv4 dimensions retain exact decimal combination counts beyond Number precision',()=>{
+  const m=core.parse(config('0.0.0.0',[policy(99,'all','all','ALL','deny')]));
+  const f=review(m,m,[scenario({sourceIP:'0.0.0.0/0',destinationIP:'0.0.0.0/0',port:'1-65535',expected:'block'})]).flows[0];
+  assert.equal(f.coverage.combinations,(4294967296n*4294967296n*65535n).toString());assert.equal(f.coverage.cells,1);assert.equal(f.status,'pass');
+});
+test('Range aggregation matches exhaustive individual evaluation over deterministic varied rule sets',()=>{
+  for(let seed=0;seed<12;seed++){
+    const m=core.parse(config('255.255.248.0'));
+    m.objectDefinitions.find(d=>d.name==='Clients').fields={'ip-range':['10.20.8.'+(seed%5)+'-10.20.8.'+(8+seed%6)]};
+    const service=m.objectDefinitions.find(d=>d.name==='HTTPS-CUSTOM');service.fields={'tcp-portrange':[`${440+seed%4}-${445+seed%5}`]};
+    const r=review(m,m,[scenario({sourceIP:'10.20.8.0-10.20.8.15',destinationIP:'10.30.0.8-10.30.0.12',port:'440-450'})]).flows[0];
+    const counts={permit:0n,block:0n,inconclusive:0n};
+    for(let src=0;src<16;src++)for(let dst=8;dst<=12;dst++)for(let port=440;port<=450;port++)counts[change.evaluate(m,scenario({sourceIP:'10.20.8.'+src,destinationIP:'10.30.0.'+dst,port}),'after').verdict]++;
+    const partitionCounts={permit:0n,block:0n,inconclusive:0n};for(const c of r.regions)partitionCounts[c.after.verdict]+=BigInt(c.combinations);
+    assert.deepEqual(partitionCounts,counts,'seed '+seed);assert.equal(r.coverage.complete,true);
+  }
+});
+test('Service definitions starting at port zero still partition the valid scenario range',()=>{
+  const m=core.parse(config('255.255.248.0').replace('tcp-portrange 443','tcp-portrange 0-443'));
+  const f=review(m,m,[scenario({port:'440-450',expected:'block'})]).flows[0];assert.equal(f.after.verdict,'mixed');assert.equal(f.regions.length,2);assert.equal(f.status,'regression');
+});
+test('Partition limits refuse whole scenario without presenting partial passes',()=>{
+  const m=core.parse(config('255.255.248.0'));
+  m.objectDefinitions.find(d=>d.name==='HTTPS-CUSTOM').fields={'tcp-portrange':Array.from({length:150},(_,i)=>String(1+i*2))};
+  const f=review(m,m,[scenario({port:'1-300'})]).flows[0];assert.equal(f.status,'inconclusive');assert.equal(f.after.reason,'analysisLimit');assert.equal(f.regions.length,0);assert.equal(f.coverage.requiredCells,300);
+});
+test('Unknown dynamic selector stays inconclusive in every affected range partition',()=>{
+  const m=core.parse(config('255.255.248.0'));m.objectDefinitions.find(d=>d.name==='Clients').fields={fqdn:['internal.example']};
+  const f=review(m,m,[scenario({sourceIP:'10.20.8.0/21'})]).flows[0];assert.equal(f.after.verdict,'inconclusive');assert.equal(f.status,'inconclusive');assert.equal(f.coverage.complete,false);
+});
+test('Combined review budget is bounded and source restrictions retain uncertainty',()=>{
+  const m=core.parse(config('255.255.248.0'));m.objectDefinitions.find(d=>d.name==='HTTPS-CUSTOM').fields={'tcp-portrange':Array.from({length:60},(_,i)=>String(1+i*2))};
+  const r=review(m,m,Array.from({length:10},()=>scenario({port:'1-120'})));assert.equal(r.limits.usedCells,960);assert.equal(r.flows[8].after.reason,'analysisLimit');
+  const restricted=core.parse(config('255.255.248.0').replace('tcp-portrange 443','tcp-portrange 443:1024-2048'));
+  const f=review(restricted,restricted,[scenario({port:'440-450'})]).flows[0];assert.equal(f.after.verdict,'inconclusive');assert.equal(f.status,'regression'); // Known blocked ports violate permit even though 443 is unknown.
+});

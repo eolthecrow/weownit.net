@@ -3,15 +3,17 @@ const test=require('node:test'),assert=require('node:assert/strict'),vm=require(
 const core=require('../assets/firewall-review-core.js'),change=require('../assets/firewall-change-core.js');
 async function harness(language='en'){
   const elements=new Map(),blobs=[],listeners={};
-  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',files:[],checked:false,dataset:{},textContent:'',innerHTML:'',hidden:false,handlers:{},setAttribute(){},addEventListener(event,fn){this.handlers[event]=fn;},querySelectorAll(){return[];}});return elements.get(id);};
+  const element=id=>{if(!elements.has(id))elements.set(id,{value:'',files:[],checked:false,dataset:{},textContent:'',innerHTML:'',hidden:false,handlers:{},setAttribute(k,v){this[k]=v;},addEventListener(event,fn){this.handlers[event]=fn;},querySelectorAll(){return[];}});return elements.get(id);};
+  element('fc-mode-policy').dataset.fcMode='policy';element('fc-mode-change').dataset.fcMode='change';
   element('fw-vendor').value='auto';element('fw-severity').value='all';
-  const document={documentElement:{lang:language},getElementById:element,querySelectorAll:()=>[],addEventListener(name,fn){(listeners[name]??=[]).push(fn);},dispatchEvent(e){for(const fn of listeners[e.type]||[])fn(e);},body:{append(){}},createElement:()=>({click(){},remove(){}})};
+  const document={documentElement:{lang:language},getElementById:element,querySelectorAll:selector=>selector==='[data-fc-mode]'?[element('fc-mode-policy'),element('fc-mode-change')]:[],addEventListener(name,fn){(listeners[name]??=[]).push(fn);},dispatchEvent(e){for(const fn of listeners[e.type]||[])fn(e);},body:{append(){}},createElement:()=>({click(){},remove(){}})};
   class Worker{postMessage(data){queueMicrotask(()=>{if(this.cancelled)return;try{this.onmessage({data:{result:change.review(data.before,data.after,data.scenarios,data.delta)}});}catch(e){this.onmessage({data:{error:e.code||'unexpected'}});}});}terminate(){this.cancelled=true;}}
   const context=vm.createContext({window:null,document,Blob,Event,URL:{createObjectURL(b){blobs.push(b);return 'blob:local';},revokeObjectURL(){}},Worker,FirewallReview:core,FirewallChangeReview:change,setTimeout:fn=>{queueMicrotask(fn);return 0;}});context.window=context;
   for(const file of ['firewall-review-demo.js','firewall-change-ui.js','firewall-review.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets',file),'utf8'),context);
+  element('fc-demo').click=()=>element('fc-demo').handlers.click();
   element('fw-clear').click=()=>element('fw-clear').handlers.click();let pending;
   element('fw-form').requestSubmit=()=>{pending=element('fw-form').handlers.submit({preventDefault(){}});};
-  return {element,document,blobs,context,async demo(){element('fc-demo').handlers.click();await pending;},async export(kind){element('fw-export-'+kind).handlers.click();return blobs.at(-1).text();},review(){return element('fw-form').handlers.submit({preventDefault(){}});}};
+  return {element,document,blobs,context,async demo(advanced=false){element(advanced?'fc-range-demo':'fc-demo').handlers.click();await pending;},async export(kind){element('fw-export-'+kind).handlers.click();return blobs.at(-1).text();},review(){return element('fw-form').handlers.submit({preventDefault(){}});}};
 }
 test('Full workspace demo runs local worker, exposes regression and exports evidence in EN/RO/FR',async()=>{
   for(const language of ['en','ro','fr']){
@@ -35,4 +37,25 @@ test('Scenario JSON packs round-trip and malformed packs keep existing data',asy
   const ui=await harness();await ui.demo();ui.element('fc-export').handlers.click();const content=await ui.blobs.at(-1).text();assert.equal(JSON.parse(content).scenarios.length,3);
   ui.element('fc-import').files=[{size:content.length,text:async()=>content}];await ui.element('fc-import').handlers.change();await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.summary.regression,1);
   ui.element('fc-import').files=[{size:100,text:async()=>'{"schema":"bad"}'}];await ui.element('fc-import').handlers.change();assert.ok(ui.element('fc-message').textContent);await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.summary.total,3);
+});
+
+test('Advanced lab evaluates subnet and port contracts and CSV packs round-trip',async()=>{
+  const ui=await harness('ro');await ui.demo(true);
+  let r=JSON.parse(await ui.export('json'));assert.equal(r.changeReview.summary.total,5);assert.equal(r.changeReview.flows[3].before.verdict,'mixed');assert.equal(r.changeReview.flows[4].status,'regression');assert.equal(r.changeReview.objectImpact[0].addressDelta.addedCount,'1792');
+  ui.element('fc-export-csv').handlers.click();const csv=await ui.blobs.at(-1).text();assert.ok(csv.includes('expectedBefore'));
+  ui.element('fc-import').files=[{name:'scenarios.csv',size:csv.length,text:async()=>csv}];await ui.element('fc-import').handlers.change();await ui.review();r=JSON.parse(await ui.export('json'));assert.equal(r.changeReview.summary.total,5);assert.equal(r.changeReview.flows[4].scenario.port,'440-450');
+  ui.element('fc-results').handlers.change({target:{id:'fc-filter',value:'regression'}});assert.ok(!ui.element('fc-results').innerHTML.includes('Existing user → Application HTTPS'));assert.ok((await ui.export('html')).includes('Existing user → Application HTTPS'));
+});
+test('CSV quoting preserves commas, quotes and newlines; invalid rows preserve existing scenarios',async()=>{
+  const ui=await harness();await ui.demo();ui.element('fc-rows').handlers.input({target:{dataset:{fcRow:'0',fcField:'name'},value:'QA, "special"\nline'}});
+  ui.element('fc-export-csv').handlers.click();const csv=await ui.blobs.at(-1).text();ui.element('fc-import').files=[{name:'scenarios.csv',size:csv.length,text:async()=>csv}];await ui.element('fc-import').handlers.change();await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.flows[0].scenario.name,'QA, "special"\nline');
+  ui.element('fc-import').files=[{name:'bad.csv',size:20,text:async()=> 'name,sourceIP\nbad,999.0.0.1'}];await ui.element('fc-import').handlers.change();await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.summary.total,3);
+});
+
+test('Policy mode preserves structural review and change mode restores scenario evaluation',async()=>{
+  const ui=await harness();await ui.demo();ui.element('fc-mode-policy').handlers.click();await ui.review();let report=JSON.parse(await ui.export('json'));assert.equal(report.changeReview,null);assert.equal(report.policies.length,3);assert.equal(ui.element('fc-editor').hidden,true);
+  ui.element('fc-mode-change').handlers.click();await ui.review();report=JSON.parse(await ui.export('json'));assert.equal(report.changeReview.summary.total,3);assert.equal(ui.element('fc-mode-change')['aria-pressed'],'true');
+});
+test('CSV export neutralizes spreadsheet formulas and reimport preserves scenario names',async()=>{
+  const ui=await harness();await ui.demo();ui.element('fc-rows').handlers.input({target:{dataset:{fcRow:'0',fcField:'name'},value:'=HYPERLINK("https://example.com")'}});ui.element('fc-export-csv').handlers.click();const csv=await ui.blobs.at(-1).text();assert.ok(csv.includes("\"'=HYPERLINK"));ui.element('fc-import').files=[{name:'scenarios.csv',size:csv.length,text:async()=>csv}];await ui.element('fc-import').handlers.change();await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.flows[0].scenario.name,'=HYPERLINK("https://example.com")');
 });

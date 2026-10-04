@@ -62,3 +62,22 @@ Before/after comparison uses policy context plus ID (or name if no UUID exists) 
 ## 1.3 verification
 
 CLI quote validation reports the failing line. Custom TCP service names and group members are inspected using supplied ports; explicit custom definitions override built-in name guesses. Fortinet endpoint-dependent service restrictions remain conservative. Address/service/group definition changes survive JSON/XML round trips. The regression suite includes contradictory Check Point pages, Content, custom ports, same-name subnet changes, legacy snapshots, escaped HTML and complete report export beyond the UI preview limit.
+
+
+## Change Review 2.0 — local range analysis
+
+Policy Review keeps the existing structural findings, native imports, object/rule comparison, coverage and reports. Change Review enables before/after traffic contracts within the same workspace. Both modes preserve the uploaded/pasted configurations when switching; stale results are invalidated.
+
+Scenarios now accept source and destination IPv4 hosts, CIDR subnets and inclusive `start-end` address ranges. Destination TCP/UDP ports accept an integer or inclusive `start-end` range. Source ports remain optional exact integers. An optional `expectedBefore` assertion checks the baseline separately from the required after-change expectation. A baseline violation does not silently change the after-change verdict.
+
+The engine partitions address and destination-port ranges at relevant static selector boundaries from both snapshots. It evaluates one representative per partition because supported selectors are constant within that partition. This is an exact partition evaluation within the supported policy model, not random sampling or live traffic testing. Subnet boundaries include all IPv4 addresses; counts are combinations of source addresses, destination addresses and destination ports, not usable host counts, connection counts or exposure to the Internet. Large combination counts are serialized as exact decimal strings.
+
+Limits: 100 scenarios, 256 partitions per scenario and 1,024 evaluated partitions per review. A scenario exceeding its own limit or the remaining review budget is wholly inconclusive with reason `analysisLimit`; no partial pass is emitted. Input order determines review-budget allocation.
+
+Range reports include individual regions, rule evidence, mixed verdicts, baseline results and a segmentation-contract table covering only supplied scenarios. A known contradiction of the expected verdict produces an unexpected-result status even if other regions are inconclusive; a pass requires all after regions to meet the expectation conclusively. Changed-flow status is true if any region has a proven verdict change, null if no change is established and some before/after verdict remains unknown, otherwise false. The trace displayed for an aggregated flow describes its first partition only; every region's verdict/rule/reason is included separately.
+
+Static address changes show union counts and exact added/removed intervals for supported address definitions/groups. Dynamic/FQDN/excluded/cyclic groups have no inferred address delta. Referenced changed objects are review candidates; the report does not assert exclusive causality. NAT, routing, identity, application classification, managed/inherited/layered policy and effective Check Point traffic decisions remain outside the engine.
+
+Scenario packs: JSON schema `weownit.firewall-change.scenarios` version 2; imports accept versions 1 and 2. CSV uses headers `name,sourceIP,destinationIP,from,to,protocol,port,sourcePort,expected,expectedBefore,beforeScope,afterScope`, quoted cells and optional source port/baseline values. CSV exports neutralize spreadsheet formula prefixes; reimport restores those escaped values. Maximum scenario-file size is 128 KiB. Import validation is atomic; malformed imports preserve existing scenarios. Duplicating scenarios, filtering displayed results and switching language preserve scenario values. Report exports always contain all scenarios, regardless of the on-screen filter.
+
+The advanced synthetic lab adds subnet and deployment-port contracts to the original three-flow example. It demonstrates a mixed baseline, a permitted subnet, unintended administration access and partially satisfied deployment ports. Existing single-host demos and structural vendor coverage remain available.

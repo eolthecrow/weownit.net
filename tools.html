@@ -68,8 +68,8 @@
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=18">
   <link rel="stylesheet" href="assets/cve-risk-lens.css?v=2">
-  <link rel="stylesheet" href="assets/firewall-review.css?v=5">
-  <script src="assets/i18n.js?v=3"></script>
+  <link rel="stylesheet" href="assets/firewall-review.css?v=6">
+  <script src="assets/i18n.js?v=4"></script>
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -153,7 +153,7 @@
       <p class="fw-intro" data-fw="lead">Inspect firewall policies, review evidence and compare configurations. Fortinet, Palo Alto Networks and Check Point.</p>
       <p class="fw-privacy" data-fw="privacy">Local analysis · No configuration upload · No account required</p>
       <div class="fw-workspace">
-        <form id="fw-form"><div class="fc-launch" id="firewall-change-review"><div><p class="fc-kicker" data-fc="tag">CHANGE IMPACT / LOCAL LAB</p><h3 data-fc="intro">Will your firewall change allow the right traffic?</h3><p data-fc="pitch">Compare two configurations against your traffic requirements.</p></div><div class="fc-launch-action"><button type="button" id="fc-demo" class="fw-primary" data-fc="demo">Run change demo</button><p class="fw-hint" data-fc="demoNote">Synthetic lab.</p></div></div><div id="fc-steps" class="fc-steps"></div>
+        <form id="fw-form"><div class="fc-modes" role="group" aria-label="Review mode"><button type="button" data-fc-mode="policy" aria-pressed="true" data-fc="policyMode">Policy Review</button><button type="button" data-fc-mode="change" aria-pressed="false" data-fc="changeMode">Change Review</button></div><div class="fc-launch" id="firewall-change-review"><div><p class="fc-kicker" data-fc="tag">CHANGE IMPACT / LOCAL LAB</p><h3 data-fc="intro">Will your firewall change allow the right traffic?</h3><p data-fc="pitch">Compare two configurations against your traffic requirements.</p></div><div class="fc-launch-action"><button type="button" id="fc-demo" class="fw-primary" data-fc="demo">Run change demo</button><button type="button" id="fc-range-demo" data-fc="rangeDemo">Run advanced lab</button><p class="fw-hint" data-fc="demoNote">Synthetic lab.</p></div></div><div id="fc-steps" class="fc-steps"></div>
           <div class="fw-toolbar">
             <div class="fw-control"><label for="fw-vendor" data-fw="vendor">Configuration format</label><select id="fw-vendor"><option value="auto" data-fw="auto">Detect automatically</option><option value="fortinet">Fortinet · CLI / JSON</option><option value="paloalto">Palo Alto · CLI / XML / JSON</option><option value="checkpoint">Check Point · Management API JSON</option></select></div>
             <div><span class="fw-label" data-fw="demo">Try a synthetic lab</span><div class="fw-demos"><button type="button" data-fw-demo="fortinet">Fortinet CLI</button><button type="button" data-fw-demo="paloalto">Palo Alto XML</button><button type="button" data-fw-demo="checkpoint">Check Point JSON</button></div></div>
@@ -164,7 +164,7 @@
           <div class="fw-upload"><label for="fw-file" data-fw="file">Local files (maximum 5 MB in total)</label><input id="fw-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div>
           <p id="fw-format-hint" class="fw-hint" data-fw="formatHint">Fortinet: firewall policy/security-policy CLI export, including VDOMs. Palo Alto: config XML, including Panorama rulebases. Check Point: extracted access-rulebase and objects JSON; select related JSON files together. Archives and Gaia CLI are not supported.</p>
           <details class="fw-before" id="fw-before-panel"><summary data-fw="compare">Compare with an earlier configuration (optional)</summary><label class="fw-label" for="fw-before" data-fw="before">Earlier configuration — same vendor</label><textarea id="fw-before" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880"></textarea><div class="fw-upload"><label for="fw-before-file" data-fw="beforeFile">Earlier local files</label><input id="fw-before-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div><p class="fw-hint" data-fw="compareHint">Compares policy fields and order. It does not simulate routing, NAT or application availability.</p></details>
-<div class="fc-scenarios"><label class="fc-toggle"><input type="checkbox" id="fc-enable"><span data-fc="enable">Evaluate before / after traffic scenarios</span></label><div id="fc-editor" hidden><p class="fw-hint" data-fc="hint">Use exact IPv4 hosts and exported policy contexts.</p><datalist id="fc-scopes"></datalist><div id="fc-rows"></div><div class="fw-input-actions"><button type="button" id="fc-add" data-fc="add">Add scenario</button><button type="button" id="fc-export" data-fc="export">Export scenarios JSON</button><label class="fc-import"><span data-fc="import">Import scenarios JSON</span><input id="fc-import" type="file" accept=".json"></label></div><p class="fw-status" id="fc-message" role="status" aria-live="polite"></p></div></div>
+<div class="fc-scenarios"><label class="fc-toggle"><input type="checkbox" id="fc-enable"><span data-fc="enable">Evaluate before / after traffic scenarios</span></label><div id="fc-editor" hidden><p class="fw-hint" data-fc="hint">Use exact IPv4 hosts and exported policy contexts.</p><datalist id="fc-scopes"></datalist><div id="fc-rows"></div><div class="fw-input-actions"><button type="button" id="fc-add" data-fc="add">Add scenario</button><button type="button" id="fc-export" data-fc="export">Export scenarios JSON</button><button type="button" id="fc-export-csv" data-fc="csvExport">Export CSV</button><label class="fc-import"><span data-fc="import">Import scenarios JSON</span><input id="fc-import" type="file" accept=".json,.csv"></label></div><p class="fw-status" id="fc-message" role="status" aria-live="polite"></p></div></div>
           <div class="fw-input-actions"><button class="fw-primary" type="submit" data-fw="analyze">Review configuration</button><button id="fw-clear" type="button" data-fw="clear">Clear data</button></div>
           <p id="fw-status" class="fw-status" role="status" aria-live="polite"></p>
         </form>
@@ -363,8 +363,8 @@
 <script type="module" src="assets/cve-risk-lens.js?v=brand-lowercase-20261001"></script>
 <script src="assets/firewall-review-core.js?v=6" defer></script>
 <script src="assets/firewall-review-demo.js?v=3" defer></script>
-<script src="assets/firewall-change-core.js?v=1" defer></script>
-<script src="assets/firewall-change-ui.js?v=1" defer></script>
+<script src="assets/firewall-change-core.js?v=2" defer></script>
+<script src="assets/firewall-change-ui.js?v=2" defer></script>
 <script src="assets/firewall-review.js?v=7" defer></script>
 </body>
 </html>

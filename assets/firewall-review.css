@@ -9,3 +9,5 @@
 @media(max-width:850px){.fc-fields{grid-template-columns:repeat(2,minmax(0,1fr))}.fc-launch{grid-template-columns:1fr}.fc-launch-action{max-width:360px}}@media(max-width:550px){.fc-verdicts{grid-template-columns:1fr}.fc-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.fc-stat:nth-child(2){border-right:0}.fc-stat:nth-child(-n+2){border-bottom:1px solid var(--line)}.fc-fields{grid-template-columns:1fr 1fr}.fc-row-head{align-items:flex-start}.fc-status{white-space:normal}.fc-launch{padding:1rem}.fc-flow{padding:1rem}}
 
 #fc-results{scroll-margin-top:100px}.fc-report>h3{font-size:1.1rem;margin:1.2rem 0 .8rem}
+
+.fc-modes{display:flex;gap:10px;margin-bottom:20px}.fc-modes button[aria-pressed="true"]{color:#071a21;background:#5eeac7;border-color:#5eeac7}.fc-filter{display:flex;align-items:center;gap:12px;margin-bottom:18px}.fc-filter select{max-width:260px}.fc-impact td small{display:block;color:#93a5b8;margin-top:6px}.fc-impact{margin-bottom:18px}.fc-launch-action button+button{margin-top:10px}.fc-fields select,.fc-fields input{width:100%;min-width:0}
