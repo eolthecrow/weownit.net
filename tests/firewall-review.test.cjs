@@ -234,7 +234,7 @@ async function uiHarness(language='en'){
   const element=id=>{if(!elements.has(id))elements.set(id,{value:'',files:[],dataset:{},textContent:'',innerHTML:'',hidden:false,handlers:{},setAttribute(){},addEventListener(event,fn){this.handlers[event]=fn;},querySelectorAll(){return[];}});return elements.get(id);};
   element('fw-vendor').value='auto';element('fw-severity').value='all';
   const document={documentElement:{lang:language},getElementById:element,querySelectorAll:()=>[],handlers:{},addEventListener(event,fn){this.handlers[event]=fn;},body:{append(){}},createElement:()=>({click(){},remove(){}})};
-  const context=vm.createContext({window:{FirewallReview:core,FirewallReviewDemos:demo},document,Blob,URL:{createObjectURL(blob){blobs.push(blob);return 'blob:local';},revokeObjectURL(){}},setTimeout:fn=>{fn();return 0;}});
+  const context=vm.createContext({window:{FirewallReview:core,FirewallReviewDemos:demo,FirewallChangeWorkspace:{render(){},reset(){},cancel(){},scopes(){},run:async()=>null,html:()=>'',error:()=>null}},document,Blob,URL:{createObjectURL(blob){blobs.push(blob);return 'blob:local';},revokeObjectURL(){}},setTimeout:fn=>{fn();return 0;}});
   vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets/firewall-review.js'),'utf8'),context);
   return {element,document,blobs,async review(input,before=''){element('fw-input').value=input;element('fw-before').value=before;await element('fw-form').handlers.submit({preventDefault(){}});},async export(kind){element('fw-export-'+kind).handlers.click();return blobs.at(-1).text();}};
 }
@@ -244,7 +244,7 @@ test('UI reports: all policies, content, coverage and object diffs exported; uns
     await ui.review(after,before);assert.ok(ui.element('fw-coverage').innerHTML.includes('unknown')||ui.element('fw-coverage').innerHTML.includes('necunoscut')||ui.element('fw-coverage').innerHTML.includes('inconnue'));
     assert.ok(ui.element('fw-diff-content').innerHTML.includes('10.1.0.0'));
     const html=await ui.export('html');assert.ok(html.includes('fw-table'));assert.ok(html.includes('10.1.0.0'));assert.ok(html.includes('Policy 1'));assert.ok(html.includes('Content-Security-Policy'));
-    const json=JSON.parse(await ui.export('json'));assert.equal(json.version,'1.3.0');assert.ok(json.coverage);assert.ok(json.comparison.objectChanges);assert.ok(json.objectDefinitions.length);
+    const json=JSON.parse(await ui.export('json'));assert.equal(json.version,'1.4.0');assert.ok(json.coverage);assert.ok(json.comparison.objectChanges);assert.ok(json.objectDefinitions.length);
     await ui.review(policy(1,'set name "<script>alert(1)</script>"'));const escaped=await ui.export('html');assert.ok(!escaped.includes('<script>'));assert.ok(escaped.includes('&lt;script&gt;'));
     await ui.review(policy(1,'set name "unclosed'));assert.ok(ui.element('fw-status').textContent.includes('10'));
   }

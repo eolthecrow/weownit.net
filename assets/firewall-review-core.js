@@ -1,15 +1,16 @@
 /* weownit Firewall Review: static, local, conservative policy analysis. No network or storage APIs. */
 (function (root) {
   'use strict';
-  const VERSION = '1.3.0';
+  const VERSION = '1.4.0';
   const SCHEMA = 'weownit.firewall-review.snapshot';
   const MAX_BYTES = 5 * 1024 * 1024, MAX_RULES = 5000, PAIR_LIMIT = 350;
   const ANY = '__ANY__';
   const fail = (code, line=0) => { const e = new Error(code); e.code = code; if(line)e.line=line; throw e; };
   const canonical=v=>JSON.stringify(v&&typeof v==='object'?Array.isArray(v)?v.map(x=>JSON.parse(canonical(x))):Object.fromEntries(Object.keys(v).sort().map(k=>[k,JSON.parse(canonical(v[k]))])):v);
   function mergeObject(a,b){const out=Object.assign(Object.create(null),a);for(const [k,v]of Object.entries(b)){if(!Object.hasOwn(out,k)){out[k]=v;continue;}if(canonical(out[k])===canonical(v))continue;if(out[k]&&v&&typeof out[k]==='object'&&typeof v==='object'&&!Array.isArray(out[k])&&!Array.isArray(v))out[k]=mergeObject(out[k],v);else fail('conflictingPages');}return out;}
-  const objectFields=new Set(['display-name','subnet','type','fqdn','start-ip','end-ip','wildcard','member','protocol','protocol-number','tcp-portrange','udp-portrange','sctp-portrange','iprange','ip-netmask','ip-range','static','dynamic','filter','port','source-port','ipv4-address','ipv6-address','subnet4','subnet-mask','subnet6','mask-length4','mask-length6','members','match-for-any']);
-  function definition(m,scope,type,name,fields){const safe=Object.fromEntries(Object.entries(fields).filter(([k])=>objectFields.has(k)).map(([k,v])=>[k,clean(list(v))]));if(!Object.keys(safe).length)return;const d={scope,type,name,fields:safe},key=scope+'\0'+type+'\0'+name,previous=m.objectDefinitions.find(x=>x.scope+'\0'+x.type+'\0'+x.name===key);if(previous){if(canonical(previous)!==canonical(d))fail('conflictingPages');}else m.objectDefinitions.push(d);}
+  const unsupportedFortinetMatches=['internet-service-name','internet-service-id','internet-service-custom','internet-service-src-name','internet-service-src-id','internet-service-src-custom','fsso-groups','devices','src-mac','dst-mac','srcaddr6','dstaddr6','srcaddr6-negate','dstaddr6-negate','ztna-ems-tag','ztna-tags-match-logic','tos','tos-mask','tcp-flags'];
+  const objectFields=new Set(['display-name','subnet','type','fqdn','start-ip','end-ip','wildcard','member','protocol','protocol-number','tcp-portrange','udp-portrange','sctp-portrange','iprange','ip-netmask','ip-range','static','dynamic','filter','port','source-port','ipv4-address','ipv6-address','subnet4','subnet-mask','subnet6','mask-length4','mask-length6','members','match-for-any','exclude','exclude-member']);
+  function definition(m,scope,type,name,fields){const safe=Object.fromEntries(Object.entries(fields).filter(([k])=>objectFields.has(k)).map(([k,v])=>[k,k==='subnet'?[...new Set(list(v).map(String).filter(Boolean))]:clean(list(v))]));if(!Object.keys(safe).length)return;const d={scope,type,name,fields:safe},key=scope+'\0'+type+'\0'+name,previous=m.objectDefinitions.find(x=>x.scope+'\0'+x.type+'\0'+x.name===key);if(previous){if(canonical(previous)!==canonical(d))fail('conflictingPages');}else m.objectDefinitions.push(d);}
   const list = value => value == null ? [] : Array.isArray(value) ? value : [value];
   const uniq = values => [...new Set(values)].sort();
   const isAny = value => value === ANY;
@@ -17,9 +18,9 @@
   const cliAny = values => clean(values.map(v => v === 'any' ? ANY : v));
   const all = values => values.includes(ANY);
   const note = (model, code, detail = '') => { if (!model.warnings.some(w => w.code === code && w.detail === detail)) model.warnings.push({code, detail}); };
-  function model(vendor) { return {version: VERSION, vendor, rules: [], warnings: [], scopes: [], format: '', objects: 0, objectDefinitions: [], definitionsAvailable:true}; }
+  function model(vendor) { return {version: VERSION, vendor, rules: [], warnings: [], scopes: [], format: '', objects: 0, objectDefinitions: [], definitionsAvailable:true, scenarioEngineVersion:1}; }
   function rule(data) {
-    return Object.assign({id:'', name:'', scope:'', order:0, orderKnown:true, action:'unknown', enabled:true, src:[], dst:[], service:[], from:[ANY], to:[ANY], apps:[ANY], users:[ANY], urlCategories:[], appCategories:[], appGroups:[], src6:[], dst6:[], inspectionProfiles:[], content:[], contentDirection:[], contentNegation:[], servicePorts:[], schedule:'always', vpn:'any', logging:'unknown', protection:'unknown', comment:'', negated:false, complex:false, unresolved:[], complete:true}, data);
+    return Object.assign({id:'', name:'', scope:'', order:0, orderKnown:true, action:'unknown', enabled:true, src:[], dst:[], service:[], from:[ANY], to:[ANY], apps:[ANY], users:[ANY], urlCategories:[], appCategories:[], appGroups:[], src6:[], dst6:[], inspectionProfiles:[], content:[], contentDirection:[], contentNegation:[], servicePorts:[], srcRefs:[], dstRefs:[], serviceRefs:[], schedule:'always', vpn:'any', logging:'unknown', protection:'unknown', comment:'', negated:false, complex:false, unresolved:[], complete:true}, data);
   }
   function add(model, entry) {
     if (model.rules.length >= MAX_RULES) fail('tooManyRules');
@@ -76,11 +77,11 @@
         if(!['firewall policy','firewall security-policy'].includes(c.name))definition(m,scope,c.name,e.name,e.props);
         if (c.name === 'firewall address') {
           const subnet=e.props.subnet;
-          addresses.set(e.name, {any:!!subnet && subnet.join(' ') === '0.0.0.0 0.0.0.0'});
+          addresses.set(e.name, {any:!!subnet && subnet.join(' ') === '0.0.0.0 0.0.0.0' && (!e.props.type || e.props.type[0]==='ipmask')});
         }
-        if (c.name === 'firewall addrgrp') addresses.set(e.name, {members:e.props.member || []});
+        if (c.name === 'firewall addrgrp') addresses.set(e.name, {members:e.props.member || [],excluded:e.props.exclude?.[0]==='enable'});
         if (c.name === 'firewall service custom') services.set(e.name, {props:e.props,any:e.props.protocol?.[0] === 'IP' && (!e.props['protocol-number'] || e.props['protocol-number'][0] === '0')});
-        if (c.name === 'firewall service group') services.set(e.name, {members:e.props.member || []});
+        if (c.name === 'firewall service group') services.set(e.name, {members:e.props.member || [],excluded:e.props.exclude?.[0]==='enable'});
       }
       m.objects += addresses.size + services.size;
       function expand(names, map, seen = new Set()) {
@@ -89,7 +90,7 @@
           if ((map===addresses && name==='all') || (map===services && name==='ALL')) {result.push(ANY); continue;}
           const obj=map.get(name);
           if (obj?.any) {result.push(ANY); continue;}
-          if (obj?.members?.length && !seen.has(name) && seen.size < 30) {
+          if (obj?.members?.length && !obj.excluded && !seen.has(name) && seen.size < 30) {
             result.push(...expand(obj.members, map, new Set([...seen, name])));
           } else result.push(name);
         }
@@ -103,6 +104,8 @@
         const profiles=['av-profile','ips-sensor','webfilter-profile','dnsfilter-profile','emailfilter-profile','dlp-profile','file-filter-profile','application-list','ssl-ssh-profile'].flatMap(k=>(p[k]||[]).map(v=>k+':'+v));
         add(m, rule({id:e.name,name:get('name') || 'Policy '+e.name,scope,src,dst,service,from:cliAny(p.srcintf || []),to:cliAny(p.dstintf || []),action:get('action') || 'deny',enabled:get('status') !== 'disable',logging:log==='disable'?'off':['all','utm'].includes(log)?'on':'unknown',protection:utm==='disable'?'off':utm==='enable'?'on':'unknown',comment:get('comments'),schedule:get('schedule') || 'unknown',users:clean(p.users || p.groups || [ANY]),negated:['srcaddr-negate','dstaddr-negate','service-negate'].some(k=>get(k)==='enable'),complex:['internet-service','internet-service-src','identity-based','match-vip-only'].some(k=>get(k)==='enable'),complete:src.length>0 && dst.length>0 && service.length>0 && !!p.srcintf && !!p.dstintf}));
         const r=m.rules[m.rules.length-1];
+        r.srcRefs=clean(p.srcaddr||[]);r.dstRefs=clean(p.dstaddr||[]);r.serviceRefs=clean(p.service||[]);
+        if(unsupportedFortinetMatches.some(k=>p[k]?.length&&!(p[k].length===1&&['disable','0','0x00'].includes(p[k][0]))))r.complex=true;
         r.servicePorts=clean(service.flatMap(name=>(services.get(name)?.props?.['tcp-portrange']||[]).map(v=>'tcp:'+v)));
         if(service.some(name=>(services.get(name)?.props?.fqdn?.length||(services.get(name)?.props?.iprange&&services.get(name).props.iprange.join(' ')!=='0.0.0.0'))))r.complex=true;
         r.apps=clean(p.application?.length?p.application:[ANY]);
@@ -148,7 +151,7 @@
         const src=clean(members(e,'source')),dst=clean(members(e,'destination')),service=clean(members(e,'service'));
         const from=clean(members(e,'from')),to=clean(members(e,'to')),apps=clean(members(e,'application'));
         const restricted=k=>{const values=members(e,k);return values.length>0&&!values.includes(ANY);};
-        add(m,rule({id:e.getAttribute('uuid')||e.getAttribute('name'),name:e.getAttribute('name')||'Unnamed',scope,src,dst,service,from,to,apps,action:txt(e,'action')||'unknown',enabled:txt(e,'disabled')!=='yes',logging:start==='yes'||end==='yes'?'on':start==='no'&&end==='no'?'off':'unknown',protection:hasProfiles?'on':'off',comment:txt(e,'description'),users:clean(members(e,'source-user').length?members(e,'source-user'):[ANY]),schedule:txt(e,'schedule')||'always',negated:txt(e,'negate-source')==='yes'||txt(e,'negate-destination')==='yes',complex:['hip-profiles','source-hip','destination-hip','category'].some(restricted)||!!child(child(e,'target'),'devices')||txt(e,'rule-type')==='intrazone',complete:src.length>0&&dst.length>0&&service.length>0&&from.length>0&&to.length>0&&apps.length>0}));
+        add(m,rule({id:e.getAttribute('uuid')||e.getAttribute('name'),name:e.getAttribute('name')||'Unnamed',scope,src,dst,service,srcRefs:src,dstRefs:dst,serviceRefs:service,from,to,apps,action:txt(e,'action')||'unknown',enabled:txt(e,'disabled')!=='yes',logging:start==='yes'||end==='yes'?'on':start==='no'&&end==='no'?'off':'unknown',protection:hasProfiles?'on':'off',comment:txt(e,'description'),users:clean(members(e,'source-user').length?members(e,'source-user'):[ANY]),schedule:txt(e,'schedule')||'always',negated:txt(e,'negate-source')==='yes'||txt(e,'negate-destination')==='yes',complex:['hip-profiles','source-hip','destination-hip','category'].some(restricted)||!!child(child(e,'target'),'devices')||['intrazone','interzone'].includes(txt(e,'rule-type'))||txt(child(e,'target'),'negate')==='yes',complete:src.length>0&&dst.length>0&&service.length>0&&from.length>0&&to.length>0&&apps.length>0}));
       }
     }
     for(const kind of ['address','address-group','service','service-group'])for(const container of Array.from(config.getElementsByTagName(kind))){
@@ -223,7 +226,7 @@
   // JSON/XML snapshots are a versioned review schema, never a vendor restore file.
   const scalarFields=['id','name','scope','action','schedule','vpn','logging','protection','comment'];
   const selectorFields=['src','dst','service','from','to','apps','users','unresolved'];
-  const extraSelectors=['urlCategories','appCategories','appGroups','src6','dst6','inspectionProfiles','content','contentDirection','contentNegation','servicePorts'];
+  const extraSelectors=['urlCategories','appCategories','appGroups','src6','dst6','inspectionProfiles','content','contentDirection','contentNegation','servicePorts','srcRefs','dstRefs','serviceRefs'];
   const booleanFields=['enabled','negated','complex','complete','orderKnown'];
   const xmlEscape=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;'}[c]));
   const plain=o=>!!o && typeof o==='object' && !Array.isArray(o);
@@ -234,13 +237,13 @@
     bound(data);return data;
   }
   function snapshot(m) {
-    return {schema:SCHEMA,schemaVersion:1,vendor:m.vendor,sourceFormat:m.sourceFormat||m.format,objects:m.objects,...(m.definitionsAvailable?{objectDefinitions:m.objectDefinitions}:{}),
+    return {schema:SCHEMA,schemaVersion:1,scenarioEngineVersion:m.scenarioEngineVersion||0,vendor:m.vendor,sourceFormat:m.sourceFormat||m.format,objects:m.objects,...(m.definitionsAvailable?{objectDefinitions:m.objectDefinitions}:{}),
       warnings:m.warnings.map(w=>({code:w.code,detail:w.detail||''})),
       policies:m.rules.map(r=>Object.fromEntries([...scalarFields,...selectorFields,...extraSelectors,...booleanFields,'order'].map(k=>[k,r[k]])))};
   }
   function snapshotXML(m) {
     const s=snapshot(m);
-    return '<?xml version="1.0" encoding="UTF-8"?>\n<firewall-review-snapshot schema="'+SCHEMA+'" schema-version="1" vendor="'+s.vendor+'">\n'+
+    return '<?xml version="1.0" encoding="UTF-8"?>\n<firewall-review-snapshot schema="'+SCHEMA+'" schema-version="1" scenario-engine-version="'+s.scenarioEngineVersion+'" vendor="'+s.vendor+'">\n'+
       '<source-format>'+xmlEscape(s.sourceFormat)+'</source-format><objects>'+s.objects+'</objects>\n<warnings>'+s.warnings.map(w=>'<warning code="'+xmlEscape(w.code)+'">'+xmlEscape(w.detail)+'</warning>').join('')+'</warnings>\n'+(s.objectDefinitions?'<object-definitions>'+s.objectDefinitions.map(d=>'<object scope="'+xmlEscape(d.scope)+'" type="'+xmlEscape(d.type)+'" name="'+xmlEscape(d.name)+'">'+Object.entries(d.fields).map(([k,v])=>'<field name="'+xmlEscape(k)+'">'+v.map(x=>'<value>'+xmlEscape(x)+'</value>').join('')+'</field>').join('')+'</object>').join('')+'</object-definitions>\n':'')+'<policies>'+s.policies.map(r=>'<policy>'+scalarFields.map(k=>'<'+k+'>'+xmlEscape(r[k])+'</'+k+'>').join('')+[...selectorFields,...extraSelectors].map(k=>'<'+k+'>'+r[k].map(v=>'<value>'+xmlEscape(v)+'</value>').join('')+'</'+k+'>').join('')+booleanFields.map(k=>'<'+k+'>'+r[k]+'</'+k+'>').join('')+'<order>'+r.order+'</order></policy>').join('\n')+'</policies>\n</firewall-review-snapshot>';
   }
   function snapshotModel(data,expectedVendor) {
@@ -249,7 +252,7 @@
     if(!Array.isArray(data.policies)||!data.policies.length)fail('invalidSnapshot');
     if(data.policies.length>MAX_RULES)fail('tooManyRules');
     if(typeof data.sourceFormat!=='string'||!Number.isSafeInteger(data.objects)||data.objects<0||!Array.isArray(data.warnings))fail('invalidSnapshot');
-    const m=model(data.vendor);m.definitionsAvailable='objectDefinitions' in data;
+    const m=model(data.vendor);m.scenarioEngineVersion=data.scenarioEngineVersion===1?1:0;m.definitionsAvailable='objectDefinitions' in data;
     if(m.definitionsAvailable){if(!Array.isArray(data.objectDefinitions))fail('invalidSnapshot');for(const d of data.objectDefinitions){if(!plain(d)||['scope','type','name'].some(k=>typeof d[k]!=='string')||!plain(d.fields)||Object.entries(d.fields).some(([k,v])=>!objectFields.has(k)||!Array.isArray(v)||v.some(x=>typeof x!=='string')))fail('invalidSnapshot');definition(m,d.scope,d.type,d.name,d.fields);}}
     m.sourceFormat=data.sourceFormat;m.objects=data.objects;
     const seen=new Set(),orders=new Map();
@@ -272,7 +275,7 @@
     const Parser=XMLParser||root.DOMParser;if(!Parser)fail('xmlUnavailable');
     const doc=new Parser().parseFromString(text,'application/xml');if(doc.getElementsByTagName('parsererror').length)fail('malformedXML');
     const e=doc.documentElement;if(e.localName!=='firewall-review-snapshot')fail('invalidSnapshot');
-    const data={schema:e.getAttribute('schema'),schemaVersion:Number(e.getAttribute('schema-version')),vendor:e.getAttribute('vendor'),sourceFormat:txt(e,'source-format'),objects:Number(txt(e,'objects')),warnings:children(child(e,'warnings'),'warning').map(w=>({code:w.getAttribute('code'),detail:w.textContent})),policies:[]};
+    const data={scenarioEngineVersion:Number(e.getAttribute('scenario-engine-version')),schema:e.getAttribute('schema'),schemaVersion:Number(e.getAttribute('schema-version')),vendor:e.getAttribute('vendor'),sourceFormat:txt(e,'source-format'),objects:Number(txt(e,'objects')),warnings:children(child(e,'warnings'),'warning').map(w=>({code:w.getAttribute('code'),detail:w.textContent})),policies:[]};
     if(children(e,'object-definitions').length>1)fail('invalidSnapshot');
     if(child(e,'object-definitions'))data.objectDefinitions=children(child(e,'object-definitions'),'object').map(o=>{const fields={};for(const f of children(o,'field')){const k=f.getAttribute('name');if(k in fields)fail('invalidSnapshot');fields[k]=children(f,'value').map(v=>v.textContent);}return {scope:o.getAttribute('scope'),type:o.getAttribute('type'),name:o.getAttribute('name'),fields};});
     for(const p of children(child(e,'policies'),'policy')) {
@@ -288,7 +291,7 @@
   function parseFortinetJSON(texts) {
     const responses=texts.flatMap(t=>fortResponses(jsonRead(t))),scopes=new Map(),warnings=[];
     const types={'firewall/policy':'firewall policy','firewall/security-policy':'firewall security-policy','firewall/address':'firewall address','firewall/addrgrp':'firewall addrgrp','firewall.service/custom':'firewall service custom','firewall.service/group':'firewall service group'};
-    const fields=new Set(['name','srcintf','dstintf','srcaddr','dstaddr','service','action','status','logtraffic','utm-status','comments','schedule','users','groups','srcaddr-negate','dstaddr-negate','service-negate','internet-service','internet-service-src','identity-based','match-vip-only','application-list','subnet','member','protocol','protocol-number',...objectFields]);
+    const fields=new Set(['name','srcintf','dstintf','srcaddr','dstaddr','service','action','status','logtraffic','utm-status','comments','schedule','users','groups','srcaddr-negate','dstaddr-negate','service-negate','internet-service','internet-service-src','identity-based','match-vip-only','application-list','subnet','member','protocol','protocol-number',...objectFields,...unsupportedFortinetMatches]);
     const quoted=v=>JSON.stringify(String(v));
     for(const k of ['application','app-category','app-group','url-category','srcaddr6','dstaddr6','srcaddr6-negate','dstaddr6-negate','av-profile','ips-sensor','webfilter-profile','dnsfilter-profile','emailfilter-profile','dlp-profile','file-filter-profile','application-list','ssl-ssh-profile'])fields.add(k);
     function values(key,value) {

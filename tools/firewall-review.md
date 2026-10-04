@@ -1,4 +1,16 @@
-# weownit Firewall Review 1.3
+# weownit Firewall Change Review 1.4
+
+## Change scenarios (new)
+
+Use **Run change demo** on the Tools page to load two synthetic FortiOS exports and three traffic requirements. The subnet changes from /24 to /21; unchanged application/admin policies inherit that larger source set. The local worker produces two expected results and one unwanted administrative access. No customer configuration is included.
+
+Scenario evaluation is an original, conservative browser implementation in `assets/firewall-change-core.js`, executed in a local Web Worker. Supply both configurations and 1–100 exact IPv4 TCP/UDP flows, source/destination interfaces or zones, before/after context, expected after result, and optionally a source port. Imported/exported scenario packs use `weownit.firewall-change.scenarios` version 1. Legacy snapshots without scenario coverage metadata remain readable for structural checks but receive inconclusive scenario verdicts; use a fresh native export. JSON/HTML review reports include before/after decisions, rule evidence, bounded traces, expected-result failures and changed-object dependency candidates. The JSON report also includes a normalized before snapshot. XML remains the after-only review snapshot.
+
+This release evaluates **the supplied policy sequence**, not an installed firewall or a complete network model. Users must verify complete exports, effective order and context. Known-order regular FortiOS policies and local PAN-OS VSYS rulebases support static IPv4 subnets/ranges, static groups, explicit TCP/UDP service definitions and explicit matching allow/drop policies. Custom definitions are authoritative; missing services/objects are not guessed. No default/implicit action is inferred when no explicit rule matches. API snapshots with unknown order or missing pages are inconclusive. Check Point, FortiManager packages, Panorama inheritance and FortiOS policy-based NGFW retain structural review; their scenario verdicts are inconclusive in this release.
+
+Potentially matching unsupported/unknown rules stop evaluation before later policies. A supported address/service mismatch may exclude a rule; negation cannot use that shortcut. Interface/zone groups without definitions stay unknown. Excluded address groups, dynamic/FQDN/geographic objects, scheduling, identity, App-ID/application-default, rule-type restrictions and unsupported selectors are not simulated. NAT, routing, SD-WAN, VIP translation, decryption, sessions and live reachability remain outside the evaluation. A policy permit is not proof of connectivity or Internet exposure. Object dependencies are review candidates, not proof that every referenced flow changes. There is no certification or security score.
+
+Verification: `node --test tests/firewall-review.test.cjs tests/firewall-change.test.cjs tests/firewall-change-ui.test.cjs`. The new tests exercise actual expected/unexpected changes, subnet/port boundaries, uncertainty propagation, cycles, exclusion, disabled rules, contexts, snapshots, local worker integration, report escaping and EN/RO/FR. Browser checks additionally verify native XML and the deployed worker.
 
 Original browser implementation. No external analyzer/library, backend, configuration upload, analytics call or configuration persistence in the Firewall Review code. This component shares the existing Tools page with the other website tools.
 

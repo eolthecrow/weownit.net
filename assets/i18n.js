@@ -38,9 +38,9 @@
     "Kits, modèles et ressources numériques pour les réseaux et la cybersécurité, proposés par Vladimir Arjoca."
   ],
   "tools": [
-    "Web-Check, CVE Risk Lens and local Firewall Review for Fortinet, Palo Alto Networks and Check Point.",
-    "Web-Check, CVE Risk Lens și Firewall Review local pentru Fortinet, Palo Alto Networks și Check Point.",
-    "Web-Check, CVE Risk Lens et Firewall Review local pour Fortinet, Palo Alto Networks et Check Point."
+    "Web-Check, CVE Risk Lens and local Firewall Change Review: configuration evidence and before/after traffic scenarios.",
+    "Web-Check, CVE Risk Lens și Firewall Change Review local: configurații și scenarii de trafic înainte/după.",
+    "Web-Check, CVE Risk Lens et Firewall Change Review local : configurations et scénarios de trafic avant/après."
   ]
 };
   const labels = {
