@@ -70,7 +70,7 @@
   <link rel="stylesheet" href="assets/cve-risk-lens.css?v=2">
   <link rel="stylesheet" href="assets/firewall-review.css?v=6">
   <script src="assets/i18n.js?v=4"></script>
-  <link rel="stylesheet" href="assets/incident-triage.css?v=2">
+  <link rel="stylesheet" href="assets/incident-triage.css?v=3">
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -195,7 +195,8 @@
       <p class="it-privacy" data-it="privacy">Local processing · No log upload · No account or backend required</p>
       <div class="it-workspace">
         <div class="it-launch"><div><h3 data-it="intro">From event logs to an investigation</h3><p data-it="pitch">Inspect evidence and correlate observed events.</p></div><button type="button" id="it-demo" class="it-primary" data-it="demo">Run investigation lab</button></div>
-        <div class="it-platform-demos" aria-label="Platform investigation labs"><button type="button" id="it-demo-linux" data-it="linuxDemo">Linux SSH / sudo lab</button><button type="button" id="it-demo-fortinet" data-it="fortinetDemo">FortiOS lab</button><button type="button" id="it-demo-paloalto" data-it="paloaltoDemo">PAN-OS lab</button><button type="button" id="it-demo-checkpoint" data-it="checkpointDemo">Check Point lab</button><button type="button" id="it-demo-cisco-ios" data-it="cisco-iosDemo">Cisco IOS / IOS XE lab</button><button type="button" id="it-demo-cisco-asa" data-it="cisco-asaDemo">Cisco ASA / FTD lab</button></div>
+        <details class="it-guide"><summary data-it="demo">Run investigation lab</summary><div class="it-platform-demos" aria-label="Platform investigation labs"><button type="button" id="it-demo-linux" data-it="linuxDemo">Linux SSH / sudo lab</button><button type="button" id="it-demo-fortinet" data-it="fortinetDemo">FortiOS lab</button><button type="button" id="it-demo-paloalto" data-it="paloaltoDemo">PAN-OS lab</button><button type="button" id="it-demo-checkpoint" data-it="checkpointDemo">Check Point lab</button><button type="button" id="it-demo-cisco-ios" data-it="cisco-iosDemo">Cisco IOS / IOS XE lab</button><button type="button" id="it-demo-cisco-asa" data-it="cisco-asaDemo">Cisco ASA / FTD lab</button></div></details>
+        <div class="it-resume"><label for="it-resume-file" data-it="resume">Resume saved case</label><input id="it-resume-file" type="file" accept=".json,application/json" aria-describedby="it-resume-hint"><p id="it-resume-hint" class="it-hint" data-it="resumeHint"></p></div>
         <form id="it-form">
           <div class="it-case"><label><span data-it="caseId">Case reference (optional)</span><input id="it-case" maxlength="120" autocomplete="off"></label><label><span data-it="analyst">Analyst (optional)</span><input id="it-analyst" maxlength="120" autocomplete="off"></label></div>
           <div class="it-import-source"><label for="it-source-mode" data-it="sourceMode">Log source</label><select id="it-source-mode"><option value="auto">Automatic detection</option><option value="windows">Windows</option><option value="linux">Linux</option><option value="fortinet">Fortinet FortiOS</option><option value="paloalto">Palo Alto PAN-OS</option><option value="checkpoint">Check Point</option><option value="cisco">Cisco ASA / FTD / IOS</option></select></div>
@@ -221,10 +222,18 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
         <div class="it-results" id="it-results" hidden>
           <div class="it-result-head"><h3 data-it="results">Incident evidence review</h3><div class="it-export"><button type="button" id="it-export-html" data-it="exportHTML">HTML report</button><button type="button" id="it-export-json" data-it="exportJSON">JSON case report</button><button type="button" id="it-export-csv" data-it="exportCSV">Timeline CSV</button><button type="button" id="it-export-events" data-it="exportEvents">Reusable events JSON</button></div></div>
           <p class="it-banner" id="it-demo-banner" data-it="demoBanner" hidden>Synthetic investigation.</p><div class="it-stats" id="it-stats"></div><p class="it-hint" id="it-period"></p><p class="it-hint" data-it="scope">Heuristic review; analyst validation required.</p>
+          <p class="it-banner" id="it-restored-notice" hidden></p>
+          <nav class="it-view-nav" aria-label="Investigation views"><button type="button" id="it-view-summary" aria-controls="it-panel-summary" aria-pressed="true" data-it="summaryView">Summary</button><button type="button" id="it-view-evidence" aria-controls="it-panel-evidence" aria-pressed="false" data-it="evidenceView">Evidence</button><button type="button" id="it-view-steps" aria-controls="it-panel-steps" aria-pressed="false" data-it="stepsView">Next steps</button></nav>
+          <section id="it-panel-summary" aria-labelledby="it-view-summary"><div id="it-summary"></div><button type="button" id="it-summary-evidence" data-it="evidenceView">Evidence</button></section>
+          <section id="it-panel-steps" aria-labelledby="it-view-steps" hidden><div id="it-next-steps"></div></section>
+          <section id="it-panel-evidence" aria-labelledby="it-view-evidence" hidden>
+          <details class="it-entity-explorer" open><summary data-it="entities">Entity explorer</summary><p class="it-hint" data-it="entityHint"></p><div class="it-filters"><label><span data-it="entityType">Entity type</span><select id="it-entity-type"></select></label><label><span data-it="entityQuery">Find an entity</span><input id="it-entity-query" type="search" maxlength="200"></label></div><p class="it-hint" data-it="entityPreview"></p><p id="it-entity-count" class="it-findings-count"></p><div id="it-entity-list"></div></details>
+          <div id="it-entity-selection" class="it-banner" hidden><p id="it-entity-selected"></p><button type="button" id="it-entity-clear" data-it="entityClear">Clear entity selection</button></div>
           <div class="it-filters"><label><span data-it="platform">Platform</span><select id="it-platform"></select></label><label><span data-it="priority">Priority</span><select id="it-priority"></select></label><label><span data-it="host">Host</span><select id="it-host"></select></label><label><span data-it="search">Search user / IP / command / host</span><input id="it-search" type="search" maxlength="200"></label></div>
           <h3 data-it="findings">Findings to investigate</h3><p class="it-findings-count" id="it-findings-count"></p><p class="it-hint" data-it="preview">Preview limits apply; exports contain all findings and events.</p><div id="it-findings"></div>
           <details open><summary data-it="timeline">Event timeline · UTC</summary><label class="it-hint"><input type="checkbox" id="it-matched"><span data-it="matched">Finding-linked events only</span></label><p class="it-findings-count" id="it-timeline-count"></p><div class="it-timeline" id="it-timeline"></div></details>
           <div class="it-grid"><div id="it-manifest"></div><div id="it-coverage"></div></div><div id="it-relations"></div>
+          </section>
           <div class="it-cta"><p data-it="cta">Need help validating the evidence?</p><a href="contact.html" data-it="ctaLink">Request incident response support</a></div>
         </div>
       </div><noscript><p>JavaScript is required for local Incident Evidence Triage.</p></noscript>
@@ -411,11 +420,12 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
 <script src="assets/firewall-change-core.js?v=2" defer></script>
 <script src="assets/firewall-change-ui.js?v=3" defer></script>
 <script src="assets/firewall-review.js?v=7" defer></script>
-<script src="assets/incident-triage-sources.js?v=2" defer></script>
-<script src="assets/incident-triage-core.js?v=2" defer></script>
-<script src="assets/incident-triage-demo.js?v=2" defer></script>
-<script src="assets/incident-triage-platform-demos.js?v=2" defer></script>
-<script src="assets/incident-triage-ui.js?v=2" defer></script>
+<script src="assets/incident-triage-sources.js?v=3" defer></script>
+<script src="assets/incident-triage-core.js?v=3" defer></script>
+<script src="assets/incident-triage-demo.js?v=3" defer></script>
+<script src="assets/incident-triage-platform-demos.js?v=3" defer></script>
+<script src="assets/incident-triage-workspace.js?v=3" defer></script>
+<script src="assets/incident-triage-ui.js?v=3" defer></script>
 </body>
 </html>
 

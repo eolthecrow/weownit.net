@@ -1,4 +1,4 @@
-# weownit Incident Evidence Triage 2.0
+# weownit Incident Evidence Triage 2.1
 
 A browser-only workspace for bounded, explainable triage of supplied Windows, Linux and network-device log subsets. It does not collect logs, enable audit policy, execute commands, query external threat intelligence or send evidence to a backend. Analysis runs in a dedicated Web Worker; import parsing and SHA-256 hashing occur locally.
 
@@ -112,3 +112,16 @@ Additional primary references:
 - https://sc1.checkpoint.com/documents/Log_Exporter/EN/CP_Log_Exporter_AdminGuide.pdf
 
 - https://community.checkpoint.com/t5/Firewall-Security-Management/Log-Exporter-CEF-Field-Mappings/m-p/41060
+
+
+## Version 2.1 investigation workspace
+
+Results open in Summary, with separate Evidence and Next steps views. The summary covers the entire case, independent of display filters: observed event/host/account totals and interval; heuristic priorities; rejected/unresolved/unrecognized/omitted evidence; required-field gaps; and analyst dispositions. An explained finding remains in the report and source evidence. Next steps combine collection-gap guidance with validation advice for the currently unresolved rule types. No breach conclusion or executed response action is inferred.
+
+The entity explorer indexes exact structured source/destination IP addresses, account principals and host names. Clicking a value filters the timeline by exact event membership and findings by intersection with those events. It never treats a substring in a command as an IP observation. Account case and domain strings remain distinct. Shared values across sources are navigation pivots, not proof of identity, attribution or an attack chain. Display up to 100 entities, searchable by value/type; exports retain the complete case. The six native source labs are grouped in a collapsible guide. Finding intervals display both start and end; technical JSON is collapsible.
+
+JSON case reports can be reopened through Resume saved case (maximum 64 MiB UTF-8/BOM-marked UTF-16). This is distinct from reimporting reusable event JSON. Complete version 2 reports remain accepted. Restoration validates bounded source/event/provenance/review metadata, renormalizes source fields and recalculates findings and process links in the local worker. Convenience fields, saved priority counts, links and rule text are not trusted. Analyst reviews match the recalculated rule and exact event-reference set, rather than an ordinal finding ID; unmatched reviews are counted explicitly. Case/analyst fields, the synthetic marker, original timestamps, source references, recorded import context, duplicate provenance and original source hashes are retained. Re-exported JSON and offline HTML include the investigation summary and next steps.
+
+A restored manifest records the hashes from the saved case; it cannot verify those hashes against original source bytes or authenticate acquisition. The UI and HTML report state this distinction. The original source files must be retained separately. The saved report itself can be edited, so it is not a signed evidence container. There is no browser autosave or server persistence. Save the case JSON before closing. A malformed/oversized case import leaves the current case intact; editing raw evidence still invalidates that case. The 64 MiB case limit accommodates expanded report JSON; raw-evidence limits remain 8 files, 10 MiB and 20,000 events. Oversized JSON exports are refused explicitly rather than producing a case that cannot be reopened.
+
+Validation adds every-platform saved-case round trips; backward compatibility; duplicate/rejection/time-context retention; tampered convenience fields and metadata; note matching; malformed reopening with current-case preservation; localized summary/navigation/entity controls; exact entity pivots; and a 20,000-event restoration/indexing case. These are fixture and functional checks, not validation against all vendor versions or real customer incident corpora.

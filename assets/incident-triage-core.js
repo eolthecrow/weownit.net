@@ -1,7 +1,7 @@
 /* weownit Incident Evidence Triage — local, bounded, explainable event review. */
 (function(root){
   'use strict';
-  const VERSION='2.0.0',MAX_BYTES=10*1024*1024,MAX_EVENTS=20000,MAX_FINDINGS=1000,MAX_FIELD=32768;
+  const VERSION='2.1.0',MAX_BYTES=10*1024*1024,MAX_EVENTS=20000,MAX_FINDINGS=1000,MAX_FIELD=32768;
   const adapters=root.IncidentSources||(typeof module!=='undefined'&&module.exports?require('./incident-triage-sources.js'):null);
   const fail=code=>{throw Object.assign(new Error(code),{code});};
   const scalar=v=>v==null?'':typeof v==='object'?scalar(v['#text']??v._text??v.Value??v.value??''):String(v);
@@ -178,5 +178,5 @@
     const times=events.filter(e=>e.timestamp),hosts=[...new Set(events.map(e=>e.host).filter(known))],users=[...new Set(events.map(e=>e.user).filter(known))];
     return {schema:'weownit.incident.review',schemaVersion:2,version:VERSION,created:new Date().toISOString(),sources:input.sources||[],importSummary:input.importSummary||[],platforms:adapters?.PLATFORMS.filter(p=>p!=='unrecognized').concat('windows').map(platform=>({platform,events:events.filter(e=>e.platform===platform).length}))||[],summary:{imported:input.events.length,unique:events.length,duplicates:duplicates.length,hosts:hosts.length,users:users.length,high:findings.filter(f=>f.priority==='high').length,medium:findings.filter(f=>f.priority==='medium').length,low:findings.filter(f=>f.priority==='low').length,findings:findings.length,matchedEvents:matched.size,start:times[0]?.timestamp||null,end:times[times.length-1]?.timestamp||null,missingTime:events.filter(e=>!e.timestamp).length,unknownProvider:events.filter(e=>e.category==='other').length,omittedFindings:omitted},coverage:[...covered.values()],rules:RULES,entities:{hosts,users},findings,events,duplicates,processLinks,limits:{maxBytes:MAX_BYTES,maxEvents:MAX_EVENTS,maxFindings:MAX_FINDINGS},scope:'Local heuristic review of documented Windows, Linux and network-device log subsets only. No universal vendor support, live collection, malware scanning, complete Sigma coverage, binary EVTX parsing or breach confirmation. ATT&CK references are investigation hypotheses.'};
   }
-  const api={VERSION,MAX_BYTES,MAX_EVENTS,MAX_FINDINGS,RULES,parse,analyze,timestamp,parseCSV};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.IncidentTriage=api;
+  const api={VERSION,MAX_BYTES,MAX_EVENTS,MAX_FINDINGS,RULES,parse,analyze,normalize,timestamp,parseCSV};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.IncidentTriage=api;
 })(typeof window!=='undefined'?window:globalThis);
