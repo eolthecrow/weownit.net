@@ -16,3 +16,5 @@
 
 .cc-workspace>summary{color:var(--accent);font-size:1rem;font-weight:650;cursor:pointer}
 #cc-workspace,#cc-policy-form{scroll-margin-top:100px}
+
+#ep-workspace .it-import-context{grid-template-columns:repeat(2,minmax(0,1fr));margin:1rem 0}#ep-workspace .it-import-context :is(input,select){width:100%;margin-top:.4rem}#ep-cards article{border-top:1px solid var(--line);padding:1rem 0}#ep-cards h3{font: .9rem/1.5 var(--mono);overflow-wrap:anywhere;color:var(--accent)}#ep-cards small{display:block;overflow-wrap:anywhere}#ep-cards button{margin:.4rem .4rem .4rem 0;max-width:100%;overflow-wrap:anywhere}#ep-cards details{margin:.8rem 0}@media(max-width:760px){#ep-workspace .it-import-context{grid-template-columns:1fr}}

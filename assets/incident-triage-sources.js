@@ -1,15 +1,16 @@
 /* Local adapters for documented Linux and network-device log subsets. */
 (function(root){
   'use strict';
+  const endpoint=root.EndpointEvidence||(typeof require==='function'?require('./endpoint-evidence-core.js'):null);
   const packets=root.ConnectedCase||(typeof require==='function'?require('./connected-case-core.js'):null);
-  const PLATFORMS=['tshark','linux','fortinet','paloalto','checkpoint','cisco-asa','cisco-ios','unrecognized'];
+  const PLATFORMS=['autoruns','sigcheck','tshark','linux','fortinet','paloalto','checkpoint','cisco-asa','cisco-ios','unrecognized'];
   const str=v=>v==null?'':Array.isArray(v)?JSON.stringify(v):typeof v==='object'?JSON.stringify(v):String(v);
   const pick=(o,...keys)=>{for(const k of keys)if(o[k]!=null&&str(o[k])!=='')return str(o[k]);return '';};
   const fail=code=>{throw Object.assign(new Error(code),{code});};
   const clean=v=>!v||['-','?','(unknown)','unknown','<unknown>','*****'].includes(v.toLowerCase())?'':v;
   const epoch=(value,unit)=>{const s=str(value);if(!/^\d{1,20}(?:\.\d{1,9})?$/.test(s))return '';let ms;if(unit==='micro')ms=Number(BigInt(s.split('.')[0])/1000n);else if(unit==='nano')ms=Number(BigInt(s.split('.')[0])/1000000n);else if(unit==='milli')ms=Number(s);else ms=Number(s)*1000;return Number.isFinite(ms)&&ms>=0&&ms<=8640000000000000?new Date(ms).toISOString():'';};
   function offset(value){const s=str(value);if(!s)return '';if(!/^[+-](?:0\d|1[0-4]):[0-5]\d$/.test(s)||s.slice(1,3)==='14'&&s.slice(4)!=='00')fail('invalidImportContext');return s;}
-  function settings(options={}){const mode=options.mode||'auto';if(!['auto','windows','linux','fortinet','paloalto','checkpoint','cisco','tshark'].includes(mode))fail('invalidImportContext');const year=str(options.year),host=str(options.host).trim();if(year&&!/^(?:19[7-9]\d|20\d\d|2100)$/.test(year)||host.length>512)fail('invalidImportContext');const capturePhase=options.capturePhase||'before';if(!['before','after'].includes(capturePhase))fail('invalidImportContext');return {mode,year,timezone:offset(options.timezone),host,capturePhase};}
+  function settings(options={}){const mode=options.mode||'auto';if(!['auto','windows','linux','fortinet','paloalto','checkpoint','cisco','tshark','autoruns','sigcheck'].includes(mode))fail('invalidImportContext');const year=str(options.year),host=str(options.host).trim();if(year&&!/^(?:19[7-9]\d|20\d\d|2100)$/.test(year)||host.length>512)fail('invalidImportContext');const capturePhase=options.capturePhase||'before';if(!['before','after'].includes(capturePhase))fail('invalidImportContext');return {mode,year,timezone:offset(options.timezone),host,capturePhase};}
   function localTime(value,context,zone=''){
     let s=str(value).trim();if(!s)return '';if(/(?:Z|[+-]\d\d:\d\d)$/.test(s))return s.replace(' ','T');
     const tz=zone?offset(zone.replace(/^([+-]\d\d)(\d\d)$/,'$1:$2')):context.timezone;
@@ -98,7 +99,7 @@
   }
   function flat(input){const payload=input.data;let d=Object.create(null);if(typeof payload==='string'){try{d=JSON.parse(payload);}catch(_){fail('invalidData');}}else if(payload&&typeof payload==='object'&&!Array.isArray(payload))d={...payload};else{for(const [k,v]of Object.entries(input))if(!['platform','eventId','timestamp','host','provider','channel','recordId','source','uid','category'].includes(k))d[k]=v;}if(!d||typeof d!=='object'||Array.isArray(d))fail('invalidData');return Object.fromEntries(Object.entries(d).map(([k,v])=>[k,str(v)]));}
   function normalize(input,options={}){
-    const context=settings(options);const packet=packets?.normalizePacket(input,context);if(packet)return packet;if(!input||typeof input!=='object'||Array.isArray(input)||input.Event||input.System)return null;
+    const context=settings(options);const inventory=endpoint?.normalize(input,context);if(inventory)return inventory;const packet=packets?.normalizePacket(input,context);if(packet)return packet;if(!input||typeof input!=='object'||Array.isArray(input)||input.Event||input.System)return null;
     let platform=input.platform||'',d=flat(input),provider=pick(input,'provider','Provider'),channel=pick(input,'channel','Channel');
     if(platform&&!PLATFORMS.includes(platform))return null;
     if(!platform){

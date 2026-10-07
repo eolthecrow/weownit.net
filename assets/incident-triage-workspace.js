@@ -31,7 +31,7 @@
       const originalTimestamp=text(e.originalTimestamp||'',100);
       const clean={platform:e.platform||'windows',eventId:e.eventId,timestamp:e.timestamp||originalTimestamp,host:e.host,provider:e.provider,channel:e.channel,recordId:e.recordId,data:e.data};
       for(const key of ['host','provider','channel','recordId'])text(clean[key]||'');
-      if(!['tshark','windows','linux','fortinet','paloalto','checkpoint','cisco-ios','cisco-asa','unrecognized'].includes(clean.platform))fail();
+      if(!['autoruns','sigcheck','tshark','windows','linux','fortinet','paloalto','checkpoint','cisco-ios','cisco-asa','unrecognized'].includes(clean.platform))fail();
       const result=core.normalize(clean,source.row-1,source);
       if(!result.event||result.event.timestamp!==e.timestamp)fail();
       // Convenience fields, findings and links are regenerated from source fields.
