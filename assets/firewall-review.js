@@ -6,7 +6,7 @@
   const dictionaries={
   "en": {
     "eyebrow": "03 / FIREWALL CONFIGURATION REVIEW",
-    "lead": "Inspect firewall policies, review evidence and compare configurations. Fortinet, Palo Alto Networks and Check Point.",
+    "lead": "Review policies, check device hardening and retest configurations. FortiGate, Palo Alto, Cisco IOS / IOS XE and Check Point; coverage varies by mode.",
     "privacy": "Local analysis · No configuration upload · No account required",
     "vendor": "Firewall vendor",
     "auto": "Detect automatically",
@@ -175,7 +175,7 @@
   },
   "ro": {
     "eyebrow": "03 / REVIZIE CONFIGURAȚII FIREWALL",
-    "lead": "Inspectează politicile, verifică dovezile și compară configurațiile. Fortinet, Palo Alto Networks și Check Point.",
+    "lead": "Verifică politicile, hardening-ul dispozitivelor și configurațiile după modificare. FortiGate, Palo Alto, Cisco IOS / IOS XE și Check Point; acoperirea diferă între moduri.",
     "privacy": "Analiză locală · Configurația nu se încarcă pe server · Fără cont",
     "vendor": "Vendor firewall",
     "auto": "Detectare automată",
@@ -344,7 +344,7 @@
   },
   "fr": {
     "eyebrow": "03 / REVUE DES CONFIGURATIONS PARE-FEU",
-    "lead": "Inspectez les politiques, examinez les preuves et comparez les configurations. Fortinet, Palo Alto Networks et Check Point.",
+    "lead": "Examinez les politiques, le durcissement et les configurations après modification. FortiGate, Palo Alto, Cisco IOS / IOS XE et Check Point ; couverture selon le mode.",
     "privacy": "Analyse locale · Aucun envoi de configuration · Sans compte",
     "vendor": "Fournisseur du pare-feu",
     "auto": "Détection automatique",
