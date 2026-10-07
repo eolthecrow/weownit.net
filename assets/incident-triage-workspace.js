@@ -31,7 +31,7 @@
       const originalTimestamp=text(e.originalTimestamp||'',100);
       const clean={platform:e.platform||'windows',eventId:e.eventId,timestamp:e.timestamp||originalTimestamp,host:e.host,provider:e.provider,channel:e.channel,recordId:e.recordId,data:e.data};
       for(const key of ['host','provider','channel','recordId'])text(clean[key]||'');
-      if(!['windows','linux','fortinet','paloalto','checkpoint','cisco-ios','cisco-asa','unrecognized'].includes(clean.platform))fail();
+      if(!['tshark','windows','linux','fortinet','paloalto','checkpoint','cisco-ios','cisco-asa','unrecognized'].includes(clean.platform))fail();
       const result=core.normalize(clean,source.row-1,source);
       if(!result.event||result.event.timestamp!==e.timestamp)fail();
       // Convenience fields, findings and links are regenerated from source fields.
@@ -58,7 +58,7 @@
       const result={source:s.source,records:count(s.records),accepted:s.accepted,rejected:s.rejected,warnings,skipped:s.skipped.map(x=>{
         if(!object(x)||x.source!==s.source||!Number.isSafeInteger(x.row)||x.row<1||x.row>1000000)fail();return {source:s.source,row:x.row,reason:text(x.reason||'',512)};
       })};
-      if(s.context){if(!object(s.context))fail();result.context={};for(const key of ['mode','timezone','year','host'])if(s.context[key]!=null){const v=s.context[key];if(typeof v!=='string'&&typeof v!=='number')fail();result.context[key]=typeof v==='number'?count(v):text(v);}}
+      if(s.context){if(!object(s.context))fail();result.context={};for(const key of ['mode','timezone','year','host','capturePhase'])if(s.context[key]!=null){const v=s.context[key];if(typeof v!=='string'&&typeof v!=='number')fail();result.context[key]=typeof v==='number'?count(v):text(v);}}
       return result;
     });
     const r=core.analyze({events,sources,importSummary});if(r.duplicates.length)fail();
@@ -74,6 +74,7 @@
     if(typeof saved.synthetic!=='boolean')fail();
     const created=text(saved.created,100);if(!core.timestamp(created))fail();r.created=created;
     r.restoration={restoredAt:new Date().toISOString(),sourceEngine:text(saved.version,32),sourceHashesVerified:false,findingsRecomputed:true,unmatchedReviews:savedReviews.size-Object.keys(reviews).length};
+    if(saved.connectedCase!=null){const connected=root.ConnectedCase||(typeof require==='function'?require('./connected-case-core.js'):null);r.connectedCase=connected.restoreConnected(saved.connectedCase,events);}
     return {report:r,reviews,case:caseInfo,synthetic:saved.synthetic};
   }
   const known=v=>typeof v==='string'&&v.trim()&&!['-','?','unknown','(unknown)','*****'].includes(v.toLowerCase());
@@ -110,3 +111,4 @@
   const api={MAX_CASE_BYTES,restoreCase,entityIndex,eventEntities,overview};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;root.IncidentWorkspace=api;
 })(typeof window!=='undefined'?window:globalThis);
+

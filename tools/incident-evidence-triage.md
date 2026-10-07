@@ -1,5 +1,7 @@
 # weownit Incident Evidence Triage 2.1
 
+The connected investigation extension accepts local TShark exports, links candidate packet/log evidence and attaches supported Firewall Change Review decisions to the same saved case. See [connected-case.md](connected-case.md) for collection, retest, coverage and revert details.
+
 A browser-only workspace for bounded, explainable triage of supplied Windows, Linux and network-device log subsets. It does not collect logs, enable audit policy, execute commands, query external threat intelligence or send evidence to a backend. Analysis runs in a dedicated Web Worker; import parsing and SHA-256 hashing occur locally.
 
 ## Supported input

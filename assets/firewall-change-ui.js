@@ -79,6 +79,18 @@
   $('fc-demo').addEventListener('click',()=>loadDemo());
   $('fc-range-demo').addEventListener('click',()=>loadDemo(true));
   document.addEventListener('site:languagechange',e=>{lang=words[e.detail.language]?e.detail.language:'en';translate();});
-  window.FirewallChangeWorkspace={run,render,reset,cancel,html,error:code=>t().errors[code],scopes:(before,after)=>{$('fc-scopes').innerHTML=[...new Set([...(before?.scopes||[]),...(after?.scopes||[])])].map(s=>'<option value="'+esc(s)+'">').join('');},isEnabled:()=>$('fc-enable').checked};
+  function stage(scenario,connection){
+    if(rows.length>=100)return false;
+    const valid=FirewallChangeReview.scenarios([scenario])[0];rows.push({...valid,_caseConnection:connection});demo=false;mode(true);notify();return true;
+  }
+  function publish(report,before,after){
+    if(!report)return;const links=[];
+    rows.forEach((row,i)=>{const connection=row._caseConnection;if(!connection||!report.flows[i])return;
+      try{const tuple=s=>JSON.stringify([s.sourceIP,s.destinationIP,s.protocol,s.port,s.sourcePort]);const same=tuple(FirewallChangeReview.scenarios([connection.scenario])[0])===tuple(report.flows[i].scenario);if(same)links.push({...connection,scenarioIndex:i});}catch(_){}
+    });
+    window.ConnectedCaseUI?.acceptPolicy(report,links,before,after);
+  }
+  window.FirewallChangeWorkspace={stage,publish,run,render,reset,cancel,html,error:code=>t().errors[code],scopes:(before,after)=>{$('fc-scopes').innerHTML=[...new Set([...(before?.scopes||[]),...(after?.scopes||[])])].map(s=>'<option value="'+esc(s)+'">').join('');},isEnabled:()=>$('fc-enable').checked};
   translate();
 })();
+

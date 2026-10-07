@@ -80,7 +80,7 @@
     const targetUser=data.TargetUserName,subjectUser=data.SubjectUserName;
     const principal=(u,d)=>known(u)?(known(d)?d+'\\':'')+u:'';
     const user=category==='security'&&[4624,4625].includes(Number(id))?principal(targetUser,data.TargetDomainName):principal(subjectUser,data.SubjectDomainName)||data.User||'';
-    const event={platform:'windows',uid:source.id+':'+(index+1),source:{id:source.id,name:source.name,row:index+1},eventId:Number(id),timestamp:ts,originalTimestamp:timeValue,host:values.host||'',provider:values.provider,channel:values.channel,recordId:values.recordId,category,data,user,sourceIP:data.IpAddress||data.SourceIp||'',image:data.Image||data.NewProcessName||data.ProcessName||'',command:data.CommandLine||data.ScriptBlockText||'',parentImage:data.ParentImage||data.ParentProcessName||'',processGuid:data.ProcessGuid||'',parentProcessGuid:data.ParentProcessGuid||''};
+    const event={platform:'windows',uid:source.id+':'+(index+1),source:{id:source.id,name:source.name,row:index+1},eventId:Number(id),timestamp:ts,originalTimestamp:timeValue,host:values.host||'',provider:values.provider,channel:values.channel,recordId:values.recordId,category,data,user,sourceIP:data.IpAddress||data.SourceIp||'',destinationIP:category==='sysmon'&&Number(id)===3?data.DestinationIp||'':'',destinationPort:category==='sysmon'&&Number(id)===3?data.DestinationPort||'':'',sourcePort:category==='sysmon'&&Number(id)===3?data.SourcePort||'':'',protocol:category==='sysmon'&&Number(id)===3?data.Protocol||'':'',image:data.Image||data.NewProcessName||data.ProcessName||'',command:data.CommandLine||data.ScriptBlockText||'',parentImage:data.ParentImage||data.ParentProcessName||'',processGuid:data.ProcessGuid||'',parentProcessGuid:data.ParentProcessGuid||''};
     return {event};
   }
   function parse(text,source={id:'source-1',name:'pasted-events'},Parser=root.DOMParser,options={}){
@@ -128,7 +128,7 @@
     if(!input||!Array.isArray(input.events)||input.events.length>MAX_EVENTS)fail('tooManyEvents');
     // Exact duplicates are retained as provenance; correlations count a single identity once.
     const seen=new Map(),duplicates=[],events=[];
-    for(const e of input.events){const key=JSON.stringify([e.host,e.provider,e.channel,e.recordId,e.eventId,e.timestamp,Object.fromEntries(Object.entries(e.data).sort(([a],[b])=>a.localeCompare(b)))]);if(e.recordId&&e.timestamp&&known(e.host)&&known(e.provider)&&known(e.channel)&&seen.has(key)){duplicates.push({uid:e.uid,duplicateOf:seen.get(key).uid,source:e.source});}else{seen.set(key,e);events.push(e);}}
+    for(const e of input.events){const key=JSON.stringify([e.platform==='tshark'?e.source.id:'',e.host,e.provider,e.channel,e.recordId,e.eventId,e.timestamp,Object.fromEntries(Object.entries(e.data).sort(([a],[b])=>a.localeCompare(b)))]);if(e.recordId&&e.timestamp&&known(e.host)&&known(e.provider)&&known(e.channel)&&seen.has(key)){duplicates.push({uid:e.uid,duplicateOf:seen.get(key).uid,source:e.source});}else{seen.set(key,e);events.push(e);}}
     events.sort((a,b)=>(a.timestamp?Date.parse(a.timestamp):Infinity)-(b.timestamp?Date.parse(b.timestamp):Infinity)||a.uid.localeCompare(b.uid));
     const findings=[];let omitted=0;const matched=new Set();
     function add(ruleId,items,details={},priority){const rule=RULES.find(r=>r.id===ruleId);items.forEach(e=>matched.add(e.uid));if(findings.length>=MAX_FINDINGS){omitted++;return;}findings.push({id:'finding-'+(findings.length+1),ruleId,priority:priority||rule.priority,technique:rule.technique,start:items.find(e=>e.timestamp)?.timestamp||null,end:[...items].reverse().find(e=>e.timestamp)?.timestamp||null,host:items[0].host,user:items[0].user,sourceIP:items[0].sourceIP,eventRefs:items.map(e=>e.uid),details});}
@@ -180,3 +180,4 @@
   }
   const api={VERSION,MAX_BYTES,MAX_EVENTS,MAX_FINDINGS,RULES,parse,analyze,normalize,timestamp,parseCSV};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.IncidentTriage=api;
 })(typeof window!=='undefined'?window:globalThis);
+

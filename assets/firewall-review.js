@@ -584,7 +584,7 @@
       change.scopes(earlier,parsed);
       const impact=await change.run(earlier,parsed,delta);
       if(ticket!==generation)return;
-      changeReport=impact;beforeModel=earlier;result=report;currentModel=parsed;comparison=delta;created=new Date().toISOString();statusKey='done';renderResults();if(changeReport)$('fc-results').scrollIntoView?.({behavior:'smooth',block:'start'});
+      changeReport=impact;beforeModel=earlier;result=report;currentModel=parsed;comparison=delta;created=new Date().toISOString();statusKey='done';renderResults();change.publish?.(changeReport,earlier,parsed);if(changeReport)$('fc-results').scrollIntoView?.({behavior:'smooth',block:'start'});
     } catch(e) {if(ticket===generation){errorCode=e.code||'unexpected';errorLine=e.line||0;statusKey='';}}
     finally {busy=false;$('fw-form').querySelectorAll('button').forEach(b=>b.disabled=false);status();}
   }
@@ -617,3 +617,4 @@
   document.addEventListener('site:languagechange',e=>{language=dictionaries[e.detail.language]?e.detail.language:'en';translate();});
   translate();
 })();
+

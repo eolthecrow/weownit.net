@@ -81,3 +81,7 @@ Static address changes show union counts and exact added/removed intervals for s
 Scenario packs: JSON schema `weownit.firewall-change.scenarios` version 2; imports accept versions 1 and 2. CSV uses headers `name,sourceIP,destinationIP,from,to,protocol,port,sourcePort,expected,expectedBefore,beforeScope,afterScope`, quoted cells and optional source port/baseline values. CSV exports neutralize spreadsheet formula prefixes; reimport restores those escaped values. Maximum scenario-file size is 128 KiB. Import validation is atomic; malformed imports preserve existing scenarios. Duplicating scenarios, filtering displayed results and switching language preserve scenario values. Report exports always contain all scenarios, regardless of the on-screen filter.
 
 The advanced synthetic lab adds subnet and deployment-port contracts to the original three-flow example. It demonstrates a mixed baseline, a permitted subnet, unintended administration access and partially satisfied deployment ports. Existing single-host demos and structural vendor coverage remain available.
+## Connected packet evidence
+
+Incident Evidence Triage can send exact IPv4 TCP/UDP evidence tuples to the scenario editor after the analyst supplies zones, policy contexts and expected behavior. Matching review results are retained in that local incident case. See [connected-case.md](connected-case.md). Static policy decisions retain all existing coverage limits.
+
