@@ -90,7 +90,7 @@
     });
     window.ConnectedCaseUI?.acceptPolicy(report,links,before,after);
   }
-  window.FirewallChangeWorkspace={stage,publish,run,render,reset,cancel,html,error:code=>t().errors[code],scopes:(before,after)=>{$('fc-scopes').innerHTML=[...new Set([...(before?.scopes||[]),...(after?.scopes||[])])].map(s=>'<option value="'+esc(s)+'">').join('');},isEnabled:()=>$('fc-enable').checked};
+  window.FirewallChangeWorkspace={stage,publish,reasonLabel:code=>t().reasons[code]||code,run,render,reset,cancel,html,error:code=>t().errors[code],scopes:(before,after)=>{$('fc-scopes').innerHTML=[...new Set([...(before?.scopes||[]),...(after?.scopes||[])])].map(s=>'<option value="'+esc(s)+'">').join('');},isEnabled:()=>$('fc-enable').checked};
   translate();
 })();
 

@@ -30,4 +30,4 @@ Run `node --test tests/*.test.cjs worker/test/*.test.mjs`. The connected-case su
 
 The pre-change main commit is `7d22312125bc3ff50429803dbc2208c5e0f0b193`, preserved remotely at `backup/tools-before-connected-case-2026-10-07`.
 
-Revert the commit titled **Connect packet evidence, incident cases and firewall change review** on main using a normal Git revert commit. This removes this feature while retaining repository history and subsequent unrelated changes. The backup branch is an exact reference for the previous site version; do not force-reset main to it after unrelated edits have been added.
+Revert the feature commit **Connect packet evidence, incident cases and firewall change review** (`581f21dceef2829669573c31f53526b1177f0733`) and its connected-case follow-up commits, newest first, using normal Git revert commits. This removes this feature while retaining repository history and subsequent unrelated changes. The backup branch is an exact reference for the previous site version; do not force-reset main to it after unrelated edits have been added.
