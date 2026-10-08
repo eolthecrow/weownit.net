@@ -1,71 +1,43 @@
 {
   "schema": "weownit.webcheck.preview.v2",
   "domain": "weownit.net",
-  "generatedAt": "2026-10-08T20:38:36Z",
+  "generatedAt": "2026-10-08T20:42:20Z",
   "checks": {
     "dns": {
-      "state": "ok",
-      "checkedAt": "2026-10-08T20:38:17Z",
+      "state": "unavailable",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "source": "https://web-check.xyz/api/dns?url=https%3A%2F%2Fweownit.net",
-      "data": {
-        "ipv4": [
-          "104.21.85.173",
-          "172.67.208.136"
-        ],
-        "ipv6": [
-          "2606:4700:3033::6815:55ad",
-          "2606:4700:3033::ac43:d088"
-        ],
-        "nameservers": [
-          "braden.ns.cloudflare.com",
-          "ainsley.ns.cloudflare.com"
-        ]
-      }
+      "data": null,
+      "error": "HTTPError"
     },
     "tls": {
-      "state": "ok",
-      "checkedAt": "2026-10-08T20:38:17Z",
+      "state": "unavailable",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "source": "https://web-check.xyz/api/ssl?url=https%3A%2F%2Fweownit.net",
-      "data": {
-        "subject": "weownit.net",
-        "issuer": "Let's Encrypt",
-        "validFrom": "2026-09-28T12:39:35Z",
-        "validTo": "2026-12-27T12:39:34Z",
-        "verifiedAtCapture": true
-      }
+      "data": null,
+      "error": "HTTPError"
     },
     "headers": {
-      "state": "challenge",
-      "checkedAt": "2026-10-08T20:38:17Z",
+      "state": "unavailable",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "source": "https://web-check.xyz/api/headers?url=https%3A%2F%2Fweownit.net",
-      "data": {
-        "server": "cloudflare",
-        "securityHeaders": null
-      }
+      "data": null,
+      "error": "HTTPError"
     },
     "connection": {
-      "state": "ok",
-      "checkedAt": "2026-10-08T20:38:17Z",
+      "state": "unavailable",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "source": "https://web-check.xyz/api/tls-connection?url=https%3A%2F%2Fweownit.net",
-      "data": {
-        "protocol": "TLSv1.3",
-        "cipher": "TLS_AES_256_GCM_SHA384",
-        "authorized": true,
-        "observedVersions": [
-          "TLSv1",
-          "TLSv1.1",
-          "TLSv1.2",
-          "TLSv1.3"
-        ]
-      }
+      "data": null,
+      "error": "HTTPError"
     },
     "records": {
       "state": "ok",
-      "checkedAt": "2026-10-08T20:38:36Z",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "data": {
         "mx": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:18Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=15&do=true&cd=false",
           "records": [
             "18 route3.mx.cloudflare.net.",
@@ -76,7 +48,7 @@
         },
         "txt": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:18Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=16&do=true&cd=false",
           "records": [
             "v=spf1 include:_spf.mx.cloudflare.net ~all"
@@ -85,14 +57,14 @@
         },
         "dmarc": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:18Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=_dmarc.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "caa": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:36Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=net&type=257&do=true&cd=false",
           "records": [],
           "authenticated": true,
@@ -101,21 +73,21 @@
         },
         "dnskey": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:18Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=48&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "ds": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:18Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=43&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "validatedA": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=1&do=true&cd=false",
           "records": [
             "104.21.85.173",
@@ -125,49 +97,49 @@
         },
         "mtaSts": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=_mta-sts.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "tlsRpt": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=_smtp._tls.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "dkim:selector1": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=selector1._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "dkim:selector2": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=selector2._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "dkim:google": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:24Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=google._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "dkim:default": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:30Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=default._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
         },
         "dkim:dkim": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:38:30Z",
+          "checkedAt": "2026-10-08T20:42:20Z",
           "source": "https://dns.google/resolve?name=dkim._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
           "authenticated": false
@@ -176,42 +148,12 @@
     },
     "mtaPolicy": {
       "state": "not-published",
-      "checkedAt": "2026-10-08T20:38:36Z",
+      "checkedAt": "2026-10-08T20:42:20Z",
       "source": "https://mta-sts.weownit.net/.well-known/mta-sts.txt",
       "data": null
     }
   },
   "baseline": {
-    "dns": {
-      "ipv4": [
-        "104.21.85.173",
-        "172.67.208.136"
-      ],
-      "ipv6": [
-        "2606:4700:3033::6815:55ad",
-        "2606:4700:3033::ac43:d088"
-      ],
-      "nameservers": [
-        "braden.ns.cloudflare.com",
-        "ainsley.ns.cloudflare.com"
-      ]
-    },
-    "tls": {
-      "issuer": "Let's Encrypt",
-      "validTo": "2026-12-27T12:39:34Z",
-      "verifiedAtCapture": true
-    },
-    "connection": {
-      "protocol": "TLSv1.3",
-      "cipher": "TLS_AES_256_GCM_SHA384",
-      "authorized": true,
-      "observedVersions": [
-        "TLSv1",
-        "TLSv1.1",
-        "TLSv1.2",
-        "TLSv1.3"
-      ]
-    },
     "mx": [
       "18 route3.mx.cloudflare.net.",
       "46 route1.mx.cloudflare.net.",
@@ -233,14 +175,18 @@
   },
   "history": [
     {
+      "capturedAt": "2026-10-08T20:38:36Z",
+      "changes": []
+    },
+    {
       "capturedAt": "2026-10-08T20:17:54Z",
       "changes": []
     }
   ],
   "comparison": {
     "state": "compared",
-    "previousAt": "2026-10-08T20:17:54Z",
+    "previousAt": "2026-10-08T20:38:36Z",
     "changes": [],
-    "comparableChecks": 2
+    "comparableChecks": 12
   }
 }
