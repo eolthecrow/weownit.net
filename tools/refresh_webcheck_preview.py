@@ -8,6 +8,8 @@ import concurrent.futures
 import datetime as dt
 import json
 import pathlib
+import re
+import shlex
 import urllib.parse
 import urllib.request
 
@@ -62,11 +64,16 @@ def normalize(kind, raw):
         selected = ["strict-transport-security", "content-security-policy", "x-content-type-options", "x-frame-options", "referrer-policy", "permissions-policy"]
         # A Cloudflare challenge has its own headers. Never score them as site headers.
         return "challenge" if challenge else "ok", {"server": bounded_text(headers.get("server"), 100), "securityHeaders": None if challenge else {key: bounded_text(headers.get(key), 4000) or None for key in selected}}
+    if kind == "connection":
+        if raw.get("protocol") not in ["TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"]:
+            raise ValueError("No negotiated TLS protocol")
+        cipher = raw.get("cipher") or {}
+        return "ok", {"protocol": raw["protocol"], "cipher": bounded_text(cipher.get("standardName") or cipher.get("name"), 100), "authorized": raw.get("authorized") is True, "observedVersions": [v for v in raw.get("versions", []) if v in ["TLSv1", "TLSv1.1", "TLSv1.2", "TLSv1.3"]]}
     raise ValueError("Unknown preview check")
 
 
 def capture(kind):
-    endpoint = {"dns": "dns", "tls": "ssl", "headers": "headers"}[kind]
+    endpoint = {"dns": "dns", "tls": "ssl", "headers": "headers", "connection": "tls-connection"}[kind]
     url = "https://web-check.xyz/api/" + endpoint + "?" + urllib.parse.urlencode({"url": "https://" + DOMAIN})
     result = {"state": "unavailable", "checkedAt": utc_now(), "source": url, "data": None}
     try:
@@ -84,12 +91,135 @@ def capture(kind):
     return kind, result
 
 
+def dns_query(name, record_type):
+    """A validating public resolver; NXDOMAIN/NODATA differ from request failure."""
+    url = "https://dns.google/resolve?" + urllib.parse.urlencode({"name": name, "type": record_type, "do": "true", "cd": "false"})
+    result = {"state": "unavailable", "checkedAt": utc_now(), "source": url, "records": [], "authenticated": False}
+    try:
+        request = urllib.request.Request(url, headers={"User-Agent": "weownit-public-overview/2.0"})
+        with urllib.request.urlopen(request, timeout=18) as response:
+            body = response.read(262145)
+            if len(body) > 262144:
+                raise ValueError("DNS response too large")
+            raw = json.loads(body)
+        if raw.get("Status") not in (0, 3):
+            raise ValueError("Resolver did not return a usable answer")
+        answers = [x for x in raw.get("Answer", []) if x.get("type") == record_type]
+        values = []
+        for answer in answers[:32]:
+            value = bounded_text(answer.get("data"), 4000)
+            if record_type == 16 and value.startswith('"'):
+                value = "".join(shlex.split(value))
+            values.append(value)
+        result.update(state="ok", records=sorted(set(values)), authenticated=raw.get("AD") is True)
+    except Exception as exc:
+        result["error"] = type(exc).__name__
+    result["checkedAt"] = utc_now()
+    return result
+
+
+def capture_records():
+    queries = {"mx": (DOMAIN, 15), "txt": (DOMAIN, 16), "dmarc": ("_dmarc." + DOMAIN, 16), "caa": (DOMAIN, 257), "dnskey": (DOMAIN, 48), "ds": (DOMAIN, 43), "validatedA": (DOMAIN, 1), "mtaSts": ("_mta-sts." + DOMAIN, 16), "tlsRpt": ("_smtp._tls." + DOMAIN, 16)}
+    # Selectors are explicitly scoped. A negative result is never "no DKIM".
+    queries.update({"dkim:" + selector: (selector + "._domainkey." + DOMAIN, 16) for selector in ["selector1", "selector2", "google", "default", "dkim"]})
+    with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
+        results = dict(zip(queries, pool.map(lambda q: dns_query(*q), queries.values())))
+    caa = results["caa"]
+    caa["effectiveDomain"] = DOMAIN
+    if caa["state"] == "ok" and not caa["records"]:
+        parent = dns_query("net", 257)
+        caa = {**parent, "effectiveDomain": "net", "apexSource": caa["source"]}
+        results["caa"] = caa
+    return {"state": "ok" if any(v["state"] == "ok" for v in results.values()) else "unavailable", "checkedAt": utc_now(), "data": results}
+
+
+def capture_mta_policy(records):
+    result = {"state": "unavailable", "checkedAt": utc_now(), "source": "https://mta-sts." + DOMAIN + "/.well-known/mta-sts.txt", "data": None}
+    marker = records.get("data", {}).get("mtaSts", {})
+    if marker.get("state") == "ok" and not any(x.startswith("v=STSv1;") for x in marker.get("records", [])):
+        result["state"] = "not-published"
+        return result
+    if marker.get("state") != "ok":
+        return result
+    try:
+        # No retries or alternative user agents when an access challenge is returned.
+        request = urllib.request.Request(result["source"], headers={"User-Agent": "weownit-public-overview/2.0"})
+        with urllib.request.urlopen(request, timeout=18) as response:
+            if response.headers.get("cf-mitigated") == "challenge":
+                result["state"] = "challenge"
+                return result
+            if not response.headers.get("content-type", "").startswith("text/plain"):
+                raise ValueError("Not a plain text policy")
+            body = response.read(16385).decode("utf-8")
+            if len(body) > 16384:
+                raise ValueError("Policy too large")
+        fields = {}
+        for line in body.splitlines():
+            key, sep, value = line.partition(":")
+            if sep:
+                fields.setdefault(key.strip().lower(), []).append(value.strip())
+        if fields.get("version") != ["STSv1"] or fields.get("mode") not in [["enforce"], ["testing"], ["none"]] or not fields.get("max_age", [""])[0].isdigit() or not fields.get("mx"):
+            raise ValueError("Incomplete MTA-STS policy")
+        result.update(state="ok", data={"mode": fields["mode"][0], "maxAge": int(fields["max_age"][0]), "mx": fields["mx"][:32]})
+    except Exception as exc:
+        result["error"] = type(exc).__name__
+    result["checkedAt"] = utc_now()
+    return result
+
+
+def observations(checks):
+    """Stable evidence only: volatile resolver TTLs and request times are excluded."""
+    values = {}
+    for key in ["dns", "tls", "headers", "connection"]:
+        item = checks.get(key, {})
+        if item.get("state") == "ok":
+            data = item["data"]
+            if key == "tls":
+                data = {k: data[k] for k in ["issuer", "validTo", "verifiedAtCapture"]}
+            values[key] = data
+    for key, item in checks.get("records", {}).get("data", {}).items():
+        if item.get("state") == "ok":
+            if key not in ["dnskey", "ds", "validatedA"]:
+                values[key] = item["records"]
+            elif key == "validatedA":
+                values["dnssecAuthenticated"] = item["authenticated"]
+    policy = checks.get("mtaPolicy", {})
+    if policy.get("state") == "ok":
+        values["mtaPolicy"] = policy["data"]
+    return values
+
+
+def add_history(snapshot, previous):
+    current = observations(snapshot["checks"])
+    snapshot["baseline"] = current
+    snapshot["history"] = []
+    if not isinstance(previous, dict) or previous.get("domain") != DOMAIN:
+        snapshot["comparison"] = {"state": "baseline", "changes": []}
+        return
+    old = previous.get("baseline") or observations(previous.get("checks", {}))
+    changed = [{"check": key, "before": old[key], "after": current[key]} for key in current if key in old and old[key] != current[key]]
+    snapshot["comparison"] = {"state": "compared", "previousAt": previous.get("generatedAt"), "changes": changed, "comparableChecks": len(set(current) & set(old))}
+    entry = {"capturedAt": previous.get("generatedAt"), "changes": previous.get("comparison", {}).get("changes", [])[:20]}
+    snapshot["history"] = ([entry] + previous.get("history", []))[:7]
+
+
 def main():
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool:
-        checks = dict(pool.map(capture, ["dns", "tls", "headers"]))
+    with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
+        futures = {kind: pool.submit(capture, kind) for kind in ["dns", "tls", "headers", "connection"]}
+        records_future = pool.submit(capture_records)
+        checks = {kind: future.result()[1] for kind, future in futures.items()}
+        checks["records"] = records_future.result()
+    checks["mtaPolicy"] = capture_mta_policy(checks["records"])
     if all(check["state"] == "unavailable" for check in checks.values()):
         raise SystemExit("No usable observation; existing preview was preserved.")
-    snapshot = {"schema": "weownit.webcheck.preview.v1", "domain": DOMAIN, "generatedAt": utc_now(), "checks": checks}
+    previous = None
+    if OUTPUT.exists():
+        try:
+            previous = json.loads(OUTPUT.read_text(encoding="utf-8"))
+        except (ValueError, OSError):
+            pass
+    snapshot = {"schema": "weownit.webcheck.preview.v2", "domain": DOMAIN, "generatedAt": utc_now(), "checks": checks}
+    add_history(snapshot, previous)
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     temporary = OUTPUT.with_suffix(".tmp")
     temporary.write_text(json.dumps(snapshot, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")

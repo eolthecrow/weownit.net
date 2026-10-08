@@ -1,0 +1,52 @@
+name: Refresh public Web-Check overview
+
+on:
+  schedule:
+    - cron: '17 2 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'tools/refresh_webcheck_preview.py'
+      - 'tests/test_webcheck_preview.py'
+      - '.github/workflows/refresh-webcheck-preview.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: webcheck-public-overview
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate evidence handling
+        run: python -m unittest discover -s tests -p 'test_webcheck_preview.py' -v
+      - name: Collect fixed-domain public evidence
+        run: python tools/refresh_webcheck_preview.py
+      - name: Publish snapshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add assets/webcheck-weownit-snapshot.json
+          if git diff --cached --quiet; then
+            echo 'No snapshot changes.'
+            exit 0
+          fi
+          git commit -m 'Refresh weownit.net public security observations'
+          git pull --rebase origin main
+          git push origin HEAD:main

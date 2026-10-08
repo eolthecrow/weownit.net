@@ -1,4 +1,6 @@
 import importlib.util
+import io
+import json
 import pathlib
 import unittest
 from unittest.mock import patch
@@ -45,6 +47,44 @@ class PreviewEvidenceTests(unittest.TestCase):
     def test_failed_upstream_response_is_rejected(self):
         with self.assertRaises(ValueError):
             preview.normalize("dns", {"error": "upstream timeout"})
+
+    def test_dns_txt_preserves_unquoted_spaces(self):
+        answer = {"Status": 0, "Answer": [{"type": 16, "data": "v=spf1 include:example.net ~all"}]}
+        with patch.object(preview.urllib.request, "urlopen", return_value=io.BytesIO(json.dumps(answer).encode())):
+            result = preview.dns_query("weownit.net", 16)
+        self.assertEqual(result["records"], ["v=spf1 include:example.net ~all"])
+
+    def test_dns_txt_joins_quoted_chunks(self):
+        answer = {"Status": 0, "Answer": [{"type": 16, "data": '"v=spf1 " "include:example.net ~all"'}]}
+        with patch.object(preview.urllib.request, "urlopen", return_value=io.BytesIO(json.dumps(answer).encode())):
+            result = preview.dns_query("weownit.net", 16)
+        self.assertEqual(result["records"], ["v=spf1 include:example.net ~all"])
+
+    def test_resolver_failure_is_not_an_absent_record(self):
+        with patch.object(preview.urllib.request, "urlopen", return_value=io.BytesIO(b'{"Status":2}')):
+            result = preview.dns_query("weownit.net", 16)
+        self.assertEqual(result["state"], "unavailable")
+
+    def test_successful_empty_dns_answer_is_distinct(self):
+        with patch.object(preview.urllib.request, "urlopen", return_value=io.BytesIO(b'{"Status":0,"AD":false}')):
+            result = preview.dns_query("weownit.net", 48)
+        self.assertEqual(result["state"], "ok")
+        self.assertEqual(result["records"], [])
+        self.assertFalse(result["authenticated"])
+
+    def test_partial_failure_does_not_become_a_configuration_removal(self):
+        old = {"domain": preview.DOMAIN, "generatedAt": "2026-10-07T00:00:00Z", "checks": {"dns": {"state": "ok", "data": {"ipv4": ["1.1.1.1"]}}}}
+        current = {"checks": {"dns": {"state": "unavailable", "data": None}}}
+        preview.add_history(current, old)
+        self.assertEqual(current["comparison"]["changes"], [])
+        self.assertEqual(current["comparison"]["comparableChecks"], 0)
+
+    def test_real_change_is_recorded_without_timestamps(self):
+        old = {"domain": preview.DOMAIN, "generatedAt": "2026-10-07T00:00:00Z", "checks": {"dns": {"state": "ok", "checkedAt": "earlier", "data": {"ipv4": ["1.1.1.1"]}}}}
+        current = {"checks": {"dns": {"state": "ok", "checkedAt": "later", "data": {"ipv4": ["8.8.8.8"]}}}}
+        preview.add_history(current, old)
+        self.assertEqual(current["comparison"]["changes"][0]["check"], "dns")
+        self.assertNotIn("checkedAt", current["comparison"]["changes"][0]["after"])
 
 
 if __name__ == "__main__":

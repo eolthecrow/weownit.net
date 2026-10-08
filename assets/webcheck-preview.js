@@ -1,82 +1,163 @@
-/* Cached public Web-Check observations. Opening this page starts no external scan. */
+/* Public, dated evidence for the fixed weownit.net target; no scan on page load. */
 (() => {
-  "use strict";
-  const root = document.getElementById("webcheck-preview");
+  'use strict';
+  const root = document.getElementById('webcheck-preview');
   if (!root) return;
-  const translations = {
-    en: {title:"weownit.net · public results",tag:"Recorded preview",loading:"Loading recorded results…",checked:"Captured",unavailable:"The recorded preview is unavailable. You can still open the full analysis.",note:"Recorded Web-Check observations, not a live scan or a security score.",stale:"This snapshot is over 48 hours old. Open Web-Check for current results.",future:"This snapshot’s timestamp could not be verified. Open Web-Check for current results.",labels:["DNS addresses","TLS certificate","Public edge","HTTP headers"],verified:"Verified at capture",unverified:"Not verified at capture",expired:"Recorded certificate expired",limited:"Cloudflare challenge",unknown:"Unavailable",evidence:"Evidence & sources",ipv4:"IPv4",ipv6:"IPv6",nameservers:"Nameservers",issuer:"Certificate issuer",expires:"Certificate expiry",edge:"Observed server",challenge:"Web-Check received a Cloudflare challenge. Its headers describe the challenge, so the website’s security headers were not assessed.",headers:"Recorded response headers",scope:"The public edge does not identify the origin server.",sources:"Web-Check sources",full:"Open full weownit.net analysis ↗",privacy:"The full analysis opens an external service in a new tab."},
-    ro: {title:"weownit.net · rezultate publice",tag:"Previzualizare salvată",loading:"Se încarcă rezultatele salvate…",checked:"Verificat la",unavailable:"Previzualizarea salvată nu este disponibilă. Poți deschide în continuare analiza completă.",note:"Observații Web-Check salvate; nu reprezintă o scanare live sau un scor de securitate.",stale:"Acest instantaneu are peste 48 de ore. Deschide Web-Check pentru rezultate actualizate.",future:"Data acestui instantaneu nu a putut fi verificată. Deschide Web-Check pentru rezultate actualizate.",labels:["Adrese DNS","Certificat TLS","Infrastructură publică","Antete HTTP"],verified:"Validat la verificare",unverified:"Nevalidat la verificare",expired:"Certificatul salvat a expirat",limited:"Verificare Cloudflare",unknown:"Indisponibil",evidence:"Dovezi și surse",ipv4:"IPv4",ipv6:"IPv6",nameservers:"Servere DNS",issuer:"Emitent certificat",expires:"Expirare certificat",edge:"Server observat",challenge:"Web-Check a primit pagina de verificare Cloudflare. Antetele sale descriu acea pagină, astfel că antetele de securitate ale site-ului nu au fost evaluate.",headers:"Antete de răspuns salvate",scope:"Infrastructura publică nu identifică serverul de origine.",sources:"Surse Web-Check",full:"Deschide analiza completă weownit.net ↗",privacy:"Analiza completă deschide un serviciu extern într-o filă nouă."},
-    fr: {title:"weownit.net · résultats publics",tag:"Aperçu enregistré",loading:"Chargement des résultats enregistrés…",checked:"Vérifié le",unavailable:"L’aperçu enregistré est indisponible. Vous pouvez ouvrir l’analyse complète.",note:"Observations Web-Check enregistrées ; ni analyse en direct ni score de sécurité.",stale:"Cet aperçu date de plus de 48 heures. Ouvrez Web-Check pour des résultats à jour.",future:"La date de cet aperçu n’a pas pu être vérifiée. Ouvrez Web-Check pour des résultats à jour.",labels:["Adresses DNS","Certificat TLS","Infrastructure publique","En-têtes HTTP"],verified:"Validé lors du contrôle",unverified:"Non validé lors du contrôle",expired:"Certificat enregistré expiré",limited:"Vérification Cloudflare",unknown:"Indisponible",evidence:"Preuves et sources",ipv4:"IPv4",ipv6:"IPv6",nameservers:"Serveurs DNS",issuer:"Émetteur du certificat",expires:"Expiration du certificat",edge:"Serveur observé",challenge:"Web-Check a reçu la page de vérification Cloudflare. Ses en-têtes décrivent cette page ; les en-têtes de sécurité du site n’ont donc pas été évalués.",headers:"En-têtes de réponse enregistrés",scope:"L’infrastructure publique n’identifie pas le serveur d’origine.",sources:"Sources Web-Check",full:"Ouvrir l’analyse complète weownit.net ↗",privacy:"L’analyse complète ouvre un service externe dans un nouvel onglet."}
+  const fixed = 'weownit.net';
+  const liveSnapshot = 'https://raw.githubusercontent.com/eolthecrow/weownit.net/main/assets/webcheck-weownit-snapshot.json';
+  const copy = {
+    en: {title:'weownit.net · security overview',tag:'Public evidence',loading:'Loading recorded results…',checked:'Captured',unavailable:'Results are unavailable. You can still open Web-Check.',note:'Dated observations of the public edge. This is not a live scan, an origin assessment or a security score.',stale:'These results are over 48 hours old. Some observations may have changed.',future:'The capture timestamp could not be verified.',labels:['DNS protection','TLS certificate','Email protection','HTTP headers'],verified:'Verified at capture',unverified:'Not verified at capture',expired:'Recorded certificate expired',limited:'Cloudflare challenge',unknown:'Not assessed',evidence:'Technical evidence & sources',report:'View security report',changes:'Changes & history',exportJson:'Export JSON',exportHtml:'Export report',ipv4:'IPv4',ipv6:'IPv6',nameservers:'Nameservers',issuer:'Certificate issuer',expires:'Certificate expiry',edge:'Observed server',challenge:'A Cloudflare challenge was returned. Its headers were discarded; the ordinary website response was not assessed.',headers:'Recorded response headers',scope:'The public edge does not identify the origin server.',sources:'Web-Check sources',full:'Open full weownit.net analysis ↗',privacy:'The full analysis opens an external service in a new tab.',remote:'Latest published snapshot · daily refresh scheduled',local:'Site snapshot · latest published results could not be loaded',confirmed:'Confirmed',attention:'Needs review',unassessed:'Not assessed',recommend:'Recommended action',top:'What matters',none:'No change in comparable observations. This does not prove that the site is unchanged.',baseline:'First observation: a comparison baseline is being established.',compared:'Compared with',history:'Previous captures',source:'Source',noHistory:'History will accumulate with each refresh.',selectorNote:'Only selector1, selector2, google, default and dkim were checked. Missing results do not prove that DKIM is absent.'},
+    ro: {title:'weownit.net · profil de securitate',tag:'Dovezi publice',loading:'Se încarcă rezultatele salvate…',checked:'Verificat la',unavailable:'Rezultatele nu sunt disponibile. Poți deschide Web-Check.',note:'Observații datate ale infrastructurii publice. Nu reprezintă o scanare live, o evaluare a serverului de origine sau un scor de securitate.',stale:'Rezultatele au peste 48 de ore. Unele observații se pot fi schimbat.',future:'Data verificării nu a putut fi validată.',labels:['Protecție DNS','Certificat TLS','Protecție email','Antete HTTP'],verified:'Validat la verificare',unverified:'Nevalidat la verificare',expired:'Certificatul salvat a expirat',limited:'Verificare Cloudflare',unknown:'Neverificat',evidence:'Dovezi tehnice și surse',report:'Vezi raportul de securitate',changes:'Modificări și istoric',exportJson:'Export JSON',exportHtml:'Export raport',ipv4:'IPv4',ipv6:'IPv6',nameservers:'Servere DNS',issuer:'Emitent certificat',expires:'Expirare certificat',edge:'Server observat',challenge:'A fost returnată pagina de verificare Cloudflare. Antetele ei au fost excluse; răspunsul obișnuit al site-ului nu a fost evaluat.',headers:'Antete de răspuns salvate',scope:'Infrastructura publică nu identifică serverul de origine.',sources:'Surse Web-Check',full:'Deschide analiza completă weownit.net ↗',privacy:'Analiza completă deschide un serviciu extern într-o filă nouă.',remote:'Ultimul instantaneu publicat · actualizare zilnică programată',local:'Instantaneu din site · ultimele rezultate publicate nu au putut fi încărcate',confirmed:'Confirmat',attention:'Necesită atenție',unassessed:'Neverificat',recommend:'Acțiune recomandată',top:'Ce merită urmărit',none:'Nicio modificare în observațiile comparabile. Aceasta nu dovedește că site-ul este neschimbat.',baseline:'Prima observație: se stabilește baza pentru comparații.',compared:'Comparat cu',history:'Verificări anterioare',source:'Sursă',noHistory:'Istoricul se acumulează la fiecare actualizare.',selectorNote:'Au fost verificați doar selector1, selector2, google, default și dkim. Lipsa rezultatelor nu dovedește absența DKIM.'},
+    fr: {title:'weownit.net · profil de sécurité',tag:'Preuves publiques',loading:'Chargement des résultats enregistrés…',checked:'Vérifié le',unavailable:'Les résultats sont indisponibles. Vous pouvez ouvrir Web-Check.',note:'Observations datées de l’infrastructure publique. Ni analyse en direct, ni évaluation du serveur d’origine, ni score de sécurité.',stale:'Ces résultats datent de plus de 48 heures. Certaines observations peuvent avoir changé.',future:'La date du contrôle n’a pas pu être validée.',labels:['Protection DNS','Certificat TLS','Protection email','En-têtes HTTP'],verified:'Validé lors du contrôle',unverified:'Non validé lors du contrôle',expired:'Certificat enregistré expiré',limited:'Vérification Cloudflare',unknown:'Non évalué',evidence:'Preuves techniques et sources',report:'Voir le rapport de sécurité',changes:'Modifications et historique',exportJson:'Exporter JSON',exportHtml:'Exporter le rapport',ipv4:'IPv4',ipv6:'IPv6',nameservers:'Serveurs DNS',issuer:'Émetteur du certificat',expires:'Expiration du certificat',edge:'Serveur observé',challenge:'Une page de vérification Cloudflare a été reçue. Ses en-têtes ont été exclus ; la réponse normale du site n’a pas été évaluée.',headers:'En-têtes de réponse enregistrés',scope:'L’infrastructure publique n’identifie pas le serveur d’origine.',sources:'Sources Web-Check',full:'Ouvrir l’analyse complète weownit.net ↗',privacy:'L’analyse complète ouvre un service externe dans un nouvel onglet.',remote:'Dernier aperçu publié · actualisation quotidienne programmée',local:'Aperçu du site · les derniers résultats publiés n’ont pas pu être chargés',confirmed:'Confirmé',attention:'À examiner',unassessed:'Non évalué',recommend:'Action recommandée',top:'Points à suivre',none:'Aucun changement dans les observations comparables. Cela ne prouve pas que le site est inchangé.',baseline:'Première observation : établissement de la base de comparaison.',compared:'Comparé au',history:'Contrôles précédents',source:'Source',noHistory:'L’historique s’enrichit à chaque actualisation.',selectorNote:'Seuls selector1, selector2, google, default et dkim ont été testés. Leur absence ne prouve pas l’absence de DKIM.'}
   };
-  let snapshot = null, failed = false;
+  // Each message explains the observation and gives a proportionate next step.
+  const messages = {
+    dnssecYes: ['The resolver authenticated the DNS answer with DNSSEC.','Resolverul a autentificat răspunsul DNS prin DNSSEC.','Le résolveur a authentifié la réponse DNS avec DNSSEC.'],
+    dnssecNo: ['The resolver did not authenticate this answer. DNSKEY/DS presence alone does not validate the chain.','Resolverul nu a autentificat acest răspuns. Prezența DNSKEY/DS nu validează singură lanțul.','Le résolveur n’a pas authentifié cette réponse. La présence DNSKEY/DS ne valide pas la chaîne.'],
+    dnssecAction: ['Review DNSSEC in the authoritative DNS provider and the registrar; verify the DS chain.','Verifică DNSSEC la furnizorul DNS și registrar; validează lanțul DS.','Vérifier DNSSEC chez le fournisseur DNS et le bureau d’enregistrement, puis la chaîne DS.'],
+    caaYes: ['CAA records restrict which certificate authorities may issue certificates. Syntax and every issuance path need separate validation.','Înregistrările CAA limitează autoritățile care pot emite certificate. Sintaxa și toate căile de emitere necesită validare separată.','Les enregistrements CAA limitent les autorités de certification. La syntaxe et tous les chemins d’émission doivent être validés séparément.'],
+    caaNo: ['No applicable CAA record was returned for the domain or its parent.','Nu a fost returnată o înregistrare CAA aplicabilă pentru domeniu sau părintele său.','Aucun enregistrement CAA applicable n’a été retourné pour le domaine ou son parent.'],
+    caaAction: ['Restrict issuance to the certificate authorities you use; include wildcard requirements.','Restricționează emiterea la autoritățile folosite; verifică și cerințele wildcard.','Limiter l’émission aux autorités utilisées, y compris pour les certificats génériques.'],
+    tlsYes: ['The certificate was validated at capture. Expiry and issuer are recorded below.','Certificatul a fost validat la captură. Expirarea și emitentul sunt înregistrate mai jos.','Le certificat a été validé lors du contrôle. L’expiration et l’émetteur figurent ci-dessous.'],
+    tlsBad: ['The recorded certificate needs review: verification failed, it has expired, or it expires within 30 days.','Certificatul înregistrat necesită atenție: validare eșuată, expirat sau expiră în 30 de zile.','Le certificat nécessite un examen : validation échouée, expiration passée ou dans les 30 jours.'],
+    tlsAction: ['Check automatic renewal and the certificate chain on the public endpoint.','Verifică reînnoirea automată și lanțul certificatului pe endpointul public.','Vérifier le renouvellement automatique et la chaîne du certificat public.'],
+    connectionYes: ['This is the negotiated TLS protocol and cipher, not proof that all older versions are disabled.','Acesta este protocolul TLS și cifrul negociat; nu dovedește dezactivarea tuturor versiunilor vechi.','Il s’agit du protocole TLS et du chiffrement négociés, sans preuve de désactivation des versions anciennes.'],
+    connectionOld: ['An obsolete TLS version was observed in an accepted connection.','A fost observată o versiune TLS învechită într-o conexiune acceptată.','Une version TLS obsolète a été observée dans une connexion acceptée.'],
+    connectionAction: ['Review the edge TLS policy. Prefer TLS 1.2/1.3 and separately validate legacy-protocol rejection.','Verifică politica TLS la edge. Preferă TLS 1.2/1.3 și validează separat respingerea protocoalelor vechi.','Vérifier la politique TLS publique. Privilégier TLS 1.2/1.3 et valider séparément le refus des anciens protocoles.'],
+    mxYes: ['Public mail routing records were returned; delivery was not tested.','Au fost returnate înregistrări publice de rutare email; livrarea nu a fost testată.','Des enregistrements de routage email ont été retournés ; la livraison n’a pas été testée.'],
+    mxNo: ['No MX record was returned. This can be intentional for a domain that does not receive mail.','Nu a fost returnată o înregistrare MX. Poate fi intenționat pentru un domeniu care nu primește email.','Aucun enregistrement MX n’a été retourné. Cela peut être volontaire pour un domaine sans réception email.'],
+    mxAction: ['Confirm the intended mail provider or the deliberate no-mail policy.','Confirmă furnizorul de email sau politica intenționată fără email.','Confirmer le fournisseur email ou la politique volontaire sans email.'],
+    spfYes: ['One SPF record was observed. Recursive lookup limits and authorized senders were not fully validated.','A fost observată o singură înregistrare SPF. Limita căutărilor recursive și expeditorii autorizați nu au fost validați complet.','Un seul enregistrement SPF a été observé. Les recherches récursives et les expéditeurs autorisés n’ont pas été entièrement validés.'],
+    spfBad: ['SPF is absent, duplicated, or ends in a permissive all mechanism; review the published evidence.','SPF lipsește, este duplicat sau include un mecanism all permisiv; verifică dovezile publicate.','SPF est absent, dupliqué ou contient un mécanisme all permissif ; examiner les preuves.'],
+    spfAction: ['Maintain one SPF record for actual senders. Validate syntax and the ten-lookup limit before changing the policy.','Menține un singur SPF pentru expeditorii reali. Validează sintaxa și limita de zece căutări înainte de modificare.','Conserver un seul SPF pour les expéditeurs réels. Valider la syntaxe et la limite de dix recherches avant modification.'],
+    dmarcYes: ['DMARC publishes quarantine/reject for the full declared percentage. This does not prove SPF/DKIM alignment for messages.','DMARC publică quarantine/reject pentru întregul procent declarat. Nu dovedește alinierea SPF/DKIM a mesajelor.','DMARC publie quarantine/reject pour tout le pourcentage déclaré. Cela ne prouve pas l’alignement SPF/DKIM des messages.'],
+    dmarcBad: ['DMARC enforcement is absent, incomplete, or monitoring-only.','Aplicarea DMARC lipsește, este incompletă sau funcționează doar în monitorizare.','L’application DMARC est absente, incomplète ou limitée à la surveillance.'],
+    dmarcAction: ['Review reports and sender alignment before moving to quarantine/reject at 100%.','Analizează rapoartele și alinierea expeditorilor înainte de quarantine/reject la 100%.','Examiner les rapports et l’alignement avant de passer à quarantine/reject à 100 %.'],
+    dkimYes: ['A public DKIM key was found among the tested selectors. Signing and message alignment were not tested.','A fost găsită o cheie DKIM publică între selectorii verificați. Semnarea și alinierea mesajelor nu au fost testate.','Une clé DKIM publique a été trouvée parmi les sélecteurs testés. La signature et l’alignement n’ont pas été testés.'],
+    dkimNo: ['No usable key was found among the tested selectors. Other selectors may be in use.','Nu a fost găsită o cheie utilizabilă între selectorii verificați. Pot fi folosiți alți selectori.','Aucune clé exploitable parmi les sélecteurs testés. D’autres sélecteurs peuvent être utilisés.'],
+    dkimAction: ['Obtain the active selectors from the mail provider and verify a signed message.','Obține selectorii activi de la furnizorul de email și verifică un mesaj semnat.','Obtenir les sélecteurs actifs du fournisseur email et vérifier un message signé.'],
+    mtaYes: ['An HTTPS MTA-STS policy in enforce mode was retrieved. MX coverage and delivery behavior need separate testing.','A fost preluată o politică HTTPS MTA-STS în modul enforce. Acoperirea MX și livrarea necesită teste separate.','Une politique HTTPS MTA-STS en mode enforce a été obtenue. La couverture MX et la livraison nécessitent des tests séparés.'],
+    mtaBad: ['No enforcing MTA-STS policy was observed. Applicability depends on the receiving mail provider.','Nu a fost observată o politică MTA-STS enforce. Aplicabilitatea depinde de furnizorul de email care primește mesajele.','Aucune politique MTA-STS enforce observée. L’applicabilité dépend du fournisseur de réception email.'],
+    mtaAction: ['Confirm provider support and publish a matching HTTPS policy before enforcement.','Confirmă suportul furnizorului și publică o politică HTTPS corespunzătoare înainte de aplicare.','Confirmer le support du fournisseur et publier une politique HTTPS adaptée avant application.'],
+    rptYes: ['A TLS reporting record was observed; report delivery and receiver validity were not tested.','A fost observată o înregistrare TLS-RPT; livrarea rapoartelor și validitatea destinatarului nu au fost testate.','Un enregistrement TLS-RPT a été observé ; l’envoi et la validité du destinataire n’ont pas été testés.'],
+    rptBad: ['No TLS reporting record was observed. Mail TLS failures may lack reporting.','Nu a fost observată o înregistrare TLS-RPT. Erorile TLS pentru email pot rămâne fără raportare.','Aucun enregistrement TLS-RPT observé. Les échecs TLS email peuvent ne pas être signalés.'],
+    rptAction: ['Configure a monitored TLS-RPT reporting destination if supported by the mail provider.','Configurează un destinatar TLS-RPT monitorizat dacă furnizorul permite.','Configurer une destination TLS-RPT surveillée si le fournisseur le permet.'],
+    httpYes: ['Selected headers are listed as observed. Their syntax, adequacy and browser enforcement were not fully assessed.','Antetele selectate sunt listate conform observației. Sintaxa, adecvarea și aplicarea în browser nu au fost evaluate complet.','Les en-têtes sélectionnés sont listés tels qu’observés. Leur syntaxe, pertinence et application navigateur n’ont pas été entièrement évaluées.'],
+    httpBad: ['Some selected headers were not present in the observed ordinary response. Requirements depend on the application.','Unele antete selectate lipsesc din răspunsul obișnuit observat. Cerințele depind de aplicație.','Certains en-têtes sélectionnés sont absents de la réponse normale observée. Les exigences dépendent de l’application.'],
+    httpAction: ['Review an authorized ordinary response, then validate application-specific HSTS/CSP and related headers.','Verifică un răspuns obișnuit autorizat, apoi validează HSTS/CSP și antetele potrivite aplicației.','Examiner une réponse normale autorisée, puis valider HSTS/CSP et les en-têtes adaptés.'],
+    unavailable: ['The source did not return usable evidence. No conclusion can be drawn.','Sursa nu a returnat dovezi utilizabile. Nu se poate trage o concluzie.','La source n’a pas retourné de preuve exploitable. Aucune conclusion possible.']
+  };
+  let snapshot = null, failed = false, delivery = 'local';
+  const language = () => ['en','ro','fr'].includes(document.documentElement.lang) ? document.documentElement.lang : 'en';
+  const phrase = key => messages[key][['en','ro','fr'].indexOf(language())];
+  function element(tag, value, cls) { const node = document.createElement(tag); if (value !== undefined) node.textContent = value; if (cls) node.className = cls; return node; }
   function text(id, value) { const el = document.getElementById(id); if (el) el.textContent = value; }
-  function formatDate(value, withTime = false) {
-    const date = new Date(value);
-    if (!Number.isFinite(date.getTime())) return "—";
-    const locale = {en:"en-GB",ro:"ro-RO",fr:"fr-FR"}[document.documentElement.lang] || "en-GB";
-    return new Intl.DateTimeFormat(locale, {year:"numeric",month:"short",day:"numeric",...(withTime ? {hour:"2-digit",minute:"2-digit",timeZoneName:"short"} : {}),timeZone:"UTC"}).format(date);
+  function date(value) { if (!Number.isFinite(Date.parse(value))) return '—'; return new Intl.DateTimeFormat({en:'en-GB',ro:'ro-RO',fr:'fr-FR'}[language()], {year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',timeZoneName:'short',timeZone:'UTC'}).format(new Date(value)); }
+  function assessments(value) {
+    const d = copy[language()], checks = value.checks, records = checks.records?.data || {};
+    const rec = key => records[key] || {state:'unavailable',records:[]};
+    const usable = x => x?.state === 'ok';
+    const result = [];
+    function add(key,label,state,why,action,evidence,source,checkedAt) { result.push({key,label,state,detail:why === 'challenge' ? d.challenge : phrase(why),action:phrase(action),evidence,source,checkedAt:checkedAt || value.generatedAt}); }
+    const a = rec('validatedA'), keys = rec('dnskey'), ds = rec('ds');
+    add('dnssec','DNSSEC',usable(a) && a.authenticated ? 'confirmed' : 'unassessed',usable(a) && a.authenticated ? 'dnssecYes' : usable(a) ? 'dnssecNo' : 'unavailable','dnssecAction',JSON.stringify({authenticated:a.authenticated === true,DNSKEY:keys.records,DS:ds.records},null,2),a.source,a.checkedAt);
+    const caa = rec('caa'); add('caa','CAA',usable(caa) ? caa.records.length ? 'confirmed':'attention':'unassessed',usable(caa) ? caa.records.length ? 'caaYes':'caaNo':'unavailable','caaAction',caa.records.join('\n') || '—',caa.source,caa.checkedAt);
+    const tls = checks.tls, cert = usable(tls) ? tls.data : null;
+    const certOk = cert?.verifiedAtCapture && Date.parse(cert.validTo) > Date.now() + 30*86400000;
+    add('tls',d.labels[1],cert ? certOk ? 'confirmed':'attention':'unassessed',cert ? certOk ? 'tlsYes':'tlsBad':'unavailable','tlsAction',cert ? `${cert.issuer}\n${date(cert.validTo)}`:'—',tls.source,tls.checkedAt);
+    const conn = checks.connection, connection = usable(conn) ? conn.data : null;
+    const legacy = connection && [connection.protocol,...connection.observedVersions].some(v=>['TLSv1','TLSv1.1'].includes(v));
+    add('connection','TLS · protocol / cipher',connection ? legacy || !connection.authorized ? 'attention':'confirmed':'unassessed',connection ? legacy ? 'connectionOld':'connectionYes':'unavailable','connectionAction',connection ? JSON.stringify(connection,null,2):'—',conn?.source,conn?.checkedAt);
+    const mx = rec('mx'); add('mx','MX',usable(mx) && mx.records.length ? 'confirmed':'unassessed',usable(mx) ? mx.records.length ? 'mxYes':'mxNo':'unavailable','mxAction',mx.records.join('\n')||'—',mx.source,mx.checkedAt);
+    const txt = rec('txt'), spf = txt.records.filter(x=>/^v=spf1(?:\s|$)/i.test(x));
+    const spfOk = spf.length === 1 && !/(?:^|\s)[+?~]?all(?:\s|$)/i.test(spf[0]);
+    add('spf','SPF',usable(txt) ? spfOk ? 'confirmed':'attention':'unassessed',usable(txt) ? spfOk ? 'spfYes':'spfBad':'unavailable','spfAction',spf.join('\n')||'—',txt.source,txt.checkedAt);
+    const dm = rec('dmarc'), dmRecords = dm.records.filter(x=>/^v=DMARC1\s*;/i.test(x));
+    const tags = Object.fromEntries((dmRecords[0]||'').split(';').map(x=>x.trim().split('=').map(v=>v.trim())).filter(x=>x.length===2));
+    const dmOk = dmRecords.length === 1 && ['reject','quarantine'].includes(tags.p) && (tags.pct === undefined || tags.pct === '100');
+    add('dmarc','DMARC',usable(dm) ? dmOk ? 'confirmed':'attention':'unassessed',usable(dm) ? dmOk ? 'dmarcYes':'dmarcBad':'unavailable','dmarcAction',dmRecords.join('\n')||'—',dm.source,dm.checkedAt);
+    const selectors = ['selector1','selector2','google','default','dkim'];
+    const dkim = selectors.flatMap(s=>rec('dkim:'+s).records.filter(v=>/(?:^|;)\s*p\s*=\s*[^;\s]+/.test(v)).map(v=>`${s}: ${v}`));
+    add('dkim','DKIM',dkim.length ? 'confirmed':'unassessed',dkim.length ? 'dkimYes':'dkimNo','dkimAction',(dkim.join('\n')||'—')+'\n'+d.selectorNote,undefined,checks.records?.checkedAt);
+    const mta = checks.mtaPolicy; const mtaOk = usable(mta) && mta.data.mode === 'enforce';
+    add('mtaPolicy','MTA-STS',mtaOk ? 'confirmed':mta && ['ok','not-published'].includes(mta.state) ? 'attention':'unassessed',mtaOk ? 'mtaYes':mta && ['ok','not-published'].includes(mta.state) ? 'mtaBad':'unavailable','mtaAction',mta?.data ? JSON.stringify(mta.data,null,2):'—',mta?.source,mta?.checkedAt);
+    const rpt = rec('tlsRpt'), rptValues = rpt.records.filter(x=>/^v=TLSRPTv1\s*;/i.test(x) && /(?:^|;)\s*rua\s*=\s*\S+/.test(x));
+    add('tlsRpt','TLS-RPT',usable(rpt) ? rptValues.length ? 'confirmed':'attention':'unassessed',usable(rpt) ? rptValues.length ? 'rptYes':'rptBad':'unavailable','rptAction',rpt.records.join('\n')||'—',rpt.source,rpt.checkedAt);
+    const headers = checks.headers, http = usable(headers) ? headers.data.securityHeaders : null;
+    const complete = http && Object.values(http).every(Boolean);
+    add('headers',d.labels[3],http ? complete ? 'confirmed':'attention':'unassessed',headers.state === 'challenge' ? 'challenge':http ? complete ? 'httpYes':'httpBad':'unavailable','httpAction',http ? JSON.stringify(http,null,2):'—',headers.source,headers.checkedAt);
+    return result;
   }
-  function render() {
-    const d = translations[document.documentElement.lang] || translations.en;
-    root.querySelectorAll("[data-wcp]").forEach(el => { if (d[el.dataset.wcp]) el.textContent = d[el.dataset.wcp]; });
-    const loading = document.getElementById("wc-preview-loading");
-    loading.hidden = Boolean(snapshot);
-    loading.textContent = failed ? d.unavailable : d.loading;
-    const results = document.getElementById("wc-preview-results");
-    results.hidden = !snapshot;
-    if (!snapshot) return;
-    const captured = document.getElementById("wc-preview-time");
-    captured.dateTime = snapshot.generatedAt;
-    captured.textContent = formatDate(snapshot.generatedAt, true);
-    const age = Date.now() - Date.parse(snapshot.generatedAt);
-    const stale = document.getElementById("wc-preview-stale");
-    stale.hidden = age <= 48 * 3600000 && age >= -300000;
-    stale.textContent = age < -300000 ? d.future : d.stale;
-    const {dns, tls, headers} = snapshot.checks;
-    const dnsData = dns.state === "ok" ? dns.data : null;
-    const tlsData = tls.state === "ok" ? tls.data : null;
-    const headerData = ["ok", "challenge"].includes(headers.state) ? headers.data : null;
-    const expiry = tlsData ? Date.parse(tlsData.validTo) : NaN;
-    const expired = Number.isFinite(expiry) && expiry <= Date.now();
-    const values = [dnsData ? `${dnsData.ipv4.length} IPv4 · ${dnsData.ipv6.length} IPv6` : d.unknown, tlsData ? (expired ? d.expired : tlsData.verifiedAtCapture ? d.verified : d.unverified) : d.unknown, headerData?.server || d.unknown, headers.state === "challenge" ? d.limited : headerData ? d.headers : d.unknown];
-    root.querySelectorAll(".wc-preview-card").forEach((card, index) => {
-      card.querySelector(".wc-preview-label").textContent = d.labels[index];
-      card.querySelector(".wc-preview-value").textContent = values[index];
-      card.dataset.state = index === 1 && tlsData?.verifiedAtCapture && !expired ? "verified" : index === 3 && headers.state === "challenge" || index === 1 && expired ? "limited" : "neutral";
-    });
-    text("wc-preview-ipv4", dnsData?.ipv4.join(" · ") || "—");
-    text("wc-preview-ipv6", dnsData?.ipv6.join(" · ") || "—");
-    text("wc-preview-ns", dnsData?.nameservers.join(" · ") || "—");
-    text("wc-preview-issuer", tlsData?.issuer || "—");
-    text("wc-preview-expiry", tlsData ? formatDate(tlsData.validTo) + " (UTC)" : "—");
-    text("wc-preview-edge", headerData?.server || "—");
-    document.getElementById("wc-preview-challenge").hidden = headers.state !== "challenge";
-    const recordedHeaders = document.getElementById("wc-preview-headers");
-    recordedHeaders.textContent = headers.state === "ok" && headerData.securityHeaders ? Object.entries(headerData.securityHeaders).map(([key, value]) => `${key}: ${value || "—"}`).join("\n") : "";
-    recordedHeaders.hidden = !recordedHeaders.textContent;
-    // These are fixed, allowlisted links in HTML; response data never becomes a URL or HTML.
-  }
-  function validSnapshot(value) {
-    if (!value || value.schema !== "weownit.webcheck.preview.v1" || value.domain !== "weownit.net" || !Number.isFinite(Date.parse(value.generatedAt))) return false;
+  function valid(value) {
+    if (!value || value.schema !== 'weownit.webcheck.preview.v2' || value.domain !== fixed || !Number.isFinite(Date.parse(value.generatedAt))) return false;
     const checks = value.checks;
-    if (!checks || !["dns", "tls", "headers"].every(key => checks[key] && ["ok", "unavailable", "challenge"].includes(checks[key].state))) return false;
-    const dns = checks.dns;
-    if (dns.state !== "unavailable" && (dns.state !== "ok" || !dns.data || !["ipv4", "ipv6", "nameservers"].every(key => Array.isArray(dns.data[key]) && dns.data[key].length <= 32 && dns.data[key].every(item => typeof item === "string" && item.length <= 253)))) return false;
-    const tls = checks.tls;
-    if (tls.state !== "unavailable" && (tls.state !== "ok" || !tls.data || typeof tls.data.issuer !== "string" || typeof tls.data.verifiedAtCapture !== "boolean" || !Number.isFinite(Date.parse(tls.data.validTo)))) return false;
-    const headers = checks.headers;
-    if (headers.state !== "unavailable" && (!headers.data || typeof headers.data.server !== "string" || headers.data.server.length > 100)) return false;
-    if (headers.state === "challenge" && headers.data.securityHeaders !== null) return false;
-    if (headers.state === "ok" && (!headers.data.securityHeaders || typeof headers.data.securityHeaders !== "object" || Array.isArray(headers.data.securityHeaders) || Object.keys(headers.data.securityHeaders).length > 6 || !Object.values(headers.data.securityHeaders).every(value => value === null || typeof value === "string" && value.length <= 4000))) return false;
+    if (!checks || !['dns','tls','headers','connection','records','mtaPolicy'].every(k=>checks[k] && ['ok','unavailable','challenge','not-published'].includes(checks[k].state))) return false;
+    const strings = (v,limit=4000) => Array.isArray(v) && v.length<=32 && v.every(x=>typeof x==='string' && x.length<=limit);
+    if (checks.dns.state==='ok' && (!checks.dns.data || !['ipv4','ipv6','nameservers'].every(k=>strings(checks.dns.data[k],253)))) return false;
+    if (checks.tls.state==='ok' && (!checks.tls.data || typeof checks.tls.data.issuer!=='string' || typeof checks.tls.data.verifiedAtCapture!=='boolean' || !Number.isFinite(Date.parse(checks.tls.data.validTo)))) return false;
+    if (['ok','challenge'].includes(checks.headers.state) && (!checks.headers.data || typeof checks.headers.data.server!=='string')) return false;
+    if (checks.headers.state==='challenge' && checks.headers.data.securityHeaders!==null) return false;
+    if (checks.headers.state==='ok' && (!checks.headers.data.securityHeaders || Array.isArray(checks.headers.data.securityHeaders) || Object.keys(checks.headers.data.securityHeaders).length>6 || !Object.values(checks.headers.data.securityHeaders).every(x=>x===null || typeof x==='string' && x.length<=4000))) return false;
+    if (checks.connection.state==='ok' && (!checks.connection.data || typeof checks.connection.data.protocol!=='string' || !strings(checks.connection.data.observedVersions,20))) return false;
+    if (checks.records.state==='ok' && (!checks.records.data || Object.keys(checks.records.data).length>20 || !Object.values(checks.records.data).every(x=>x && ['ok','unavailable'].includes(x.state) && strings(x.records)))) return false;
+    if (checks.mtaPolicy.state==='ok' && (!checks.mtaPolicy.data || !['none','testing','enforce'].includes(checks.mtaPolicy.data.mode))) return false;
+    if (value.history && (!Array.isArray(value.history) || value.history.length>7)) return false;
+    if (value.comparison && (!Array.isArray(value.comparison.changes) || value.comparison.changes.length>32)) return false;
     return true;
   }
-  document.addEventListener("site:languagechange", render);
-  render();
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), 8000);
-  fetch("assets/webcheck-weownit-snapshot.json", {cache:"no-cache",credentials:"omit",signal:controller.signal})
-    .then(response => { if (!response.ok) throw new Error("Preview unavailable"); return response.json(); })
-    .then(value => { if (!validSnapshot(value)) throw new Error("Invalid preview"); snapshot = value; })
-    .catch(() => { failed = true; })
-    .finally(() => { clearTimeout(timer); render(); });
+  function sourceLink(url,d) {
+    if (typeof url!=='string') return null;
+    try { const u = new URL(url); if (u.protocol!=='https:' || !['dns.google','web-check.xyz','mta-sts.weownit.net'].includes(u.hostname) || u.username || u.password || u.port) return null; }
+    catch { return null; }
+    const a=element('a',d.source);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;
+  }
+  function render() {
+    const d = copy[language()];
+    root.querySelectorAll('[data-wcp]').forEach(el=>{if(d[el.dataset.wcp])el.textContent=d[el.dataset.wcp];});
+    const loading=document.getElementById('wc-preview-loading');loading.hidden=Boolean(snapshot);loading.textContent=failed?d.unavailable:d.loading;
+    document.getElementById('wc-preview-results').hidden=!snapshot;
+    if (!snapshot) return;
+    const time=document.getElementById('wc-preview-time');time.dateTime=snapshot.generatedAt;time.textContent=date(snapshot.generatedAt);
+    text('wc-preview-delivery',d[delivery]);
+    const age=Date.now()-Date.parse(snapshot.generatedAt),stale=document.getElementById('wc-preview-stale');stale.hidden=age<=48*3600000 && age>=-300000;stale.textContent=age<0?d.future:d.stale;
+    const rows=assessments(snapshot),find=key=>rows.find(r=>r.key===key),checks=snapshot.checks;
+    const cert=checks.tls.state==='ok'?checks.tls.data:null;
+    const expired=cert && Date.parse(cert.validTo)<=Date.now();
+    const dm=find('dmarc'),dns=find('dnssec');
+    const values=[dns.state==='confirmed'?'DNSSEC':d.unassessed,cert?expired?d.expired:cert.verifiedAtCapture?d.verified:d.unverified:d.unknown,dm.state==='confirmed'?'DMARC · '+d.confirmed:dm.state==='attention'?'DMARC · '+d.attention:d.unknown,checks.headers.state==='challenge'?d.limited:find('headers').state==='unassessed'?d.unknown:d[find('headers').state]];
+    const states=[dns.state,find('tls').state,dm.state,find('headers').state];
+    root.querySelectorAll('.wc-preview-card').forEach((card,i)=>{card.querySelector('.wc-preview-label').textContent=d.labels[i];card.querySelector('.wc-preview-value').textContent=values[i];card.dataset.state=states[i];});
+    const findings=document.getElementById('wc-preview-findings');findings.replaceChildren(element('h3',d.top));
+    const priority={attention:0,unassessed:1,confirmed:2};
+    rows.slice().sort((a,b)=>priority[a.state]-priority[b.state] || ['dmarc','connection','spf','caa','mtaPolicy','tlsRpt','tls','dnssec','headers','dkim','mx'].indexOf(a.key)-['dmarc','connection','spf','caa','mtaPolicy','tlsRpt','tls','dnssec','headers','dkim','mx'].indexOf(b.key)).slice(0,3).forEach(r=>{const p=element('p',`${r.label} · ${r.detail}`);p.dataset.state=r.state;findings.append(p);});
+    const report=document.getElementById('wc-preview-report');report.replaceChildren();
+    rows.forEach(r=>{const article=element('article',undefined,'wc-report-row'),head=element('div',undefined,'wc-row-heading');head.append(element('h3',r.label));const state=element('span',d[r.state],'wc-state');state.dataset.state=r.state;head.append(state);article.append(head,element('p',r.detail),element('p',`${d.recommend}: ${r.action}`));const details=element('details');details.append(element('summary',d.evidence),element('pre',r.evidence),element('p',`${d.checked}: ${date(r.checkedAt)}`));const a=sourceLink(r.source,d);if(a)details.append(a);article.append(details);report.append(article);});
+    const dnsData=checks.dns.state==='ok'?checks.dns.data:null,headerData=checks.headers.data;
+    text('wc-preview-ipv4',dnsData?.ipv4.join(' · ')||'—');text('wc-preview-ipv6',dnsData?.ipv6.join(' · ')||'—');text('wc-preview-ns',dnsData?.nameservers.join(' · ')||'—');text('wc-preview-issuer',cert?.issuer||'—');text('wc-preview-expiry',cert?date(cert.validTo):'—');text('wc-preview-edge',headerData?.server||'—');
+    document.getElementById('wc-preview-challenge').hidden=checks.headers.state!=='challenge';
+    const recorded=document.getElementById('wc-preview-headers');recorded.textContent=checks.headers.state==='ok'?JSON.stringify(headerData.securityHeaders,null,2):'';recorded.hidden=!recorded.textContent;
+    const history=document.getElementById('wc-preview-history');history.replaceChildren();
+    const comparison=snapshot.comparison;
+    history.append(element('p',comparison?.state==='compared'?`${d.compared}: ${date(comparison.previousAt)}`:d.baseline));
+    if(comparison?.changes?.length){comparison.changes.forEach(c=>{const detail=element('details');detail.append(element('summary',find(c.check)?.label||c.check),element('pre',JSON.stringify({before:c.before,after:c.after},null,2)));history.append(detail);});}else if(comparison?.state==='compared')history.append(element('p',d.none));
+    history.append(element('h3',d.history));
+    if(snapshot.history?.length)snapshot.history.forEach(h=>{const item=element('details');item.append(element('summary',date(h.capturedAt)));item.append(element('pre',JSON.stringify(h.changes||[],null,2)));history.append(item);});else history.append(element('p',d.noHistory));
+  }
+  function download(body,type,extension){const url=URL.createObjectURL(new Blob([body],{type}));const a=element('a');a.href=url;a.download=`weownit-net-security-${snapshot.generatedAt.slice(0,10)}.${extension}`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  document.getElementById('wc-export-json').addEventListener('click',()=>{if(snapshot)download(JSON.stringify(snapshot,null,2),'application/json','json');});
+  const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  document.getElementById('wc-export-html').addEventListener('click',()=>{
+    if(!snapshot)return;const d=copy[language()];
+    const content=assessments(snapshot).map(r=>`<article><h2>${escape(r.label)} · ${escape(d[r.state])}</h2><p>${escape(r.detail)}</p><p>${escape(d.recommend)}: ${escape(r.action)}</p><pre>${escape(r.evidence)}</pre><p>${escape(d.checked)}: ${escape(date(r.checkedAt))}</p>${sourceLink(r.source,d)?`<p><a href="${escape(r.source)}" rel="noopener noreferrer">${escape(d.source)}</a></p>`:''}</article>`).join('');
+    const report=`<!doctype html><html lang="${language()}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'"><title>weownit.net · security overview</title><style>body{max-width:900px;margin:40px auto;padding:0 20px;font:15px/1.6 system-ui;color:#152630}article{border-top:1px solid #ccd5d8;margin-top:24px}h1{font-size:28px}h2{font-size:18px}pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#f0f4f5;padding:12px}@media print{article{break-inside:avoid}}</style><body><h1>${escape(d.title)}</h1><p>${escape(d.checked)}: ${escape(date(snapshot.generatedAt))}</p><p>${escape(d.note)}</p>${content}<h2>${escape(d.changes)}</h2><pre>${escape(JSON.stringify(snapshot.comparison,null,2))}</pre><p>Web-Check: Alicia Sykes · MIT. DNS: Google Public DNS.</p></body></html>`;
+    download(report,'text/html','html');
+  });
+  document.addEventListener('site:languagechange',render);render();
+  async function fetchSnapshot(url){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6000);try{const response=await fetch(url,{cache:'no-cache',credentials:'omit',signal:controller.signal});if(!response.ok)throw Error('Unavailable');const body=await response.text();if(body.length>1048576)throw Error('Too large');const value=JSON.parse(body);if(!valid(value))throw Error('Invalid snapshot');return value;}finally{clearTimeout(timer);}}
+  // Load the site copy first, then use the fresher public snapshot if available.
+  Promise.allSettled([fetchSnapshot('assets/webcheck-weownit-snapshot.json'),fetchSnapshot(liveSnapshot)]).then(results=>{
+    const local=results[0].status==='fulfilled'?results[0].value:null,remote=results[1].status==='fulfilled'?results[1].value:null;
+    if(remote && (!local || Date.parse(remote.generatedAt)>=Date.parse(local.generatedAt))){snapshot=remote;delivery='remote';}else snapshot=local;
+    failed=!snapshot;render();
+  });
 })();
