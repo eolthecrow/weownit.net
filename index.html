@@ -102,6 +102,19 @@
     .resource-ref-links a { font-size:.688rem; color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .2s }
     .resource-ref-links a:hover { border-bottom-color:currentColor }
     .resource-ref-links a:focus-visible,.trusted-links a:focus-visible { outline:2px solid var(--accent); outline-offset:3px }
+    .resource-spotlight { display:flex; justify-content:space-between; align-items:center; gap:1.25rem 2rem; margin-top:1.65rem; padding:1.25rem 1.5rem; background:linear-gradient(95deg,rgba(108,226,199,.055),rgba(16,32,41,.7) 72%); border:1px solid var(--line); border-left:2px solid var(--accent) }
+    .spotlight-copy { flex:1; min-width:0; max-width:720px }
+    .spotlight-label { color:var(--accent); font-size:.62rem; letter-spacing:.09em }
+    .resource-spotlight h3 { font-size:clamp(1.22rem,2.05vw,1.75rem); line-height:1.2; letter-spacing:-.035em; font-weight:660; margin:.45rem 0 .45rem }
+    .spotlight-description { color:var(--muted); font-size:.765rem; line-height:1.55; margin:0 }
+    .spotlight-action { display:flex; flex-direction:column; align-items:flex-end; gap:.45rem; flex:0 0 auto }
+    .spotlight-diff { font-family:var(--mono); color:var(--ink); font-size:.89rem; letter-spacing:.07em; white-space:nowrap }
+    .spotlight-diff span { color:var(--accent); margin:0 .25rem }
+    .spotlight-link { display:inline-block; color:var(--accent); border-bottom:1px solid currentColor; font-size:.75rem; font-weight:720; padding-bottom:.15rem; text-align:right }
+    .spotlight-link:hover { color:var(--ink) }
+    .spotlight-link:focus-visible { outline:2px solid var(--accent); outline-offset:4px }
+    .spotlight-note { color:var(--quiet); font-size:.625rem; text-align:right }
+    @media(max-width:760px) { .resource-spotlight { align-items:stretch; flex-direction:column; padding:1.1rem 1.2rem; gap:.85rem } .spotlight-action { flex-direction:row; align-items:center; flex-wrap:wrap; gap:.5rem 1rem } .spotlight-note { width:100%; text-align:left } .spotlight-link { text-align:left } }
     .trusted-references { border-top:1px solid var(--line-strong); margin-top:2.25rem; padding-top:1.85rem }
     .trusted-head { display:flex; align-items:end; justify-content:space-between; gap:1rem 2rem; margin-bottom:1.1rem }
     .trusted-head h3 { font-size:clamp(1.35rem,2.3vw,1.8rem); letter-spacing:-.045em; font-weight:650; margin:.4rem 0 0 }
@@ -284,6 +297,7 @@
           <article class="resource" id="incident-diagnostics"><div class="resource-top"><span class="index">05 / DIAGNOSE</span><span class="kind">Diagnostic playbooks</span></div><h3>Troubleshooting &amp; incident diagnostics</h3><p class="desc">Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.</p><ul class="list"><li>VPN, routing, SD-WAN, and connectivity failures</li><li>Missing logs, unreachable devices, and control-plane issues</li><li>Known-good baselines, packet evidence, and validation</li></ul><div class="sample">Sample action: capture the last known good state before changing anything.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.rfc-editor.org/info/rfc9293" target="_blank" rel="noopener noreferrer">RFC 9293 / TCP ↗</a><a href="https://www.cisco.com/c/en/us/support/index.html" target="_blank" rel="noopener noreferrer">Cisco Support ↗</a><a href="tools.html#incident-evidence-triage">Incident Evidence Triage →</a></div></div></article>
           <article class="resource" id="network-automation"><div class="resource-top"><span class="index">06 / AUTOMATE</span><span class="kind">Automation &amp; compliance</span></div><h3>Network automation &amp; compliance</h3><p class="desc">Use repeatable automation to standardize configuration, validate changes, collect evidence, and identify configuration drift.</p><ul class="list"><li>Inventory, reusable roles, and configuration backup</li><li>Pre-change and post-change validation</li><li>Compliance checks, reporting, and drift detection</li></ul><div class="sample"><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Explore Ansible network automation ↗</a></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://csrc.nist.gov/pubs/sp/800/128/upd1/final" target="_blank" rel="noopener noreferrer">NIST SP 800-128 ↗</a></div></div></article>
           </div>
+        <aside class="resource-spotlight" id="resource-spotlight" aria-labelledby="resource-spotlight-title"><div class="spotlight-copy"><span class="micro spotlight-label">Featured practical example</span><h3 id="resource-spotlight-title">A small change. An unexpected access path?</h3><p class="spotlight-description">See how expanding a subnet from /24 to /21 can affect firewall rule matches. Explore a synthetic before/after scenario, analyzed locally in your browser.</p></div><div class="spotlight-action"><span class="spotlight-diff" aria-hidden="true">/24 <span>→</span> /21</span><a class="spotlight-link" href="tools.html#firewall-review">Explore the firewall demo ↗</a><span class="spotlight-note">Synthetic scenario · No configuration upload</span></div></aside>
         <div class="trusted-references" id="trusted-references" aria-labelledby="trusted-references-title">
           <div class="trusted-head"><div><span class="micro trusted-eyebrow">Curated technical references</span><h3 id="trusted-references-title">Trusted references.</h3></div><p class="trusted-intro">Official standards, security-authority guidance and practical engineering tools selected for the workflows above.</p></div>
           <div class="trusted-grid">
@@ -329,6 +343,7 @@
           resourcesMicro: "The resource library",
           resourcesTitle: "Find a starting point.",
           resourcesIntro: "Six practical areas. Start with a sample action, then choose the next review your team needs.",
+          spotlight: {"label":"Featured practical example","title":"A small change. An unexpected access path?","description":"See how expanding a subnet from /24 to /21 can affect firewall rule matches. Explore a synthetic before/after scenario, analyzed locally in your browser.","cta":"Explore the firewall demo ↗","note":"Synthetic scenario · No configuration upload"},
           relatedLabel: "Related references",
           trusted: {"eyebrow":"Curated technical references","title":"Trusted references.","intro":"Official standards, security-authority guidance and practical engineering tools selected for the workflows above.","headings":["Standards & frameworks","Government & security authorities","Engineering tools & vendor guidance"],"note":"External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net."},
           cards: {
@@ -443,6 +458,7 @@
           resourcesMicro: "La bibliothèque de ressources",
           resourcesTitle: "Choisissez un point de départ.",
           resourcesIntro: "Six domaines pratiques. Commencez par une action concrète, puis choisissez la prochaine revue dont votre équipe a besoin.",
+          spotlight: {"label":"Exemple pratique","title":"Un changement mineur. Un accès inattendu ?","description":"Découvrez comment l’extension d’un sous-réseau de /24 à /21 peut modifier la correspondance des règles de pare-feu. Explorez un scénario synthétique avant/après, analysé localement dans le navigateur.","cta":"Explorer la démonstration ↗","note":"Scénario synthétique · Aucun envoi de configuration"},
           relatedLabel: "Références associées",
           trusted: {"eyebrow":"Références techniques sélectionnées","title":"Références de confiance.","intro":"Normes officielles, recommandations des autorités et outils d’ingénierie utiles aux workflows présentés ci-dessus.","headings":["Normes et référentiels","Autorités et agences de cybersécurité","Outils d’ingénierie et guides fournisseurs"],"note":"Ces liens externes sont fournis à titre de référence technique ; ils ne constituent pas une accréditation, une certification ou une approbation de weownit.net."},
           cards: {
@@ -557,6 +573,7 @@
           resourcesMicro: "Biblioteca de resurse",
           resourcesTitle: "Alege punctul de plecare.",
           resourcesIntro: "Șase arii practice. Începe cu o acțiune concretă, apoi alege următoarea evaluare de care are nevoie echipa ta.",
+          spotlight: {"label":"Exemplu practic","title":"O modificare mică. Un acces neașteptat?","description":"Vezi cum extinderea unui subnet de la /24 la /21 poate modifica potrivirea regulilor de firewall. Explorează un scenariu sintetic înainte/după, analizat local în browser.","cta":"Explorează demonstrația ↗","note":"Scenariu sintetic · Fără încărcarea configurației"},
           relatedLabel: "Referințe utile",
           trusted: {"eyebrow":"Referințe tehnice selectate","title":"Surse de încredere.","intro":"Standarde oficiale, recomandări ale autorităților și instrumente practice pentru domeniile de mai sus.","headings":["Standarde și framework-uri","Autorități și agenții de securitate","Instrumente tehnice și ghiduri de la vendori"],"note":"Referințele externe oferă îndrumare tehnică; includerea lor nu reprezintă acreditarea, certificarea sau aprobarea weownit.net de către aceste organizații."},
           cards: {
@@ -718,6 +735,11 @@
           if (t.trusted.headings[i]) h.textContent = t.trusted.headings[i];
         });
         setText("#resources .trusted-note", t.trusted.note);
+        setText("#resource-spotlight .spotlight-label", t.spotlight.label);
+        setText("#resource-spotlight-title", t.spotlight.title);
+        setText("#resource-spotlight .spotlight-description", t.spotlight.description);
+        setText("#resource-spotlight .spotlight-link", t.spotlight.cta);
+        setText("#resource-spotlight .spotlight-note", t.spotlight.note);
 
 
         Object.entries(t.cards).forEach(([id, card]) => {
