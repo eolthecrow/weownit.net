@@ -1,0 +1,47 @@
+{
+  "schema": "weownit.webcheck.preview.v1",
+  "domain": "weownit.net",
+  "generatedAt": "2026-10-08T20:17:54Z",
+  "checks": {
+    "dns": {
+      "state": "ok",
+      "checkedAt": "2026-10-08T20:16:08Z",
+      "source": "https://web-check.xyz/api/dns?url=https%3A%2F%2Fweownit.net",
+      "data": {
+        "ipv4": [
+          "104.21.85.173",
+          "172.67.208.136"
+        ],
+        "ipv6": [
+          "2606:4700:3033::6815:55ad",
+          "2606:4700:3033::ac43:d088"
+        ],
+        "nameservers": [
+          "braden.ns.cloudflare.com",
+          "ainsley.ns.cloudflare.com"
+        ]
+      }
+    },
+    "tls": {
+      "state": "ok",
+      "checkedAt": "2026-10-08T20:17:54Z",
+      "source": "https://web-check.xyz/api/ssl?url=https%3A%2F%2Fweownit.net",
+      "data": {
+        "subject": "weownit.net",
+        "issuer": "Let's Encrypt",
+        "validFrom": "2026-09-28T12:39:35Z",
+        "validTo": "2026-12-27T12:39:34Z",
+        "verifiedAtCapture": true
+      }
+    },
+    "headers": {
+      "state": "challenge",
+      "checkedAt": "2026-10-08T20:16:08Z",
+      "source": "https://web-check.xyz/api/headers?url=https%3A%2F%2Fweownit.net",
+      "data": {
+        "server": "cloudflare",
+        "securityHeaders": null
+      }
+    }
+  }
+}

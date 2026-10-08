@@ -1,0 +1,24 @@
+.wc-preview{margin-top:1.5rem;border-top:1px solid var(--line-strong);padding-top:1rem;min-width:0}
+.wc-preview-heading{display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap;margin-bottom:.6rem}
+.wc-preview-heading h2{margin:0;font-size:.94rem;font-weight:650;letter-spacing:-.02em}
+.wc-preview-tag{font:.62rem var(--mono);letter-spacing:.07em;color:var(--quiet);text-transform:uppercase}
+.wc-preview-meta,.wc-preview-note,.wc-preview-unavailable{font-size:.75rem;color:var(--muted);margin:.4rem 0;line-height:1.5}
+.wc-preview-meta time{font-variant-numeric:tabular-nums}
+.wc-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.55rem;margin:.85rem 0}
+.wc-preview-card{padding:.7rem .8rem;background:rgba(14,29,37,.7);border:1px solid var(--line);min-width:0}
+.wc-preview-label{display:block;font:.66rem var(--mono);color:var(--quiet);margin-bottom:.25rem}
+.wc-preview-value{display:block;font-size:.86rem;color:var(--ink);font-weight:650;min-height:1.35rem;overflow-wrap:anywhere}
+.wc-preview-card[data-state="verified"] .wc-preview-value{color:var(--accent)}
+.wc-preview-card[data-state="limited"] .wc-preview-value{color:#e6c88e}
+.wc-preview-details{font-size:.75rem;color:var(--muted);margin-top:.65rem}
+.wc-preview-details summary{cursor:pointer;color:var(--ink);padding:.25rem 0}
+.wc-preview-details dl{margin:.6rem 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:.35rem .8rem}
+.wc-preview-details dt{color:var(--quiet)}
+.wc-preview-details dd{margin:0;overflow-wrap:anywhere}
+.wc-preview-details code{font:.7rem var(--mono);color:var(--ink)}
+.wc-preview-details pre{white-space:pre-wrap;overflow-wrap:anywhere;max-height:180px;overflow:auto;font:.7rem var(--mono);padding:.6rem;border:1px solid var(--line)}
+.wc-preview a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+.wc-preview-action{display:inline-block;margin-top:.7rem;font-size:.8rem}
+.wc-preview :is(a,summary):focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.wc-preview .wc-preview-stale{color:#e6c88e}
+@media(max-width:380px){.wc-preview-card{padding:.6rem}.wc-preview-value{font-size:.78rem}.wc-preview-details dl{grid-template-columns:1fr;gap:.2rem}.wc-preview-details dd{margin-bottom:.3rem}}
