@@ -519,7 +519,7 @@
     analyze:{en:'Run local review',ro:'Rulează analiza locală',fr:'Lancer la revue locale'}[l]
   });}
   let language=['en','ro','fr'].includes(document.documentElement.lang)?document.documentElement.lang:'en';
-  let result=null,currentModel=null,comparison=null,changeReport=null,beforeModel=null,created=null,statusKey='',errorCode='',errorLine=0,busy=false,generation=0;
+  let result=null,currentModel=null,comparison=null,changeReport=null,beforeModel=null,created=null,statusKey='',errorCode='',errorLine=0,busy=false,generation=0,hardeningMode=false;
   const t=()=>dictionaries[language];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const display=v=>Array.isArray(v)?v.map(display).join(', '):v===core.ANY?t().any:['on','off','unknown'].includes(v)?t()[v]:String(v??'');
@@ -549,7 +549,7 @@
     return counts+items.slice(0,limit).join('')+(items.length>limit?'<p class="fw-hint">'+limit+' / '+items.length+'</p>':'');
   }
   function renderResults() {
-    change.render(result?changeReport:null);$('fw-results').hidden=!result;if(!result){for(const id of ['fw-result-title','fw-counts','fw-summary','fw-warnings','fw-diff-content','fw-findings','fw-policy-table','fw-coverage'])$(id).textContent='';$('fw-diff').hidden=true;return;}
+    change.render(result?changeReport:null);$('fw-results').hidden=hardeningMode||!result;if(!result){for(const id of ['fw-result-title','fw-counts','fw-summary','fw-warnings','fw-diff-content','fw-findings','fw-policy-table','fw-coverage'])$(id).textContent='';$('fw-diff').hidden=true;return;}
     $('fw-result-title').textContent=names[result.vendor]+' · '+t().review;
     const c=result.counts;
     $('fw-counts').textContent=result.format+' · '+t().active+': '+c.active+' · '+t().disabled+': '+c.disabled+' · '+t().scopes+': '+c.scopes;
@@ -605,6 +605,8 @@
     const url=URL.createObjectURL(new Blob([content],{type:mime})),a=document.createElement('a');
     a.href=url;a.download='weownit_Firewall_Review_'+result.vendor+'_'+created.slice(0,10)+'.'+kind;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
+  document.addEventListener('fw:hardeningmode',()=>{hardeningMode=true;$('fw-results').hidden=true;});
+  document.addEventListener('fw:policymode',()=>{hardeningMode=false;$('fw-results').hidden=!result;});
   document.addEventListener('fw:scenariochange',()=>{generation++;change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='';errorCode='';status();});
   $('fw-form').addEventListener('submit',analyze);$('fw-clear').addEventListener('click',clear);
   document.querySelectorAll('[data-fw-demo]').forEach(b=>b.addEventListener('click',()=>{clear();$('fw-vendor').value=b.dataset.fwVendor||b.dataset.fwDemo;$('fw-input').value=window.FirewallReviewDemos[b.dataset.fwDemo];analyze();}));

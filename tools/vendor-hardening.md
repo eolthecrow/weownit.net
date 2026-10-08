@@ -56,3 +56,13 @@ UI tests run all four labs in EN/RO/FR, export HTML/JSON, verify source byte has
 Backup branch: `backup/tools-before-vendor-hardening-2026-10-07`, at `b130fea23bcb674cc1aadf83c9b2eb0f07dcca3b`.
 
 For a scoped revert, restore `tools.html`, `assets/firewall-review.js` and `assets/firewall-review.css` from that commit and remove the three vendor-hardening assets. Do not reset all main history if unrelated changes have landed since publication. The preceding endpoint evidence and connected investigations remain included in the backup.
+
+## Integration verification — 2026-10-08
+
+All four hardening labs were verified in the live browser. Before this patch, staging a connected-case flow while hardening was open selected Change Review but left its form hidden and both buttons pressed. A shared mode event now restores the policy/change workspace for programmatic transfers, imports and demonstrations. Hardening evidence stays available when returning to its mode.
+
+Existing policy reports also stay hidden when language changes or a pending policy computation completes during hardening mode. Two regression tests exercise connected-case transfer in EN/RO/FR and report visibility across language/pending-result transitions.
+
+The four vendor adapters, their supported checks, and the limits above are unchanged. This is the first scoped hardening/retest delivery, not effective Panorama/FortiManager policy reconstruction, ASA/FTD configuration review, NAT/routing simulation or Cisco advisory enrichment.
+
+Backup before these corrections: `backup/tools-before-mode-fix-2026-10-08`, at `cfce30b1c4f8c0bf142bea9013162a19aa03e843`.
