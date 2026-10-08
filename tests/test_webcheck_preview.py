@@ -13,11 +13,28 @@ spec.loader.exec_module(preview)
 
 class PreviewEvidenceTests(unittest.TestCase):
     def test_tls_capture_uses_the_documented_ssl_endpoint(self):
-        with patch.object(preview.urllib.request, "urlopen", side_effect=OSError("offline")) as request:
+        with patch.object(preview.urllib.request, "urlopen", side_effect=OSError("offline")) as request, patch.object(preview, "capture_direct", return_value={"state": "unavailable", "data": None}):
             kind, result = preview.capture("tls")
         self.assertEqual(kind, "tls")
         self.assertEqual(request.call_args.args[0].full_url, "https://web-check.xyz/api/ssl?url=https%3A%2F%2Fweownit.net")
         self.assertEqual(result["state"], "unavailable")
+
+    def test_direct_mode_does_not_request_the_unavailable_api(self):
+        with patch.object(preview.urllib.request, "urlopen") as request, patch.object(preview, "capture_direct", return_value={"state": "ok", "data": {"protocol": "TLSv1.3"}}) as direct:
+            _, result = preview.capture("connection", direct=True)
+        request.assert_not_called()
+        direct.assert_called_once_with("connection")
+        self.assertEqual(result["state"], "ok")
+
+    def test_direct_challenge_is_not_ordinary_response_evidence(self):
+        from email.message import Message
+        headers = Message();headers["cf-mitigated"] = "challenge";headers["content-security-policy"] = "challenge-policy"
+        error = preview.urllib.error.HTTPError("https://weownit.net/", 403, "challenge", headers, None)
+        with patch.object(preview.urllib.request, "urlopen", side_effect=error) as request:
+            result = preview.capture_direct("headers")
+        self.assertEqual(result["state"], "challenge")
+        self.assertIsNone(result["data"]["securityHeaders"])
+        self.assertEqual(request.call_count, 1)
 
     def test_challenge_headers_are_not_website_security_evidence(self):
         state, data = preview.normalize("headers", {"Server": "cloudflare", "CF-Mitigated": "challenge", "Content-Security-Policy": "challenge-page-policy", "strict-transport-security": "max-age=63072000"})

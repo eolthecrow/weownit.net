@@ -37,7 +37,7 @@ jobs:
       - name: Validate evidence handling
         run: python -m unittest discover -s tests -p 'test_webcheck_preview.py' -v
       - name: Collect fixed-domain public evidence
-        run: python tools/refresh_webcheck_preview.py
+        run: python tools/refresh_webcheck_preview.py --direct
       - name: Publish snapshot
         run: |
           git config user.name 'github-actions[bot]'

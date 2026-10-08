@@ -107,7 +107,7 @@
   }
   function sourceLink(url,d) {
     if (typeof url!=='string') return null;
-    try { const u = new URL(url); if (u.protocol!=='https:' || !['dns.google','web-check.xyz','mta-sts.weownit.net'].includes(u.hostname) || u.username || u.password || u.port) return null; }
+    try { const u = new URL(url); if (u.protocol!=='https:' || !['dns.google','web-check.xyz','mta-sts.weownit.net',fixed].includes(u.hostname) || u.username || u.password || u.port) return null; }
     catch { return null; }
     const a=element('a',d.source);a.href=url;a.target='_blank';a.rel='noopener noreferrer';return a;
   }
@@ -131,7 +131,7 @@
     const priority={attention:0,unassessed:1,confirmed:2};
     rows.slice().sort((a,b)=>priority[a.state]-priority[b.state] || ['dmarc','connection','spf','caa','mtaPolicy','tlsRpt','tls','dnssec','headers','dkim','mx'].indexOf(a.key)-['dmarc','connection','spf','caa','mtaPolicy','tlsRpt','tls','dnssec','headers','dkim','mx'].indexOf(b.key)).slice(0,3).forEach(r=>{const p=element('p',`${r.label} · ${r.detail}`);p.dataset.state=r.state;findings.append(p);});
     const report=document.getElementById('wc-preview-report');report.replaceChildren();
-    rows.forEach(r=>{const article=element('article',undefined,'wc-report-row'),head=element('div',undefined,'wc-row-heading');head.append(element('h3',r.label));const state=element('span',d[r.state],'wc-state');state.dataset.state=r.state;head.append(state);article.append(head,element('p',r.detail),element('p',`${d.recommend}: ${r.action}`));const details=element('details');details.append(element('summary',d.evidence),element('pre',r.evidence),element('p',`${d.checked}: ${date(r.checkedAt)}`));const a=sourceLink(r.source,d);if(a)details.append(a);article.append(details);report.append(article);});
+    rows.forEach(r=>{const article=element('article',undefined,'wc-report-row'),head=element('div',undefined,'wc-row-heading');head.append(element('h3',r.label));const state=element('span',d[r.state],'wc-state');state.dataset.state=r.state;head.append(state);article.append(head,element('p',r.detail),element('p',`${d.recommend}: ${r.action}`));const details=element('details');details.append(element('summary',d.evidence),element('pre',r.evidence),element('p',`${d.checked}: ${date(r.checkedAt)}`));const method=checks[r.key]?.method;if(method)details.append(element('p',method));const a=sourceLink(r.source,d);if(a)details.append(a);article.append(details);report.append(article);});
     const dnsData=checks.dns.state==='ok'?checks.dns.data:null,headerData=checks.headers.data;
     text('wc-preview-ipv4',dnsData?.ipv4.join(' · ')||'—');text('wc-preview-ipv6',dnsData?.ipv6.join(' · ')||'—');text('wc-preview-ns',dnsData?.nameservers.join(' · ')||'—');text('wc-preview-issuer',cert?.issuer||'—');text('wc-preview-expiry',cert?date(cert.validTo):'—');text('wc-preview-edge',headerData?.server||'—');
     document.getElementById('wc-preview-challenge').hidden=checks.headers.state!=='challenge';

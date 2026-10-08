@@ -5,11 +5,13 @@ No credentials, arbitrary targets, active scans or third-party code are executed
 Run from the repository root: python tools/refresh_webcheck_preview.py
 """
 import concurrent.futures
+import argparse
 import datetime as dt
 import json
 import pathlib
-import re
 import shlex
+import socket
+import ssl
 import urllib.parse
 import urllib.request
 
@@ -72,7 +74,12 @@ def normalize(kind, raw):
     raise ValueError("Unknown preview check")
 
 
-def capture(kind):
+def capture(kind, direct=False):
+    if direct:
+        if kind == "dns":
+            # Built from the validating resolver answers after concurrent collection.
+            return kind, {"state": "unavailable", "checkedAt": utc_now(), "data": None}
+        return kind, capture_direct(kind)
     endpoint = {"dns": "dns", "tls": "ssl", "headers": "headers", "connection": "tls-connection"}[kind]
     url = "https://web-check.xyz/api/" + endpoint + "?" + urllib.parse.urlencode({"url": "https://" + DOMAIN})
     result = {"state": "unavailable", "checkedAt": utc_now(), "source": url, "data": None}
@@ -87,8 +94,63 @@ def capture(kind):
     except Exception as exc:
         # Do not expose exception contents in the public snapshot.
         result["error"] = type(exc).__name__
+    if result["state"] == "unavailable" and kind in ["tls", "connection", "headers"]:
+        # Independently observe our own fixed public endpoint. This does not retry
+        # or bypass the unavailable Web-Check service, and never evades a challenge.
+        direct = capture_direct(kind)
+        if direct["state"] != "unavailable":
+            direct["webCheckUnavailable"] = True
+            result = direct
     result["checkedAt"] = utc_now()
     return kind, result
+
+
+def capture_direct(kind):
+    result = {"state": "unavailable", "checkedAt": utc_now(), "source": "https://" + DOMAIN + "/", "data": None, "method": "direct-https" if kind == "headers" else "direct-tls"}
+    try:
+        if kind == "headers":
+            request = urllib.request.Request(result["source"], headers={"User-Agent": "weownit-public-overview/2.0"})
+            try:
+                response = urllib.request.urlopen(request, timeout=15)
+            except urllib.error.HTTPError as error:
+                # Header evidence on errors is only retained for a declared challenge.
+                if error.headers.get("cf-mitigated") == "challenge":
+                    result["state"], result["data"] = normalize("headers", dict(error.headers.items()))
+                return result
+            with response:
+                result["state"], result["data"] = normalize("headers", dict(response.headers.items()))
+            return result
+        context = ssl.create_default_context()
+        with socket.create_connection((DOMAIN, 443), timeout=8) as sock:
+            with context.wrap_socket(sock, server_hostname=DOMAIN) as connection:
+                cert = connection.getpeercert()
+                protocol = connection.version()
+                cipher = connection.cipher()[0]
+        if kind == "tls":
+            issuer = dict(item for group in cert.get("issuer", []) for item in group)
+            subject = dict(item for group in cert.get("subject", []) for item in group)
+            raw = {"subject": {"CN": subject.get("commonName")}, "issuer": {"O": issuer.get("organizationName"), "CN": issuer.get("commonName")}, "subjectaltname": ", ".join("DNS:" + value for key, value in cert.get("subjectAltName", []) if key == "DNS"), "valid_from": cert.get("notBefore"), "valid_to": cert.get("notAfter"), "isValid": True}
+            result["state"], result["data"] = normalize("tls", raw)
+        elif kind == "connection":
+            # Only negotiated versions are reported. Failed probes are inconclusive.
+            versions = [protocol]
+            for name, version in [("TLSv1", ssl.TLSVersion.TLSv1), ("TLSv1.1", ssl.TLSVersion.TLSv1_1), ("TLSv1.2", ssl.TLSVersion.TLSv1_2)]:
+                try:
+                    probe = ssl.create_default_context()
+                    probe.minimum_version = probe.maximum_version = version
+                    # A diagnostic client only, for observing legacy server acceptance.
+                    probe.set_ciphers("DEFAULT:@SECLEVEL=0")
+                    with socket.create_connection((DOMAIN, 443), timeout=5) as sock:
+                        with probe.wrap_socket(sock, server_hostname=DOMAIN) as connection:
+                            versions.append(connection.version())
+                except (OSError, ssl.SSLError):
+                    pass
+            result["state"], result["data"] = normalize("connection", {"protocol": protocol, "cipher": {"name": cipher}, "authorized": True, "versions": sorted(set(versions))})
+    except Exception as exc:
+        result["error"] = type(exc).__name__
+    finally:
+        result["checkedAt"] = utc_now()
+    return result
 
 
 def dns_query(name, record_type):
@@ -119,7 +181,7 @@ def dns_query(name, record_type):
 
 
 def capture_records():
-    queries = {"mx": (DOMAIN, 15), "txt": (DOMAIN, 16), "dmarc": ("_dmarc." + DOMAIN, 16), "caa": (DOMAIN, 257), "dnskey": (DOMAIN, 48), "ds": (DOMAIN, 43), "validatedA": (DOMAIN, 1), "mtaSts": ("_mta-sts." + DOMAIN, 16), "tlsRpt": ("_smtp._tls." + DOMAIN, 16)}
+    queries = {"mx": (DOMAIN, 15), "txt": (DOMAIN, 16), "dmarc": ("_dmarc." + DOMAIN, 16), "caa": (DOMAIN, 257), "dnskey": (DOMAIN, 48), "ds": (DOMAIN, 43), "validatedA": (DOMAIN, 1), "aaaa": (DOMAIN, 28), "ns": (DOMAIN, 2), "mtaSts": ("_mta-sts." + DOMAIN, 16), "tlsRpt": ("_smtp._tls." + DOMAIN, 16)}
     # Selectors are explicitly scoped. A negative result is never "no DKIM".
     queries.update({"dkim:" + selector: (selector + "._domainkey." + DOMAIN, 16) for selector in ["selector1", "selector2", "google", "default", "dkim"]})
     with concurrent.futures.ThreadPoolExecutor(max_workers=6) as pool:
@@ -176,6 +238,10 @@ def observations(checks):
             data = item["data"]
             if key == "tls":
                 data = {k: data[k] for k in ["issuer", "validTo", "verifiedAtCapture"]}
+            elif key == "connection":
+                # Upstream and direct clients can use different cipher preferences
+                # and protocol probe capabilities; do not call that a config change.
+                data = {"authorized": data["authorized"]}
             values[key] = data
     for key, item in checks.get("records", {}).get("data", {}).items():
         if item.get("state") == "ok":
@@ -204,12 +270,22 @@ def add_history(snapshot, previous):
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Collect public observations for the fixed weownit.net target")
+    parser.add_argument("--direct", action="store_true", help="Use direct TLS/HTTPS and public DNS instead of the external Web-Check API")
+    args = parser.parse_args()
     with concurrent.futures.ThreadPoolExecutor(max_workers=5) as pool:
-        futures = {kind: pool.submit(capture, kind) for kind in ["dns", "tls", "headers", "connection"]}
+        futures = {kind: pool.submit(capture, kind, args.direct) for kind in ["dns", "tls", "headers", "connection"]}
         records_future = pool.submit(capture_records)
         checks = {kind: future.result()[1] for kind, future in futures.items()}
         checks["records"] = records_future.result()
     checks["mtaPolicy"] = capture_mta_policy(checks["records"])
+    if checks["dns"]["state"] == "unavailable":
+        records = checks["records"].get("data", {})
+        a = records.get("validatedA", {})
+        if a.get("state") == "ok" and a.get("records"):
+            raw = {"A": a["records"], "AAAA": records.get("aaaa", {}).get("records", []), "NS": records.get("ns", {}).get("records", [])}
+            state, data = normalize("dns", raw)
+            checks["dns"] = {"state": state, "data": data, "checkedAt": checks["records"]["checkedAt"], "source": a["source"], "method": "dns-over-https"}
     if all(check["state"] == "unavailable" for check in checks.values()):
         raise SystemExit("No usable observation; existing preview was preserved.")
     previous = None
