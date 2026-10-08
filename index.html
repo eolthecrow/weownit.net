@@ -95,6 +95,25 @@
     .resource .list li::before { content:"/"; font-family:var(--mono); color:var(--accent) }
     .resource .sample { border-top:1px solid var(--line-strong); padding-top:1rem; color:var(--amber); font-size:.747rem; font-weight:650; margin-top:auto }
     .resource .sample a:hover { text-decoration:underline; text-underline-offset:4px }
+
+    .resource-references { margin-top:.85rem; padding-top:.55rem; display:flex; align-items:baseline; flex-wrap:wrap; gap:.45rem .85rem }
+    .resource-ref-label { font:600 .605rem var(--mono); color:var(--quiet); text-transform:uppercase; letter-spacing:.065em }
+    .resource-ref-links { display:flex; flex-wrap:wrap; gap:.4rem .85rem }
+    .resource-ref-links a { font-size:.688rem; color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .2s }
+    .resource-ref-links a:hover { border-bottom-color:currentColor }
+    .resource-ref-links a:focus-visible,.trusted-links a:focus-visible { outline:2px solid var(--accent); outline-offset:3px }
+    .trusted-references { border-top:1px solid var(--line-strong); margin-top:2.25rem; padding-top:1.85rem }
+    .trusted-head { display:flex; align-items:end; justify-content:space-between; gap:1rem 2rem; margin-bottom:1.1rem }
+    .trusted-head h3 { font-size:clamp(1.35rem,2.3vw,1.8rem); letter-spacing:-.045em; font-weight:650; margin:.4rem 0 0 }
+    .trusted-intro { color:var(--muted); font-size:.782rem; max-width:480px; margin:0 }
+    .trusted-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; border:1px solid var(--line); background:var(--line) }
+    .trusted-card { background:#102029; padding:1.15rem 1.3rem 1.25rem; min-width:0 }
+    .trusted-card h4 { color:var(--ink); font-size:.825rem; line-height:1.3; font-weight:680; margin:0 0:.85rem }
+    .trusted-links { display:flex; flex-wrap:wrap; gap:.5rem 1rem }
+    .trusted-links a { color:#b7d3cf; font-size:.717rem; text-decoration:none; border-bottom:1px solid transparent }
+    .trusted-links a:hover { color:var(--accent); border-bottom-color:currentColor }
+    .trusted-note { color:var(--quiet); font-size:.669rem; margin:.85rem 0 0 }
+    @media(max-width:900px){.trusted-grid{grid-template-columns:1fr}.trusted-head{align-items:start;flex-direction:column}}
     .vendor-links { display:flex; flex-direction:column; gap:.45rem }
     .resource.featured .list { margin:0 0 1.5rem }
     .resource.featured .feature-side { border-left:1px solid #42736e; padding-left:clamp(1.5rem,3vw,3rem); display:flex; flex-direction:column; justify-content:center }
@@ -256,15 +275,24 @@
         <div class="section-head"><div><span class="micro">The resource library</span><h2 id="resources-title">Find a starting point.</h2></div><p>Six practical areas. Start with a sample action, then choose the next review your team needs.</p></div>
         <div class="resource-grid">
           <article class="resource featured" id="incident-response">
-            <div><div class="resource-top"><span class="index">01 / RESPONSE</span><span class="kind">Response framework</span></div><h3>Cybersecurity incident response</h3><p class="desc">A practical response framework for handling security incidents from initial triage through containment, recovery, and lessons learned.</p><ul class="list"><li>Roles, escalation paths, and decision authority</li><li>Evidence preservation and incident timeline</li><li>Containment, recovery, and post-incident review</li></ul><div class="sample">Sample action: confirm who can declare an incident and authorize containment.</div></div>
+            <div><div class="resource-top"><span class="index">01 / RESPONSE</span><span class="kind">Response framework</span></div><h3>Cybersecurity incident response</h3><p class="desc">A practical response framework for handling security incidents from initial triage through containment, recovery, and lessons learned.</p><ul class="list"><li>Roles, escalation paths, and decision authority</li><li>Evidence preservation and incident timeline</li><li>Containment, recovery, and post-incident review</li></ul><div class="sample">Sample action: confirm who can declare an incident and authorize containment.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer">MITRE ATT&CK ↗</a><a href="tools.html#incident-evidence-triage">Incident Evidence Triage →</a></div></div></div>
             <div class="feature-side"><span class="micro">Start with this question</span><blockquote>When an alert becomes an incident, who has the authority to act?</blockquote><a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener noreferrer">Read NIST SP 800-61 Rev. 3 <span aria-hidden="true">↗</span></a><div class="premium-offer"><span class="premium-label">Professional Toolkit · 2026 Edition</span><strong>Complete incident response pack</strong><p>Plan, playbooks, checklists, communication templates, and practical worksheets.</p><a class="premium-link" href="store.html#incident-response-toolkit">View toolkit <span aria-hidden="true">↗</span></a></div></div>
           </article>
-          <article class="resource" id="network-assessment"><div class="resource-top"><span class="index">02 / ASSESS</span><span class="kind">Assessment framework</span></div><h3>Network security assessment</h3><p class="desc">Review the network from exposure and access through segmentation, management, logging, resilience, and operational ownership.</p><ul class="list"><li>Assets, exposed services, and management planes</li><li>Segmentation, privileged access, and trust boundaries</li><li>Logging, backups, resilience, and remediation priorities</li></ul><div class="sample">Sample action: trace one critical service from user to workload and document every trust boundary.</div></article>
-          <article class="resource" id="firewall-hardening"><div class="resource-top"><span class="index">03 / HARDEN</span><span class="kind">Security checklist</span></div><h3>Firewall security &amp; hardening</h3><p class="desc">A vendor-neutral review of firewall management, policy hygiene, secure administration, telemetry, lifecycle, and recovery readiness.</p><ul class="list"><li>Management exposure, accounts, MFA, and trusted access</li><li>Policy review, object hygiene, and least privilege</li><li>Firmware, logging, backups, and recovery controls</li></ul><div class="sample vendor-guidance"><span class="guidance-label">Vendor guidance</span><div class="vendor-links"><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436" target="_blank" rel="noopener noreferrer">Fortinet ↗</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks ↗</a><a href="https://sc1.checkpoint.com/documents/Check_Point_Gateway_and_Management_Hardening/index.html" target="_blank" rel="noopener noreferrer">Check Point ↗</a></div></div><div class="vendor-toolkit-shelf"><div class="vendor-toolkit-head"><span class="micro">Platform hardening editions</span><span class="toolkit-edition">2026 professional series</span></div><div class="vendor-toolkit-marquee"><div class="vendor-toolkit-track"><div class="vendor-toolkit-group"><a class="vendor-toolkit fortinet-toolkit" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div><div class="vendor-toolkit-group" aria-hidden="true"><a class="vendor-toolkit fortinet-toolkit" tabindex="-1" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" tabindex="-1" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" tabindex="-1" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div></div></div></div></article>
-          <article class="resource" id="network-architecture"><div class="resource-top"><span class="index">04 / SEGMENT</span><span class="kind">Architecture guidance</span></div><h3>Network architecture &amp; segmentation</h3><p class="desc">Design and review trust boundaries so critical services, users, management systems, and external connectivity are separated intentionally.</p><ul class="list"><li>Security zones, VLANs, VRFs, and trust boundaries</li><li>North-south and east-west traffic paths</li><li>Management, user, server, and third-party segmentation</li></ul><div class="sample"><a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener noreferrer">Review NIST Zero Trust Architecture ↗</a></div></article>
-          <article class="resource" id="incident-diagnostics"><div class="resource-top"><span class="index">05 / DIAGNOSE</span><span class="kind">Diagnostic playbooks</span></div><h3>Troubleshooting &amp; incident diagnostics</h3><p class="desc">Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.</p><ul class="list"><li>VPN, routing, SD-WAN, and connectivity failures</li><li>Missing logs, unreachable devices, and control-plane issues</li><li>Known-good baselines, packet evidence, and validation</li></ul><div class="sample">Sample action: capture the last known good state before changing anything.</div></article>
-          <article class="resource" id="network-automation"><div class="resource-top"><span class="index">06 / AUTOMATE</span><span class="kind">Automation &amp; compliance</span></div><h3>Network automation &amp; compliance</h3><p class="desc">Use repeatable automation to standardize configuration, validate changes, collect evidence, and identify configuration drift.</p><ul class="list"><li>Inventory, reusable roles, and configuration backup</li><li>Pre-change and post-change validation</li><li>Compliance checks, reporting, and drift detection</li></ul><div class="sample"><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Explore Ansible network automation ↗</a></div></article>
+          <article class="resource" id="network-assessment"><div class="resource-top"><span class="index">02 / ASSESS</span><span class="kind">Assessment framework</span></div><h3>Network security assessment</h3><p class="desc">Review the network from exposure and access through segmentation, management, logging, resilience, and operational ownership.</p><ul class="list"><li>Assets, exposed services, and management planes</li><li>Segmentation, privileged access, and trust boundaries</li><li>Logging, backups, resilience, and remediation priorities</li></ul><div class="sample">Sample action: trace one critical service from user to workload and document every trust boundary.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20" target="_blank" rel="noopener noreferrer">NIST CSF 2.0 ↗</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1 ↗</a><a href="https://www.enisa.europa.eu/publications/nis2-technical-implementation-guidance" target="_blank" rel="noopener noreferrer">ENISA NIS2 guidance ↗</a></div></div></article>
+          <article class="resource" id="firewall-hardening"><div class="resource-top"><span class="index">03 / HARDEN</span><span class="kind">Security checklist</span></div><h3>Firewall security &amp; hardening</h3><p class="desc">A vendor-neutral review of firewall management, policy hygiene, secure administration, telemetry, lifecycle, and recovery readiness.</p><ul class="list"><li>Management exposure, accounts, MFA, and trusted access</li><li>Policy review, object hygiene, and least privilege</li><li>Firmware, logging, backups, and recovery controls</li></ul><div class="sample vendor-guidance"><span class="guidance-label">Vendor guidance</span><div class="vendor-links"><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436" target="_blank" rel="noopener noreferrer">Fortinet ↗</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks ↗</a><a href="https://sc1.checkpoint.com/documents/Check_Point_Gateway_and_Management_Hardening/index.html" target="_blank" rel="noopener noreferrer">Check Point ↗</a></div></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="tools.html#firewall-review">Firewall Change Review →</a><a href="tools.html#cve-risk-lens">CVE Risk Lens →</a></div></div><div class="vendor-toolkit-shelf"><div class="vendor-toolkit-head"><span class="micro">Platform hardening editions</span><span class="toolkit-edition">2026 professional series</span></div><div class="vendor-toolkit-marquee"><div class="vendor-toolkit-track"><div class="vendor-toolkit-group"><a class="vendor-toolkit fortinet-toolkit" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div><div class="vendor-toolkit-group" aria-hidden="true"><a class="vendor-toolkit fortinet-toolkit" tabindex="-1" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" tabindex="-1" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" tabindex="-1" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div></div></div></div></article>
+          <article class="resource" id="network-architecture"><div class="resource-top"><span class="index">04 / SEGMENT</span><span class="kind">Architecture guidance</span></div><h3>Network architecture &amp; segmentation</h3><p class="desc">Design and review trust boundaries so critical services, users, management systems, and external connectivity are separated intentionally.</p><ul class="list"><li>Security zones, VLANs, VRFs, and trust boundaries</li><li>North-south and east-west traffic paths</li><li>Management, user, server, and third-party segmentation</li></ul><div class="sample"><a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener noreferrer">Review NIST Zero Trust Architecture ↗</a></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.cisa.gov/topics/cybersecurity-best-practices/executive-order-improving-nations-cybersecurity" target="_blank" rel="noopener noreferrer">CISA Zero Trust Model ↗</a></div></div></article>
+          <article class="resource" id="incident-diagnostics"><div class="resource-top"><span class="index">05 / DIAGNOSE</span><span class="kind">Diagnostic playbooks</span></div><h3>Troubleshooting &amp; incident diagnostics</h3><p class="desc">Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.</p><ul class="list"><li>VPN, routing, SD-WAN, and connectivity failures</li><li>Missing logs, unreachable devices, and control-plane issues</li><li>Known-good baselines, packet evidence, and validation</li></ul><div class="sample">Sample action: capture the last known good state before changing anything.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.rfc-editor.org/info/rfc9293" target="_blank" rel="noopener noreferrer">RFC 9293 / TCP ↗</a><a href="https://www.cisco.com/c/en/us/support/index.html" target="_blank" rel="noopener noreferrer">Cisco Support ↗</a><a href="tools.html#incident-evidence-triage">Incident Evidence Triage →</a></div></div></article>
+          <article class="resource" id="network-automation"><div class="resource-top"><span class="index">06 / AUTOMATE</span><span class="kind">Automation &amp; compliance</span></div><h3>Network automation &amp; compliance</h3><p class="desc">Use repeatable automation to standardize configuration, validate changes, collect evidence, and identify configuration drift.</p><ul class="list"><li>Inventory, reusable roles, and configuration backup</li><li>Pre-change and post-change validation</li><li>Compliance checks, reporting, and drift detection</li></ul><div class="sample"><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Explore Ansible network automation ↗</a></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://csrc.nist.gov/pubs/sp/800/128/upd1/final" target="_blank" rel="noopener noreferrer">NIST SP 800-128 ↗</a></div></div></article>
           </div>
+        <div class="trusted-references" id="trusted-references" aria-labelledby="trusted-references-title">
+          <div class="trusted-head"><div><span class="micro trusted-eyebrow">Curated technical references</span><h3 id="trusted-references-title">Trusted references.</h3></div><p class="trusted-intro">Official standards, security-authority guidance and practical engineering tools selected for the workflows above.</p></div>
+          <div class="trusted-grid">
+            <div class="trusted-card"><h4>Standards &amp; frameworks</h4><div class="trusted-links"><a href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20" target="_blank" rel="noopener noreferrer">NIST CSF 2.0 ↗</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1 ↗</a><a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer">MITRE ATT&CK ↗</a></div></div>
+            <div class="trusted-card"><h4>Government &amp; security authorities</h4><div class="trusted-links"><a href="https://www.enisa.europa.eu/publications/nis2-technical-implementation-guidance" target="_blank" rel="noopener noreferrer">ENISA NIS2 guidance ↗</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener noreferrer">CISA KEV Catalog ↗</a><a href="https://www.dnsc.ro/" target="_blank" rel="noopener noreferrer">DNSC Romania ↗</a></div></div>
+            <div class="trusted-card"><h4>Engineering tools &amp; vendor guidance</h4><div class="trusted-links"><a href="tools.html">weownit tools →</a><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436/hardening" target="_blank" rel="noopener noreferrer">Fortinet ↗</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks ↗</a><a href="https://sc1.checkpoint.com/documents/Check_Point_Gateway_and_Management_Hardening/index.html" target="_blank" rel="noopener noreferrer">Check Point ↗</a><a href="https://www.cisco.com/c/en/us/support/index.html" target="_blank" rel="noopener noreferrer">Cisco ↗</a></div></div>
+          </div>
+          <p class="trusted-note">External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net.</p>
+        </div>
       </section>
       <section id="about" class="section" aria-labelledby="about-title"><div class="about-grid"><div><span class="micro">About</span><h2 id="about-title">Vladimir Arjoca.</h2></div><div><p class="lead">Network &amp; Security Engineer with 10+ years of hands-on experience across enterprise and service-provider environments.</p><p>I work with network security, firewalls, data-center infrastructure, monitoring, automation, and incident response. This site turns that experience into practical resources.</p><div class="expertise" aria-label="Areas of experience"><span>FortiGate / FortiManager</span><span>Palo Alto / Panorama</span><span>Cisco networking</span><span>Observability</span><span>Ansible / CI</span></div></div></div></section>
       <section id="contact" class="contact" aria-labelledby="contact-title"><div><span class="micro">Get in touch</span><h2 id="contact-title">Have a real-world problem to solve?</h2><p>Tell me which resource would help your team most, or suggest a scenario for a future playbook.</p></div><a class="button" href="contact.html">Contact Vladimir <span class="arrow" aria-hidden="true">↗</span></a></section>
@@ -301,8 +329,11 @@
           resourcesMicro: "The resource library",
           resourcesTitle: "Find a starting point.",
           resourcesIntro: "Six practical areas. Start with a sample action, then choose the next review your team needs.",
+          relatedLabel: "Related references",
+          trusted: {"eyebrow":"Curated technical references","title":"Trusted references.","intro":"Official standards, security-authority guidance and practical engineering tools selected for the workflows above.","headings":["Standards & frameworks","Government & security authorities","Engineering tools & vendor guidance"],"note":"External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net."},
           cards: {
             "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
               kind: "Response framework",
               title: "Cybersecurity incident response",
               desc: "A practical response framework for handling security incidents from initial triage through containment, recovery, and lessons learned.",
@@ -317,6 +348,7 @@
               premiumLink: "View toolkit <span aria-hidden=\"true\">↗</span>"
             },
             "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","ENISA NIS2 guidance ↗"],
               kind: "Assessment framework",
               title: "Network security assessment",
               desc: "Review the network from exposure and access through segmentation, management, logging, resilience, and operational ownership.",
@@ -324,6 +356,7 @@
               sample: "Sample action: trace one critical service from user to workload and document every trust boundary."
             },
             "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
               kind: "Security checklist",
               title: "Firewall security & hardening",
               desc: "A vendor-neutral review of firewall management, policy hygiene, secure administration, telemetry, lifecycle, and recovery readiness.",
@@ -340,6 +373,7 @@
               checkpointCta: "Explore edition ↗"
             },
             "network-architecture": {
+              referenceLinks: ["CISA Zero Trust Model ↗"],
               kind: "Architecture guidance",
               title: "Network architecture & segmentation",
               desc: "Design and review trust boundaries so critical services, users, management systems, and external connectivity are separated intentionally.",
@@ -347,6 +381,7 @@
               sample: "Review NIST Zero Trust Architecture ↗"
             },
             "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Cisco Support ↗","Incident Evidence Triage →"],
               kind: "Diagnostic playbooks",
               title: "Troubleshooting & incident diagnostics",
               desc: "Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.",
@@ -354,6 +389,7 @@
               sample: "Sample action: capture the last known good state before changing anything."
             },
             "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
               kind: "Automation & compliance",
               title: "Network automation & compliance",
               desc: "Use repeatable automation to standardize configuration, validate changes, collect evidence, support control verification, and identify configuration drift.",
@@ -407,8 +443,11 @@
           resourcesMicro: "La bibliothèque de ressources",
           resourcesTitle: "Choisissez un point de départ.",
           resourcesIntro: "Six domaines pratiques. Commencez par une action concrète, puis choisissez la prochaine revue dont votre équipe a besoin.",
+          relatedLabel: "Références associées",
+          trusted: {"eyebrow":"Références techniques sélectionnées","title":"Références de confiance.","intro":"Normes officielles, recommandations des autorités et outils d’ingénierie utiles aux workflows présentés ci-dessus.","headings":["Normes et référentiels","Autorités et agences de cybersécurité","Outils d’ingénierie et guides fournisseurs"],"note":"Ces liens externes sont fournis à titre de référence technique ; ils ne constituent pas une accréditation, une certification ou une approbation de weownit.net."},
           cards: {
             "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
               kind: "Cadre de réponse",
               title: "Réponse aux incidents de cybersécurité",
               desc: "Un cadre pratique pour gérer les incidents de sécurité, du triage initial jusqu’au confinement, à la récupération et au retour d’expérience.",
@@ -423,6 +462,7 @@
               premiumLink: "Voir le toolkit <span aria-hidden=\"true\">↗</span>"
             },
             "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","Guide NIS2 de l’ENISA ↗"],
               kind: "Cadre d’évaluation",
               title: "Évaluation de la sécurité réseau",
               desc: "Évaluez le réseau depuis l’exposition et les accès jusqu’à la segmentation, la gestion, la journalisation, la résilience et les responsabilités opérationnelles.",
@@ -430,6 +470,7 @@
               sample: "Action exemple : suivre un service critique de l’utilisateur à la charge de travail et documenter chaque frontière de confiance."
             },
             "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
               kind: "Checklist de sécurité",
               title: "Sécurité & durcissement des firewalls",
               desc: "Une revue indépendante du fournisseur couvrant la gestion des firewalls, l’hygiène des politiques, l’administration sécurisée, la télémétrie, le cycle de vie et la récupération.",
@@ -446,6 +487,7 @@
               checkpointCta: "Explorer l’édition ↗"
             },
             "network-architecture": {
+              referenceLinks: ["Modèle Zero Trust de la CISA ↗"],
               kind: "Guide d’architecture",
               title: "Architecture réseau & segmentation",
               desc: "Concevez et révisez les frontières de confiance afin de séparer volontairement les services critiques, les utilisateurs, la gestion et les accès externes.",
@@ -453,6 +495,7 @@
               sample: "Consulter NIST Zero Trust Architecture ↗"
             },
             "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Support Cisco ↗","Incident Evidence Triage →"],
               kind: "Playbooks de diagnostic",
               title: "Dépannage & diagnostic d’incidents",
               desc: "Des investigations reproductibles pour les pannes et les défaillances de contrôles de sécurité, structurées autour des symptômes, preuves, hypothèses et validations.",
@@ -460,6 +503,7 @@
               sample: "Action exemple : capturer le dernier état connu comme fonctionnel avant toute modification."
             },
             "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
               kind: "Automatisation & conformité",
               title: "Automatisation réseau & conformité",
               desc: "Utilisez une automatisation reproductible pour standardiser les configurations, valider les changements, collecter les preuves, soutenir la vérification des contrôles et détecter la dérive de configuration.",
@@ -513,8 +557,11 @@
           resourcesMicro: "Biblioteca de resurse",
           resourcesTitle: "Alege punctul de plecare.",
           resourcesIntro: "Șase arii practice. Începe cu o acțiune concretă, apoi alege următoarea evaluare de care are nevoie echipa ta.",
+          relatedLabel: "Referințe utile",
+          trusted: {"eyebrow":"Referințe tehnice selectate","title":"Surse de încredere.","intro":"Standarde oficiale, recomandări ale autorităților și instrumente practice pentru domeniile de mai sus.","headings":["Standarde și framework-uri","Autorități și agenții de securitate","Instrumente tehnice și ghiduri de la vendori"],"note":"Referințele externe oferă îndrumare tehnică; includerea lor nu reprezintă acreditarea, certificarea sau aprobarea weownit.net de către aceste organizații."},
           cards: {
             "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
               kind: "Cadru de răspuns",
               title: "Răspuns la incidente de cybersecurity",
               desc: "Un cadru practic pentru gestionarea incidentelor de securitate, de la trierea inițială până la containment, recovery și analiza post-incident.",
@@ -529,6 +576,7 @@
               premiumLink: "Vezi toolkit-ul <span aria-hidden=\"true\">↗</span>"
             },
             "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","Ghidul NIS2 ENISA ↗"],
               kind: "Cadru de evaluare",
               title: "Evaluarea securității rețelei",
               desc: "Evaluează rețeaua de la expunere și acces până la segmentare, management, logare, reziliență și responsabilitate operațională.",
@@ -536,6 +584,7 @@
               sample: "Acțiune exemplu: urmărește un serviciu critic de la utilizator la workload și documentează fiecare zonă de încredere."
             },
             "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
               kind: "Checklist de securitate",
               title: "Securitate & hardening pentru firewall",
               desc: "O evaluare vendor-neutral pentru managementul firewall-urilor, igiena politicilor, administrare securizată, telemetrie, lifecycle și pregătirea pentru recovery.",
@@ -552,6 +601,7 @@
               checkpointCta: "Explorează ediția ↗"
             },
             "network-architecture": {
+              referenceLinks: ["Modelul Zero Trust CISA ↗"],
               kind: "Ghid de arhitectură",
               title: "Arhitectură de rețea & segmentare",
               desc: "Proiectează și verifică zonele de încredere astfel încât serviciile critice, utilizatorii, managementul și conectivitatea externă să fie separate intenționat.",
@@ -559,6 +609,7 @@
               sample: "Consultă NIST Zero Trust Architecture ↗"
             },
             "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Suport Cisco ↗","Incident Evidence Triage →"],
               kind: "Playbook-uri de diagnostic",
               title: "Troubleshooting & diagnosticarea incidentelor",
               desc: "Investigații repetabile pentru întreruperi și probleme ale controalelor de securitate, structurate în jurul simptomelor, dovezilor, ipotezelor și validării.",
@@ -566,6 +617,7 @@
               sample: "Acțiune exemplu: capturează ultima stare cunoscută ca fiind bună înainte de orice modificare."
             },
             "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
               kind: "Automatizare & conformitate",
               title: "Automatizare de rețea & conformitate",
               desc: "Folosește automatizare repetabilă pentru standardizarea configurațiilor, validarea schimbărilor, colectarea dovezilor, verificarea controalelor și identificarea configuration drift.",
@@ -651,6 +703,22 @@
         setText("#resources .section-head .micro", t.resourcesMicro);
         setText("#resources-title", t.resourcesTitle);
         setText("#resources .section-head > p", t.resourcesIntro);
+        document.querySelectorAll("#resources .resource-references").forEach(group => {
+          const card = t.cards[group.closest(".resource")?.id];
+          const label = group.querySelector(".resource-ref-label");
+          if (label) label.textContent = t.relatedLabel;
+          group.querySelectorAll(".resource-ref-links a").forEach((a, i) => {
+            if (card?.referenceLinks?.[i]) a.textContent = card.referenceLinks[i];
+          });
+        });
+        setText("#resources .trusted-eyebrow", t.trusted.eyebrow);
+        setText("#trusted-references-title", t.trusted.title);
+        setText("#resources .trusted-intro", t.trusted.intro);
+        document.querySelectorAll("#resources .trusted-card h4").forEach((h, i) => {
+          if (t.trusted.headings[i]) h.textContent = t.trusted.headings[i];
+        });
+        setText("#resources .trusted-note", t.trusted.note);
+
 
         Object.entries(t.cards).forEach(([id, card]) => {
           const root = document.getElementById(id);
