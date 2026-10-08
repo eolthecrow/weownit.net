@@ -52,18 +52,8 @@
     .webcheck-features{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.5rem 0 0;padding:0;list-style:none}
     .webcheck-features li{border-bottom:1px solid var(--line-strong);color:var(--accent);padding:.35rem 0;margin-right:.65rem;font:.875rem var(--mono)}
     [hidden]{display:none!important}
-    .tools-section{padding:4.5rem 0 5rem;border-top:1px solid var(--line);background:var(--bg)}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:2rem;margin-bottom:2rem}
-    .section-head h2{font-size:clamp(1.98rem,3.6vw,3.78rem);letter-spacing:-.06em;line-height:1.05;margin:.6rem 0 0}
-    .section-head p{max-width:420px;color:var(--muted);margin:0}
-    .tools-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));border-top:1px solid var(--line);border-left:1px solid var(--line)}
-    .tool-group{background:var(--bg2);border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:1.7rem}
-    .tool-index{display:block;font-family:var(--mono);color:var(--accent);font-size:.75rem;letter-spacing:.08em;margin-bottom:.8rem}
-    .tool-group h3{margin:0 0 1rem;font-size:1.08rem;letter-spacing:-.03em}
-    .tool-list{display:flex;flex-wrap:wrap;gap:.5rem}
-    .tool-list span{border:1px solid var(--line-strong);padding:.42rem .64rem;font-family:var(--mono);font-size:.75rem;color:#c8d8d5;background:#0b171e}
     footer{border-top:1px solid var(--line);padding:1.7rem 0;color:var(--quiet);font-size:.8rem}
-    @media(max-width:780px){.nav{align-items:flex-start;padding:1rem 0}.nav-right{gap:.6rem}.back{display:none}.hero-inner{grid-template-columns:1fr;gap:2.2rem;padding:3rem 1.4rem}.lang-switch button{padding:.32rem .44rem}.section-head{display:block}.section-head p{margin-top:1rem}.tools-grid{grid-template-columns:1fr}}
+    @media(max-width:780px){.nav{align-items:flex-start;padding:1rem 0}.nav-right{gap:.6rem}.back{display:none}.hero-inner{grid-template-columns:1fr;gap:2.2rem;padding:3rem 1.4rem}.lang-switch button{padding:.32rem .44rem}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=19">
@@ -308,37 +298,7 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
     </div>
   </section>
 
-  <section class="tools-section">
-    <div class="wrap">
-      <div class="section-head">
-        <div><div class="eyebrow">Technical toolkit</div><h2>Tools I work with.</h2></div>
-        <p>Core platforms and engineering tools used across network, security, automation, observability, and lab workflows.</p>
-      </div>
-      <div class="tools-grid">
-        <article class="tool-group">
-          <span class="tool-index">01 / NETWORK &amp; SECURITY</span>
-          <h3>Platforms</h3>
-          <div class="tool-list"><span>Cisco</span><span>Fortinet</span><span>Palo Alto Networks</span><span>Juniper</span></div>
-        </article>
-        <article class="tool-group">
-          <span class="tool-index">02 / AUTOMATION &amp; DELIVERY</span>
-          <h3>Engineering</h3>
-          <div class="tool-list"><span>Ansible</span><span>Python</span><span>GitLab CI/CD</span><span>Jenkins</span></div>
-        </article>
-        <article class="tool-group">
-          <span class="tool-index">03 / MONITORING &amp; OPERATIONS</span>
-          <h3>Observability</h3>
-          <div class="tool-list"><span>Grafana</span><span>Prometheus</span><span>Checkmk</span><span>Graylog</span></div>
-        </article>
-        <article class="tool-group">
-          <span class="tool-index">04 / INFRASTRUCTURE &amp; LABS</span>
-          <h3>Platforms</h3>
-          <div class="tool-list"><span>VMware vSphere</span><span>GNS3</span><span>Docker / WSL2</span><span>Hyper-V</span></div>
-        </article>
-      </div>
-    </div>
-  </section>
-</main>
+  </main>
 
 <footer><div class="wrap">© 2026 Vladimir Arjoca · <span data-footer-brand>Network & Security Consultant</span></div><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
 
@@ -356,15 +316,6 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
       title:"Web-Check.",
       lead:"Explore a website’s public footprint: DNS records, TLS certificates, HTTP headers, hosting and security configuration.",
       webcheck:{formTitle:"Check your website",label:"Public domain or website URL",hint:"Only the domain is sent. URL paths and query parameters are excluded.",button:"Start analysis",external:"Opens the official Web-Check application in a new tab. The domain is shared with that service; results and availability depend on it.",report:"Open analysis",openTool:"Open Web-Check directly",invalid:"Enter a valid public domain, such as example.com. Internal addresses, credentials and custom ports are not supported.",opened:"The analysis opens in a new tab. If it did not open, use the link below.",features:["DNS","TLS / SSL","HTTP headers","Hosting"],checks:"Checks"},
-      sectionMicro:"Technical toolkit",
-      sectionTitle:"Tools I work with.",
-      sectionText:"Core platforms and engineering tools used across network, security, automation, observability, and lab workflows.",
-      groups:[
-        ["01 / NETWORK & SECURITY","Platforms",["Cisco","Fortinet","Palo Alto Networks","Juniper"]],
-        ["02 / AUTOMATION & DELIVERY","Engineering",["Ansible","Python","GitLab CI/CD","Jenkins"]],
-        ["03 / MONITORING & OPERATIONS","Observability",["Grafana","Prometheus","Checkmk","Graylog"]],
-        ["04 / INFRASTRUCTURE & LABS","Platforms",["VMware vSphere","GNS3","Docker / WSL2","Hyper-V"]]
-      ]
     },
     ro: {
       pageTitle:"Instrumente — Network & Security Consultant",
@@ -374,15 +325,6 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
       title:"Web-Check.",
       lead:"Explorează amprenta publică a unui site: înregistrări DNS, certificate TLS, antete HTTP, găzduire și configurația de securitate.",
       webcheck:{formTitle:"Verifică site-ul tău",label:"Domeniu public sau adresa unui site",hint:"Se trimite doar domeniul. Calea și parametrii din adresă sunt excluși.",button:"Pornește analiza",external:"Deschide aplicația oficială Web-Check într-o filă nouă. Domeniul este transmis acelui serviciu; rezultatele și disponibilitatea depind de acesta.",report:"Deschide analiza",openTool:"Deschide direct Web-Check",invalid:"Introdu un domeniu public valid, de exemplu example.com. Adresele interne, datele de autentificare și porturile personalizate nu sunt acceptate.",opened:"Analiza se deschide într-o filă nouă. Dacă nu s-a deschis, folosește linkul de mai jos.",features:["DNS","TLS / SSL","Antete HTTP","Găzduire"],checks:"Verificări"},
-      sectionMicro:"Toolkit tehnic",
-      sectionTitle:"Instrumente cu care lucrez.",
-      sectionText:"Platforme și instrumente de bază folosite în rețea, securitate, automatizare, observabilitate și medii de laborator.",
-      groups:[
-        ["01 / REȚEA & SECURITATE","Platforme",["Cisco","Fortinet","Palo Alto Networks","Juniper"]],
-        ["02 / AUTOMATIZARE & DELIVERY","Engineering",["Ansible","Python","GitLab CI/CD","Jenkins"]],
-        ["03 / MONITORIZARE & OPERAȚIUNI","Observabilitate",["Grafana","Prometheus","Checkmk","Graylog"]],
-        ["04 / INFRASTRUCTURĂ & LABS","Platforme",["VMware vSphere","GNS3","Docker / WSL2","Hyper-V"]]
-      ]
     },
     fr: {
       pageTitle:"Outils — Network & Security Consultant",
@@ -392,15 +334,6 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
       title:"Web-Check.",
       lead:"Explorez l’empreinte publique d’un site : enregistrements DNS, certificats TLS, en-têtes HTTP, hébergement et configuration de sécurité.",
       webcheck:{formTitle:"Vérifiez votre site",label:"Domaine public ou adresse d’un site",hint:"Seul le domaine est transmis. Le chemin et les paramètres de l’adresse sont exclus.",button:"Lancer l’analyse",external:"Ouvre l’application officielle Web-Check dans un nouvel onglet. Le domaine est transmis à ce service ; les résultats et la disponibilité en dépendent.",report:"Ouvrir l’analyse",openTool:"Ouvrir directement Web-Check",invalid:"Saisissez un domaine public valide, par exemple example.com. Les adresses internes, identifiants et ports personnalisés ne sont pas acceptés.",opened:"L’analyse s’ouvre dans un nouvel onglet. Si elle ne s’est pas ouverte, utilisez le lien ci-dessous.",features:["DNS","TLS / SSL","En-têtes HTTP","Hébergement"],checks:"Vérifications"},
-      sectionMicro:"Boîte à outils technique",
-      sectionTitle:"Outils que j’utilise.",
-      sectionText:"Plateformes et outils principaux utilisés pour le réseau, la sécurité, l’automatisation, l’observabilité et les environnements de laboratoire.",
-      groups:[
-        ["01 / RÉSEAU & SÉCURITÉ","Plateformes",["Cisco","Fortinet","Palo Alto Networks","Juniper"]],
-        ["02 / AUTOMATISATION & DELIVERY","Ingénierie",["Ansible","Python","GitLab CI/CD","Jenkins"]],
-        ["03 / SUPERVISION & OPÉRATIONS","Observabilité",["Grafana","Prometheus","Checkmk","Graylog"]],
-        ["04 / INFRASTRUCTURE & LABS","Plateformes",["VMware vSphere","GNS3","Docker / WSL2","Hyper-V"]]
-      ]
     }
   };
 
@@ -459,16 +392,6 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
     document.querySelector("h1").textContent=d.title;
     document.querySelector(".lead").textContent=d.lead;
     renderWebCheck();
-    document.querySelector(".tools-section .section-head .eyebrow").textContent=d.sectionMicro;
-    document.querySelector(".tools-section h2").textContent=d.sectionTitle;
-    document.querySelector(".tools-section .section-head p").textContent=d.sectionText;
-    document.querySelectorAll(".tool-group").forEach((el,i)=>{
-      const row=d.groups[i];
-      if(!row)return;
-      el.querySelector(".tool-index").textContent=row[0];
-      el.querySelector("h3").textContent=row[1];
-      el.querySelectorAll(".tool-list span").forEach((tag,j)=>{if(row[2][j]!==undefined)tag.textContent=row[2][j];});
-    });
     document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
     syncInternalLanguageLinks(lang);
   }
