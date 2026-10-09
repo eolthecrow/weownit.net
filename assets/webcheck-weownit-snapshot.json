@@ -1,7 +1,7 @@
 {
   "schema": "weownit.webcheck.preview.v2",
   "domain": "weownit.net",
-  "generatedAt": "2026-10-08T20:47:10Z",
+  "generatedAt": "2026-10-09T09:13:24Z",
   "checks": {
     "dns": {
       "state": "ok",
@@ -19,13 +19,13 @@
           "braden.ns.cloudflare.com."
         ]
       },
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "source": "https://dns.google/resolve?name=weownit.net&type=1&do=true&cd=false",
       "method": "dns-over-https"
     },
     "tls": {
       "state": "ok",
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "source": "https://weownit.net/",
       "data": {
         "subject": "weownit.net",
@@ -38,7 +38,7 @@
     },
     "headers": {
       "state": "ok",
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "source": "https://weownit.net/",
       "data": {
         "server": "cloudflare",
@@ -55,15 +55,13 @@
     },
     "connection": {
       "state": "ok",
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "source": "https://weownit.net/",
       "data": {
         "protocol": "TLSv1.3",
         "cipher": "TLS_AES_256_GCM_SHA384",
         "authorized": true,
         "observedVersions": [
-          "TLSv1",
-          "TLSv1.1",
           "TLSv1.2",
           "TLSv1.3"
         ]
@@ -72,38 +70,38 @@
     },
     "records": {
       "state": "ok",
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "data": {
         "mx": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=15&do=true&cd=false",
           "records": [
             "18 route3.mx.cloudflare.net.",
             "46 route1.mx.cloudflare.net.",
             "96 route2.mx.cloudflare.net."
           ],
-          "authenticated": false
+          "authenticated": true
         },
         "txt": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=16&do=true&cd=false",
           "records": [
             "v=spf1 include:_spf.mx.cloudflare.net ~all"
           ],
-          "authenticated": false
+          "authenticated": true
         },
         "dmarc": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=_dmarc.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "caa": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=net&type=257&do=true&cd=false",
           "records": [],
           "authenticated": true,
@@ -112,102 +110,107 @@
         },
         "dnskey": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=48&do=true&cd=false",
-          "records": [],
-          "authenticated": false
+          "records": [
+            "256 3 13 oJMRESz5E4gYzS/q6XDrvU1qMPYIjCWzJaOau8XNEZeqCYKD5ar0IRd8KqXXFJkqmVfRvMGPmM1x8fGAa2XhSA==",
+            "257 3 13 mdsswUyr3DPW132mOi8V9xESWE8jTo0dxCjjnopKl+GqJxpVXckHAeF+KkxLbxILfDLUT0rAK9iUzy1L53eKGQ=="
+          ],
+          "authenticated": true
         },
         "ds": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=43&do=true&cd=false",
-          "records": [],
-          "authenticated": false
+          "records": [
+            "2371 13 2 BE9640C1B78C227080763358843C52B5AD222D55196385CD7C31DF54D86F5247"
+          ],
+          "authenticated": true
         },
         "validatedA": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=1&do=true&cd=false",
           "records": [
             "104.21.85.173",
             "172.67.208.136"
           ],
-          "authenticated": false
+          "authenticated": true
         },
         "aaaa": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=28&do=true&cd=false",
           "records": [
             "2606:4700:3033::6815:55ad",
             "2606:4700:3033::ac43:d088"
           ],
-          "authenticated": false
+          "authenticated": true
         },
         "ns": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=weownit.net&type=2&do=true&cd=false",
           "records": [
             "ainsley.ns.cloudflare.com.",
             "braden.ns.cloudflare.com."
           ],
-          "authenticated": false
+          "authenticated": true
         },
         "mtaSts": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=_mta-sts.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "tlsRpt": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=_smtp._tls.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "dkim:selector1": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=selector1._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "dkim:selector2": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=selector2._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "dkim:google": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=google._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "dkim:default": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=default._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         },
         "dkim:dkim": {
           "state": "ok",
-          "checkedAt": "2026-10-08T20:47:10Z",
+          "checkedAt": "2026-10-09T09:13:24Z",
           "source": "https://dns.google/resolve?name=dkim._domainkey.weownit.net&type=16&do=true&cd=false",
           "records": [],
-          "authenticated": false
+          "authenticated": true
         }
       }
     },
     "mtaPolicy": {
       "state": "not-published",
-      "checkedAt": "2026-10-08T20:47:10Z",
+      "checkedAt": "2026-10-09T09:13:24Z",
       "source": "https://mta-sts.weownit.net/.well-known/mta-sts.txt",
       "data": null
     }
@@ -256,7 +259,7 @@
     ],
     "dmarc": [],
     "caa": [],
-    "dnssecAuthenticated": false,
+    "dnssecAuthenticated": true,
     "aaaa": [
       "2606:4700:3033::6815:55ad",
       "2606:4700:3033::ac43:d088"
@@ -275,6 +278,10 @@
   },
   "history": [
     {
+      "capturedAt": "2026-10-08T20:47:10Z",
+      "changes": []
+    },
+    {
       "capturedAt": "2026-10-08T20:42:20Z",
       "changes": []
     },
@@ -289,8 +296,14 @@
   ],
   "comparison": {
     "state": "compared",
-    "previousAt": "2026-10-08T20:42:20Z",
-    "changes": [],
-    "comparableChecks": 12
+    "previousAt": "2026-10-08T20:47:10Z",
+    "changes": [
+      {
+        "check": "dnssecAuthenticated",
+        "before": false,
+        "after": true
+      }
+    ],
+    "comparableChecks": 18
   }
 }
