@@ -32,8 +32,6 @@
     .portrait-card{position:relative;max-width:390px;margin-left:auto}.portrait-frame{border:1px solid var(--line-strong);padding:.65rem;background:var(--bg2);box-shadow:14px 14px 0 rgba(4,12,15,.45)}.portrait-frame img{display:block;width:100%;aspect-ratio:2/3;object-fit:cover;object-position:center top;}
     .metrics{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line);background:var(--bg2)}.metric{padding:2rem clamp(1.4rem,4vw,3rem);border-right:1px solid var(--line)}.metric:last-child{border-right:0}.metric strong{display:block;font-size:clamp(1.62rem,3.6vw,2.88rem);letter-spacing:-.05em;color:var(--ink);line-height:1}.metric span{display:block;margin-top:.55rem;color:var(--muted);font-size:.81rem}
     .section{padding:clamp(3.5rem,7vw,6.5rem) 0;border-bottom:1px solid var(--line)}.section-head{display:grid;grid-template-columns:minmax(220px,.55fr) minmax(0,1.45fr);gap:2.5rem;margin-bottom:2.5rem}.section h2{font-size:clamp(1.98rem,3.6vw,3.6rem);line-height:1.04;letter-spacing:-.055em;margin:.7rem 0 0}.section-head p{color:var(--muted);max-width:730px;margin:.6rem 0 0}
-    .timeline{display:grid;gap:0;border-top:1px solid var(--line)}.role{display:grid;grid-template-columns:210px minmax(0,1fr);gap:2rem;padding:2rem 0;border-bottom:1px solid var(--line)}.role-date{font-family:var(--mono);font-size:.675rem;color:var(--accent)}.role h3{font-size:1.215rem;margin:0 0 .25rem;letter-spacing:-.025em}.company{color:var(--muted);margin-bottom:.9rem}.role ul{margin:0;padding-left:1.1rem;color:#c9d5d2}.role li+li{margin-top:.45rem}
-    .skills{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.skill{background:var(--bg2);padding:1.5rem}.skill h3{margin:0 0 .9rem;font-size:.972rem}.tags{display:flex;flex-wrap:wrap;gap:.45rem}.tag{border:1px solid var(--line-strong);padding:.35rem .55rem;color:#c8d8d5;font-family:var(--mono);font-size:.63rem}
     .achievements{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}.achievement{border:1px solid var(--line);background:var(--bg2);padding:1.5rem}.achievement .number{font-family:var(--mono);color:var(--accent);font-size:.648rem}.achievement h3{font-size:1.08rem;margin:.65rem 0 .55rem}.achievement p{color:var(--muted);margin:0}
     .training-marquee{position:relative;overflow:hidden;border:1px solid var(--line);background:var(--bg2);padding:1.65rem 0}
     .training-marquee::before,.training-marquee::after{content:"";position:absolute;top:0;bottom:0;width:70px;z-index:2;pointer-events:none}
@@ -52,6 +50,40 @@
     footer{padding:2rem 0;color:var(--quiet);font-size:.738rem}
     @media(max-width:850px){.hero-grid,.section-head{grid-template-columns:1fr}.portrait-card{margin:0;max-width:330px}.metrics{grid-template-columns:1fr}.metric{border-right:0;border-bottom:1px solid var(--line)}.metric:last-child{border-bottom:0}.role{grid-template-columns:1fr;gap:.5rem}.skills{grid-template-columns:1fr}.achievements{grid-template-columns:1fr}.training-marquee{margin-left:-1.4rem;margin-right:-1.4rem;border-left:0;border-right:0}.contact-inner{display:block}.contact-inner .button{margin-top:1.4rem}.back{display:none}}
     @media(prefers-reduced-motion:reduce){.training-track{animation:none}}
+
+    .wrap{max-width:1100px}
+    .hero-grid{grid-template-columns:minmax(0,1fr) 224px;gap:3rem;padding:3.25rem 1.4rem}
+    h1{font-size:clamp(2rem,4vw,2.5rem);margin:.7rem 0 .6rem}
+    .profile-role{font-size:.875rem;color:var(--accent);margin:0 0 1.3rem}
+    .lead{font-size:clamp(1.15rem,2.3vw,1.44rem);line-height:1.45;font-weight:500;color:var(--ink);max-width:36ch}
+    .hero-intro{font-size:1rem;line-height:1.65;color:var(--muted);max-width:56ch;margin:.85rem 0 0}
+    .hero-actions{margin-top:1.4rem}
+    .portrait-card{width:100%;max-width:224px}
+    .metrics{gap:2rem;padding-top:1.7rem;padding-bottom:1.7rem;background:transparent}
+    .metric{padding:0;border:0}
+    .metric strong{font-size:2.25rem}
+    .metric span{font-size:.875rem;max-width:30ch}
+    .section{padding:2.1rem 0}
+    .section h2{font-size:1.4rem;line-height:1.35;letter-spacing:-.025em;margin:0 0 1.3rem}
+    .achievements{gap:1.6rem 2.3rem}
+    .achievement{padding:.8rem 0 0;border:0;border-top:1px solid var(--line);background:transparent;min-width:0}
+    .achievement h3{font-size:1rem;margin:.4rem 0 .45rem}
+    .achievement p{font-size:.9375rem;line-height:1.65}
+    .platforms,.framework{font-size:.8125rem;color:var(--muted);line-height:1.5}
+    .platforms{margin:1.6rem 0 0}
+    .framework{margin:.8rem 0 1.1rem}
+    .section-head{grid-template-columns:270px minmax(0,1fr);gap:1.8rem;margin-bottom:1.5rem}
+    .section-head h2{font-size:2rem;line-height:1.15;margin:.6rem 0 0}
+    .section-head p{font-size:.9375rem;line-height:1.6}
+    .training-marquee{padding:1.4rem 0}
+    .education-card{padding:1.2rem}
+    .education-card span{font-size:.875rem}
+    .contact-inner{padding:2.4rem 0}
+    .contact-inner h2{font-size:clamp(1.65rem,3vw,2rem);line-height:1.25}
+    .contact-inner p{font-size:.9375rem}
+    @media(max-width:850px){.hero-grid{grid-template-columns:minmax(0,1fr) 180px;gap:1.75rem}.portrait-card{max-width:180px;margin-left:auto}.metrics{grid-template-columns:repeat(3,minmax(0,1fr));gap:1.5rem}.metric{border:0}.achievements{grid-template-columns:repeat(2,minmax(0,1fr))}.section-head{grid-template-columns:1fr;gap:.7rem}}
+    @media(max-width:550px){.hero-grid{grid-template-columns:1fr;padding:2rem 1.4rem;gap:1.6rem}.portrait-card{width:190px;max-width:190px;margin:0}.metrics{grid-template-columns:1fr;gap:1.2rem}.metric{display:grid;grid-template-columns:80px minmax(0,1fr);gap:.75rem;align-items:center}.metric span{margin:0;max-width:none}.achievements{grid-template-columns:1fr}.section{padding:1.8rem 0}.section-head h2{font-size:1.75rem}}
+    @media(prefers-reduced-motion:reduce){.training-track{width:auto}.training-group{flex-wrap:wrap;gap:1rem 1.5rem;padding:0 1.4rem}.training-group[aria-hidden="true"]{display:none}.training-marquee::before,.training-marquee::after{display:none}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=19">
@@ -63,7 +95,7 @@
     "@id":"https://weownit.net/#person",
     "name":"Vladimir Arjoca",
     "url":"https://weownit.net/about.html",
-    "jobTitle":"Network & Security Engineer",
+    "jobTitle":"Network & Security Consultant",
     "sameAs":["https://www.linkedin.com/in/vladimir-arjoca-194397126"],
     "knowsAbout":["Network security","Cybersecurity incident response","Firewall security","Network architecture and segmentation","Network automation","Fortinet","Palo Alto Networks","Check Point","Cisco"]
   }
@@ -73,9 +105,9 @@
 <a class="site-skip" href="#main">Skip to content</a>
 <header class="global-header">
   <div class="wrap nav global-nav-shell">
-    <a class="brand" href="index.html" aria-label="Network & Security Consultant">
+    <a class="brand" href="index.html" aria-label="weownit.net">
       <span class="mark" aria-hidden="true"><img src="assets/va-symbol.svg?v=2" alt=""></span>
-      <span data-brand>Network &amp; Security Consultant</span>
+      <span data-brand>weownit.net</span>
     </a>
     <div class="global-nav-panel" id="global-navigation" data-nav-panel>
       <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
@@ -98,15 +130,17 @@
   </div>
 </header>
 
-<main id="main" tabindex="-1">
+<main id="main" tabindex="-1" data-about-version="milestones-20261009">
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
         <div class="eyebrow" data-k="heroEyebrow">About</div>
         <h1>Vladimir Arjoca.</h1>
-        <p class="lead" data-k="heroLead">Network and Security Engineer with 10+ years of experience designing, operating, and securing enterprise and service-provider network infrastructures.</p>
+        <p class="profile-role">Network &amp; Security Consultant</p>
+        <p class="lead" data-k="heroLead">Experience in large-scale networks, complex incidents and engineering leadership.</p>
+        <p class="hero-intro" data-k="heroIntro">I have operated enterprise and service-provider infrastructure, led engineering teams and contributed to migrations and architecture changes. I use this experience to help clients make clear decisions about security, availability and the evolution of their networks.</p>
         <div class="hero-actions">
-          <a class="button" href="contact.html" data-k="contactCta">Start a conversation ↗</a>
+          <a class="button" href="contact.html" data-k="contactCta">Let’s talk ↗</a>
           <a class="button secondary" href="https://www.linkedin.com/in/vladimir-arjoca-194397126" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a>
         </div>
       </div>
@@ -119,85 +153,24 @@
     </div>
   </section>
 
-  <section class="metrics">
-    <div class="metric"><strong>10+</strong><span data-k="metricYears">years in network &amp; security engineering</span></div>
-    <div class="metric"><strong>100%</strong><span data-k="metricUptime">network uptime maintained at Voxility for more than three years</span></div>
-    <div class="metric"><strong>12</strong><span data-k="metricLead">people led and mentored across the engineering team</span></div>
+  <section class="metrics wrap" aria-label="Selected results" data-label-k="metricsLabel">
+    <div class="metric"><strong>10+</strong><span data-k="metricYears">years of experience in networks and security</span></div>
+    <div class="metric"><strong>100%</strong><span data-k="metricUptime">network uptime maintained for more than 3 years</span></div>
+    <div class="metric"><strong>12</strong><span data-k="metricLead">people led and mentored: engineers, a supervisor and interns</span></div>
   </section>
 
-  <section class="section">
+  <section class="section milestones" aria-labelledby="milestones-title">
     <div class="wrap">
-      <div class="section-head">
-        <div><div class="micro" data-k="profileMicro">Professional profile</div><h2 data-k="profileTitle">Hands-on network &amp; security engineering.</h2></div>
-        <p data-k="profileText">10+ years across enterprise and service-provider environments, combining network operations, security platforms, data-center infrastructure, monitoring, automation, and engineering leadership.</p>
-      </div>
-
-      <div class="skills">
-        <article class="skill"><h3 data-k="skillNetwork">Networking &amp; infrastructure</h3><div class="tags"><span class="tag">Cisco Nexus</span><span class="tag">Cisco Catalyst</span><span class="tag">Cisco ACI</span><span class="tag">Cisco ISE</span><span class="tag">Arista</span><span class="tag">Dell</span><span class="tag">BGP</span><span class="tag">EVPN</span><span class="tag">VXLAN</span><span class="tag">IS-IS</span></div></article>
-        <article class="skill"><h3 data-k="skillSecurity">Security platforms</h3><div class="tags"><span class="tag">Palo Alto</span><span class="tag">Panorama</span><span class="tag">FortiGate</span><span class="tag">FortiManager</span><span class="tag">FortiAnalyzer</span><span class="tag">QRadar</span><span class="tag">Graylog</span><span class="tag">Anti-DDoS</span></div></article>
-        <article class="skill"><h3 data-k="skillAutomation">Monitoring &amp; automation</h3><div class="tags"><span class="tag">Grafana</span><span class="tag">Prometheus</span><span class="tag">GitLab</span><span class="tag">CI/CD</span><span class="tag">Ansible</span><span class="tag">Python</span><span class="tag">Bash</span><span class="tag">Molecule</span></div></article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div><div class="micro" data-k="experienceMicro">Experience</div><h2 data-k="experienceTitle">From NOC to leadership.</h2></div>
-        <p data-k="experienceText">The timeline below follows the roles listed in my CV, from network administration and NOC operations through service-provider engineering, team leadership, and enterprise network security.</p>
-      </div>
-      <div class="timeline">
-        <article class="role">
-          <div class="role-date">2023 — 2026</div>
-          <div><h3 data-k="orangeRole">Network Engineer</h3><div class="company">Orange Services · Bucharest</div><ul>
-            <li data-k="orange1">Administered Palo Alto Panorama for upgrades, policy management, licensing, and centralized log analysis.</li>
-            <li data-k="orange2">Managed FortiGate, FortiManager, FortiAnalyzer, and Cisco Nexus fabrics using IS-IS underlay and BGP EVPN overlay.</li>
-            <li data-k="orange3">Supported vulnerability remediation, observability with Grafana/Prometheus, and automation initiatives through GitLab CI/CD.</li>
-          </ul></div>
-        </article>
-        <article class="role">
-          <div class="role-date">2018 — 2022</div>
-          <div><h3 data-k="voxLeadRole">Deputy Network Engineer Supervisor</h3><div class="company">Voxility · Bucharest</div><ul>
-            <li data-k="voxLead1">Led and mentored 9 network engineers, 1 supervisor, and 2 interns.</li>
-            <li data-k="voxLead2">Maintained 100% network availability over multiple years while supporting large-scale Anti-DDoS service-provider networks.</li>
-            <li data-k="voxLead3">Coordinated peering, Points of Presence, traffic engineering, operational procedures, and final escalation for complex incidents.</li>
-          </ul></div>
-        </article>
-        <article class="role">
-          <div class="role-date">2017 — 2018</div>
-          <div><h3 data-k="voxEngRole">Network Engineer</h3><div class="company">Voxility · Bucharest</div><ul>
-            <li data-k="voxEng1">Provided 24/7 monitoring and troubleshooting across infrastructure, applications, and data centers.</li>
-            <li data-k="voxEng2">Configured and supported Cisco, Dell, Arista, and FortiGate devices across Layer 2 and Layer 3 networks.</li>
-          </ul></div>
-        </article>
-        <article class="role">
-          <div class="role-date">2015 — 2017</div>
-          <div><h3 data-k="juniorRole">Junior Network Engineer</h3><div class="company">Voxility · Bucharest</div><ul><li data-k="junior1">Monitored network traffic and equipment and resolved incidents through CRM, phone, and email channels.</li></ul></div>
-        </article>
-        <article class="role">
-          <div class="role-date">2015</div>
-          <div><h3 data-k="nocRole">NOC Engineer</h3><div class="company">Cryptowave · Bucharest</div><ul><li data-k="noc1">Monitored system health, provided technical support, and maintained server and network equipment in data centers.</li></ul></div>
-        </article>
-        <article class="role">
-          <div class="role-date">2013 — 2015</div>
-          <div><h3 data-k="adminRole">Network Administrator</h3><div class="company">Bucur SA · Bucharest</div><ul><li data-k="admin1">Managed local networks, Windows desktop/server environments, hardware inventory, software licensing, and technical troubleshooting.</li></ul></div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <div class="wrap">
-      <div class="section-head">
-        <div><div class="micro" data-k="achMicro">Selected achievements</div><h2 data-k="achTitle">Results with measurable impact.</h2></div>
-        <p data-k="achText">A concise view of the outcomes that best represent my operational and leadership experience.</p>
-      </div>
+      <h2 id="milestones-title" data-k="achTitle">Selected milestones.</h2>
       <div class="achievements">
-        <article class="achievement"><span class="number">01</span><h3 data-k="ach1Title">100% network availability</h3><p data-k="ach1Text">Maintained 100% network uptime at Voxility for more than three years.</p></article>
-        <article class="achievement"><span class="number">02</span><h3 data-k="ach2Title">Engineering leadership</h3><p data-k="ach2Text">Led and mentored 9 network engineers, 1 supervisor, and 2 interns.</p></article>
-        <article class="achievement"><span class="number">03</span><h3 data-k="ach3Title">PoP &amp; traffic engineering</h3><p data-k="ach3Text">Supported Point of Presence deployments and traffic-engineering initiatives in a large-scale service-provider and Anti-DDoS environment.</p></article>
-        <article class="achievement"><span class="number">04</span><h3 data-k="ach4Title">Secure infrastructure projects</h3><p data-k="ach4Text">Contributed to PEPS, a data-center platform migration, and the Propolis Project through secure network and infrastructure changes.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">01</span><h3 data-k="ach1Title">Final escalation point</h3><p data-k="ach1Text">Served as the final escalation point for complex network and security incidents in an environment with 24/7 operations.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">02</span><h3 data-k="ach2Title">Network expansion and cost optimization</h3><p data-k="ach2Text">Coordinated peering and Point of Presence deployments, optimizing traffic and reducing operational costs in networks supporting Anti-DDoS services.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">03</span><h3 data-k="ach3Title">Successful data center migration</h3><p data-k="ach3Text">Contributed to a platform migration between data centers, covering infrastructure transition, validation and post-migration support.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">04</span><h3 data-k="ach4Title">Secure access and architecture changes</h3><p data-k="ach4Text">Contributed to secure virtual desktop access for a large user base and the implementation of network and security architecture changes in secure environments.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">05</span><h3 data-k="ach5Title">Vulnerability and firewall management</h3><p data-k="ach5Text">Collaborated on vulnerability remediation using security advisories and CVEs, and centrally managed firewall policies, upgrades and logs.</p></article>
+        <article class="achievement"><span class="number" aria-hidden="true">06</span><h3 data-k="ach6Title">Procedures, visibility and automation</h3><p data-k="ach6Text">Developed procedures that improved incident response, improved monitoring and supported automation initiatives through GitLab CI/CD.</p></article>
       </div>
+      <p class="platforms" data-k="platforms">Hands-on experience: Fortinet · Palo Alto Networks · Cisco</p>
     </div>
   </section>
 
@@ -205,10 +178,10 @@
     <div class="wrap">
       <div class="section-head">
         <div><div class="micro" data-k="certMicro">Professional development</div><h2 data-k="certTitle">Training &amp; Certifications</h2></div>
-        <p data-k="certText">Technology vendors, certification organizations, and cybersecurity standards and frameworks represented in my professional development.</p>
+        <p data-k="certText">Technology vendors and certification organizations represented in my professional training and development.</p>
       </div>
 
-      <div class="training-marquee" aria-label="Training and certification organizations">
+      <div class="training-marquee" aria-label="Training and certification organizations" data-label-k="trainingLabel">
         <div class="training-track">
           <div class="training-group">
             <span class="training-item">Cisco</span>
@@ -216,7 +189,6 @@
             <span class="training-item">Fortinet</span>
             <span class="training-item">Amazon Web Services</span>
             <span class="training-item">CertiProf</span>
-            <span class="training-item">NIST</span>
           </div>
           <div class="training-group" aria-hidden="true">
             <span class="training-item">Cisco</span>
@@ -224,11 +196,11 @@
             <span class="training-item">Fortinet</span>
             <span class="training-item">Amazon Web Services</span>
             <span class="training-item">CertiProf</span>
-            <span class="training-item">NIST</span>
           </div>
         </div>
       </div>
 
+      <p class="framework" data-k="framework">Reference standards and frameworks: NIST</p>
       <article class="education-card">
         <strong data-k="educationLabel">Education</strong>
         <span data-k="education">B.Sc. in Business Administration and Management — Dimitrie Cantemir Christian University, Bucharest (2007–2011)</span>
@@ -252,100 +224,131 @@
 
   
   const t = {
-    en: {
-      heroEyebrow:"About",
-      heroLead:"Network and Security Engineer with 10+ years of experience designing, operating, and securing enterprise and service-provider network infrastructures.",
-      contactCta:"Start a conversation ↗",
-      metricYears:"years in network & security engineering",
-      metricUptime:"network uptime maintained at Voxility for more than three years",
-      metricLead:"people led and mentored across the engineering team",
-      profileMicro:"Professional profile", profileTitle:"Hands-on network & security engineering.",
-      profileText:"10+ years across enterprise and service-provider environments, combining network operations, security platforms, data-center infrastructure, monitoring, automation, and engineering leadership.",
-      skillNetwork:"Networking & infrastructure", skillSecurity:"Security platforms", skillAutomation:"Monitoring & automation",
-      experienceMicro:"Experience", experienceTitle:"From NOC to leadership.", experienceText:"The timeline below follows the roles listed in my CV, from network administration and NOC operations through service-provider engineering, team leadership, and enterprise network security.",
-      orangeRole:"Network Engineer", orange1:"Administered Palo Alto Panorama for upgrades, policy management, licensing, and centralized log analysis.", orange2:"Managed FortiGate, FortiManager, FortiAnalyzer, and Cisco Nexus fabrics using IS-IS underlay and BGP EVPN overlay.", orange3:"Supported vulnerability remediation, observability with Grafana/Prometheus, and automation initiatives through GitLab CI/CD.",
-      voxLeadRole:"Deputy Network Engineer Supervisor", voxLead1:"Led and mentored 9 network engineers, 1 supervisor, and 2 interns.", voxLead2:"Maintained 100% network availability over multiple years while supporting large-scale Anti-DDoS service-provider networks.", voxLead3:"Coordinated peering, Points of Presence, traffic engineering, operational procedures, and final escalation for complex incidents.",
-      voxEngRole:"Network Engineer", voxEng1:"Provided 24/7 monitoring and troubleshooting across infrastructure, applications, and data centers.", voxEng2:"Configured and supported Cisco, Dell, Arista, and FortiGate devices across Layer 2 and Layer 3 networks.",
-      juniorRole:"Junior Network Engineer", junior1:"Monitored network traffic and equipment and resolved incidents through CRM, phone, and email channels.",
-      nocRole:"NOC Engineer", noc1:"Monitored system health, provided technical support, and maintained server and network equipment in data centers.",
-      adminRole:"Network Administrator", admin1:"Managed local networks, Windows desktop/server environments, hardware inventory, software licensing, and technical troubleshooting.",
-      achMicro:"Selected achievements", achTitle:"Results with measurable impact.", achText:"A concise view of the outcomes that best represent my operational and leadership experience.",
-      ach1Title:"100% network availability", ach1Text:"Maintained 100% network uptime at Voxility for more than three years.",
-      ach2Title:"Engineering leadership", ach2Text:"Led and mentored 9 network engineers, 1 supervisor, and 2 interns.",
-      ach3Title:"PoP & traffic engineering", ach3Text:"Supported Point of Presence deployments and traffic-engineering initiatives in a large-scale service-provider and Anti-DDoS environment.",
-      ach4Title:"Secure infrastructure projects", ach4Text:"Contributed to PEPS, a data-center platform migration, and the Propolis Project through secure network and infrastructure changes.",
-      certMicro:"Professional development", certTitle:"Training & Certifications", certText:"Technology vendors, certification organizations, and cybersecurity standards and frameworks represented in my professional development.", educationLabel:"Education",
-      education:"B.Sc. in Business Administration and Management — Dimitrie Cantemir Christian University, Bucharest (2007–2011)",
-      contactTitle:"Have a network or security problem to solve?", contactText:"Tell me what you are working on and where the challenge is.", contactButton:"Contact me ↗",
-      brand:"Network & Security Consultant", pageTitle:"About Vladimir Arjoca — Network & Security Consultant", back:"← Back to resources"
+    "ro": {
+        "heroEyebrow": "Despre",
+        "heroLead": "Experiență în rețele la scară largă, incidente complexe și coordonarea echipelor.",
+        "heroIntro": "Am operat infrastructuri enterprise și service-provider, am coordonat echipe tehnice și am contribuit la migrări și schimbări de arhitectură. Folosesc această experiență pentru a ajuta clienții să ia decizii clare privind securitatea, disponibilitatea și evoluția rețelei.",
+        "contactCta": "Hai să discutăm ↗",
+        "metricYears": "ani de experiență în rețele și securitate",
+        "metricUptime": "uptime al rețelei menținut pentru mai mult de 3 ani",
+        "metricLead": "persoane coordonate și mentorate: ingineri, supervisor și interni",
+        "achTitle": "Repere din experiența mea.",
+        "platforms": "Experiență practică: Fortinet · Palo Alto Networks · Cisco",
+        "certMicro": "Dezvoltare profesională",
+        "certTitle": "Training & Certificări",
+        "certText": "Vendori tehnologici și organizații de certificare reprezentate în formarea și dezvoltarea mea profesională.",
+        "framework": "Standarde și framework-uri de referință: NIST",
+        "educationLabel": "Educație",
+        "education": "Licență în Business Administration and Management — Universitatea Creștină Dimitrie Cantemir, București (2007–2011)",
+        "contactTitle": "Ai o problemă de rețea sau securitate de rezolvat?",
+        "contactText": "Spune-mi la ce lucrezi și unde este provocarea.",
+        "contactButton": "Contactează-mă ↗",
+        "brand": "weownit.net",
+        "footerBrand": "Network & Security Consultant",
+        "pageTitle": "Despre Vladimir Arjoca — Network & Security Consultant",
+        "metricsLabel": "Rezultate selectate",
+        "trainingLabel": "Organizații de training și certificare",
+        "ach1Title": "Punct final de escaladare",
+        "ach1Text": "Am fost punctul final de escaladare pentru incidente complexe de rețea și securitate, într-un mediu cu operațiuni 24/7.",
+        "ach2Title": "Extindere de rețea și optimizarea costurilor",
+        "ach2Text": "Am coordonat peering și implementări de Points of Presence, optimizând traficul și reducând costurile operaționale în rețele cu servicii Anti-DDoS.",
+        "ach3Title": "Migrare reușită între data centere",
+        "ach3Text": "Am contribuit la migrarea unei platforme între data centere, acoperind tranziția infrastructurii, validarea și suportul după migrare.",
+        "ach4Title": "Acces securizat și evoluția arhitecturii",
+        "ach4Text": "Am contribuit la acces virtual desktop securizat pentru o bază largă de utilizatori și la implementarea schimbărilor de arhitectură în medii securizate.",
+        "ach5Title": "Vulnerabilități și controlul firewall-urilor",
+        "ach5Text": "Am colaborat la remedierea vulnerabilităților pe baza advisoarelor și CVE-urilor și am administrat centralizat politici, upgrade-uri și loguri de firewall.",
+        "ach6Title": "Proceduri, vizibilitate și automatizare",
+        "ach6Text": "Am dezvoltat proceduri care au îmbunătățit răspunsul la incidente, am îmbunătățit monitorizarea și am susținut inițiative de automatizare prin GitLab CI/CD."
     },
-    fr: {
-      heroEyebrow:"À propos",
-      heroLead:"Ingénieur réseau et sécurité avec plus de 10 ans d’expérience dans la conception, l’exploitation et la sécurisation d’infrastructures réseau d’entreprise et de fournisseurs de services.",
-      contactCta:"Démarrer une conversation ↗",
-      metricYears:"ans d’expérience en ingénierie réseau et sécurité",
-      metricUptime:"de disponibilité réseau maintenue chez Voxility pendant plus de trois ans",
-      metricLead:"personnes encadrées et accompagnées au sein de l’équipe d’ingénierie",
-      profileMicro:"Profil professionnel", profileTitle:"Ingénierie réseau & sécurité, orientée terrain.",
-      profileText:"Plus de 10 ans dans des environnements d’entreprise et de fournisseurs de services, combinant opérations réseau, plateformes de sécurité, infrastructure de data center, supervision, automatisation et leadership d’ingénierie.",
-      skillNetwork:"Réseau & infrastructure", skillSecurity:"Plateformes de sécurité", skillAutomation:"Supervision & automatisation",
-      experienceMicro:"Expérience", experienceTitle:"Du NOC au leadership.", experienceText:"Cette chronologie reprend les rôles indiqués dans mon CV, de l’administration réseau et des opérations NOC à l’ingénierie service-provider, au management d’équipe et à la sécurité réseau d’entreprise.",
-      orangeRole:"Ingénieur réseau", orange1:"Administration de Palo Alto Panorama pour les mises à niveau, la gestion des politiques, les licences et l’analyse centralisée des journaux.", orange2:"Gestion de FortiGate, FortiManager, FortiAnalyzer et de fabrics Cisco Nexus avec underlay IS-IS et overlay BGP EVPN.", orange3:"Contribution à la remédiation des vulnérabilités, à l’observabilité avec Grafana/Prometheus et aux initiatives d’automatisation via GitLab CI/CD.",
-      voxLeadRole:"Deputy Network Engineer Supervisor", voxLead1:"Encadrement et mentorat de 9 ingénieurs réseau, 1 superviseur et 2 stagiaires.", voxLead2:"Maintien d’une disponibilité réseau de 100 % pendant plusieurs années sur des réseaux service-provider Anti-DDoS à grande échelle.", voxLead3:"Coordination du peering, des Points of Presence, du traffic engineering, des procédures opérationnelles et des escalades finales sur les incidents complexes.",
-      voxEngRole:"Ingénieur réseau", voxEng1:"Supervision et dépannage 24/7 de l’infrastructure, des applications et des data centers.", voxEng2:"Configuration et support d’équipements Cisco, Dell, Arista et FortiGate sur des réseaux de couche 2 et 3.",
-      juniorRole:"Ingénieur réseau junior", junior1:"Supervision du trafic et des équipements réseau et résolution d’incidents via CRM, téléphone et e-mail.",
-      nocRole:"Ingénieur NOC", noc1:"Supervision de l’état des systèmes, support technique et maintenance des serveurs et équipements réseau en data center.",
-      adminRole:"Administrateur réseau", admin1:"Gestion des réseaux locaux, environnements Windows desktop/server, inventaire matériel, licences logicielles et dépannage technique.",
-      achMicro:"Réalisations sélectionnées", achTitle:"Des résultats à impact mesurable.", achText:"Une vue concise des résultats qui représentent le mieux mon expérience opérationnelle et managériale.",
-      ach1Title:"100 % de disponibilité réseau", ach1Text:"Maintien de 100 % de disponibilité réseau chez Voxility pendant plus de trois ans.",
-      ach2Title:"Leadership d’ingénierie", ach2Text:"Encadrement et mentorat de 9 ingénieurs réseau, 1 superviseur et 2 stagiaires.",
-      ach3Title:"PoP & traffic engineering", ach3Text:"Contribution aux déploiements de Points of Presence et aux initiatives de traffic engineering dans un environnement service-provider et Anti-DDoS à grande échelle.",
-      ach4Title:"Projets d’infrastructure sécurisée", ach4Text:"Contribution à PEPS, à une migration de plateforme entre data centers et au projet Propolis via des changements réseau et infrastructure sécurisés.",
-      certMicro:"Développement professionnel", certTitle:"Formations & Certifications", certText:"Les principaux fournisseurs technologiques, organismes de certification, standards et référentiels de cybersécurité représentés dans mon développement professionnel.", educationLabel:"Formation académique",
-      education:"Licence en administration et gestion des affaires — Université Chrétienne Dimitrie Cantemir, Bucarest (2007–2011)",
-      contactTitle:"Vous avez un problème réseau ou sécurité à résoudre ?", contactText:"Dites-moi sur quoi vous travaillez et où se situe la difficulté.", contactButton:"Me contacter ↗",
-      brand:"Network & Security Consultant", pageTitle:"À propos de Vladimir Arjoca — Network & Security Consultant", back:"← Retour aux ressources"
+    "en": {
+        "heroEyebrow": "About",
+        "heroLead": "Experience in large-scale networks, complex incidents and engineering leadership.",
+        "heroIntro": "I have operated enterprise and service-provider infrastructure, led engineering teams and contributed to migrations and architecture changes. I use this experience to help clients make clear decisions about security, availability and the evolution of their networks.",
+        "contactCta": "Let’s talk ↗",
+        "metricYears": "years of experience in networks and security",
+        "metricUptime": "network uptime maintained for more than 3 years",
+        "metricLead": "people led and mentored: engineers, a supervisor and interns",
+        "achTitle": "Selected milestones.",
+        "platforms": "Hands-on experience: Fortinet · Palo Alto Networks · Cisco",
+        "certMicro": "Professional development",
+        "certTitle": "Training & Certifications",
+        "certText": "Technology vendors and certification organizations represented in my professional training and development.",
+        "framework": "Reference standards and frameworks: NIST",
+        "educationLabel": "Education",
+        "education": "B.Sc. in Business Administration and Management — Dimitrie Cantemir Christian University, Bucharest (2007–2011)",
+        "contactTitle": "Have a network or security problem to solve?",
+        "contactText": "Tell me what you are working on and where the challenge is.",
+        "contactButton": "Contact me ↗",
+        "brand": "weownit.net",
+        "footerBrand": "Network & Security Consultant",
+        "pageTitle": "About Vladimir Arjoca — Network & Security Consultant",
+        "metricsLabel": "Selected results",
+        "trainingLabel": "Training and certification organizations",
+        "ach1Title": "Final escalation point",
+        "ach1Text": "Served as the final escalation point for complex network and security incidents in an environment with 24/7 operations.",
+        "ach2Title": "Network expansion and cost optimization",
+        "ach2Text": "Coordinated peering and Point of Presence deployments, optimizing traffic and reducing operational costs in networks supporting Anti-DDoS services.",
+        "ach3Title": "Successful data center migration",
+        "ach3Text": "Contributed to a platform migration between data centers, covering infrastructure transition, validation and post-migration support.",
+        "ach4Title": "Secure access and architecture changes",
+        "ach4Text": "Contributed to secure virtual desktop access for a large user base and the implementation of network and security architecture changes in secure environments.",
+        "ach5Title": "Vulnerability and firewall management",
+        "ach5Text": "Collaborated on vulnerability remediation using security advisories and CVEs, and centrally managed firewall policies, upgrades and logs.",
+        "ach6Title": "Procedures, visibility and automation",
+        "ach6Text": "Developed procedures that improved incident response, improved monitoring and supported automation initiatives through GitLab CI/CD."
     },
-    ro: {
-      heroEyebrow:"Despre",
-      heroLead:"Network and Security Engineer cu peste 10 ani de experiență în proiectarea, operarea și securizarea infrastructurilor de rețea enterprise și service-provider.",
-      contactCta:"Începe o discuție ↗",
-      metricYears:"ani de experiență în network & security engineering",
-      metricUptime:"disponibilitate a rețelei menținută la Voxility pentru mai mult de trei ani",
-      metricLead:"persoane coordonate și mentorate în cadrul echipei de inginerie",
-      profileMicro:"Profil profesional", profileTitle:"Network & security engineering, hands-on.",
-      profileText:"Peste 10 ani în medii enterprise și service-provider, combinând network operations, platforme de securitate, infrastructură de data center, monitorizare, automatizare și leadership tehnic.",
-      skillNetwork:"Networking & infrastructură", skillSecurity:"Platforme de securitate", skillAutomation:"Monitorizare & automatizare",
-      experienceMicro:"Experiență", experienceTitle:"De la NOC la leadership.", experienceText:"Cronologia urmează rolurile din CV-ul meu, de la administrare de rețea și operațiuni NOC până la service-provider engineering, coordonare de echipă și securitate de rețea enterprise.",
-      orangeRole:"Network Engineer", orange1:"Administrare Palo Alto Panorama pentru upgrade-uri, management de politici, licențiere și analiză centralizată de loguri.", orange2:"Administrare FortiGate, FortiManager, FortiAnalyzer și fabric-uri Cisco Nexus cu IS-IS underlay și BGP EVPN overlay.", orange3:"Contribuție la remedierea vulnerabilităților, observabilitate prin Grafana/Prometheus și inițiative de automatizare prin GitLab CI/CD.",
-      voxLeadRole:"Deputy Network Engineer Supervisor", voxLead1:"Coordonarea și mentorarea a 9 network engineers, 1 supervisor și 2 interni.", voxLead2:"Menținerea unei disponibilități de 100% a rețelei pe parcursul mai multor ani în rețele service-provider Anti-DDoS la scară largă.", voxLead3:"Coordonarea activităților de peering, Points of Presence, traffic engineering, proceduri operaționale și escaladarea finală pentru incidente complexe.",
-      voxEngRole:"Network Engineer", voxEng1:"Monitorizare și troubleshooting 24/7 pentru infrastructură, aplicații și data center.", voxEng2:"Configurare și suport pentru echipamente Cisco, Dell, Arista și FortiGate în rețele Layer 2 și Layer 3.",
-      juniorRole:"Junior Network Engineer", junior1:"Monitorizarea traficului și echipamentelor de rețea și rezolvarea incidentelor prin CRM, telefon și email.",
-      nocRole:"NOC Engineer", noc1:"Monitorizarea stării sistemelor, suport tehnic și mentenanța serverelor și echipamentelor de rețea din data center.",
-      adminRole:"Network Administrator", admin1:"Administrarea rețelelor locale, mediilor Windows desktop/server, inventarului hardware, licențelor software și troubleshooting tehnic.",
-      achMicro:"Realizări selectate", achTitle:"Rezultate cu impact măsurabil.", achText:"O vedere concisă asupra rezultatelor care reprezintă cel mai bine experiența mea operațională și de leadership.",
-      ach1Title:"100% disponibilitate a rețelei", ach1Text:"Am menținut 100% uptime al rețelei la Voxility pentru mai mult de trei ani.",
-      ach2Title:"Leadership tehnic", ach2Text:"Am coordonat și mentorat 9 network engineers, 1 supervisor și 2 interni.",
-      ach3Title:"PoP & traffic engineering", ach3Text:"Am contribuit la implementări de Points of Presence și inițiative de traffic engineering într-un mediu service-provider și Anti-DDoS la scară largă.",
-      ach4Title:"Proiecte de infrastructură securizată", ach4Text:"Am contribuit la PEPS, la o migrare de platformă între data centere și la Propolis Project prin schimbări securizate de rețea și infrastructură.",
-      certMicro:"Dezvoltare profesională", certTitle:"Training & Certificări", certText:"Principalii vendori tehnologici, organizații de certificare, standarde și framework-uri de cybersecurity reprezentate în dezvoltarea mea profesională.", educationLabel:"Educație",
-      education:"Licență în Business Administration and Management — Universitatea Creștină Dimitrie Cantemir, București (2007–2011)",
-      contactTitle:"Ai o problemă de rețea sau securitate de rezolvat?", contactText:"Spune-mi la ce lucrezi și unde este provocarea.", contactButton:"Contactează-mă ↗",
-      brand:"Network & Security Consultant", pageTitle:"Despre Vladimir Arjoca — Network & Security Consultant", back:"← Înapoi la resurse"
+    "fr": {
+        "heroEyebrow": "À propos",
+        "heroLead": "Une expérience des réseaux à grande échelle, des incidents complexes et de la coordination d’équipes.",
+        "heroIntro": "J’ai exploité des infrastructures d’entreprise et d’opérateurs, encadré des équipes techniques et contribué à des migrations et à des évolutions d’architecture. Cette expérience m’aide à accompagner les clients dans leurs décisions concernant la sécurité, la disponibilité et l’évolution du réseau.",
+        "contactCta": "Parlons-en ↗",
+        "metricYears": "ans d’expérience en réseaux et sécurité",
+        "metricUptime": "de disponibilité réseau maintenue pendant plus de 3 ans",
+        "metricLead": "personnes encadrées et accompagnées : ingénieurs, superviseur et stagiaires",
+        "achTitle": "Quelques étapes marquantes.",
+        "platforms": "Expérience pratique : Fortinet · Palo Alto Networks · Cisco",
+        "certMicro": "Développement professionnel",
+        "certTitle": "Formation & Certifications",
+        "certText": "Fournisseurs technologiques et organismes de certification représentés dans ma formation et mon développement professionnel.",
+        "framework": "Normes et cadres de référence : NIST",
+        "educationLabel": "Formation universitaire",
+        "education": "Licence en Business Administration and Management — Université chrétienne Dimitrie Cantemir, Bucarest (2007–2011)",
+        "contactTitle": "Un problème de réseau ou de sécurité à résoudre ?",
+        "contactText": "Dites-moi sur quoi vous travaillez et où se situe la difficulté.",
+        "contactButton": "Contactez-moi ↗",
+        "brand": "weownit.net",
+        "footerBrand": "Network & Security Consultant",
+        "pageTitle": "À propos de Vladimir Arjoca — Network & Security Consultant",
+        "metricsLabel": "Résultats sélectionnés",
+        "trainingLabel": "Organismes de formation et de certification",
+        "ach1Title": "Dernier niveau d’escalade",
+        "ach1Text": "Dernier niveau d’escalade pour les incidents complexes de réseau et de sécurité, dans un environnement opérationnel 24 h/24 et 7 j/7.",
+        "ach2Title": "Extension du réseau et optimisation des coûts",
+        "ach2Text": "Coordination du peering et du déploiement de points de présence, optimisation du trafic et réduction des coûts opérationnels dans des réseaux proposant des services Anti-DDoS.",
+        "ach3Title": "Migration réussie entre centres de données",
+        "ach3Text": "Contribution à la migration d’une plateforme entre centres de données : transition de l’infrastructure, validation et support après migration.",
+        "ach4Title": "Accès sécurisé et évolution de l’architecture",
+        "ach4Text": "Contribution à l’accès sécurisé aux bureaux virtuels pour de nombreux utilisateurs et à la mise en œuvre d’évolutions d’architecture dans des environnements sécurisés.",
+        "ach5Title": "Gestion des vulnérabilités et des pare-feu",
+        "ach5Text": "Collaboration à la correction des vulnérabilités à partir des avis de sécurité et des CVE, et gestion centralisée des politiques, mises à niveau et journaux des pare-feu.",
+        "ach6Title": "Procédures, visibilité et automatisation",
+        "ach6Text": "Développement de procédures améliorant la réponse aux incidents, amélioration de la supervision et soutien aux initiatives d’automatisation via GitLab CI/CD."
     }
-  };
+};
 
   function apply(lang){
     const d=t[lang]||t.en;
     SiteI18n.setLanguage(lang);
     document.title=d.pageTitle;
     const brand=document.querySelector("[data-brand]"); if(brand) brand.textContent=d.brand;
-    const footerBrand=document.querySelector("[data-footer-brand]"); if(footerBrand) footerBrand.textContent=d.brand;
+    const footerBrand=document.querySelector("[data-footer-brand]"); if(footerBrand) footerBrand.textContent=d.footerBrand;
     document.querySelectorAll("[data-k]").forEach(el=>{
       const key=el.dataset.k;
-      if(d[key]!==undefined) el.innerHTML=d[key];
+      if(d[key]!==undefined) el.textContent=d[key];
     });
     document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
+    document.querySelectorAll("[data-label-k]").forEach(el=>el.setAttribute("aria-label",d[el.dataset.labelK]));
     syncInternalLanguageLinks(lang);
   }
   document.querySelectorAll(".lang-switch button").forEach(b=>b.addEventListener("click",()=>{
