@@ -6,7 +6,7 @@
   <meta name="description" content="weownit.net Security Canvas — a guided workflow connecting local security evidence and next actions.">
   <title>Security Canvas — weownit.net</title>
   <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
-  <link rel="stylesheet" href="assets/security-canvas.css?v=1">
+  <link rel="stylesheet" href="assets/security-canvas.css?v=2">
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=20">
   <link rel="canonical" href="https://weownit.net/tools.html?lang=en">
@@ -40,7 +40,7 @@
     <button class="global-nav-toggle" type="button" aria-expanded="false" aria-controls="global-navigation" data-nav-toggle data-nav-label="menu">Menu</button>
   </div>
 </header>
-  <div class="wrap preview-bar"><div class="compare-control" role="group" aria-label="Tools view" data-canvas-label="toolsView"><button id="canvas-view" aria-pressed="true" data-i18n="canvas">Security Canvas</button><button id="current-view" aria-pressed="false" data-i18n="current">Existing tools</button></div></div>
+  <div class="wrap preview-bar"><div class="compare-control"><button id="canvas-view" type="button" hidden data-i18n="returnCanvas">← Return to Security Canvas</button><button id="current-view" type="button" data-i18n="openIndividual">Open individual tools →</button></div></div>
   <main id="main" tabindex="-1">
     <section id="start" class="wrap start">
       <div class="intro"><p class="eyebrow" data-i18n="eyebrow">ONE CONCERN. A CONNECTED WORKFLOW.</p><h1 data-i18n="headline">Security Canvas.</h1><p class="lead" data-i18n="lead">Start with what worries you. Follow the evidence. Leave with a clear next step.</p></div>
@@ -60,7 +60,7 @@
   </main>
   <footer class="wrap"><span>weownit.net <b>·</b> Security Canvas</span><span data-i18n="footer">Local evidence · Clear next actions</span><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
   <div id="toast" role="status" aria-live="polite" hidden></div>
-  <script src="assets/firewall-review-core.js"></script><script src="assets/firewall-change-core.js"></script><script src="assets/vendor-hardening-core.js"></script><script src="assets/vendor-hardening-demos.js"></script><script src="assets/incident-triage-sources.js"></script><script src="assets/incident-triage-core.js"></script><script src="assets/incident-triage-platform-demos.js"></script><script src="assets/security-canvas-model.js?v=1"></script><script type="module" src="assets/security-canvas.js?v=1"></script>
+  <script src="assets/firewall-review-core.js"></script><script src="assets/firewall-change-core.js"></script><script src="assets/vendor-hardening-core.js"></script><script src="assets/vendor-hardening-demos.js"></script><script src="assets/incident-triage-sources.js"></script><script src="assets/incident-triage-core.js"></script><script src="assets/incident-triage-platform-demos.js"></script><script src="assets/security-canvas-model.js?v=1"></script><script type="module" src="assets/security-canvas.js?v=2"></script>
   <noscript><p class="wrap">Enable JavaScript to use Security Canvas. <a href="tools-existing.html">Open the existing tools</a>.</p></noscript>
 <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
 <script src="assets/chatbox.js?v=18" defer></script>
