@@ -8,3 +8,6 @@
 
 .global-nav-shell .brand{display:flex;align-items:center;gap:.75rem;font-weight:750;letter-spacing:-.035em}.global-nav-shell .mark{display:grid;place-items:center}.security-canvas-page .comparison iframe{visibility:hidden}.security-canvas-page .comparison iframe.is-ready{visibility:visible}.site-privacy{margin-left:auto}.workspace{scroll-margin-top:90px}.summary-title{overflow-wrap:anywhere}.compare-control button{min-height:44px}
 @media(max-width:700px){.workspace{scroll-margin-top:12px}}
+
+/* Individual tools are secondary; allow one page scroll instead of a nested viewport. */
+.security-canvas-page .comparison iframe{height:600px;min-height:0}.progress li.reviewed{color:var(--muted)}.progress li.skipped,.progress-status{color:var(--quiet)}.compare-control button{border:0;color:var(--muted);text-align:left}.compare-control button:hover{color:var(--accent)}
