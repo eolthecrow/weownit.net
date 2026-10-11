@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a151c">
+  <meta name="description" content="Technical tools and platforms used across network and security engineering by Vladimir Arjoca.">
+  <title>Tools — Network & Security Consultant</title>
+  <link rel="canonical" href="https://weownit.net/tools.html?lang=en">
+  <link rel="alternate" hreflang="en" href="https://weownit.net/tools.html?lang=en">
+  <link rel="alternate" hreflang="ro" href="https://weownit.net/tools.html?lang=ro">
+  <link rel="alternate" hreflang="fr" href="https://weownit.net/tools.html?lang=fr">
+  <link rel="alternate" hreflang="x-default" href="https://weownit.net/tools.html?lang=en">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Tools — Network &amp; Security Consultant">
+  <meta property="og:description" content="Technical tools and platforms used across network and security engineering by Vladimir Arjoca.">
+  <meta property="og:url" content="https://weownit.net/tools.html?lang=en">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Network &amp; Security Consultant">
+  <meta name="twitter:card" content="summary">
+  <style>
+    :root{color-scheme:dark;--bg:#0a151c;--bg2:#0e1d25;--panel:#12232b;--line:#29404a;--line-strong:#507078;--ink:#f2f1e8;--muted:#a6b8ba;--quiet:#81969a;--accent:#6ce2c7;--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55}
+    a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 1.4rem}
+    
+    
+    .brand{display:flex;align-items:center;gap:.75rem;font-weight:750;letter-spacing:-.035em}
+    .mark{width:40px;height:40px;display:grid;place-items:center;border:0;background:transparent;box-shadow:none;outline:none;flex:none}
+    .mark img{width:34px;height:auto;max-height:34px;display:block;object-fit:contain}
+    
+    
+    
+    
+    main{min-height:calc(100vh - 67px)}
+    .hero{display:grid;align-items:center;background:linear-gradient(135deg,#0a151c 0%,#0d1e26 62%,#12342f 100%)}
+    .hero-inner{width:100%;padding:4rem 1.4rem;display:grid;grid-template-columns:minmax(0,1fr) minmax(320px,1fr);gap:3rem;align-items:center}
+    .eyebrow{font-family:var(--mono);color:var(--accent);font-size:.75rem;text-transform:uppercase;letter-spacing:.13em;margin-bottom:1rem}
+    .tool-title{font-family:var(--font);font-size:clamp(2rem,4vw,3.5rem);line-height:1.1;letter-spacing:-.05em;margin:0 0 .8rem;font-weight:700;overflow-wrap:break-word}
+    .lead{max-width:690px;color:var(--muted);font-size:.972rem;margin:0}
+    .webcheck-card{border:1px solid var(--line-strong);background:rgba(14,29,37,.9);padding:1.6rem;min-width:0}
+    .webcheck-card h2{font-size:1.25rem;margin:0 0 1.5rem;letter-spacing:-.03em}
+    .webcheck-card label{display:block;margin-bottom:.6rem;font-size:.95rem;font-weight:650}
+    .webcheck-card input{display:block;width:100%;min-height:50px;border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);padding:.85rem;font:1rem var(--mono);border-radius:0}
+    .webcheck-card input[aria-invalid="true"]{border-color:#ffb4a9}
+    .webcheck-card button{display:block;width:100%;min-height:50px;margin-top:1rem;padding:.85rem 1rem;border:1px solid var(--accent);background:var(--accent);color:var(--bg);font:700 1rem var(--font);cursor:pointer}
+    .webcheck-card button:hover{background:#9cebd9}
+    .webcheck-card :is(input,button,a):focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+    .webcheck-card p{color:var(--muted);font-size:.9rem;line-height:1.65;margin:.75rem 0 0}
+    .webcheck-card .webcheck-error{color:#ffb4a9}
+    .webcheck-card a,.webcheck-credit a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+    .webcheck-credit{color:var(--quiet);font-size:.875rem;margin-top:1.5rem}
+    .webcheck-features{display:flex;flex-wrap:wrap;gap:.55rem;margin:1.5rem 0 0;padding:0;list-style:none}
+    .webcheck-features li{border-bottom:1px solid var(--line-strong);color:var(--accent);padding:.35rem 0;margin-right:.65rem;font:.875rem var(--mono)}
+    [hidden]{display:none!important}
+    footer{border-top:1px solid var(--line);padding:1.7rem 0;color:var(--quiet);font-size:.8rem}
+    @media(max-width:780px){.hero-inner{grid-template-columns:1fr;gap:2.2rem;padding:3rem 1.4rem}}
+  </style>
+  <link rel="stylesheet" href="assets/chatbox.css?v=8">
+  <link rel="stylesheet" href="assets/site.css?v=20">
+  <link rel="stylesheet" href="assets/webcheck-preview.css?v=2">
+  <link rel="stylesheet" href="assets/cve-risk-lens.css?v=2">
+  <link rel="stylesheet" href="assets/firewall-review.css?v=hardening-1">
+  <script src="assets/i18n.js?v=5"></script>
+  <link rel="stylesheet" href="assets/incident-triage.css?v=3">
+  <link rel="stylesheet" href="assets/connected-case.css?v=endpoint-1">
+</head>
+<body>
+<a class="site-skip" href="#main">Skip to content</a>
+<header class="global-header">
+  <div class="wrap nav global-nav-shell">
+    <a class="brand" href="index.html" aria-label="Network & Security Consultant">
+      <span class="mark" aria-hidden="true"><img src="assets/va-symbol.svg?v=2" alt=""></span>
+      <span data-brand>Network &amp; Security Consultant</span>
+    </a>
+    <div class="global-nav-panel" id="global-navigation" data-nav-panel>
+      <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
+        <a href="index.html#services" data-nav-label="services">Services</a>
+        <a href="tools.html" data-nav-label="tools" aria-current="page">Tools</a>
+        <a href="store.html" data-nav-label="store">Store</a>
+        <a href="about.html" data-nav-label="about">About</a>
+        <a href="contact.html" data-nav-label="contact">Contact</a>
+      </nav>
+
+    </div>
+      <div class="global-nav-actions">
+        <div class="lang-switch" role="group" aria-label="Language">
+          <button type="button" data-lang="ro" aria-pressed="false">RO</button>
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="fr" aria-pressed="false">FR</button>
+        </div>
+      </div>
+    <button class="global-nav-toggle" type="button" aria-expanded="false" aria-controls="global-navigation" data-nav-toggle data-nav-label="menu">Menu</button>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+  <section class="hero" id="web-check" aria-labelledby="webcheck-title">
+    <div class="wrap hero-inner">
+      <div>
+        <div class="eyebrow">01 / OPEN-SOURCE TOOL</div>
+        <h1 class="tool-title" id="webcheck-title">Web-Check.</h1>
+        <p class="lead">Explore a website’s public footprint: DNS records, TLS certificates, HTTP headers, hosting and security configuration.</p>
+        <ul class="webcheck-features" aria-label="Checks"><li>DNS</li><li>TLS / SSL</li><li>HTTP headers</li><li>Hosting</li></ul>
+        <section class="wc-preview" id="webcheck-preview" aria-labelledby="wc-preview-title">
+          <div class="wc-preview-heading"><h2 id="wc-preview-title" data-wcp="title">weownit.net · public results</h2><span class="wc-preview-tag" data-wcp="tag">Recorded preview</span></div>
+          <p id="wc-preview-loading" class="wc-preview-unavailable" role="status" hidden></p>
+          <div id="wc-preview-results" hidden>
+            <p class="wc-preview-meta"><span data-wcp="checked">Captured</span> <time id="wc-preview-time"></time></p>
+            <div class="wc-preview-grid">
+              <div class="wc-preview-card"><span class="wc-preview-label">DNS addresses</span><strong class="wc-preview-value"></strong></div>
+              <div class="wc-preview-card"><span class="wc-preview-label">TLS certificate</span><strong class="wc-preview-value"></strong></div>
+              <div class="wc-preview-card"><span class="wc-preview-label">Public edge</span><strong class="wc-preview-value"></strong></div>
+              <div class="wc-preview-card"><span class="wc-preview-label">HTTP headers</span><strong class="wc-preview-value"></strong></div>
+            </div>
+            <p class="wc-preview-note" id="wc-preview-delivery"></p>
+            <p class="wc-preview-note" data-wcp="note">Recorded Web-Check observations, not a live scan or a security score.</p>
+            <p class="wc-preview-note wc-preview-stale" id="wc-preview-stale" hidden></p>
+            <div id="wc-preview-findings" class="wc-findings" aria-live="polite"></div>
+            <details class="wc-preview-details wc-report"><summary data-wcp="report">View security report</summary><div id="wc-preview-report"></div></details>
+            <details class="wc-preview-details"><summary data-wcp="changes">Changes &amp; history</summary><div id="wc-preview-history"></div></details>
+            <div class="wc-export"><button type="button" id="wc-export-json" data-wcp="exportJson">Export JSON</button><button type="button" id="wc-export-html" data-wcp="exportHtml">Export report</button></div>
+            <details class="wc-preview-details"><summary data-wcp="evidence">Evidence &amp; sources</summary>
+              <dl>
+                <dt data-wcp="ipv4">IPv4</dt><dd><code id="wc-preview-ipv4"></code></dd>
+                <dt data-wcp="ipv6">IPv6</dt><dd><code id="wc-preview-ipv6"></code></dd>
+                <dt data-wcp="nameservers">Nameservers</dt><dd id="wc-preview-ns"></dd>
+                <dt data-wcp="issuer">Certificate issuer</dt><dd id="wc-preview-issuer"></dd>
+                <dt data-wcp="expires">Certificate expiry</dt><dd id="wc-preview-expiry"></dd>
+                <dt data-wcp="edge">Observed server</dt><dd id="wc-preview-edge"></dd>
+              </dl>
+              <p data-wcp="challenge" id="wc-preview-challenge" hidden></p>
+              <p data-wcp="scope">The public edge does not identify the origin server.</p>
+              <pre id="wc-preview-headers" hidden></pre>
+              <p><span data-wcp="sources">Web-Check sources</span>: <a href="https://web-check.xyz/api/dns?url=https%3A%2F%2Fweownit.net" target="_blank" rel="noopener noreferrer">DNS</a> · <a href="https://web-check.xyz/api/ssl?url=https%3A%2F%2Fweownit.net" target="_blank" rel="noopener noreferrer">TLS</a> · <a href="https://web-check.xyz/api/headers?url=https%3A%2F%2Fweownit.net" target="_blank" rel="noopener noreferrer">HTTP</a></p>
+            </details>
+          </div>
+          <a class="wc-preview-action" id="wc-preview-full" href="https://web-check.xyz/check/weownit.net" target="_blank" rel="noopener noreferrer" data-wcp="full">Open full weownit.net analysis ↗</a>
+          <p class="wc-preview-note" data-wcp="privacy">The full analysis opens an external service in a new tab.</p>
+          <noscript><p class="wc-preview-note">Enable JavaScript to display the recorded preview.</p></noscript>
+        </section>
+        <p class="webcheck-credit">Web-Check by <a href="https://github.com/Lissy93/web-check" target="_blank" rel="noopener noreferrer">Alicia Sykes</a> · <a href="https://github.com/Lissy93/web-check/blob/master/LICENSE" target="_blank" rel="noopener noreferrer">MIT</a></p>
+      </div>
+      <div class="webcheck-card">
+        <h2 data-webcheck="formTitle">Check your website</h2>
+        <form id="webcheck-form" novalidate>
+          <label for="webcheck-domain" data-webcheck="label">Public domain or website URL</label>
+          <input id="webcheck-domain" type="text" inputmode="url" autocomplete="url" autocapitalize="none" spellcheck="false" maxlength="2048" value="weownit.net" placeholder="example.com" required aria-describedby="webcheck-hint webcheck-error">
+          <p id="webcheck-hint" data-webcheck="hint">Only the domain is sent. URL paths and query parameters are excluded.</p>
+          <p id="webcheck-error" class="webcheck-error" role="alert" hidden></p>
+          <button type="submit" data-webcheck="button">Start analysis</button>
+        </form>
+        <p data-webcheck="external">Opens the official Web-Check application in a new tab. The domain is shared with that service; results and availability depend on it.</p>
+        <p id="webcheck-status" role="status" hidden></p>
+        <p id="webcheck-report-wrap" hidden><a id="webcheck-report" target="_blank" rel="noopener noreferrer" data-webcheck="report">Open analysis</a></p>
+        <p><a href="https://web-check.xyz/" target="_blank" rel="noopener noreferrer" data-webcheck="openTool">Open Web-Check directly</a></p>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="risk-section" id="cve-risk-lens" aria-labelledby="risk-title">
+    <div class="wrap">
+      <div class="eyebrow" data-risk="eyebrow">02 / VULNERABILITY INTELLIGENCE</div>
+      <h2 class="tool-title" id="risk-title">CVE Risk Lens.</h2>
+      <p data-risk="lead">Investigate one CVE using public risk signals and official vendor advisory references.</p>
+      <form class="risk-form" novalidate>
+        <div style="flex:1;min-width:0"><label class="risk-label" for="risk-cve" data-risk="label">CVE identifier</label><input id="risk-cve" placeholder="CVE-2024-3400" maxlength="28" autocapitalize="characters" autocomplete="off" spellcheck="false" required aria-describedby="risk-status" style="width:100%"></div>
+        <button type="submit" data-risk="button" style="align-self:end">Analyze CVE</button>
+      </form>
+      <p data-risk="examples">Try a vendor example</p>
+      <div class="risk-examples"><button type="button" data-cve-example="CVE-2024-21762">Fortinet · CVE-2024-21762</button><button type="button" data-cve-example="CVE-2024-3400">Palo Alto · CVE-2024-3400</button><button type="button" data-cve-example="CVE-2024-24919">Check Point · CVE-2024-24919</button></div>
+      <p id="risk-status" class="risk-status" role="status" aria-live="polite"></p>
+      <div class="risk-results" hidden></div>
+      <p class="risk-meta" data-risk="privacy">Only the CVE identifier is sent to public data sources.</p>
+      <noscript><p>JavaScript is required for CVE Risk Lens. <a href="https://www.fortiguard.com/psirt">Fortinet PSIRT</a> · <a href="https://security.paloaltonetworks.com/">Palo Alto security advisories</a> · <a href="https://support.checkpoint.com/">Check Point support</a></p></noscript>
+    </div>
+  </section>
+
+  <section class="fw-section" id="firewall-review" aria-labelledby="fw-title">
+    <div class="wrap">
+      <div class="eyebrow" data-fw="eyebrow">03 / FIREWALL CONFIGURATION REVIEW</div>
+      <h2 class="tool-title" id="fw-title">Firewall Change Review.</h2>
+      <p class="fw-intro" data-fw="lead">Review policies, check device hardening and retest configurations. FortiGate, Palo Alto, Cisco IOS / IOS XE and Check Point; coverage varies by mode.</p>
+      <p class="fw-privacy" data-fw="privacy">Local analysis · No configuration upload · No account required</p>
+      <div class="fw-workspace">
+        <div class="fc-modes" role="group" aria-label="Review mode"><button type="button" data-fc-mode="policy" aria-pressed="true" data-fc="policyMode">Policy Review</button><button type="button" data-fc-mode="change" aria-pressed="false" data-fc="changeMode">Change Review</button><button type="button" id="vh-toggle" aria-pressed="false" aria-controls="vendor-hardening" data-vh="mode">Hardening &amp; Retest</button></div><form id="fw-form"><div class="fc-launch" id="firewall-change-review"><div><p class="fc-kicker" data-fc="tag">CHANGE IMPACT / LOCAL LAB</p><h3 data-fc="intro">Will your firewall change allow the right traffic?</h3><p data-fc="pitch">Compare two configurations against your traffic requirements.</p></div><div class="fc-launch-action"><button type="button" id="fc-demo" class="fw-primary" data-fc="demo">Run change demo</button><button type="button" id="fc-range-demo" data-fc="rangeDemo">Run advanced lab</button><p class="fw-hint" data-fc="demoNote">Synthetic lab.</p></div></div><div id="fc-steps" class="fc-steps"></div>
+          <div class="fw-toolbar">
+            <div class="fw-control"><label for="fw-vendor" data-fw="vendor">Configuration format</label><select id="fw-vendor"><option value="auto" data-fw="auto">Detect automatically</option><option value="fortinet">Fortinet · CLI / JSON</option><option value="paloalto">Palo Alto · CLI / XML / JSON</option><option value="checkpoint">Check Point · Management API JSON</option></select></div>
+            <div><span class="fw-label" data-fw="demo">Try a synthetic lab</span><div class="fw-demos"><button type="button" data-fw-demo="fortinet">Fortinet CLI</button><button type="button" data-fw-demo="paloalto">Palo Alto XML</button><button type="button" data-fw-demo="checkpoint">Check Point JSON</button></div></div>
+          </div>
+          <details class="fw-formats"><summary data-fw="standard">One review standard across vendors</summary><p class="fw-hint" data-fw="standardHint">JSON and XML exported here share the Weownit review schema and can be reloaded for the same vendor. These are analysis snapshots, not device backups or migration configurations.</p><div class="fw-table-wrap"><table class="fw-table"><thead><tr><th data-fw="vendor">Firewall vendor</th><th data-fw="nativeInputs">Native inputs</th><th data-fw="sharedInputs">Shared review inputs</th></tr></thead><tbody><tr><td>Fortinet</td><td data-fw="fortFormats">FortiOS policy/security-policy CLI · REST API JSON</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr><tr><td>Palo Alto</td><td data-fw="paloFormats">Config XML · config JSON · CLI set · REST rule JSON</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr><tr><td>Check Point</td><td data-fw="cpFormats">Management API JSON · mgmt_cli JSON output</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr></tbody></table></div><h4 data-fw="extraDemos">More native lab formats</h4><div class="fw-demos"><button type="button" data-fw-demo="fortinetJSON" data-fw-vendor="fortinet">Fortinet JSON</button><button type="button" data-fw-demo="paloaltoCLI" data-fw-vendor="paloalto">Palo Alto CLI</button><button type="button" data-fw-demo="paloaltoJSON" data-fw-vendor="paloalto">Palo Alto JSON</button></div><h4 data-fw="nativeGuide">Export guidance</h4><p class="fw-hint" data-fw="exportGuide">Use complete policy exports with their scope and related objects. Fortinet JSON requires REST response wrappers. Check Point policy data can be exported through mgmt_cli as JSON.</p></details>
+          <label class="fw-label" for="fw-input" data-fw="input">Paste configuration or open local files</label>
+          <textarea id="fw-input" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880" aria-describedby="fw-format-hint fw-status" placeholder="FortiOS CLI / PAN-OS XML / Check Point JSON"></textarea>
+          <div class="fw-upload"><label for="fw-file" data-fw="file">Local files (maximum 5 MB in total)</label><input id="fw-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div>
+          <p id="fw-format-hint" class="fw-hint" data-fw="formatHint">Fortinet: firewall policy/security-policy CLI export, including VDOMs. Palo Alto: config XML, including Panorama rulebases. Check Point: extracted access-rulebase and objects JSON; select related JSON files together. Archives and Gaia CLI are not supported.</p>
+          <details class="fw-before" id="fw-before-panel"><summary data-fw="compare">Compare with an earlier configuration (optional)</summary><label class="fw-label" for="fw-before" data-fw="before">Earlier configuration — same vendor</label><textarea id="fw-before" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880"></textarea><div class="fw-upload"><label for="fw-before-file" data-fw="beforeFile">Earlier local files</label><input id="fw-before-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div><p class="fw-hint" data-fw="compareHint">Compares policy fields and order. It does not simulate routing, NAT or application availability.</p></details>
+<div class="fc-scenarios"><label class="fc-toggle"><input type="checkbox" id="fc-enable"><span data-fc="enable">Evaluate before / after traffic scenarios</span></label><div id="fc-editor" hidden><p class="fw-hint" data-fc="hint">Use exact IPv4 hosts and exported policy contexts.</p><datalist id="fc-scopes"></datalist><div id="fc-rows"></div><div class="fw-input-actions"><button type="button" id="fc-add" data-fc="add">Add scenario</button><button type="button" id="fc-export" data-fc="export">Export scenarios JSON</button><button type="button" id="fc-export-csv" data-fc="csvExport">Export CSV</button><label class="fc-import"><span data-fc="import">Import scenarios JSON</span><input id="fc-import" type="file" accept=".json,.csv"></label></div><p class="fw-status" id="fc-message" role="status" aria-live="polite"></p></div></div>
+          <div class="fw-input-actions"><button class="fw-primary" type="submit" data-fw="analyze">Review configuration</button><button id="fw-clear" type="button" data-fw="clear">Clear data</button></div>
+          <p id="fw-status" class="fw-status" role="status" aria-live="polite"></p>
+        </form>
+        <div id="fw-results" class="fw-results" hidden>
+          <div class="fw-result-head"><h3 id="fw-result-title"></h3><div class="fw-export"><button type="button" id="fw-export-html" data-fw="exportHTML">Download HTML report</button><button type="button" id="fw-export-json" data-fw="exportJSON">JSON report + reusable snapshot</button><button type="button" id="fw-export-xml" data-fw="exportXML">XML review snapshot</button></div></div>
+          <button type="button" id="cc-return" data-cc="policyReady" hidden>Return to connected case</button><div id="fc-results" aria-live="polite" hidden></div><p id="fw-counts" class="fw-counts"></p>
+          <div id="fw-summary" class="fw-summary"></div>
+          <details class="fw-limits" open><summary data-fw="coverage">Coverage and analysis limits</summary><div id="fw-coverage" class="fw-table-wrap"></div><ul id="fw-warnings"></ul></details>
+          <div id="fw-diff" hidden><h3 data-fw="changes">Configuration changes</h3><div id="fw-diff-content"></div></div>
+          <h3 data-fw="findings">Findings to review</h3>
+          <div class="fw-filters"><select id="fw-severity" aria-label="Severity"><option value="all" data-fw="allSeverities">All priorities</option><option value="high" data-fw="high">High</option><option value="medium" data-fw="medium">Medium</option><option value="low" data-fw="low">Low</option></select><input id="fw-search" type="search" maxlength="200" aria-label="Search findings" placeholder="Search rule name or ID"></div>
+          <div id="fw-findings"></div>
+          <details><summary data-fw="policies">Parsed policies</summary><div id="fw-policy-table" class="fw-table-wrap"></div><p class="fw-hint" data-fw="tableLimit">The table shows up to 100 policies. The JSON report includes all parsed policies.</p></details>
+          <div class="fw-cta-box"><p data-fw="ctaText">Turn these findings into a validated remediation plan: expert review, controlled changes and verification.</p><a class="fw-cta" href="contact.html" data-fw="cta">Request a firewall review</a></div>
+        </div>
+        <div id="vendor-hardening" class="vh-panel" hidden>
+          <h3 data-vh="title">Verify settings. Retest the change.</h3>
+          <p class="fw-hint" data-vh="intro">FortiGate · Palo Alto · Cisco IOS / IOS XE · Check Point. Evidence for each supported control, with a before / after comparison.</p>
+          <form id="vh-form">
+            <div class="fw-toolbar"><div class="fw-control"><label for="vh-vendor" data-vh="vendor">Vendor / platform</label><select id="vh-vendor"><option value="fortinet">FortiGate · CLI / REST JSON</option><option value="paloalto">Palo Alto · XML / CLI set</option><option value="cisco">Cisco · IOS / IOS XE CLI</option><option value="checkpoint">Check Point · Gaia CLI / Management JSON</option></select></div><div><span class="fw-label" data-vh="demo">Synthetic before / after labs</span><div class="fw-demos"><button type="button" data-vh-demo="fortinet">FortiGate</button><button type="button" data-vh-demo="paloalto">Palo Alto</button><button type="button" data-vh-demo="cisco">Cisco</button><button type="button" data-vh-demo="checkpoint">Check Point</button></div></div></div>
+            <details class="fw-formats"><summary data-vh="guide">Supported exports and collection</summary><p class="fw-hint" data-vh="formatForti"></p><p class="fw-hint" data-vh="formatPalo"></p><p class="fw-hint" data-vh="formatCisco"></p><p class="fw-hint" data-vh="formatCP"></p><p class="fw-hint" data-vh="limits"></p></details>
+            <label for="vh-reference" class="fw-label" data-vh="reference">Device reference — current snapshot</label><input id="vh-reference" class="vh-reference" type="text" maxlength="120" autocomplete="off" aria-describedby="vh-reference-hint"><p id="vh-reference-hint" class="fw-hint" data-vh="referenceHint"></p>
+            <label for="vh-input" class="fw-label" data-vh="input">Current configuration</label><textarea id="vh-input" maxlength="5242880" spellcheck="false" autocomplete="off" autocapitalize="off" aria-describedby="vh-status"></textarea>
+            <div class="fw-upload"><label for="vh-file" data-vh="files">Current local files · maximum 5 MB per snapshot</label><input id="vh-file" type="file" accept=".txt,.conf,.cfg,.xml,.json" multiple></div>
+            <details id="vh-before-panel" class="fw-before"><summary data-vh="beforeTitle">Earlier configuration for retest (optional)</summary><label class="fw-label" for="vh-before-reference" data-vh="beforeReference">Device reference — earlier snapshot</label><input id="vh-before-reference" class="vh-reference" type="text" maxlength="120" autocomplete="off"><label class="fw-label" for="vh-before" data-vh="before">Earlier configuration</label><textarea id="vh-before" maxlength="5242880" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea><div class="fw-upload"><label for="vh-before-file" data-vh="beforeFiles">Earlier local files</label><input id="vh-before-file" type="file" accept=".txt,.conf,.cfg,.xml,.json" multiple></div></details>
+            <div class="fw-input-actions"><button type="submit" class="fw-primary" data-vh="analyze">Check hardening / retest</button><button type="button" id="vh-clear" data-vh="clear">Clear hardening data</button></div><p id="vh-status" class="fw-status" role="status" aria-live="polite"></p>
+          </form>
+          <div id="vh-results" class="fw-results" hidden><div class="fw-result-head"><h3 id="vh-result-title"></h3><div class="fw-export"><button type="button" id="vh-export-json" data-vh="exportJSON">Download JSON evidence</button><button type="button" id="vh-export-html" data-vh="exportHTML">Download HTML report</button></div></div><p id="vh-synthetic" class="fc-demo-banner" data-vh="synthetic" hidden></p><p id="vh-counts" class="fw-counts"></p><div id="vh-summary" class="fw-summary"></div><details class="fw-limits"><summary data-vh="coverage">Coverage and limits</summary><div id="vh-coverage" class="fw-hint"></div></details><div id="vh-comparison"></div><div class="fw-filters"><select id="vh-filter" aria-label="Control status"><option value="all" data-vh="all">All controls</option><option value="fail" data-vh="fail">Needs review</option><option value="unknown" data-vh="unknown">Unverified</option><option value="pass" data-vh="pass">Verified setting</option></select><input type="search" id="vh-search" maxlength="200"></div><div id="vh-controls"></div><div class="fw-cta-box"><a id="vh-store" class="fw-cta" href="store.html#firewall-security-hardening-toolkit" data-vh="store">Open the related toolkit</a><a id="vh-contact" class="fw-cta" href="contact.html" data-vh="contact">Request a validated remediation plan</a></div></div>
+          <p class="fw-hint" data-vh="limits"></p>
+        </div>
+      </div>
+      <p class="fw-hint" data-fw="scope">Static policy review, not a full security audit or a connectivity guarantee. Unsupported conditions and missing information are reported explicitly. Configurations are held in this page only until cleared or closed; reports are saved locally when requested.</p>
+      <noscript><p>JavaScript is required for local Firewall Review.</p></noscript>
+    </div>
+  </section>
+
+  <section class="it-section" id="incident-evidence-triage" aria-labelledby="it-title">
+    <div class="wrap">
+      <div class="eyebrow" data-it="eyebrow">04 / INCIDENT INVESTIGATION</div>
+      <h2 class="tool-title" id="it-title">Incident Evidence Triage.</h2>
+      <p class="it-intro" data-it="lead">Review Windows event exports, reconstruct a timeline and inspect suspicious patterns.</p>
+      <p class="it-privacy" data-it="privacy">Local processing · No log upload · No account or backend required</p>
+      <div class="it-workspace">
+        <div class="it-launch"><div><h3 data-it="intro">From event logs to an investigation</h3><p data-it="pitch">Inspect evidence and correlate observed events.</p></div><button type="button" id="it-demo" class="it-primary" data-it="demo">Run investigation lab</button></div>
+        <div id="endpoint-investigation" class="it-platform-demos" style="scroll-margin-top:100px"><button type="button" id="ep-demo" class="it-primary" data-ep="demo">Run endpoint evidence lab</button></div>
+        <details class="it-guide"><summary data-it="demo">Run investigation lab</summary><div class="it-platform-demos" aria-label="Platform investigation labs"><button type="button" id="it-demo-linux" data-it="linuxDemo">Linux SSH / sudo lab</button><button type="button" id="it-demo-fortinet" data-it="fortinetDemo">FortiOS lab</button><button type="button" id="it-demo-paloalto" data-it="paloaltoDemo">PAN-OS lab</button><button type="button" id="it-demo-checkpoint" data-it="checkpointDemo">Check Point lab</button><button type="button" id="it-demo-cisco-ios" data-it="cisco-iosDemo">Cisco IOS / IOS XE lab</button><button type="button" id="it-demo-cisco-asa" data-it="cisco-asaDemo">Cisco ASA / FTD lab</button></div></details>
+        <div class="it-resume"><label for="it-resume-file" data-it="resume">Resume saved case</label><input id="it-resume-file" type="file" accept=".json,application/json" aria-describedby="it-resume-hint"><p id="it-resume-hint" class="it-hint" data-it="resumeHint"></p></div>
+        <details class="it-guide"><summary data-ep="guide">Startup entry → file → process → connection</summary><p class="it-hint" data-ep="guideHint"></p><p class="it-hint" data-ep="collect"></p><pre><code>.\autorunsc64.exe -a '*' -c -h -s &gt; autoruns.csv</code></pre><pre><code>.\sigcheck64.exe -nobanner -c -h 'C:\Path\app.exe' &gt; sigcheck.csv</code></pre><p class="it-hint" data-ep="collectionLimits"></p><p><a href="https://learn.microsoft.com/en-us/sysinternals/downloads/autoruns" target="_blank" rel="noopener noreferrer">Microsoft · Autoruns</a> · <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sigcheck" target="_blank" rel="noopener noreferrer">Microsoft · Sigcheck</a> · <a href="https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon" target="_blank" rel="noopener noreferrer">Microsoft · Sysmon</a></p></details>
+        <details class="it-guide cc-guide"><summary data-cc="guide">Packet evidence → investigation → policy review</summary><p class="it-hint" data-cc="guideHint"></p><button type="button" id="cc-demo" data-cc="demo">Run connected investigation lab</button><p class="it-hint" data-cc="syntheticHint"></p><p class="it-hint" data-cc="coverage"></p><pre><code>tshark -n -r evidence.pcapng -Y "tcp or udp" -T json -e frame.number -e frame.time_epoch -e ip.src -e ip.dst -e ipv6.src -e ipv6.dst -e tcp.srcport -e tcp.dstport -e udp.srcport -e udp.dstport -e tcp.stream -e tcp.flags.syn -e tcp.flags.ack -e tcp.flags.reset -e tcp.analysis.retransmission -e dns.qry.name -e dns.flags.rcode &gt; packets.json</code></pre><pre><code>tshark -n -r evidence.pcapng -Y "tcp or udp" -T fields -E header=y -E separator=, -E quote=d -E occurrence=f -e frame.number -e frame.time_epoch -e ip.src -e ip.dst -e ipv6.src -e ipv6.dst -e tcp.srcport -e tcp.dstport -e udp.srcport -e udp.dstport -e tcp.stream -e tcp.flags.syn -e tcp.flags.ack -e tcp.flags.reset -e tcp.analysis.retransmission -e dns.qry.name -e dns.flags.rcode &gt; packets.csv</code></pre><p><a href="https://www.wireshark.org/docs/man-pages/tshark.html" target="_blank" rel="noopener noreferrer">Wireshark · TShark</a></p></details>
+        <form id="it-form">
+          <div class="it-case"><label><span data-it="caseId">Case reference (optional)</span><input id="it-case" maxlength="120" autocomplete="off"></label><label><span data-it="analyst">Analyst (optional)</span><input id="it-analyst" maxlength="120" autocomplete="off"></label></div>
+          <div class="it-import-source"><label for="it-source-mode" data-it="sourceMode">Log source</label><select id="it-source-mode"><option value="auto">Automatic detection</option><option value="windows">Windows</option><option value="linux">Linux</option><option value="fortinet">Fortinet FortiOS</option><option value="paloalto">Palo Alto PAN-OS</option><option value="checkpoint">Check Point</option><option value="cisco">Cisco ASA / FTD / IOS</option><option value="tshark">TShark capture</option><option value="autoruns">Sysinternals Autoruns</option><option value="sigcheck">Sysinternals Sigcheck</option></select></div>
+          <details class="it-guide"><summary data-it="contextLabel">Import context for incomplete timestamps / host</summary><p class="it-hint" data-it="contextHint">Supply only the actual missing context of the exported records.</p><div class="it-import-context"><label><span data-it="timezone">UTC offset (example +03:00)</span><input id="it-timezone" maxlength="6" placeholder="+03:00" autocomplete="off"></label><label><span data-it="year">Year for legacy syslog</span><input id="it-year" type="number" min="1970" max="2100" placeholder="2026" autocomplete="off"></label><label><span data-it="evidenceHost">Host when absent from the log</span><input id="it-evidence-host" maxlength="512" placeholder="EDGE-FW-01" autocomplete="off"></label></div></details>
+          <label for="it-input" data-it="input">Paste event exports</label><textarea id="it-input" maxlength="10485760" spellcheck="false" autocomplete="off" aria-describedby="it-status it-format-hint" placeholder="Windows XML / journalctl JSON / FortiOS key=value / PAN-OS CSV / Check Point JSON / Cisco syslog"></textarea>
+          <div class="it-upload"><label for="it-files" data-it="files">Local XML / JSON / NDJSON / CSV files</label><input id="it-files" type="file" accept=".xml,.json,.jsonl,.ndjson,.csv,.txt,.log,.syslog,.evtx" multiple></div>
+          <details class="it-guide"><summary data-it="formats">Formats, collection guidance and detection scope</summary><p id="it-format-hint" class="it-hint" data-it="formatsHint">Maximum 8 files, 10 MiB and 20,000 events. Binary EVTX requires local conversion.</p><h4 data-it="platformGuide">Source coverage</h4><div class="it-table-wrap"><table class="it-table"><tbody><tr><th>Windows</th><td data-it="windowsScope">Windows log subset.</td></tr><tr><th>Linux</th><td data-it="linuxScope">Linux log subset.</td></tr><tr><th>Fortinet FortiOS</th><td data-it="fortinetScope">Fortinet FortiOS log subset.</td></tr><tr><th>Palo Alto PAN-OS</th><td data-it="paloaltoScope">Palo Alto PAN-OS log subset.</td></tr><tr><th>Check Point</th><td data-it="checkpointScope">Check Point log subset.</td></tr><tr><th>Cisco ASA / FTD / IOS XE</th><td data-it="ciscoScope">Cisco ASA / FTD / IOS XE log subset.</td></tr></tbody></table></div><h4 data-it="linuxCollect">Read-only Linux export</h4><p class="it-hint" data-it="linuxCollectHint">Export already collected journals for the relevant bounded interval.</p><pre><code>journalctl --since "2026-10-04 00:00:00" --until "2026-10-05 00:00:00" --no-pager -o json &gt; linux-journal.ndjson</code></pre><h4 data-it="collect">Read-only EVTX export on Windows</h4><p class="it-hint" data-it="collectHint">Export an existing EVTX as structured event XML.</p><pre><code>$sourcePath = 'C:\Evidence\Security.evtx'
+$destinationPath = 'C:\Evidence\Security.events.xml'
+$events = Get-WinEvent -Path $sourcePath -Oldest -ErrorAction Stop
+$eventXml = $events | ForEach-Object { $_.ToXml() }
+$xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Events&gt;'
+[System.IO.File]::WriteAllText($destinationPath, $xml, [System.Text.UTF8Encoding]::new($false))</code></pre><h4 data-it="schema">JSON / CSV fields</h4><p class="it-hint" data-it="schemaHint">Use provider, channel and explicit timestamp offsets.</p><pre><code>{
+  "eventId": 4625,
+  "timestamp": "2026-10-04T08:00:00Z",
+  "host": "LAB-WS01",
+  "provider": "Microsoft-Windows-Security-Auditing",
+  "channel": "Security",
+  "recordId": "1001",
+  "data": { "TargetUserName": "qa-admin", "TargetDomainName": "LAB", "IpAddress": "192.0.2.25", "LogonType": "10" }
+}</code></pre><p class="it-hint" data-it="scope">Heuristic review; analyst validation required.</p><p><a href="https://learn.microsoft.com/en-us/windows/security/operating-system-security/sysmon/sysmon-events" target="_blank" rel="noopener noreferrer">Microsoft · Sysmon</a> · <a href="https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/event-4625" target="_blank" rel="noopener noreferrer">Microsoft · 4625</a> · <a href="https://attack.mitre.org/techniques/T1110/001/" target="_blank" rel="noopener noreferrer">MITRE ATT&amp;CK</a></p></details>
+          <div class="it-actions"><button type="submit" id="it-run" class="it-primary" data-it="run">Analyze locally</button><button type="button" id="it-clear" data-it="clear">Clear evidence</button></div><p id="it-status" class="it-status" role="status" aria-live="polite"></p>
+        </form>
+        <div class="it-results" id="it-results" hidden>
+          <div class="it-result-head"><h3 data-it="results">Incident evidence review</h3><div class="it-export"><button type="button" id="it-export-html" data-it="exportHTML">HTML report</button><button type="button" id="it-export-json" data-it="exportJSON">JSON case report</button><button type="button" id="it-export-csv" data-it="exportCSV">Timeline CSV</button><button type="button" id="it-export-events" data-it="exportEvents">Reusable events JSON</button></div></div>
+          <p class="it-banner" id="it-demo-banner" data-it="demoBanner" hidden>Synthetic investigation.</p><div class="it-stats" id="it-stats"></div><p class="it-hint" id="it-period"></p><p class="it-hint" data-it="scope">Heuristic review; analyst validation required.</p>
+          <p class="it-banner" id="it-restored-notice" hidden></p>
+          <details id="ep-workspace" class="cc-workspace" hidden><summary data-ep="title">Endpoint evidence</summary><p class="it-hint" data-ep="limits"></p><p id="ep-counts" class="it-hint"></p><div class="it-import-context"><div><label for="ep-query" data-ep="search">Find a file, entry or host</label><input id="ep-query" type="search" maxlength="512"></div><div><label for="ep-filter" data-ep="filter">Show</label><select id="ep-filter"><option value="all" data-ep="all">All files</option><option value="review" data-ep="review">Review first</option><option value="gaps" data-ep="gaps">Evidence gaps</option></select></div></div><div id="ep-cards"></div><p class="it-hint" data-ep="appendHint"></p><div class="it-import-context"><div><label for="ep-host" data-ep="host">Source host for inventory CSV</label><input id="ep-host" type="text" maxlength="512" autocomplete="off"></div><div><label for="ep-files" data-ep="append">Add Autoruns / Sigcheck / Sysmon evidence</label><input id="ep-files" type="file" accept=".csv,.json,.jsonl,.ndjson,.xml" multiple></div></div><p><a id="ep-store" href="store.html#incident-response-toolkit" data-ep="store">Incident Response Toolkit · check availability</a></p></details>
+          <details id="cc-workspace" class="cc-workspace" hidden>
+            <summary id="cc-title" data-cc="title">Connect packet evidence to firewall decisions</summary><p class="it-hint" data-cc="intro"></p>
+            <details><summary data-cc="add">Add evidence to this case</summary><p class="it-hint" data-cc="addHint"></p><label for="cc-phase" data-cc="phase">Capture stage</label><select id="cc-phase"><option id="cc-phase-before" value="before">Before / initial investigation</option><option id="cc-phase-after" value="after">After / retest capture</option></select><label for="cc-add-files" data-cc="add">Add evidence</label><input type="file" id="cc-add-files" multiple accept=".json,.csv,.ndjson,.jsonl,.log,.syslog,.txt,.xml"><button type="button" id="cc-demo-after" data-cc="afterDemo" hidden>Add synthetic retest capture</button></details>
+            <p class="it-hint" id="cc-counts"></p><p class="it-hint" data-cc="hint"></p><p class="it-hint" data-cc="limits"></p>
+            <div id="cc-flows"></div>
+            <div id="cc-policy-form" class="cc-policy-form" hidden><h4 data-cc="context">Supply the policy context</h4><p id="cc-selected"></p><div class="cc-fields">
+              <label><span data-cc="from">Source interface / zone</span><input id="cc-from" maxlength="200" autocomplete="off" placeholder="corp"></label>
+              <label><span data-cc="to">Destination interface / zone</span><input id="cc-to" maxlength="200" autocomplete="off" placeholder="servers"></label>
+              <label><span data-cc="beforeScope">Before policy context</span><input id="cc-before-scope" maxlength="200" autocomplete="off" placeholder="root / vsys[vsys1]/rulebase"></label>
+              <label><span data-cc="afterScope">After policy context</span><input id="cc-after-scope" maxlength="200" autocomplete="off" placeholder="root / vsys[vsys1]/rulebase"></label>
+              <label><span data-cc="expected">Expected after the change</span><select id="cc-expected"><option id="cc-expected-empty" value="">Choose…</option><option id="cc-expected-permit" value="permit">Permit</option><option id="cc-expected-block" value="block">Block</option></select></label>
+            </div><button type="button" id="cc-stage" data-cc="stage">Send to Firewall Change Review</button></div>
+            <p id="cc-message" class="it-status cc-message" role="status" aria-live="polite"></p><div id="cc-comparison"></div><div id="cc-policy-results"></div>
+            <div class="cc-resources"><h4 data-cc="resources">Continue with the relevant playbook</h4><p class="it-hint" data-cc="resourcesHint"></p><a id="cc-firewall-link" href="store.html#firewall-security-hardening-toolkit" data-cc="firewallLink">Firewall hardening toolkit</a><a id="cc-incident-link" href="store.html#incident-response-toolkit" data-cc="incidentLink">Incident response and diagnostics toolkit</a></div>
+          </details>
+          <nav class="it-view-nav" aria-label="Investigation views"><button type="button" id="it-view-summary" aria-controls="it-panel-summary" aria-pressed="true" data-it="summaryView">Summary</button><button type="button" id="it-view-evidence" aria-controls="it-panel-evidence" aria-pressed="false" data-it="evidenceView">Evidence</button><button type="button" id="it-view-steps" aria-controls="it-panel-steps" aria-pressed="false" data-it="stepsView">Next steps</button></nav>
+          <section id="it-panel-summary" aria-labelledby="it-view-summary"><div id="it-summary"></div><button type="button" id="it-summary-evidence" data-it="evidenceView">Evidence</button></section>
+          <section id="it-panel-steps" aria-labelledby="it-view-steps" hidden><div id="it-next-steps"></div></section>
+          <section id="it-panel-evidence" aria-labelledby="it-view-evidence" hidden>
+          <details class="it-entity-explorer" open><summary data-it="entities">Entity explorer</summary><p class="it-hint" data-it="entityHint"></p><div class="it-filters"><label><span data-it="entityType">Entity type</span><select id="it-entity-type"></select></label><label><span data-it="entityQuery">Find an entity</span><input id="it-entity-query" type="search" maxlength="200"></label></div><p class="it-hint" data-it="entityPreview"></p><p id="it-entity-count" class="it-findings-count"></p><div id="it-entity-list"></div></details>
+          <div id="it-entity-selection" class="it-banner" hidden><p id="it-entity-selected"></p><button type="button" id="it-entity-clear" data-it="entityClear">Clear entity selection</button></div>
+          <div class="it-filters"><label><span data-it="platform">Platform</span><select id="it-platform"></select></label><label><span data-it="priority">Priority</span><select id="it-priority"></select></label><label><span data-it="host">Host</span><select id="it-host"></select></label><label><span data-it="search">Search user / IP / command / host</span><input id="it-search" type="search" maxlength="200"></label></div>
+          <h3 data-it="findings">Findings to investigate</h3><p class="it-findings-count" id="it-findings-count"></p><p class="it-hint" data-it="preview">Preview limits apply; exports contain all findings and events.</p><div id="it-findings"></div>
+          <details open><summary data-it="timeline">Event timeline · UTC</summary><label class="it-hint"><input type="checkbox" id="it-matched"><span data-it="matched">Finding-linked events only</span></label><p class="it-findings-count" id="it-timeline-count"></p><div class="it-timeline" id="it-timeline"></div></details>
+          <div class="it-grid"><div id="it-manifest"></div><div id="it-coverage"></div></div><div id="it-relations"></div>
+          </section>
+          <div class="it-cta"><p data-it="cta">Need help validating the evidence?</p><a href="contact.html" data-it="ctaLink">Request incident response support</a></div>
+        </div>
+      </div><noscript><p>JavaScript is required for local Incident Evidence Triage.</p></noscript>
+    </div>
+  </section>
+
+  </main>
+
+<footer><div class="wrap">© 2026 Vladimir Arjoca · <span data-footer-brand>Network & Security Consultant</span></div><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
+
+<script>
+(() => {
+  const {normalizeLanguage,getInitialLanguage,syncInternalLanguageLinks,installLanguageNavigation}=SiteI18n;
+
+  
+  const t = {
+    en: {
+      pageTitle:"Tools — Network & Security Consultant",
+      brand:"Network & Security Consultant",
+      back:"← Back to resources",
+      eyebrow:"01 / OPEN-SOURCE TOOL",
+      title:"Web-Check.",
+      lead:"Explore a website’s public footprint: DNS records, TLS certificates, HTTP headers, hosting and security configuration.",
+      webcheck:{formTitle:"Check your website",label:"Public domain or website URL",hint:"Only the domain is sent. URL paths and query parameters are excluded.",button:"Start analysis",external:"Opens the official Web-Check application in a new tab. The domain is shared with that service; results and availability depend on it.",report:"Open analysis",openTool:"Open Web-Check directly",invalid:"Enter a valid public domain, such as example.com. Internal addresses, credentials and custom ports are not supported.",opened:"The analysis opens in a new tab. If it did not open, use the link below.",features:["DNS","TLS / SSL","HTTP headers","Hosting"],checks:"Checks"},
+    },
+    ro: {
+      pageTitle:"Instrumente — Network & Security Consultant",
+      brand:"Network & Security Consultant",
+      back:"← Înapoi la resurse",
+      eyebrow:"01 / INSTRUMENT OPEN SOURCE",
+      title:"Web-Check.",
+      lead:"Explorează amprenta publică a unui site: înregistrări DNS, certificate TLS, antete HTTP, găzduire și configurația de securitate.",
+      webcheck:{formTitle:"Verifică site-ul tău",label:"Domeniu public sau adresa unui site",hint:"Se trimite doar domeniul. Calea și parametrii din adresă sunt excluși.",button:"Pornește analiza",external:"Deschide aplicația oficială Web-Check într-o filă nouă. Domeniul este transmis acelui serviciu; rezultatele și disponibilitatea depind de acesta.",report:"Deschide analiza",openTool:"Deschide direct Web-Check",invalid:"Introdu un domeniu public valid, de exemplu example.com. Adresele interne, datele de autentificare și porturile personalizate nu sunt acceptate.",opened:"Analiza se deschide într-o filă nouă. Dacă nu s-a deschis, folosește linkul de mai jos.",features:["DNS","TLS / SSL","Antete HTTP","Găzduire"],checks:"Verificări"},
+    },
+    fr: {
+      pageTitle:"Outils — Network & Security Consultant",
+      brand:"Network & Security Consultant",
+      back:"← Retour aux ressources",
+      eyebrow:"01 / OUTIL OPEN SOURCE",
+      title:"Web-Check.",
+      lead:"Explorez l’empreinte publique d’un site : enregistrements DNS, certificats TLS, en-têtes HTTP, hébergement et configuration de sécurité.",
+      webcheck:{formTitle:"Vérifiez votre site",label:"Domaine public ou adresse d’un site",hint:"Seul le domaine est transmis. Le chemin et les paramètres de l’adresse sont exclus.",button:"Lancer l’analyse",external:"Ouvre l’application officielle Web-Check dans un nouvel onglet. Le domaine est transmis à ce service ; les résultats et la disponibilité en dépendent.",report:"Ouvrir l’analyse",openTool:"Ouvrir directement Web-Check",invalid:"Saisissez un domaine public valide, par exemple example.com. Les adresses internes, identifiants et ports personnalisés ne sont pas acceptés.",opened:"L’analyse s’ouvre dans un nouvel onglet. Si elle ne s’est pas ouverte, utilisez le lien ci-dessous.",features:["DNS","TLS / SSL","En-têtes HTTP","Hébergement"],checks:"Vérifications"},
+    }
+  };
+
+  let currentLanguage="en", hasError=false, launched=false;
+  const domainInput=document.getElementById("webcheck-domain");
+  const error=document.getElementById("webcheck-error");
+  const status=document.getElementById("webcheck-status");
+  const report=document.getElementById("webcheck-report");
+  function renderWebCheck(){
+    const d=t[currentLanguage].webcheck;
+    document.querySelectorAll("[data-webcheck]").forEach(el=>el.textContent=d[el.dataset.webcheck]);
+    document.querySelectorAll(".webcheck-features li").forEach((el,i)=>el.textContent=d.features[i]);
+    document.querySelector(".webcheck-features").setAttribute("aria-label",d.checks);
+    error.hidden=!hasError;
+    error.textContent=hasError?d.invalid:"";
+    domainInput.setAttribute("aria-invalid",String(hasError));
+    status.hidden=!launched;
+    status.textContent=launched?d.opened:"";
+    document.getElementById("webcheck-report-wrap").hidden=!launched;
+  }
+  function publicDomain(value){
+    const raw=value.trim();
+    if(!raw || /\s/.test(raw))return null;
+    try{
+      const url=new URL(/^[a-z][a-z0-9+.-]*:\/\//i.test(raw)?raw:"https://"+raw);
+      if(!["http:","https:"].includes(url.protocol)||url.username||url.password||url.port)return null;
+      const host=url.hostname.toLowerCase().replace(/\.$/,"");
+      if(host.length>253||!host.includes(".")||/^\d+(\.\d+){3}$/.test(host))return null;
+      if(host.split(".").some(label=>!/^([a-z0-9]|[a-z0-9][a-z0-9-]{0,61}[a-z0-9])$/.test(label)))return null;
+      const tld=host.split(".").pop();
+      if(!/^([a-z]{2,63}|xn--[a-z0-9-]{2,59})$/.test(tld)||/\.(localhost|local|internal|lan|home|test|invalid|example|onion)$/.test(host))return null;
+      return host;
+    }catch(_){return null;}
+  }
+  document.getElementById("webcheck-form").addEventListener("submit",event=>{
+    event.preventDefault();
+    const host=publicDomain(domainInput.value);
+    hasError=!host;
+    launched=Boolean(host);
+    if(host){
+      report.href="https://web-check.xyz/check/"+encodeURIComponent(host);
+      window.open(report.href,"_blank","noopener,noreferrer");
+    }
+    renderWebCheck();
+    if(hasError)domainInput.focus();
+  });
+  domainInput.addEventListener("input",()=>{hasError=false;launched=false;renderWebCheck();});
+  function apply(lang){
+    const d=t[lang]||t.en;
+    currentLanguage=t[lang]?lang:"en";
+    SiteI18n.setLanguage(lang);
+    document.title=d.pageTitle;
+    document.querySelector("[data-brand]").textContent=d.brand;
+    document.querySelector("[data-footer-brand]").textContent=d.brand;
+    document.querySelector(".eyebrow").textContent=d.eyebrow;
+    document.querySelector("h1").textContent=d.title;
+    document.querySelector(".lead").textContent=d.lead;
+    renderWebCheck();
+    document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
+    syncInternalLanguageLinks(lang);
+  }
+
+  document.querySelectorAll(".lang-switch button").forEach(b=>b.addEventListener("click",()=>{
+          apply(b.dataset.lang);
+  }));
+  installLanguageNavigation();
+  apply(getInitialLanguage());
+})();
+</script>
+<script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
+<script src="assets/chatbox.js?v=18" defer></script>
+<script src="assets/webcheck-preview.js?v=4" defer></script>
+<script type="module" src="assets/cve-risk-lens.js?v=brand-lowercase-20261001"></script>
+<script src="assets/firewall-review-core.js?v=6" defer></script>
+<script src="assets/firewall-review-demo.js?v=3" defer></script>
+<script src="assets/firewall-change-core.js?v=2" defer></script>
+<script src="assets/firewall-change-ui.js?v=mode-fix-20261008" defer></script>
+<script src="assets/firewall-review.js?v=mode-fix-20261008" defer></script>
+<script src="assets/vendor-hardening-core.js?v=1" defer></script>
+<script src="assets/vendor-hardening-demos.js?v=1" defer></script>
+<script src="assets/vendor-hardening-ui.js?v=mode-fix-20261008" defer></script>
+<script src="assets/connected-case-core.js?v=connected-1" defer></script>
+<script src="assets/endpoint-evidence-core.js?v=endpoint-1" defer></script>
+<script src="assets/incident-triage-sources.js?v=endpoint-1" defer></script>
+<script src="assets/incident-triage-core.js?v=endpoint-1" defer></script>
+<script src="assets/incident-triage-demo.js?v=3" defer></script>
+<script src="assets/incident-triage-platform-demos.js?v=3" defer></script>
+<script src="assets/incident-triage-workspace.js?v=endpoint-1" defer></script>
+<script src="assets/incident-triage-ui.js?v=endpoint-1" defer></script>
+<script src="assets/connected-case-ui.js?v=connected-2" defer></script>
+<script src="assets/endpoint-evidence-ui.js?v=endpoint-1" defer></script>
+</body>
+</html>
+
+
+
+
