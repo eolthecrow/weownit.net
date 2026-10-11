@@ -60,7 +60,7 @@
   <link rel="stylesheet" href="assets/webcheck-preview.css?v=2">
   <link rel="stylesheet" href="assets/cve-risk-lens.css?v=2">
   <link rel="stylesheet" href="assets/firewall-review.css?v=hardening-1">
-  <script src="assets/i18n.js?v=5"></script>
+  <script src="assets/i18n.js?v=6"></script>
   <link rel="stylesheet" href="assets/incident-triage.css?v=3">
   <link rel="stylesheet" href="assets/connected-case.css?v=endpoint-1">
 </head>
@@ -76,7 +76,7 @@
       <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
         <a href="index.html#services" data-nav-label="services">Services</a>
         <a href="tools.html" data-nav-label="tools" aria-current="page">Tools</a>
-        <a href="store.html" data-nav-label="store">Store</a>
+        <a href="store.html" data-nav-label="resources">Resources</a>
         <a href="about.html" data-nav-label="about">About</a>
         <a href="contact.html" data-nav-label="contact">Contact</a>
       </nav>
@@ -188,7 +188,7 @@
             <div class="fw-control"><label for="fw-vendor" data-fw="vendor">Configuration format</label><select id="fw-vendor"><option value="auto" data-fw="auto">Detect automatically</option><option value="fortinet">Fortinet · CLI / JSON</option><option value="paloalto">Palo Alto · CLI / XML / JSON</option><option value="checkpoint">Check Point · Management API JSON</option></select></div>
             <div><span class="fw-label" data-fw="demo">Try a synthetic lab</span><div class="fw-demos"><button type="button" data-fw-demo="fortinet">Fortinet CLI</button><button type="button" data-fw-demo="paloalto">Palo Alto XML</button><button type="button" data-fw-demo="checkpoint">Check Point JSON</button></div></div>
           </div>
-          <details class="fw-formats"><summary data-fw="standard">One review standard across vendors</summary><p class="fw-hint" data-fw="standardHint">JSON and XML exported here share the Weownit review schema and can be reloaded for the same vendor. These are analysis snapshots, not device backups or migration configurations.</p><div class="fw-table-wrap"><table class="fw-table"><thead><tr><th data-fw="vendor">Firewall vendor</th><th data-fw="nativeInputs">Native inputs</th><th data-fw="sharedInputs">Shared review inputs</th></tr></thead><tbody><tr><td>Fortinet</td><td data-fw="fortFormats">FortiOS policy/security-policy CLI · REST API JSON</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr><tr><td>Palo Alto</td><td data-fw="paloFormats">Config XML · config JSON · CLI set · REST rule JSON</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr><tr><td>Check Point</td><td data-fw="cpFormats">Management API JSON · mgmt_cli JSON output</td><td data-fw="sharedFormats">Weownit snapshot JSON / XML</td></tr></tbody></table></div><h4 data-fw="extraDemos">More native lab formats</h4><div class="fw-demos"><button type="button" data-fw-demo="fortinetJSON" data-fw-vendor="fortinet">Fortinet JSON</button><button type="button" data-fw-demo="paloaltoCLI" data-fw-vendor="paloalto">Palo Alto CLI</button><button type="button" data-fw-demo="paloaltoJSON" data-fw-vendor="paloalto">Palo Alto JSON</button></div><h4 data-fw="nativeGuide">Export guidance</h4><p class="fw-hint" data-fw="exportGuide">Use complete policy exports with their scope and related objects. Fortinet JSON requires REST response wrappers. Check Point policy data can be exported through mgmt_cli as JSON.</p></details>
+          <details class="fw-formats"><summary data-fw="standard">One review standard across vendors</summary><p class="fw-hint" data-fw="standardHint">JSON and XML exported here share the weownit review schema and can be reloaded for the same vendor. These are analysis snapshots, not device backups or migration configurations.</p><div class="fw-table-wrap"><table class="fw-table"><thead><tr><th data-fw="vendor">Firewall vendor</th><th data-fw="nativeInputs">Native inputs</th><th data-fw="sharedInputs">Shared review inputs</th></tr></thead><tbody><tr><td>Fortinet</td><td data-fw="fortFormats">FortiOS policy/security-policy CLI · REST API JSON</td><td data-fw="sharedFormats">weownit snapshot JSON / XML</td></tr><tr><td>Palo Alto</td><td data-fw="paloFormats">Config XML · config JSON · CLI set · REST rule JSON</td><td data-fw="sharedFormats">weownit snapshot JSON / XML</td></tr><tr><td>Check Point</td><td data-fw="cpFormats">Management API JSON · mgmt_cli JSON output</td><td data-fw="sharedFormats">weownit snapshot JSON / XML</td></tr></tbody></table></div><h4 data-fw="extraDemos">More native lab formats</h4><div class="fw-demos"><button type="button" data-fw-demo="fortinetJSON" data-fw-vendor="fortinet">Fortinet JSON</button><button type="button" data-fw-demo="paloaltoCLI" data-fw-vendor="paloalto">Palo Alto CLI</button><button type="button" data-fw-demo="paloaltoJSON" data-fw-vendor="paloalto">Palo Alto JSON</button></div><h4 data-fw="nativeGuide">Export guidance</h4><p class="fw-hint" data-fw="exportGuide">Use complete policy exports with their scope and related objects. Fortinet JSON requires REST response wrappers. Check Point policy data can be exported through mgmt_cli as JSON.</p></details>
           <label class="fw-label" for="fw-input" data-fw="input">Paste configuration or open local files</label>
           <textarea id="fw-input" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880" aria-describedby="fw-format-hint fw-status" placeholder="FortiOS CLI / PAN-OS XML / Check Point JSON"></textarea>
           <div class="fw-upload"><label for="fw-file" data-fw="file">Local files (maximum 5 MB in total)</label><input id="fw-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div>
@@ -409,14 +409,14 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
 })();
 </script>
 <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-<script src="assets/chatbox.js?v=18" defer></script>
+<script src="assets/chatbox.js?v=19" defer></script>
 <script src="assets/webcheck-preview.js?v=4" defer></script>
 <script type="module" src="assets/cve-risk-lens.js?v=brand-lowercase-20261001"></script>
 <script src="assets/firewall-review-core.js?v=6" defer></script>
 <script src="assets/firewall-review-demo.js?v=3" defer></script>
 <script src="assets/firewall-change-core.js?v=2" defer></script>
-<script src="assets/firewall-change-ui.js?v=mode-fix-20261008" defer></script>
-<script src="assets/firewall-review.js?v=mode-fix-20261008" defer></script>
+<script src="assets/firewall-change-ui.js?v=simplify-20261011" defer></script>
+<script src="assets/firewall-review.js?v=simplify-20261011" defer></script>
 <script src="assets/vendor-hardening-core.js?v=1" defer></script>
 <script src="assets/vendor-hardening-demos.js?v=1" defer></script>
 <script src="assets/vendor-hardening-ui.js?v=mode-fix-20261008" defer></script>

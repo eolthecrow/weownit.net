@@ -28,7 +28,7 @@
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=20">
-  <script src="assets/i18n.js?v=5"></script>
+  <script src="assets/i18n.js?v=6"></script>
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -42,7 +42,7 @@
       <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
         <a href="index.html#services" data-nav-label="services">Services</a>
         <a href="tools.html" data-nav-label="tools">Tools</a>
-        <a href="store.html" data-nav-label="store">Store</a>
+        <a href="store.html" data-nav-label="resources">Resources</a>
         <a href="about.html" data-nav-label="about">About</a>
         <a href="contact.html" data-nav-label="contact">Contact</a>
       </nav>
@@ -63,9 +63,9 @@
   <h1>Privacy notice</h1>
   <p class="lead">This notice describes the current website operated by Vladimir Arjoca. Updated 28 September 2026. For privacy questions, email contact@weownit.net.</p>
 <section><h2>Contact requests</h2><p>The contact form sends the details you enter to a Cloudflare Worker, which uses Cloudflare Email Service to deliver the message to the site operator’s verified mailbox. Your name, email address, message and any optional company or phone details are used only to respond to your request. The website does not intentionally store contact submissions in its own database. Cloudflare and the recipient’s email provider process the message as part of delivery.</p></section>
-<section><h2>Language preference</h2><p>Your selected language is saved in your browser under siteLanguage and included in page links. This preference contains no contact details. You can clear it using your browser’s site-data settings. If browser storage is unavailable, the language in the URL still works.</p></section>
+<section><h2>Language preference</h2><p>Your selected language is saved in your browser under siteLanguage and included in page links. This preference contains no contact details. You can clear it using your browser’s site-data settings. If browser storage is unavailable, the language in the URL still works. If you explicitly include a review summary with an enquiry, an editable draft is kept in this tab for up to 20 minutes and removed when Contact opens. It is sent only when you submit the contact form.</p></section>
 <section><h2>Hosting and technical data</h2><p>This website is hosted on GitHub Pages. GitHub records visitor IP addresses for security purposes. GitHub’s privacy statement explains its handling of technical information.</p></section>
-<section><h2>Consultation bookings</h2><p>The Schedule page embeds Cal.com. Loading the calendar connects your browser to Cal.com. If you make a booking, Cal.com processes the booking details you provide and makes the relevant details available to the organiser. Review Cal.com’s privacy policy before submitting a booking.</p></section>
+<section><h2>Consultation bookings</h2><p>The booking section on Contact embeds Cal.com only when you open it. Loading the calendar connects your browser to Cal.com. If you make a booking, Cal.com processes the booking details you provide and makes the relevant details available to the organiser. Review Cal.com’s privacy policy before submitting a booking.</p></section>
 <section><h2>AI assistant</h2><p>The Network &amp; Security Assistant uses a Cloudflare Worker and Cloudflare Workers AI for technical questions. Quick links and predefined greetings are handled locally in the browser. Messages sent to the AI assistant are transmitted to Cloudflare for processing; this website does not intentionally store the conversation in its own database. Do not submit passwords, API keys, private keys, confidential customer configurations or incident evidence that you are not authorised to share.</p></section>
 <section><h2>Store and payments</h2><p>Products are currently marked Coming soon and purchases are disabled. The Store does not collect payment details. Lemon Squeezy is the planned checkout and delivery provider; the notice and applicable purchase terms must be updated when sales are enabled. External links follow the destination provider’s policies.</p></section>
 <section><h2>Privacy requests</h2><p>For questions about a message or booking you have shared, or to request access, correction or deletion, contact contact@weownit.net. Data held by external providers is also subject to their own privacy policies and request procedures.</p></section>
@@ -86,7 +86,7 @@ const copy={
       ],
       [
         "Language preference",
-        "Your selected language is saved in your browser under siteLanguage and included in page links. This preference contains no contact details. You can clear it using your browser’s site-data settings. If browser storage is unavailable, the language in the URL still works."
+        "Your selected language is saved in your browser under siteLanguage and included in page links. This preference contains no contact details. You can clear it using your browser’s site-data settings. If browser storage is unavailable, the language in the URL still works. If you explicitly include a review summary with an enquiry, an editable draft is kept in this tab for up to 20 minutes and removed when Contact opens. It is sent only when you submit the contact form."
       ],
       [
         "Hosting and technical data",
@@ -94,7 +94,7 @@ const copy={
       ],
       [
         "Consultation bookings",
-        "The Schedule page embeds Cal.com. Loading the calendar connects your browser to Cal.com. If you make a booking, Cal.com processes the booking details you provide and makes the relevant details available to the organiser. Review Cal.com’s privacy policy before submitting a booking."
+        "The booking section on Contact embeds Cal.com only when you open it. Loading the calendar connects your browser to Cal.com. If you make a booking, Cal.com processes the booking details you provide and makes the relevant details available to the organiser. Review Cal.com’s privacy policy before submitting a booking."
       ],
       [
         "AI assistant",
@@ -123,7 +123,7 @@ const copy={
       ],
       [
         "Preferința de limbă",
-        "Limba selectată este salvată în browser sub cheia siteLanguage și inclusă în legăturile dintre pagini. Preferința nu conține date de contact. O poți șterge din setările browserului pentru datele site-ului. Dacă stocarea în browser nu este disponibilă, limba din URL funcționează în continuare."
+        "Limba selectată este salvată în browser sub cheia siteLanguage și inclusă în legăturile dintre pagini. Preferința nu conține date de contact. O poți șterge din setările browserului pentru datele site-ului. Dacă stocarea în browser nu este disponibilă, limba din URL funcționează în continuare. Dacă incluzi explicit un rezumat al analizei într-o solicitare, schița editabilă rămâne în această filă maximum 20 de minute și este eliminată când se deschide Contact. Se trimite doar când trimiți formularul."
       ],
       [
         "Găzduire și date tehnice",
@@ -131,7 +131,7 @@ const copy={
       ],
       [
         "Programarea consultațiilor",
-        "Pagina de programare include calendarul Cal.com. Încărcarea acestuia conectează browserul la Cal.com. Dacă faci o programare, Cal.com prelucrează datele introduse și pune detaliile relevante la dispoziția organizatorului. Consultă politica Cal.com înainte de a trimite o programare."
+        "Secțiunea de programare din Contact include calendarul Cal.com doar când o deschizi. Încărcarea acestuia conectează browserul la Cal.com. Dacă faci o programare, Cal.com prelucrează datele introduse și pune detaliile relevante la dispoziția organizatorului. Consultă politica Cal.com înainte de a trimite o programare."
       ],
       [
         "Asistent AI",
@@ -160,7 +160,7 @@ const copy={
       ],
       [
         "Préférence de langue",
-        "La langue choisie est enregistrée dans votre navigateur sous siteLanguage et incluse dans les liens entre les pages. Cette préférence ne contient aucune coordonnée. Vous pouvez la supprimer dans les paramètres de données du site de votre navigateur. Si le stockage est indisponible, la langue indiquée dans l’URL reste utilisable."
+        "La langue choisie est enregistrée dans votre navigateur sous siteLanguage et incluse dans les liens entre les pages. Cette préférence ne contient aucune coordonnée. Vous pouvez la supprimer dans les paramètres de données du site de votre navigateur. Si le stockage est indisponible, la langue indiquée dans l’URL reste utilisable. Si vous incluez explicitement un résumé de revue dans une demande, le brouillon modifiable reste dans cet onglet pendant 20 minutes au maximum et est supprimé à l’ouverture de Contact. Il est envoyé uniquement à la soumission du formulaire."
       ],
       [
         "Hébergement et données techniques",
@@ -168,7 +168,7 @@ const copy={
       ],
       [
         "Réservation de consultations",
-        "La page de réservation intègre Cal.com. Le chargement du calendrier connecte votre navigateur à Cal.com. Lors d’une réservation, Cal.com traite les informations fournies et transmet les détails utiles à l’organisateur. Consultez sa politique de confidentialité avant d’envoyer une réservation."
+        "La section de réservation dans Contact intègre Cal.com uniquement à son ouverture. Le chargement du calendrier connecte votre navigateur à Cal.com. Lors d’une réservation, Cal.com traite les informations fournies et transmet les détails utiles à l’organisateur. Consultez sa politique de confidentialité avant d’envoyer une réservation."
       ],
       [
         "Assistant IA",
@@ -189,6 +189,6 @@ const {normalizeLanguage,getInitialLanguage,syncInternalLanguageLinks,installLan
 function apply(l){const t=copy[l]||copy.en;SiteI18n.setLanguage(l);document.title=t.title;document.querySelector("[data-brand]").textContent=t.brand;document.querySelector(".eyebrow").textContent=t.e;document.querySelector("h1").textContent=t.h;document.querySelector(".lead").textContent=t.lead;document.querySelectorAll("main section").forEach((x,i)=>{x.querySelector("h2").textContent=t.s[i][0];x.querySelector("p").textContent=t.s[i][1]});document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===l)));syncInternalLanguageLinks(l);}document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>apply(b.dataset.lang));installLanguageNavigation();apply(getInitialLanguage());
 </script>
   <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-  <script src="assets/chatbox.js?v=18" defer></script>
+  <script src="assets/chatbox.js?v=19" defer></script>
 </body>
 </html>

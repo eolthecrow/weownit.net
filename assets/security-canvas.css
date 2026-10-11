@@ -14,3 +14,6 @@
 
 .tools-shortcut{min-height:44px;flex-shrink:0;border-color:var(--accent);color:var(--accent)}.tools-shortcut:hover{background:rgba(108,226,199,.06)}
 @media(max-width:600px){.preview-bar .tools-shortcut{order:-1}.preview-bar{row-gap:12px}}
+
+
+.workspace-grid.summary-view{grid-template-columns:minmax(0,1fr)}.handoff textarea{min-height:180px}.handoff .secondary{max-width:100%;white-space:normal}.summary-actions{flex-wrap:wrap}

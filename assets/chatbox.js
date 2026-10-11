@@ -10,11 +10,11 @@
       greetingReply:"Hello! How can I help you today?",
       placeholder:"Enter your question...",
       quickLabel:"Quick links",
-      quickActions:["Contact","Schedule","Store","Services","About","Tools"],
+      quickActions:["Services","Tools","Resources","About","Contact"],
       quickHint:"Or ask any technical question below.",
       privacyHint:"Do not share passwords, API keys, private keys, or sensitive customer data.",
       thinking:"Thinking…",
-      unavailable:"The AI assistant is temporarily unavailable. You can still use Contact or Schedule above.",
+      unavailable:"The AI assistant is temporarily unavailable. You can still use Contact above.",
       error:"I couldn't reach the assistant right now. Please try again."
     },
     ro:{
@@ -24,11 +24,11 @@
       greetingReply:"Salut! Cu ce te pot ajuta astăzi?",
       placeholder:"Scrie întrebarea...",
       quickLabel:"Acces rapid",
-      quickActions:["Contact","Programare","Magazin","Servicii","Despre","Instrumente"],
+      quickActions:["Servicii","Instrumente","Resurse","Despre","Contact"],
       quickHint:"Sau scrie mai jos orice întrebare tehnică.",
       privacyHint:"Nu trimite parole, chei API, chei private sau date sensibile ale clienților.",
       thinking:"Analizez…",
-      unavailable:"Asistentul AI este temporar indisponibil. Poți folosi în continuare Contact sau Programare.",
+      unavailable:"Asistentul AI este temporar indisponibil. Poți folosi în continuare Contact.",
       error:"Nu pot contacta asistentul momentan. Încearcă din nou."
     },
     fr:{
@@ -38,11 +38,11 @@
       greetingReply:"Bonjour ! Comment puis-je vous aider aujourd’hui ?",
       placeholder:"Votre question...",
       quickLabel:"Accès rapide",
-      quickActions:["Contact","Rendez-vous","Boutique","Services","À propos","Outils"],
+      quickActions:["Services","Outils","Ressources","À propos","Contact"],
       quickHint:"Ou posez ci-dessous toute question technique.",
       privacyHint:"Ne partagez pas de mots de passe, clés API, clés privées ou données client sensibles.",
       thinking:"Analyse…",
-      unavailable:"L’assistant IA est temporairement indisponible. Vous pouvez toujours utiliser Contact ou Rendez-vous.",
+      unavailable:"L’assistant IA est temporairement indisponible. Vous pouvez toujours utiliser Contact.",
       error:"Impossible de joindre l’assistant pour le moment. Réessayez."
     }
   };
@@ -102,27 +102,20 @@
     return base+separator+"lang="+encodeURIComponent(language)+(hash?"#"+hash:"");
   };
 
-  const quickTargets=[
-    "contact.html",
-    "schedule.html",
-    "store.html",
-    "index.html#services",
-    "about.html",
-    "tools.html"
-  ];
+  const quickTargets=["index.html#services","tools.html","store.html","about.html","contact.html"];
 
   const localIntentTarget=(value,language)=>{
     const q=value.trim().toLowerCase();
     const patterns={
       contact:/^(contact|contact me|get in touch|how can i contact you|i want to contact you|vreau sa te contactez|vreau să te contactez|cum te contactez|contacteaza-ma|contactează-mă|je veux vous contacter|comment vous contacter|prendre contact)$/i,
       schedule:/^(schedule|book|book a call|schedule a call|book a discussion|schedule discussion|programare|programeaza|programează|vreau o programare|programeaza o discutie|programează o discuție|rendez-vous|prendre rendez-vous|planifier un appel)$/i,
-      store:/^(store|shop|products|buy|buy a product|magazin|produse|cumpar|cumpăr|vreau sa cumpar|vreau să cumpăr|boutique|produits|acheter)$/i,
+      store:/^(resources|resurse|ressources|store|shop|products|buy|buy a product|magazin|produse|cumpar|cumpăr|vreau sa cumpar|vreau să cumpăr|boutique|produits|acheter)$/i,
       services:/^(services|your services|what services do you offer|servicii|ce servicii oferi|ce servicii oferiti|ce servicii oferiți|vos services|quels services proposez-vous)$/i,
       about:/^(about|about you|about vladimir|who are you|despre|despre tine|despre vladimir|qui êtes-vous|a propos|à propos)$/i,
       tools:/^(tools|your tools|instrumente|unelte|outils|vos outils)$/i
     };
     if(patterns.contact.test(q)) return routeWithLanguage("contact.html",language);
-    if(patterns.schedule.test(q)) return routeWithLanguage("schedule.html",language);
+    if(patterns.schedule.test(q)) return routeWithLanguage("contact.html#book",language);
     if(patterns.store.test(q)) return routeWithLanguage("store.html",language);
     if(patterns.services.test(q)) return routeWithLanguage("index.html#services",language);
     if(patterns.about.test(q)) return routeWithLanguage("about.html",language);

@@ -51,10 +51,13 @@
     .privacy{margin-top:1rem;color:#717980;font-size:.702rem}.status{margin-top:1rem;font-size:.792rem;color:#1b5e20;display:none}.status.is-error{color:#9f2d20}.status a{text-decoration:underline;text-underline-offset:3px}.hp-field{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important}
     footer{border-top:1px solid var(--line);padding:2rem 0;color:var(--quiet);font-size:.738rem}
     @media(max-width:800px){.hero-inner,.content-inner{grid-template-columns:1fr}.hero-inner{gap:2rem;padding:3.4rem 0}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}}
+
+    .contact-options{display:flex;align-items:center;gap:1.5rem;flex-wrap:wrap}.booking-choice{color:var(--accent);text-decoration:underline;text-underline-offset:4px;padding:.85rem 0;margin-top:.8rem}.booking{padding-top:2rem;padding-bottom:2rem;scroll-margin-top:6rem}.booking details{border:1px solid var(--line);padding:1.2rem}.booking summary{cursor:pointer;font-weight:700;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:1rem}.booking-body p{color:var(--muted)}.booking-body a{color:var(--accent);text-decoration:underline}.booking iframe{width:100%;height:780px;border:0;background:var(--bg2);display:block}.review-summary-note{color:#24434b;border-left:3px solid #24434b;padding-left:.8rem;font-size:.85rem}#message-section{scroll-margin-top:5rem}@media(max-width:460px){.booking iframe{height:830px}.content-inner{padding:2rem 0}form{padding:1.2rem}.booking summary{font-size:.95rem}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=20">
-  <script src="assets/i18n.js?v=5"></script>
+  <script src="assets/i18n.js?v=6"></script>
+  <script src="assets/review-handoff.js?v=1"></script>
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -68,7 +71,7 @@
       <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
         <a href="index.html#services" data-nav-label="services">Services</a>
         <a href="tools.html" data-nav-label="tools">Tools</a>
-        <a href="store.html" data-nav-label="store">Store</a>
+        <a href="store.html" data-nav-label="resources">Resources</a>
         <a href="about.html" data-nav-label="about">About</a>
         <a href="contact.html" data-nav-label="contact" aria-current="page">Contact</a>
       </nav>
@@ -92,7 +95,7 @@
       <div class="eyebrow">Contact</div>
       <h1 aria-label="Let’s talk."><span class="typing-prefix" aria-hidden="true">Let’s </span><span class="typing-slot" aria-hidden="true"><span class="typing-word">talk.</span><span class="typing-cursor">|</span></span></h1>
       <p>The best way to start is a focused conversation about your current situation, what is blocking you, and what a practical next step could look like.</p>
-      <a class="cta" href="schedule.html">Schedule a Consultation ↗</a>
+      <div class="contact-options"><a class="cta" href="#message-section" data-contact-copy="messageChoice">Send a message</a><a class="booking-choice" href="#book" data-contact-copy="bookChoice">Book a call ↗</a></div>
     </div>
     <div class="hero-note">
       <strong>Best for</strong>
@@ -101,7 +104,15 @@
   </div>
 </section>
 
-<section class="content">
+<section id="book" class="booking wrap" aria-label="Book a call">
+  <details id="booking-details">
+    <summary><span data-contact-copy="bookTitle">Book a 30-minute call</span><span aria-hidden="true">+</span></summary>
+    <div class="booking-body"><p data-contact-copy="bookText">A focused conversation about your network or security challenge. The calendar loads only when you open this section.</p>
+    <p><a href="https://cal.com/vladimirarjoca/30min" target="_blank" rel="noopener noreferrer" data-contact-copy="bookFallback">Open the booking page directly ↗</a></p>
+    <iframe id="booking-frame" title="Book a call" data-cal-src="https://app.cal.com/vladimirarjoca/30min/embed?layout=month_view&amp;theme=light&amp;embedType=inline&amp;embed=30min"></iframe></div>
+  </details>
+</section>
+<section class="content" id="message-section">
   <div class="wrap content-inner">
     <div class="intro">
       <div class="eyebrow" style="color:#24434b">Write directly</div>
@@ -109,7 +120,7 @@
       <p>Share the context you think matters. Keep it brief or detailed — the goal is simply to understand what you need help with.</p>
     </div>
 
-    <form id="contact-form">
+    <form id="contact-form"><p id="review-summary-note" class="review-summary-note" hidden data-contact-copy="reviewNote">A brief review summary has been added. Edit it before sending; nothing has been sent yet.</p>
       <div class="grid">
         <div class="field"><label for="name">Name *</label><input id="name" name="name" required></div>
         <div class="field"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
@@ -176,6 +187,11 @@
       privacy:"Datele formularului sunt trimise către un Cloudflare Worker doar pentru livrarea mesajului. Site-ul nu stochează intenționat solicitările de contact într-o bază de date proprie."
     }
   };
+
+
+  Object.assign(translations.en,{messageChoice:"Send a message",bookChoice:"Book a call ↗",bookTitle:"Book a 30-minute call",bookText:"A focused conversation about your network or security challenge. The calendar loads only when you open this section.",bookFallback:"Open the booking page directly ↗",reviewNote:"A brief review summary has been added. Edit it before sending; nothing has been sent yet."});
+  Object.assign(translations.ro,{messageChoice:"Trimite un mesaj",bookChoice:"Programează un apel ↗",bookTitle:"Programează un apel de 30 de minute",bookText:"O discuție despre problema ta de rețea sau securitate. Calendarul se încarcă doar când deschizi această secțiune.",bookFallback:"Deschide direct pagina de programare ↗",reviewNote:"A fost adăugat un rezumat scurt al analizei. Editează-l înainte de trimitere; nimic nu a fost trimis încă."});
+  Object.assign(translations.fr,{messageChoice:"Envoyer un message",bookChoice:"Réserver un appel ↗",bookTitle:"Réserver un appel de 30 minutes",bookText:"Une discussion ciblée sur votre problème de réseau ou de sécurité. Le calendrier se charge à l’ouverture de cette section.",bookFallback:"Ouvrir directement la page de réservation ↗",reviewNote:"Un bref résumé de la revue a été ajouté. Modifiez-le avant l’envoi ; rien n’a encore été envoyé."});
 
   const qs = s => document.querySelector(s);
   let typingTimer=null;
@@ -268,7 +284,7 @@
     const brand=qs("[data-brand]"); if(brand) brand.textContent=t.brand;
     const footerBrand=qs("[data-footer-brand]"); if(footerBrand) footerBrand.textContent=t.brand;
     qs(".hero .eyebrow").textContent=t.eyebrow; renderTypingHeadline(t);
-    qs(".hero p").textContent=t.heroText; qs(".cta").textContent=t.cta; qs(".hero-note strong").textContent=t.best; qs(".hero-note p").textContent=t.bestText;
+    qs(".hero p").textContent=t.heroText;  qs(".hero-note strong").textContent=t.best; qs(".hero-note p").textContent=t.bestText;
     qs(".intro .eyebrow").textContent=t.write; qs(".intro h2").textContent=t.prefer; qs(".intro p").textContent=t.intro;
     qs('label[for="name"]').textContent=t.name; qs('label[for="email"]').textContent=t.email;
     qs('label[for="company"]').innerHTML=t.company+' <span class="hint">'+t.optional+'</span>';
@@ -276,6 +292,8 @@
     qs('label[for="message"]').textContent=t.message; qs(".consent span").innerHTML=t.consent; qs(".submit").textContent=t.send;
     qs(".response-note").textContent=t.reply; qs("#status").textContent=t.status; qs(".privacy").textContent=t.privacy;
     document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
+    document.querySelectorAll("[data-contact-copy]").forEach(el=>el.textContent=t[el.dataset.contactCopy]);
+    qs("#book").setAttribute("aria-label",t.bookTitle);qs("#booking-frame").title=t.bookTitle;
     syncInternalLanguageLinks(lang);
   }
 
@@ -284,6 +302,15 @@
   }));
   installLanguageNavigation();
   apply(getInitialLanguage());
+
+
+  const booking=qs("#booking-details"),calendar=qs("#booking-frame");
+  function openBooking(){booking.open=true;if(!calendar.getAttribute("src"))calendar.src=calendar.dataset.calSrc;}
+  booking.addEventListener("toggle",()=>{if(booking.open)openBooking();});
+  function followContactHash(){if(location.hash==="#book")openBooking();}
+  window.addEventListener("hashchange",followContactHash);followContactHash();
+  const review=window.ReviewHandoff.consume();
+  if(review){qs("#message").value=review.summary;qs("#review-summary-note").hidden=false;}
 
   const formLoadedAt=Date.now();
 
@@ -350,6 +377,6 @@
 })();
 </script>
   <script>window.NETWORK_SECURITY_CONTACT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/contact";window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-  <script src="assets/chatbox.js?v=18" defer></script>
+  <script src="assets/chatbox.js?v=19" defer></script>
 </body>
 </html>
