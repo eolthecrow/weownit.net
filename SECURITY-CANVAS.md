@@ -6,7 +6,7 @@ Security Canvas is the default Tools view at `/tools.html`. A visitor chooses a 
 
 - Baseline: `8a8b8e7191a2b51b7c8a5d17489f9e14e395ad83`.
 - Backup branch: `backup/pre-security-canvas-20261011`.
-- The existing Tools page is preserved exactly at `tools-existing.html`, Git blob `a81bc8cb6178bdf29b9fb2d8681b18463cd7fa85`.
+- The original Tools page is preserved at baseline Git blob `a81bc8cb6178bdf29b9fb2d8681b18463cd7fa85`. The current `tools-existing.html` keeps that markup with a reviewed script cache version for corrected EN/RO/FR mode labels.
 - Shared navigation, language state, site CSS, chat, contact, Store and all existing analysis engines are reused. Other public pages are untouched.
 - The private concept remains available separately at https://weownit-security-canvas.vladimir-arjoca.chatgpt.site.
 
@@ -44,3 +44,15 @@ Review verdict: **Insufficient evidence for rendered browser readiness**. Source
 The remaining verification action is a supported browser pass on desktop and 360–430 px phones in EN/RO/FR, including comparison scrolling, keyboard navigation, downloads and chat placement.
 
 Run local checks with `node --test tests/security-canvas.test.cjs` (Node and Python are needed for the XML adapter). The test DOM is an interaction adapter, not a browser renderer.
+
+## Review corrections — 11 October 2026
+
+Restore point before these corrections: `1f67190332770b827651f2fd5e2808bbc5b20830`.
+
+- Distinguish reviewed and skipped workflow steps; skipped evidence never receives a reviewed check mark.
+- Translate actual hardening identifiers, including SSH version and Palo Alto profile/forwarding controls; label the current task directly.
+- Translate individual-tool mode controls and their accessible group name in EN/RO/FR.
+- Keep Canvas as the default, with secondary individual-tool access and an explicit return that preserves the case. Size the embedded tools to their content for a single page scroll.
+- Preserve the homepage and shared navigation assets. Retain all tool deep links and the original Tools source in Git history.
+
+Validation uses the workflow, firewall-change UI and navigation regression suites. Emulated viewport inputs are not rendered phone tests. The available runtime does not provide supported local mobile browser QA; rendered mobile geometry and iframe resizing remain verification limits until exercised in a supported browser.
