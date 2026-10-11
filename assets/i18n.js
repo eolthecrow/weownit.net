@@ -121,6 +121,15 @@
   let installed=false;
   function installLanguageNavigation() {
     if(installed)return; installed=true;
+    const homeActions=document.querySelector("[data-home-nav-actions]");
+    const homeTools=document.querySelector(".topline-tools");
+    const homeSelector=homeTools?.querySelector(".lang-switch");
+    if(homeActions&&homeSelector){
+      const compact=window.matchMedia("(max-width:780px)");
+      const placeSelector=()=>{(compact.matches?homeActions:homeTools).appendChild(homeSelector);};
+      compact.addEventListener("change",placeSelector);
+      placeSelector();
+    }
     document.querySelectorAll("[data-nav-toggle]").forEach(button=>{
       const panelId=button.getAttribute("aria-controls");
       const panel=panelId?document.getElementById(panelId):null;
@@ -132,7 +141,13 @@
         button.setAttribute("aria-expanded",String(!open));
       });
       panel.querySelectorAll("a[href]").forEach(link=>link.addEventListener("click",close));
-      document.addEventListener("keydown",event=>{if(event.key==="Escape")close();});
+      document.addEventListener("keydown",event=>{
+        if(event.key!=="Escape"||button.getAttribute("aria-expanded")!=="true")return;
+        const restoreFocus=panel.contains(document.activeElement);
+        close();
+        if(restoreFocus)button.focus();
+      });
+      window.matchMedia("(max-width:"+(button.dataset.navBreakpoint||"1040")+"px)").addEventListener("change",close);
       document.addEventListener("click",event=>{
         if(button.getAttribute("aria-expanded")!=="true")return;
         if(!button.contains(event.target)&&!panel.contains(event.target))close();

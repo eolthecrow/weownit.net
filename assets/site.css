@@ -1,4 +1,5 @@
 /* Shared usability improvements, preserving each page's visual design. */
+:root{--bg2:#0e1d25;--line-strong:#507078}
 :focus-visible{outline:3px solid #6ce2c7;outline-offset:4px}
 .content :focus-visible{outline-color:#173cff}
 .site-skip{position:fixed;top:-100px;left:16px;z-index:2000;padding:12px 18px;background:#6ce2c7;color:#06201e;font-weight:700}
@@ -71,6 +72,7 @@ header .nav-right{flex-shrink:0}
 }
 header .global-nav-shell{
   max-width:1320px;
+  padding-inline:1.4rem;
   min-height:68px;
   display:flex;
   align-items:center;
@@ -247,6 +249,7 @@ header .global-nav-shell{
     color:var(--quiet,var(--muted));
   }
 
+  .global-nav-actions :is(.lang-switch,.langs) button[aria-pressed="true"]{color:var(--accent)}
   .global-nav-toggle{
     width:36px;
     min-width:36px;
@@ -299,6 +302,19 @@ header .global-nav-shell{
   }
 }
 
+/* Keep the desktop rail; share the compact mobile control contract. */
+.home-nav-actions,.home-nav-toggle{display:none}
+@media(max-width:780px){
+  .rail{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.45rem}
+  .rail .brand{min-width:0;font-size:.8rem;gap:.6rem}
+  .rail .brand>span:last-child{max-width:112px;line-height:1.12}
+  .home-nav-actions{display:flex;align-items:center}
+  .home-nav-toggle{display:inline-flex;width:36px;min-height:36px;padding:0;margin:0;font-size:0}
+  .home-nav-toggle::before{content:"";width:15px;height:1px;background:currentColor;box-shadow:0 -5px 0 currentColor,0 5px 0 currentColor}
+  .rail .rail-nav{display:none;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:.35rem;gap:.2rem;overflow:visible}
+  .rail .rail-nav.is-open{display:grid}
+  .rail .rail-nav a{padding:.55rem .62rem;min-height:42px;font-size:.75rem;transform:none}
+}
 /* Home uses a rail/topline rather than the shared header. */
 .topline-tools{display:flex;align-items:center;gap:.55rem}
 .topline .lang-switch{margin-left:auto}

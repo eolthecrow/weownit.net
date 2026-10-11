@@ -106,7 +106,7 @@
     "contact.html",
     "schedule.html",
     "store.html",
-    "index.html#resources",
+    "index.html#services",
     "about.html",
     "tools.html"
   ];
@@ -124,7 +124,7 @@
     if(patterns.contact.test(q)) return routeWithLanguage("contact.html",language);
     if(patterns.schedule.test(q)) return routeWithLanguage("schedule.html",language);
     if(patterns.store.test(q)) return routeWithLanguage("store.html",language);
-    if(patterns.services.test(q)) return routeWithLanguage("index.html#resources",language);
+    if(patterns.services.test(q)) return routeWithLanguage("index.html#services",language);
     if(patterns.about.test(q)) return routeWithLanguage("about.html",language);
     if(patterns.tools.test(q)) return routeWithLanguage("tools.html",language);
     return null;

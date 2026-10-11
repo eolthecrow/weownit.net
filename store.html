@@ -119,11 +119,11 @@
     :root{color-scheme:dark;--bg:#0a151c;--bg2:#0e1d25;--panel:#12232b;--line:#29404a;--line-strong:#507078;--ink:#f2f1e8;--muted:#a6b8ba;--quiet:#81969a;--accent:#6ce2c7;--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);line-height:1.55}
     a{color:inherit;text-decoration:none}.wrap{max-width:1180px;margin:0 auto;padding:0 1.4rem}
-    header{border-bottom:1px solid var(--line);background:rgba(10,21,28,.96);position:sticky;top:0;z-index:20}
-    .nav{min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    
+    
     .brand{display:flex;align-items:center;gap:.75rem;font-weight:750;letter-spacing:-.035em}.mark{width:40px;height:40px;display:grid;place-items:center;flex:none}.mark img{width:34px;height:auto;max-height:34px;display:block;object-fit:contain}
-    .nav-right{display:flex;align-items:center;gap:1rem}.back{color:var(--muted);font-size:.81rem}.back:hover{color:var(--accent)}
-    .lang-switch{display:inline-flex;border:1px solid var(--line-strong);padding:2px}.lang-switch button{border:0;background:transparent;color:var(--muted);padding:.35rem .5rem;font-family:var(--mono);font-size:.612rem;cursor:pointer}.lang-switch button[aria-pressed="true"]{background:var(--accent);color:var(--bg);font-weight:800}
+    
+    
     .hero{padding:5rem 0 3rem;background:linear-gradient(135deg,#0a151c 0%,#0d1e26 62%,#12342f 100%);border-bottom:1px solid var(--line)}
     .eyebrow{font-family:var(--mono);color:var(--accent);font-size:.675rem;text-transform:uppercase;letter-spacing:.13em;margin-bottom:1rem}
     h1{font-size:clamp(2.7rem,6.3vw,5.4rem);line-height:.98;letter-spacing:-.065em;margin:0 0 1.25rem;font-weight:700}.lead{max-width:720px;color:var(--muted);font-size:.972rem;margin:0}
@@ -141,7 +141,7 @@
     .sample-service-link{display:inline-block;margin-top:.85rem;color:var(--accent);font-size:.702rem;font-weight:700;border-bottom:1px solid currentColor;padding-bottom:.1rem}
     .sample-service-link:hover{color:var(--ink)}
     footer{border-top:1px solid var(--line);padding:1.7rem 0;color:var(--quiet);font-size:.72rem}
-    @media(max-width:780px){.nav{padding:1rem 0;align-items:flex-start}.back{display:none}.product{grid-template-columns:1fr}.product-side{border-left:0;border-top:1px solid var(--line)}}
+    @media(max-width:780px){.product{grid-template-columns:1fr}.product-side{border-left:0;border-top:1px solid var(--line)}}
 
     .catalog-intro{margin-bottom:1rem}.catalog-intro h2{font-size:clamp(1.8rem,3.6vw,3rem);margin:.65rem 0}.catalog-intro p{max-width:750px;color:var(--muted)}
     .catalog-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.7rem;margin:1.5rem 0 0}.catalog-overview a{display:flex;align-items:center;gap:.8rem;padding:1rem;border:1px solid var(--line);background:var(--bg2);min-width:0}.catalog-overview a:hover{border-color:var(--accent)}.catalog-overview a>span:last-child{margin-left:auto;color:var(--accent)}.catalog-number{font-family:var(--mono);color:var(--quiet);font-size:.7rem}.catalog-overview a>span:nth-child(2){min-width:0;overflow-wrap:anywhere}
@@ -152,8 +152,8 @@
     @media(max-width:600px){.catalog-overview{grid-template-columns:1fr}.family-options{padding:.85rem}.product-option summary{flex-wrap:wrap;gap:.4rem .6rem}.option-name{flex:1 1 calc(100% - 2rem)}.option-chevron{order:2}.option-badge{order:3;margin-left:0}.nested-product .product-main,.nested-product .product-side{padding:1.1rem}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
-  <link rel="stylesheet" href="assets/site.css?v=19">
-  <script src="assets/i18n.js?v=3"></script>
+  <link rel="stylesheet" href="assets/site.css?v=20">
+  <script src="assets/i18n.js?v=5"></script>
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -840,6 +840,6 @@
 })();
 </script>
 <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-<script src="assets/chatbox.js?v=17" defer></script>
+<script src="assets/chatbox.js?v=18" defer></script>
 </body>
 </html>
