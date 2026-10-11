@@ -17,3 +17,6 @@
 
 
 .workspace-grid.summary-view{grid-template-columns:minmax(0,1fr)}.handoff textarea{min-height:180px}.handoff .secondary{max-width:100%;white-space:normal}.summary-actions{flex-wrap:wrap}
+
+/* Distinguish missing evidence; use one page scroll for individual tools. */
+.security-canvas-page .comparison iframe{height:600px;min-height:0}.progress li.reviewed{color:var(--muted)}.progress li.skipped,.progress-status{color:var(--quiet)}

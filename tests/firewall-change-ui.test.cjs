@@ -4,9 +4,9 @@ const core=require('../assets/firewall-review-core.js'),change=require('../asset
 async function harness(language='en'){
   const elements=new Map(),blobs=[],listeners={};
   const element=id=>{if(!elements.has(id))elements.set(id,{value:'',files:[],checked:false,dataset:{},textContent:'',innerHTML:'',hidden:false,handlers:{},setAttribute(k,v){this[k]=v;},addEventListener(event,fn){this.handlers[event]=fn;},querySelectorAll(){return[];}});return elements.get(id);};
-  element('fc-mode-policy').dataset.fcMode='policy';element('fc-mode-change').dataset.fcMode='change';
+  element('fc-mode-policy').dataset.fcMode='policy';element('fc-mode-change').dataset.fcMode='change';element('fc-mode-policy').dataset.fc='policyMode';element('fc-mode-change').dataset.fc='changeMode';
   element('fw-vendor').value='auto';element('fw-severity').value='all';
-  const document={documentElement:{lang:language},getElementById:element,querySelectorAll:selector=>selector==='[data-fc-mode]'?[element('fc-mode-policy'),element('fc-mode-change')]:[],addEventListener(name,fn){(listeners[name]??=[]).push(fn);},dispatchEvent(e){for(const fn of listeners[e.type]||[])fn(e);},body:{append(){}},createElement:()=>({click(){},remove(){}})};
+  const document={documentElement:{lang:language},getElementById:element,querySelectorAll:selector=>['[data-fc-mode]','[data-fc]'].includes(selector)?[element('fc-mode-policy'),element('fc-mode-change')]:selector==='.fc-modes'?[element('fc-mode-group')]:[],addEventListener(name,fn){(listeners[name]??=[]).push(fn);},dispatchEvent(e){for(const fn of listeners[e.type]||[])fn(e);},body:{append(){}},createElement:()=>({click(){},remove(){}})};
   class Worker{postMessage(data){queueMicrotask(()=>{if(this.cancelled)return;try{this.onmessage({data:{result:change.review(data.before,data.after,data.scenarios,data.delta)}});}catch(e){this.onmessage({data:{error:e.code||'unexpected'}});}});}terminate(){this.cancelled=true;}}
   const context=vm.createContext({window:null,document,Blob,Event,URL:{createObjectURL(b){blobs.push(b);return 'blob:local';},revokeObjectURL(){}},Worker,FirewallReview:core,FirewallChangeReview:change,setTimeout:fn=>{queueMicrotask(fn);return 0;}});context.window=context;
   for(const file of ['firewall-review-demo.js','firewall-change-ui.js','firewall-review.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets',file),'utf8'),context);
@@ -58,4 +58,12 @@ test('Policy mode preserves structural review and change mode restores scenario 
 });
 test('CSV export neutralizes spreadsheet formulas and reimport preserves scenario names',async()=>{
   const ui=await harness();await ui.demo();ui.element('fc-rows').handlers.input({target:{dataset:{fcRow:'0',fcField:'name'},value:'=HYPERLINK("https://example.com")'}});ui.element('fc-export-csv').handlers.click();const csv=await ui.blobs.at(-1).text();assert.ok(csv.includes("\"'=HYPERLINK"));ui.element('fc-import').files=[{name:'scenarios.csv',size:csv.length,text:async()=>csv}];await ui.element('fc-import').handlers.change();await ui.review();assert.equal(JSON.parse(await ui.export('json')).changeReview.flows[0].scenario.name,'=HYPERLINK("https://example.com")');
+});
+
+test('review modes and accessible group label follow EN/RO/FR switching',async()=>{
+ const h=await harness('en');const expected={en:['Policy Review','Change Review','Review mode'],ro:['Analiza politicilor','Analiza modificării','Mod de analiză'],fr:['Revue des politiques','Revue du changement','Mode de revue']};
+ for(const lang of ['ro','fr','en']){
+  h.document.documentElement.lang=lang;h.document.dispatchEvent({type:'site:languagechange',detail:{language:lang}});
+  assert.equal(h.element('fc-mode-policy').textContent,expected[lang][0]);assert.equal(h.element('fc-mode-change').textContent,expected[lang][1]);assert.equal(h.element('fc-mode-group')['aria-label'],expected[lang][2]);
+ }
 });
