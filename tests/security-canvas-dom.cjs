@@ -16,7 +16,7 @@ class Element{
  get classList(){const el=this;return {contains:k=>el.className.split(' ').includes(k),add(k){this.toggle(k,true)},remove(k){this.toggle(k,false)},toggle(k,v){const set=new Set(el.className.split(' ').filter(Boolean));if(v??!set.has(k))set.add(k);else set.delete(k);el.setAttribute('class',[...set].join(' '));}};}
  contains(x){return this===x||this.children.some(c=>c.contains(x));}
  append(...els){els.forEach(el=>{el.parentElement=this;this.children.push(el)});}appendChild(el){this.append(el);return el;}
- dispatchEvent(e){for(const fn of this.handlers[e.type]||[])fn(e);return true;}
+ dispatchEvent(e){e.target??=this;for(const fn of this.handlers[e.type]||[])fn(e);return true;}
  addEventListener(k,fn){(this.handlers[k]??=[]).push(fn);}removeEventListener(){}
  async dispatch(type){const event={type,target:this,preventDefault(){},key:''};let node=this,waiting=[];while(node){for(const fn of node.handlers[type]||[]){const p=fn(event);if(p?.then)waiting.push(p);}node=node.parentElement;}await Promise.all(waiting);}
  async click(){if(!this.disabled)await this.dispatch('click');}

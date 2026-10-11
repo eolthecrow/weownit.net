@@ -105,7 +105,7 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
     if(kind==='hardening'){
       const current=root.VendorHardening.parse(input.current,vendor);
       let comparison=null;
-      if(input.before?.trim())comparison=root.VendorHardening.compare(root.VendorHardening.parse(input.before,vendor),current,{current:input.reference,before:input.reference});
+      if(input.before?.trim())comparison=root.VendorHardening.compare(root.VendorHardening.parse(input.before,vendor),current,{current:input.reference,before:input.beforeReference||input.reference});
       return {kind,model:current,comparison};
     }
     if(kind==='policy'){
@@ -119,7 +119,7 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
       return {kind,result};
     }
     if(kind==='triage'){
-      const parsed=root.IncidentTriage.parse(input.current,{id:'canvas-source',name:input.sourceName||'Local evidence'},root.DOMParser,{mode:input.mode||'auto',timezone:input.timezone||'+00:00'});
+      const parsed=root.IncidentTriage.parse(input.current,{id:'canvas-source',name:input.sourceName||'Local evidence'},root.DOMParser,{mode:input.mode||'auto',timezone:input.timezone||'+00:00',year:input.year||'',host:input.host||''});
       const result=root.IncidentTriage.analyze({events:parsed.events,sources:[{id:'canvas-source',name:input.sourceName||'Local evidence'}]});
       return {kind,parsed,result};
     }
@@ -132,6 +132,7 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
     if(item.kind==='triage')return {state:item.result.findings.length?'needsReview':'partial',attention:item.result.summary.high+item.result.summary.medium,unknown:item.parsed.counts.rejected+item.result.summary.missingTime};
     if(item.kind==='change')return {state:item.result.summary.regression?'needsReview':item.result.summary.inconclusive?'partial':'observed',attention:item.result.summary.regression,unknown:item.result.summary.inconclusive};
     if(item.kind==='web')return {state:item.outcome==='followup'?'needsReview':item.outcome==='clear'?'declared':'partial',attention:item.outcome==='followup'?1:0,unknown:item.outcome==='unavailable'?1:0};
+    if(item.kind==='cve'&&item.applicability?.status==='confirmed')return {state:'needsReview',attention:1,unknown:1};
     if(item.kind==='cve')return {state:item.sample||!item.result?.cve?'partial':item.result.kev?.listed?'needsReview':'partial',attention:item.result?.kev?.listed?1:0,unknown:1};
     return {state:'partial',attention:0,unknown:1};
   }
@@ -142,3 +143,4 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
   const api={VENDORS,CONCERNS,route,domain,policyLab,inspect,signals,summary};
   root.SecurityCanvas=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
+
