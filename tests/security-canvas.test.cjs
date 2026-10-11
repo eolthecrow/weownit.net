@@ -40,8 +40,25 @@ test('configuration processing makes no network calls or persistent writes',()=>
 
 test('existing deep links open their full tool within Tools',()=>{for(const anchor of ['web-check','cve-risk-lens','firewall-review','incident-evidence-triage']){const h=setup(390,'fr','#'+anchor);assert.equal(h.$('comparison').hidden,false);assert.ok(h.$('current-frame').src.endsWith('?lang=fr#'+anchor));}});
 test('shared preference and translated same-site destinations persist',async()=>{const h=setup(430,'','', 'ro');assert.equal(h.document.documentElement.lang,'ro');await h.document.querySelector('[data-lang="fr"]').click();await Promise.resolve();const nav=h.document.querySelector('[data-global-nav]');assert.ok(nav.textContent.includes('Outils'));for(const link of nav.querySelectorAll('a')){assert.ok(link.getAttribute('href').includes('lang=fr'));assert.equal(link.getAttribute('target'),null);}assert.equal(h.document.querySelector('[data-privacy-link]').textContent,'Confidentialité');});
-test('classic Tools source and shared shell remain exact baseline blobs',()=>{const crypto=require('crypto');for(const [file,sha] of [['tools-existing.html','a81bc8cb6178bdf29b9fb2d8681b18463cd7fa85'],['assets/site.css','deb80f1367135248716d990f4b144e52a62b78d5'],['assets/i18n.js','3e41a700ccd714f673d9af64f9a1fc6f97060f91']]){const content=fs.readFileSync(path.join(root,file));assert.equal(crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+content.length+'\0'),content])).digest('hex'),sha);}});
+test('classic Tools markup is preserved except the reviewed script cache version; shared shell is unchanged',()=>{const crypto=require('crypto');for(const [file,sha] of [['tools-existing.html','a81bc8cb6178bdf29b9fb2d8681b18463cd7fa85'],['assets/site.css','deb80f1367135248716d990f4b144e52a62b78d5'],['assets/i18n.js','3e41a700ccd714f673d9af64f9a1fc6f97060f91']]){const original=fs.readFileSync(path.join(root,file));const content=file==='tools-existing.html'?Buffer.from(original.toString().replace('firewall-change-ui.js?v=review-fix-20261011','firewall-change-ui.js?v=mode-fix-20261008')):original;assert.equal(crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+content.length+'\0'),content])).digest('hex'),sha);}});
 test('all referenced local runtime assets exist and old hashes remain available',()=>{const html=read('tools.html');for(const m of html.matchAll(/(?:src|href)="(assets\/[^"?]+)(?:[^" ]*)"/g))assert.ok(fs.existsSync(path.join(root,m[1])),m[1]);assert.ok(!/Private prototype|Public site unchanged|noindex|current\/assets|canvas\.js"/.test(html));const original=read('tools-existing.html');for(const id of ['web-check','cve-risk-lens','firewall-review','incident-evidence-triage'])assert.ok(original.includes('id="'+id+'"'));});
 
 test('changing the embedded tool hash retains visible frame',async()=>{const h=setup();await h.$('current-view').click();h.$('current-frame').classList.add('is-ready');await select(h,'hardening','fortinet');await h.$('full-tool').click();assert.ok(h.$('current-frame').classList.contains('is-ready'));assert.ok(h.$('current-frame').src.endsWith('#firewall-review'));});
 test('translated finding and workflow labels appear for supplied evidence',async()=>{for(const lang of ['ro','fr']){const h=setup(390,lang);await select(h,'hardening','fortinet');await h.$('sample').click();assert.ok(!h.$('tool-result').textContent.includes('Cleartext management allowed'));assert.ok(!h.$('progress').textContent.includes('Policy Review'));}});
+
+for(const lang of ['en','ro','fr'])test(`review labels and skipped progress remain truthful: ${lang}`,async()=>{
+ const h=setup(390,lang);await select(h,'hardening','cisco');await h.$('sample').click();
+ const labels={en:['Device hardening','SSH version','Skipped — not assessed'],ro:['Securizarea echipamentului','Versiune SSH','Omis — neevaluat'],fr:['Durcissement de l’équipement','Version SSH','Passé — non évalué']}[lang];
+ assert.equal(h.$('tool-heading').textContent,labels[0]);assert.ok(h.$('tool-result').textContent.includes(labels[1]));
+ await h.$('next-step').click();await h.$('skip-step').click();
+ const steps=h.$('progress').querySelectorAll('li');assert.ok(steps[0].textContent.includes('✓'));assert.ok(!steps[1].textContent.includes('✓'));assert.ok(steps[1].textContent.includes(labels[2]));
+ assert.equal(h.$('canvas-view').hidden,true);assert.equal(h.$('current-view').hidden,false);
+ await h.$('current-view').click();assert.equal(h.$('canvas-view').hidden,false);assert.equal(h.$('current-view').hidden,true);
+ await h.$('canvas-view').click();assert.ok(h.api.state.results.hardening);assert.equal(h.api.state.results.cve.skipped,true);
+});
+test('all vendor hardening control identifiers have EN/RO/FR display labels',()=>{
+ const h=setup();for(const vendor of ['fortinet','paloalto','cisco','checkpoint'])for(const side of ['before','after']){
+ const d=h.context.VendorHardeningDemos[vendor];const m=h.context.VendorHardening.parse(d[side],vendor,{XMLParser,policyCore:h.context.FirewallReview});
+ for(const control of m.controls)assert.ok(vm.runInContext(`words[${JSON.stringify('finding_'+control.check)}]?.every(v=>typeof v==='string'&&v.length>0)`,h.context),vendor+' / '+control.check);
+ }
+});
