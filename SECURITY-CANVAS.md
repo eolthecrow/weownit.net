@@ -63,3 +63,11 @@ The remaining verification action is a supported browser pass on desktop and 360
 
 Run local checks with `node --test tests/security-canvas.test.cjs` (Node and Python are needed for the XML adapter). The test DOM is an interaction adapter, not a browser renderer.
 
+
+## Integrated review fixes — 11 October 2026
+
+Pre-merge restore point: `backup/pre-review-merge-20261011` at `af71f36881d414ee5c9b8ab3f8e31c40976e07c9`. Preserve the earlier no-Canvas baseline at `backup/pre-security-canvas-20261011`.
+
+Integrate the review corrections with the newer traffic editor, case bridge, Contact handoff and simplified site navigation. Distinguish skipped from reviewed workflow checks, label device hardening directly, translate the accessible review-mode group and allow one page scroll for embedded individual tools. Retain the existing Open tools shortcut and case-preserving return. Existing newer control-name translations are preserved.
+
+Targeted automated checks include EN/RO/FR workflows and emulated mobile widths; rendered phone layouts remain a verification limit.
