@@ -19,7 +19,7 @@
     
   </style>
 <link rel="stylesheet" href="/assets/site.css?v=20">
-<script src="/assets/i18n.js?v=6"></script>
+<script src="/assets/i18n.js?v=7"></script>
 </head>
 <body>
   <main class="card">
@@ -27,16 +27,16 @@
     <div class="lang-switch" role="group" aria-label="Language"><button type="button" data-lang="ro">RO</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="fr">FR</button></div>
     <div class="code">404 / ROUTE NOT FOUND</div>
     <h1>Wrong path.<br>Useful way back.</h1>
-    <p>The page you requested does not exist or has moved. Return to the resource library, explore the technical toolkit, or open the store.</p>
+    <p>The page you requested does not exist or has moved. Return to the resource library, explore the technical toolkit, or browse the toolkits.</p>
     <div class="links">
       <a href="https://weownit.net/">Back to resources</a>
       <a class="secondary" href="https://weownit.net/tools.html">Tools</a>
-      <a class="secondary" href="https://weownit.net/store.html">Store</a>
+      <a class="secondary" href="https://weownit.net/store.html">Toolkits</a>
     </div>
   </main>
 <script>
 (()=>{
-const copy={"en": ["Page not found", "Network & Security Consultant", "404 / PAGE NOT FOUND", "Wrong path. Useful way back.", "The page you requested does not exist or has moved. Return to the resources, explore the tools, or open the store.", "Back to resources", "Tools", "Store"], "ro": ["Pagina nu a fost găsită", "Network & Security Consultant", "404 / PAGINĂ INEXISTENTĂ", "Înapoi la resurse.", "Pagina solicitată nu există sau a fost mutată. Revino la resurse, explorează instrumentele sau deschide magazinul.", "Înapoi la resurse", "Instrumente", "Magazin"], "fr": ["Page introuvable", "Network & Security Consultant", "404 / PAGE INTROUVABLE", "Retrouvez les ressources.", "La page demandée n’existe pas ou a été déplacée. Retrouvez les ressources, explorez les outils ou ouvrez la boutique.", "Retour aux ressources", "Outils", "Boutique"]};
+const copy={"en": ["Page not found", "Network & Security Consultant", "404 / PAGE NOT FOUND", "Wrong path. Useful way back.", "The page you requested does not exist or has moved. Return to the resources, explore the tools, or browse the toolkits.", "Back to resources", "Tools", "Toolkits"], "ro": ["Pagina nu a fost găsită", "Network & Security Consultant", "404 / PAGINĂ INEXISTENTĂ", "Înapoi la resurse.", "Pagina solicitată nu există sau a fost mutată. Revino la resurse, explorează instrumentele sau explorează pachetele.", "Înapoi la resurse", "Instrumente", "Pachete"], "fr": ["Page introuvable", "Network & Security Consultant", "404 / PAGE INTROUVABLE", "Retrouvez les ressources.", "La page demandée n’existe pas ou a été déplacée. Retrouvez les ressources, explorez les outils ou parcourez les kits.", "Retour aux ressources", "Outils", "Kits"]};
 function apply(lang){
  const t=copy[lang];SiteI18n.setLanguage(lang);
  document.title=t[0]+" — "+t[1];document.querySelector(".brand span").textContent=t[1];

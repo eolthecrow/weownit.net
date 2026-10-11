@@ -49,9 +49,9 @@
     fr: {privacy:"Confidentialité", skip:"Aller au contenu", language:"Langue", back:"← Contact"}
   };
   const navigation = {
-    en: {services:"Services", tools:"Tools", resources:"Resources", store:"Resources", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
-    ro: {services:"Servicii", tools:"Instrumente", resources:"Resurse", store:"Resurse", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
-    fr: {services:"Services", tools:"Outils", resources:"Ressources", store:"Ressources", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
+    en: {services:"Services", tools:"Tools", resources:"Toolkits", store:"Toolkits", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
+    ro: {services:"Servicii", tools:"Instrumente", resources:"Pachete", store:"Pachete", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
+    fr: {services:"Services", tools:"Outils", resources:"Kits", store:"Kits", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
   };
   function getInitialLanguage() {
     const explicit = normalizeLanguage(new URL(location.href).searchParams.get("lang"));
