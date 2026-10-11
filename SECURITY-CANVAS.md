@@ -1,6 +1,6 @@
 # Security Canvas release
 
-Security Canvas is the default Tools view at `/tools.html`. A visitor chooses a concern or vendor, reviews only the relevant evidence, and leaves with a copyable or downloadable next-action summary. A discreet “Browse individual tools” link opens the full tools in the same page; they also remain directly available at `/tools-existing.html`.
+Security Canvas is the default Tools view at `/tools.html`. A visitor chooses a concern or vendor, reviews only the relevant evidence, and leaves with a copyable or downloadable next-action summary. A compact “Open tools” button in the Canvas toolbar opens the full tools in the same page, with a “Back to Security Canvas” control to return; they also remain directly available at `/tools-existing.html`.
 
 ## Scope and restore point
 
