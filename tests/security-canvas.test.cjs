@@ -18,7 +18,7 @@ for(const width of [1440,360,390,430])for(const lang of ['en','ro','fr'])for(con
   assert.ok(h.api.state.results[kind],kind+' result');assert.equal(h.$('next-step').disabled,false);await h.$('next-step').click();
  }
  assert.equal(h.api.state.index,2);assert.ok(h.$('download'));assert.ok(h.$('tool-panel').querySelector('.sample-note'));await h.$('copy').click();assert.ok(h.copied.includes(vendor==='paloalto'?'Palo Alto':vendor==='checkpoint'?'Check Point':vendor==='cisco'?'Cisco':'Fortinet'));assert.ok(h.copied.length>400);
- const saved=h.api.state.results;await h.$('current-view').click();assert.equal(h.$('comparison').hidden,false);await h.$('canvas-view').click();assert.equal(h.$('workspace').hidden,false);assert.equal(h.api.state.results,saved);
+ const saved=h.api.state.results;assert.equal(h.$('current-view').tagName,'A');assert.equal(h.$('current-view').getAttribute('href'),'/tools-existing.html?lang='+lang);assert.equal(h.$('current-view').getAttribute('target'),null);await h.$('current-view').click();assert.equal(h.$('comparison').hidden,true);assert.equal(h.api.state.results,saved);
  if(vendor==='cisco'&&concern==='change')assert.equal(h.$('coverage-note').hidden,false);
  if(vendor==='checkpoint'&&concern==='change')assert.equal(h.$('coverage-note').hidden,false);
 });
@@ -43,7 +43,7 @@ test('shared preference and translated same-site destinations persist',async()=>
 test('shared visual shell stays at the approved baseline',()=>{const crypto=require('crypto'),content=fs.readFileSync(path.join(root,'assets/site.css'));assert.equal(crypto.createHash('sha1').update(Buffer.concat([Buffer.from('blob '+content.length+'\0'),content])).digest('hex'),'deb80f1367135248716d990f4b144e52a62b78d5');});
 test('all referenced local runtime assets exist and old hashes remain available',()=>{const html=read('tools.html');for(const m of html.matchAll(/(?:src|href)="(assets\/[^"?]+)(?:[^" ]*)"/g))assert.ok(fs.existsSync(path.join(root,m[1])),m[1]);assert.ok(!/Private prototype|Public site unchanged|noindex|current\/assets|canvas\.js"/.test(html));const original=read('tools-existing.html');for(const id of ['web-check','cve-risk-lens','firewall-review','incident-evidence-triage'])assert.ok(original.includes('id="'+id+'"'));});
 
-test('changing the embedded tool hash retains visible frame',async()=>{const h=setup();await h.$('current-view').click();h.$('current-frame').classList.add('is-ready');await select(h,'hardening','fortinet');await h.$('full-tool').click();assert.ok(h.$('current-frame').classList.contains('is-ready'));assert.ok(h.$('current-frame').src.endsWith('#firewall-review'));});
+test('changing the embedded tool hash retains visible frame',async()=>{const h=setup();await select(h,'hardening','fortinet');await h.$('full-tool').click();h.$('current-frame').classList.add('is-ready');await h.$('canvas-view').click();await h.$('full-tool').click();assert.ok(h.$('current-frame').classList.contains('is-ready'));assert.ok(h.$('current-frame').src.endsWith('#firewall-review'));});
 test('translated finding and workflow labels appear for supplied evidence',async()=>{for(const lang of ['ro','fr']){const h=setup(390,lang);await select(h,'hardening','fortinet');await h.$('sample').click();assert.ok(!h.$('tool-result').textContent.includes('Cleartext management allowed'));assert.ok(!h.$('progress').textContent.includes('Policy Review'));}});
 
 function childTools(h){
@@ -87,6 +87,5 @@ for(const lang of ['en','ro','fr'])test(`review labels and skipped progress rema
  await h.$('next-step').click();await h.$('skip-step').click();
  const steps=h.$('progress').querySelectorAll('li');assert.ok(steps[0].textContent.includes('✓'));assert.ok(!steps[1].textContent.includes('✓'));assert.ok(steps[1].textContent.includes(labels[2]));
  assert.equal(h.$('canvas-view').hidden,true);assert.equal(h.$('current-view').hidden,false);
- await h.$('current-view').click();assert.equal(h.$('canvas-view').hidden,false);assert.equal(h.$('current-view').hidden,true);
- await h.$('canvas-view').click();assert.ok(h.api.state.results.hardening);assert.equal(h.api.state.results.cve.skipped,true);
+ assert.equal(h.$('current-view').getAttribute('href'),'/tools-existing.html?lang='+lang);await h.$('current-view').click();assert.equal(h.$('comparison').hidden,true);assert.ok(h.api.state.results.hardening);assert.equal(h.api.state.results.cve.skipped,true);
 });
