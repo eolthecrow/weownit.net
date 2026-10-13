@@ -28,7 +28,7 @@
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=20">
-  <script src="assets/i18n.js?v=7"></script>
+  <script src="assets/i18n.js?v=8"></script>
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -42,7 +42,7 @@
       <nav class="global-nav-links" data-global-nav aria-label="Primary navigation">
         <a href="index.html#services" data-nav-label="services">Services</a>
         <a href="tools.html" data-nav-label="tools">Tools</a>
-        <a href="store.html" data-nav-label="resources">Toolkits</a>
+        <a href="store.html" data-nav-label="resources">Products</a>
         <a href="about.html" data-nav-label="about">About</a>
         <a href="contact.html" data-nav-label="contact">Contact</a>
       </nav>
@@ -189,6 +189,6 @@ const {normalizeLanguage,getInitialLanguage,syncInternalLanguageLinks,installLan
 function apply(l){const t=copy[l]||copy.en;SiteI18n.setLanguage(l);document.title=t.title;document.querySelector("[data-brand]").textContent=t.brand;document.querySelector(".eyebrow").textContent=t.e;document.querySelector("h1").textContent=t.h;document.querySelector(".lead").textContent=t.lead;document.querySelectorAll("main section").forEach((x,i)=>{x.querySelector("h2").textContent=t.s[i][0];x.querySelector("p").textContent=t.s[i][1]});document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===l)));syncInternalLanguageLinks(l);}document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>apply(b.dataset.lang));installLanguageNavigation();apply(getInitialLanguage());
 </script>
   <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-  <script src="assets/chatbox.js?v=20" defer></script>
+  <script src="assets/chatbox.js?v=21" defer></script>
 </body>
 </html>
