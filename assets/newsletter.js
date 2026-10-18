@@ -11,6 +11,8 @@ if(!block||!form)return;
 const status=block.querySelector(".newsletter-status"),submit=block.querySelector('button[type="submit"]');
 const preferred=()=>{try{return SiteI18n.getInitialLanguage()||document.documentElement.lang||"en";}catch{return document.documentElement.lang||"en";}};
 const t=()=>copy[preferred()]||copy.en;
+// A public site key is not an activation signal: enable only after Worker + Resend E2E verification.
+const available=()=>window.WEOWNIT_NEWSLETTER_ENABLED===true && Boolean(window.WEOWNIT_TURNSTILE_SITE_KEY);
 function render(){
 const c=t();
 block.querySelector("[data-newsletter-micro]").textContent=c.micro;
@@ -21,17 +23,18 @@ block.querySelector('input[type="email"]').setAttribute("aria-label",c.email);
 submit.textContent=c.action;
 block.querySelector("[data-newsletter-consent]").textContent=c.consent;
 block.querySelector("[data-newsletter-privacy]").textContent=c.privacy;
-if(!window.WEOWNIT_TURNSTILE_SITE_KEY){status.textContent=c.offline;submit.disabled=true;}
+if(!available()){status.textContent=c.offline;submit.disabled=true;}
 }
 let widgetId=null,verificationToken="";
 function initialise(){
-if(!window.WEOWNIT_TURNSTILE_SITE_KEY){render();return;}
+if(!available()){render();return;}
 if(!window.turnstile){status.textContent=t().offline;submit.disabled=true;return;}
-widgetId=window.turnstile.render("#newsletter-turnstile",{sitekey:window.WEOWNIT_TURNSTILE_SITE_KEY,action:"subscribe",callback:(value)=>{verificationToken=value;submit.disabled=false;},'expired-callback':()=>{verificationToken="";submit.disabled=true;},"error-callback":()=>{verificationToken="";submit.disabled=true;}});
+widgetId=window.turnstile.render("#newsletter-turnstile",{sitekey:window.WEOWNIT_TURNSTILE_SITE_KEY,action:"subscribe",callback:(value)=>{verificationToken=value;submit.disabled=!available();},'expired-callback':()=>{verificationToken="";submit.disabled=true;},"error-callback":()=>{verificationToken="";submit.disabled=true;}});
 }
 window.weownitNewsletterTurnstileReady=initialise;
 form.addEventListener("submit",async e=>{
 e.preventDefault();
+if(!available()){status.textContent=t().offline;submit.disabled=true;return;}
 const c=t(),input=form.elements.email,consent=form.elements.consent;
 if(!input.validity.valid||!consent.checked){status.textContent=c.invalid;status.dataset.state="error";return;}
 if(!verificationToken){status.textContent=c.verify;status.dataset.state="error";return;}
@@ -45,5 +48,5 @@ finally{verificationToken="";if(window.turnstile&&widgetId!==null)window.turnsti
 });
 document.addEventListener("site:languagechange",render);
 render();
-if(window.turnstile&&window.WEOWNIT_TURNSTILE_SITE_KEY)initialise();
+if(window.turnstile&&available())initialise();
 })();
