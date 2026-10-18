@@ -1,4 +1,5 @@
 import {handleCveRisk} from "./cve-risk.js";
+import {handleNewsletter} from "./newsletter.js";
 const MODEL = "@cf/zai-org/glm-4.7-flash";
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_MESSAGES = 8;
@@ -365,7 +366,9 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
-    if (!isAllowedOrigin(origin)) {
+    const newsletterAction = ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname);
+    const sameOriginAction = newsletterAction && origin === url.origin;
+    if (!isAllowedOrigin(origin) && !sameOriginAction) {
       return json({ error: "Origin not allowed." }, 403, "https://weownit.net");
     }
 
@@ -374,6 +377,10 @@ export default {
         status: 204,
         headers: corsHeaders(origin),
       });
+    }
+
+    if (url.pathname.startsWith("/newsletter/")) {
+      return handleNewsletter(request, env, url);
     }
 
     if ((request.method === "GET" || request.method === "POST") && url.pathname === "/download-event") {
