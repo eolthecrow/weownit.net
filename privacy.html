@@ -189,6 +189,6 @@ const {normalizeLanguage,getInitialLanguage,syncInternalLanguageLinks,installLan
 function apply(l){const t=copy[l]||copy.en;SiteI18n.setLanguage(l);document.title=t.title;document.querySelector("[data-brand]").textContent=t.brand;document.querySelector(".eyebrow").textContent=t.e;document.querySelector("h1").textContent=t.h;document.querySelector(".lead").textContent=t.lead;document.querySelectorAll("main section").forEach((x,i)=>{x.querySelector("h2").textContent=t.s[i][0];x.querySelector("p").textContent=t.s[i][1]});document.querySelectorAll(".langs button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===l)));syncInternalLanguageLinks(l);}document.querySelectorAll(".langs button").forEach(b=>b.onclick=()=>apply(b.dataset.lang));installLanguageNavigation();apply(getInitialLanguage());
 </script>
   <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
-  <script src="assets/chatbox.js?v=21" defer></script>
+  <script src="assets/chatbox.js?v=22" defer></script>
 </body>
 </html>

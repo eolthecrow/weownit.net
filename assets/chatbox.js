@@ -6,6 +6,7 @@
     en:{
       open:'Open Network & Security Assistant', close:'Close chat', send:'Send message', input:'Your question',
       title:"Network & Security Assistant",
+      backToTop:"Back to top",
       status:isLive?"AI assistant":"",
       greetingReply:"Hello! How can I help you today?",
       placeholder:"Enter your question...",
@@ -20,6 +21,7 @@
     ro:{
       open:'Deschide asistentul de rețele și securitate', close:'Închide conversația', send:'Trimite mesajul', input:'Întrebarea ta',
       title:"Asistent Rețele & Securitate",
+      backToTop:"Înapoi sus",
       status:isLive?"Asistent AI":"",
       greetingReply:"Salut! Cu ce te pot ajuta astăzi?",
       placeholder:"Scrie întrebarea...",
@@ -34,6 +36,7 @@
     fr:{
       open:'Ouvrir l’assistant réseaux et sécurité', close:'Fermer la conversation', send:'Envoyer le message', input:'Votre question',
       title:"Assistant Réseaux & Sécurité",
+      backToTop:"Retour en haut",
       status:isLive?"Assistant IA":"",
       greetingReply:"Bonjour ! Comment puis-je vous aider aujourd’hui ?",
       placeholder:"Votre question...",
@@ -152,7 +155,7 @@
   const backToTop=document.createElement("button");
   backToTop.className="site-back-to-top";
   backToTop.type="button";
-  backToTop.setAttribute("aria-label","Back to top");
+  backToTop.setAttribute("aria-label",copy.en.backToTop);
   backToTop.innerHTML='<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.5 14.5 5.5-5 5.5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   document.body.appendChild(backToTop);
   const updateBackToTop=()=>backToTop.classList.toggle("is-visible",window.scrollY>480);
@@ -186,6 +189,7 @@
   let privacyHint;
   const refresh=()=>{
     const t=copy[lang()]||copy.en;
+    backToTop.setAttribute("aria-label",t.backToTop);
     panel.setAttribute("aria-label",t.title);
     launcher.setAttribute("aria-label",t.open);
     panel.querySelector(".va-chat-close").setAttribute("aria-label",t.close);
