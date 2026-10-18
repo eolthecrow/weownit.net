@@ -106,7 +106,50 @@ async function doUnsubscribe(req,env,value,lang){
     return page(copy.done,"<p>"+h(copy.done)+"</p>",lang);
   }catch(err){console.error("Newsletter unsubscribe error",String(err.message).slice(0,50));return page(copy.failed,"",lang);}
 }
+
+/* Resend signs the exact raw webhook body with Svix headers. */
+async function verifiedWebhookEvent(req,secret){
+  if(typeof secret!=="string"||!/^whsec_[-A-Za-z0-9+/=]+$/.test(secret))return null;
+  if(Number(req.headers.get("content-length")||0)>12_000)return null;
+  const payload=await req.text();
+  if(payload.length>12_000)return null;
+  const id=req.headers.get("svix-id"),stamp=req.headers.get("svix-timestamp"),signature=req.headers.get("svix-signature");
+  const epoch=Number(stamp);
+  if(!id||!stamp||!signature||!Number.isInteger(epoch)||Math.abs(Date.now()/1000-epoch)>300)return null;
+  let secretBytes;
+  try {secretBytes=Uint8Array.from(atob(secret.slice(6)),char=>char.charCodeAt(0));}
+  catch{return null;}
+  const key=await crypto.subtle.importKey("raw",secretBytes,{name:"HMAC",hash:"SHA-256"},false,["verify"]);
+  const message=new TextEncoder().encode(id+"."+stamp+"."+payload);
+  for(const entry of signature.trim().split(/\s+/)){
+    if(!entry.startsWith("v1,"))continue;
+    try {
+      const digest=Uint8Array.from(atob(entry.slice(3)),char=>char.charCodeAt(0));
+      if(await crypto.subtle.verify("HMAC",key,digest,message)){
+        return JSON.parse(payload);
+      }
+    }catch{/* malformed signature, continue */}
+  }
+  return null;
+}
+async function newsletterWebhook(req,env){
+  if(req.method!=="POST")return result({error:"Method not allowed."},405);
+  if(!env.RESEND_WEBHOOK_SECRET||!env.SUBSCRIBERS_DB)return result({error:"Not configured."},503);
+  const event=await verifiedWebhookEvent(req,env.RESEND_WEBHOOK_SECRET);
+  if(!event)return result({error:"Invalid webhook signature."},401);
+  const data=event?.data;
+  const optedOut=(event?.type==="contact.updated"&&data?.unsubscribed===true)||event?.type==="contact.deleted";
+  if(optedOut && typeof data?.email==="string" && data.email.length<=254){
+    await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET status='unsubscribed',unsubscribed_at=?,confirm_hash=NULL,confirm_expires_at=NULL WHERE email=? AND status!='unsubscribed'")
+      .bind(Date.now(),data.email.trim().toLowerCase()).run();
+  }
+  return result({ok:true});
+}
+
 export async function handleNewsletter(req,env,url){
+  if(url.pathname==="/newsletter/webhook"){
+    try{return await newsletterWebhook(req,env);}catch{return result({error:"Webhook unavailable."},503);}
+  }
   if(url.pathname==="/newsletter/subscribe"){
     if(req.method!=="POST")return result({error:"Method not allowed."},405);
     try{return await subscribe(req,env);}catch(err){console.error("Newsletter subscribe failure",String(err.message).slice(0,60));return result({error:"Subscription unavailable."},503);}
