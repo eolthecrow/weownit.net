@@ -5,6 +5,7 @@ on:
       - 'worker/src/newsletter.js'
       - 'worker/src/index.js'
       - 'worker/test/newsletter.test.mjs'
+      - 'worker/test/newsletter-wiring.test.mjs'
       - 'worker/migrations/**'
       - 'assets/newsletter.js'
       - 'assets/newsletter.css'
