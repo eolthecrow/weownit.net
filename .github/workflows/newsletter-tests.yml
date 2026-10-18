@@ -1,0 +1,42 @@
+name: Newsletter tests
+on:
+  pull_request:
+    paths:
+      - 'worker/src/newsletter.js'
+      - 'worker/src/index.js'
+      - 'worker/test/newsletter.test.mjs'
+      - 'worker/test/newsletter-wiring.test.mjs'
+      - 'worker/migrations/**'
+      - 'worker/setup-newsletter.ps1'
+      - 'assets/newsletter.js'
+      - 'assets/newsletter.css'
+      - 'index.html'
+      - '.github/workflows/newsletter-tests.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate syntax
+        run: |
+          node --check assets/newsletter.js
+          node --check worker/src/newsletter.js
+          node --check scripts/newsletter-release-draft.mjs
+      - name: Verify bootstrap PowerShell syntax (no Cloudflare operations)
+        shell: pwsh
+        run: |
+          $tokens = $null
+          $errors = @()
+          [System.Management.Automation.Language.Parser]::ParseFile((Resolve-Path 'worker/setup-newsletter.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
+          if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_.Message }; exit 1 }
+      - name: Test newsletter
+        run: node --test worker/test/newsletter.test.mjs
+      - name: Regression test site
+        run: node --test tests/*.test.cjs worker/test/*.test.mjs
