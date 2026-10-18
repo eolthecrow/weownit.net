@@ -1,0 +1,37 @@
+name: Draft subscriber release updates
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      title:
+        description: 'Release title for drafts'
+        required: true
+        type: string
+      summary:
+        description: 'Short release summary; translate drafts before sending'
+        required: true
+        type: string
+      release_url:
+        description: 'Canonical GitHub release URL'
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  create-drafts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+      RESEND_SEGMENT_EN: ${{ secrets.RESEND_SEGMENT_EN }}
+      RESEND_SEGMENT_RO: ${{ secrets.RESEND_SEGMENT_RO }}
+      RESEND_SEGMENT_FR: ${{ secrets.RESEND_SEGMENT_FR }}
+      NEWSLETTER_FROM_EMAIL: ${{ secrets.NEWSLETTER_FROM_EMAIL }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Create draft campaigns (never sends)
+        run: node scripts/newsletter-release-draft.mjs
