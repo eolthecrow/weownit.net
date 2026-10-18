@@ -6,8 +6,6 @@
 #>
 [CmdletBinding()]
 param(
-  [ValidateSet("eeur","weur")]
-  [string]$Location = "eeur",
   [switch]$ApplyRemoteMigration
 )
 $ErrorActionPreference = "Stop"
@@ -24,7 +22,7 @@ $npx = if (Get-Command npx.cmd -ErrorAction SilentlyContinue) {
 
 Write-Host ""
 Write-Host "weownit.net / Cloudflare D1 setup" -ForegroundColor Cyan
-Write-Host "This will CREATE a Cloudflare D1 database and update worker/wrangler.jsonc."
+Write-Host "This will CREATE an EU-jurisdiction Cloudflare D1 database and update worker/wrangler.jsonc."
 Write-Host "It will NOT deploy or send subscriber email."
 $confirmation = Read-Host "Type CREATE to continue"
 if ($confirmation -cne "CREATE") {
@@ -33,7 +31,7 @@ if ($confirmation -cne "CREATE") {
 }
 
 Write-Host "Creating D1 and writing its binding to wrangler.jsonc..."
-& $npx wrangler d1 create weownit_subscribers --binding SUBSCRIBERS_DB --location $Location --update-config
+& $npx wrangler d1 create weownit_subscribers --binding SUBSCRIBERS_DB --jurisdiction eu --update-config
 if ($LASTEXITCODE -ne 0) {
   throw "D1 creation failed. If the database already exists, follow worker/NEWSLETTER.md to bind its real ID manually."
 }
