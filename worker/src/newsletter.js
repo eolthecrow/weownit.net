@@ -64,7 +64,14 @@ async function addResendContact(env,email,lang){
     if(!/409/.test(String(err.message)))throw err;
     const id=encodeURIComponent(email);
     await resend(env,"/contacts/"+id,"PATCH",{unsubscribed:false});
-    await resend(env,"/contacts/"+id+"/segments/"+encodeURIComponent(seg),"POST");
+    // A returning subscriber may have changed languages: remove stale locale segments.
+    for(const oldSegment of [env.RESEND_SEGMENT_EN,env.RESEND_SEGMENT_RO,env.RESEND_SEGMENT_FR]){
+      if(oldSegment===seg)continue;
+      try { await resend(env,"/contacts/"+id+"/segments/"+encodeURIComponent(oldSegment),"DELETE"); }
+      catch(e){ if(!/404/.test(String(e.message)))throw e; }
+    }
+    try { await resend(env,"/contacts/"+id+"/segments/"+encodeURIComponent(seg),"POST"); }
+    catch(e){ if(!/409/.test(String(e.message)))throw e; }
   }
 }
 async function doConfirmation(req,env,value,lang){
