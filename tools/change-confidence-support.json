@@ -3,7 +3,7 @@
   "schemaVersion": 1,
   "profile": "local-static-ipv4-v1",
   "lastReviewed": "2026-10-18",
-  "qualification": "synthetic-conformance-only; appliance and rendered mobile qualification pending",
+  "qualification": "synthetic-conformance; physical mobile and appliance qualification pending",
   "parserVersion": "1.5.0",
   "evaluatorVersion": "2.1.0",
   "recordVersion": "1.0.0",

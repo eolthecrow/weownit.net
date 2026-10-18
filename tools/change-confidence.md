@@ -35,7 +35,7 @@ node --test tests/*.test.cjs worker/test/*.test.mjs
 python3 -m unittest discover -s tests -p 'test_*.py'
 ```
 
-New suites cover strict native import handling, metadata bounds, source provenance, deterministic records, forged/tampered records, case compatibility, retest identity/time, raw-secret omission, worker cancellation/timeouts and the actual full-tool scripts in an emulated DOM for EN/RO/FR. Canvas integration tests exercise the shared runner for Fortinet and PAN-OS. These checks do not constitute rendered phone tests or appliance qualification.
+New suites cover strict native import handling, metadata bounds, source provenance, deterministic records, forged/tampered records, case compatibility, retest identity/time, raw-secret omission, worker cancellation/timeouts and the actual full-tool scripts in an emulated DOM for EN/RO/FR. Canvas integration tests exercise the shared runner for Fortinet and PAN-OS. These Node checks use an emulated DOM and do not constitute rendered phone tests or appliance qualification. A separate CI browser job serves the checkout on loopback and exercises 24 Chromium journeys at 360/390/430/1440 px across EN/RO/FR, including real workers, downloads, record reopening, language continuity and document overflow. It blocks external requests and uses synthetic evidence only. This is viewport automation, not physical-device or appliance qualification.
 
 The read-only CI workflow `verify-tools.yml` runs the synthetic suites for pull requests and relevant main-branch changes. It does not collect or upload client evidence.
 
@@ -43,6 +43,6 @@ The read-only CI workflow `verify-tools.yml` runs the synthetic suites for pull 
 
 Implementation baseline: `c6b5c03946f107da6ca90fedaec81ac00a615ff2`, including the newer assistant and Cal.com fixes. This change does not alter those files, Store checkout, shared navigation or existing contact behavior.
 
-The implementation is a bounded local MVP. Qualifying FortiOS/PAN-OS releases on actual appliances, rendered 360/390/430 px checks, user-assisted pilots, paid entitlements and commercial-host migration remain separate release work. No production readiness or four-vendor simulation claim is made.
+The implementation is a bounded local MVP. Qualifying FortiOS/PAN-OS releases on actual appliances, physical-device/manual mobile checks, user-assisted pilots, paid entitlements and commercial-host migration remain separate release work. No production readiness or four-vendor simulation claim is made.
 
 Revert the WIT Change Confidence feature commit using a normal Git revert, preserving subsequent unrelated work. Do not reset main to the baseline. A backup branch at the pre-feature revision is retained with the GitHub change.
