@@ -14,9 +14,14 @@ Site design and EN/RO/FR navigation remain unchanged. No subscriber emails are s
    Add a comma after the preceding object property if necessary. Never commit a fake UUID.
 3. Once the binding is verified, apply the migration explicitly:
    `npx wrangler d1 migrations apply weownit_subscribers --remote`.
-4. Create a Turnstile widget for weownit.net and www.weownit.net, using action "subscribe".
-   Put its public SITE KEY into window.WEOWNIT_TURNSTILE_SITE_KEY in index.html.
-   Set the private value through: npx wrangler secret put TURNSTILE_SECRET.
+4. The Turnstile **public site key** is now configured in `index.html` for weownit.net / www.weownit.net.
+   The separate `window.WEOWNIT_NEWSLETTER_ENABLED=false` switch prevents submissions and
+   skips widget initialization until Resend and Cloudflare Worker are fully configured.
+   **Do not flip it to true before real end-to-end confirmation + unsubscribe testing.**
+   Set the Turnstile **private secret** through: `npx wrangler secret put TURNSTILE_SECRET`
+   (or configure it securely in Cloudflare Dashboard). Do not commit the secret.
+   The Turnstile widget must accept hostnames weownit.net and www.weownit.net, and
+   the client-side action is `subscribe`.
 5. Verify a sending domain/subdomain with Resend using the DNS records it gives you.
    Suggested: updates.weownit.net to avoid changing existing MX routing.
    Set in Worker secrets via: npx wrangler secret put RESEND_API_KEY
