@@ -43,14 +43,15 @@ async function subscribe(req,env){
   const existing=await env.SUBSCRIBERS_DB.prepare("SELECT status,last_request_at FROM subscribers WHERE email=?").bind(email).first();
   const accepted=result({ok:true,message:"Check your inbox if confirmation is required."},202);
   if(existing?.status==="confirmed"||(existing&&now-existing.last_request_at<WAIT_MS))return accepted;
-  const value=token(),valueHash=await hash(value),unsubHash=await hash(token());
+  const value=token(),valueHash=await hash(value),unsubValue=token(),unsubHash=await hash(unsubValue);
   await env.SUBSCRIBERS_DB.prepare("INSERT INTO subscribers(email,language,status,confirm_hash,confirm_expires_at,unsubscribe_hash,created_at,last_request_at,consent_version) VALUES(?,?,'pending',?,?,?,?,?,'2026-10') ON CONFLICT(email) DO UPDATE SET language=excluded.language,status='pending',confirm_hash=excluded.confirm_hash,confirm_expires_at=excluded.confirm_expires_at,unsubscribe_hash=excluded.unsubscribe_hash,last_request_at=excluded.last_request_at,consent_version=excluded.consent_version")
     .bind(email,lang,valueHash,now+EXPIRE_MS,unsubHash,now,now).run();
   const link=new URL("/newsletter/confirm",req.url);link.searchParams.set("token",value);link.searchParams.set("lang",lang);
+  const optout=new URL("/newsletter/unsubscribe",req.url);optout.searchParams.set("token",unsubValue);optout.searchParams.set("lang",lang);
   const copy=C[lang];
-  const html='<p>'+h(copy.intro)+'</p><p><a href="'+h(link.href)+'">'+h(copy.action)+'</a></p><p>'+h(copy.ignore)+'</p><p><a href="https://weownit.net/privacy.html">'+h(copy.title)+'</a></p>';
+  const html='<p>'+h(copy.intro)+'</p><p><a href="'+h(link.href)+'">'+h(copy.action)+'</a></p><p>'+h(copy.ignore)+'</p><p><a href="'+h(optout.href)+'">'+h(copy.unsub)+'</a></p><p><a href="https://weownit.net/privacy.html">'+h(copy.title)+'</a></p>';
   try{
-    await resend(env,"/emails","POST",{from:env.NEWSLETTER_FROM_EMAIL,to:[email],subject:copy.subject,html,text:copy.intro+"\n"+link.href+"\n"+copy.ignore});
+    await resend(env,"/emails","POST",{from:env.NEWSLETTER_FROM_EMAIL,to:[email],subject:copy.subject,html,text:copy.intro+"\n"+link.href+"\n"+copy.ignore+"\n"+copy.unsub+": "+optout.href});
   }catch(err){
     console.error("Newsletter confirmation delivery failed",String(err.message).slice(0,50));
     return result({error:"Confirmation email could not be sent. Try later."},503);
