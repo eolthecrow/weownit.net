@@ -44,8 +44,9 @@ Resend Broadcasts themselves provide their own unsubscribe link and suppression 
   {{{RESEND_UNSUBSCRIBE_URL}}}
 A recipient who opts out through the Resend link is suppressed in Resend;
 a periodic GDPR reconciliation of D1 statuses against Resend is required.
-The Worker unsubscribe endpoint is optional and is not linked from
-Broadcasts in this first rollout.
+The Worker unsubscribe link is also included in the confirmation email.
+Broadcasts use Resend's native unsubscribe links; a Resend-to-D1 webhook or
+reconciliation job is still needed to mirror those opt-outs locally.
 
 ## GitHub release integration
 
