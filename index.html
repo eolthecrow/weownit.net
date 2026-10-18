@@ -236,6 +236,7 @@
     ]
   }
   </script>
+  <link rel="stylesheet" href="assets/newsletter.css?v=1">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -310,6 +311,18 @@
       </section>
       <section id="about" class="section" aria-labelledby="about-title"><div class="about-grid"><div><span class="micro">About</span><h2 id="about-title">Vladimir Arjoca.</h2></div><div><p class="lead">Network &amp; Security Consultant with 10+ years of hands-on experience across enterprise and service-provider environments.</p><p>My focus is technical security: networks, firewalls, data-center infrastructure, monitoring, automation, and incident response. weownit.net brings together consulting, practical tools, and guides to help teams make and verify better decisions.</p><div class="expertise" aria-label="Areas of experience"><span>FortiGate / FortiManager</span><span>Palo Alto / Panorama</span><span>Cisco networking</span><span>Observability</span><span>Ansible / CI</span></div></div></div></section>
       <section id="contact" class="contact" aria-labelledby="contact-title"><div><span class="micro">Get in touch</span><h2 id="contact-title">Where does your network need attention?</h2><p>Share the issue, platforms, approximate size, and desired outcome. I will use this context to define the scope and a practical next step.</p></div><a class="button" href="contact.html">Discuss your project <span class="arrow" aria-hidden="true">↗</span></a></section>
+      <section id="updates" class="newsletter-block" aria-labelledby="updates-title">
+        <div class="newsletter-inner">
+          <div><span class="micro" data-newsletter-micro>WEOWNIT / SECURITY UPDATES</span><h2 id="updates-title" data-newsletter-title>Useful updates. No noise.</h2><p data-newsletter-description>Important tool releases, practical security insights and new guides. Only meaningful updates.</p></div>
+          <form class="newsletter-form" id="newsletter-form" novalidate>
+            <div class="newsletter-row"><input type="email" name="email" aria-label="Email address" autocomplete="email" maxlength="254" required placeholder="Email address"><button type="submit" disabled>Subscribe</button></div>
+            <label class="newsletter-consent"><input type="checkbox" name="consent" required><span data-newsletter-consent>I agree to receive weownit.net updates by email and understand I can unsubscribe at any time.</span></label>
+            <a href="privacy.html" data-newsletter-privacy style="color:var(--accent);font-size:.72rem">Privacy notice</a>
+            <div id="newsletter-turnstile"></div>
+            <div class="newsletter-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
       <footer class="footer"><span>© 2026 Vladimir Arjoca · Bucharest, Romania</span><a href="https://www.linkedin.com/in/vladimir-arjoca-194397126" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><div class="sources"><span>Primary references:</span><a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener noreferrer">NIST incident response</a><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436" target="_blank" rel="noopener noreferrer">Fortinet best practices</a><a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener noreferrer">NIST Zero Trust Architecture</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks best practices</a><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Ansible network documentation</a></div><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
     </main>
   </div>
@@ -828,6 +841,10 @@
     })();
   </script>
 
+  <!-- Public Turnstile site key goes here after Cloudflare setup; blank keeps subscribe disabled. -->
+  <script>window.WEOWNIT_TURNSTILE_SITE_KEY="";</script>
+  <script src="assets/newsletter.js?v=1" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=weownitNewsletterTurnstileReady" defer></script>
   <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
   <script src="assets/site-assistant-facts.js?v=1" defer></script>
 <script src="assets/chatbox.js?v=23" defer></script>
