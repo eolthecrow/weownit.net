@@ -53,6 +53,8 @@ async function subscribe(req,env){
   try{
     await resend(env,"/emails","POST",{from:env.NEWSLETTER_FROM_EMAIL,to:[email],subject:copy.subject,html,text:copy.intro+"\n"+link.href+"\n"+copy.ignore+"\n"+copy.unsub+": "+optout.href});
   }catch(err){
+    // A failed email delivery must not lock the visitor out for the next 15 minutes.
+    await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET last_request_at=0 WHERE email=? AND confirm_hash=? AND status='pending'").bind(email,valueHash).run();
     console.error("Newsletter confirmation delivery failed",String(err.message).slice(0,50));
     return result({error:"Confirmation email could not be sent. Try later."},503);
   }
@@ -97,7 +99,9 @@ async function doUnsubscribe(req,env,value,lang){
   if(!item)return page(copy.invalid,"",lang);
   try{
     // Ensure Resend is suppressed before declaring local opt-out complete.
-    await resend(env,"/contacts/"+encodeURIComponent(item.email),"PATCH",{unsubscribed:true});
+    try { await resend(env,"/contacts/"+encodeURIComponent(item.email),"PATCH",{unsubscribed:true}); }
+    catch(err) { if(!/Resend 404/.test(String(err.message)))throw err; }
+    // Pending subscribers do not exist in Resend; 404 is expected for their opt-out.
     await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET status='unsubscribed',unsubscribed_at=?,confirm_hash=NULL,confirm_expires_at=NULL WHERE unsubscribe_hash=?").bind(Date.now(),digest).run();
     return page(copy.done,"<p>"+h(copy.done)+"</p>",lang);
   }catch(err){console.error("Newsletter unsubscribe error",String(err.message).slice(0,50));return page(copy.failed,"",lang);}
