@@ -78,6 +78,22 @@ test("double opt-in requires POST click and creates locale contact",async()=>{
     assert.deepEqual(contact.payload.segments,[{id:"r"}]);
   }finally{s.restore();}
 });
+test("unsubscribe link requires POST and suppresses Resend contact",async()=>{
+  const s=setup();try{
+    await route(jsonReq({email:"person@example.com",language:"en",consent:true,turnstileToken:"ok"}),s.env);
+    const message=s.calls.find(x=>x.url.endsWith("/emails"));
+    const links=message.payload.text.match(/https:\/\/\S+/g);
+    assert.equal(links.length,2);
+    const confirm=new URL(links[0]);
+    await route(postReq(base+"/newsletter/confirm",{token:confirm.searchParams.get("token"),lang:"en"}),s.env);
+    const optout=new URL(links[1]);
+    await route(new Request(optout.href),s.env);
+    assert.equal(s.db.rows.get("person@example.com").status,"confirmed");
+    await route(postReq(base+"/newsletter/unsubscribe",{token:optout.searchParams.get("token"),lang:"en"}),s.env);
+    assert.equal(s.db.rows.get("person@example.com").status,"unsubscribed");
+    assert(s.calls.some(x=>x.method==="PATCH" && x.payload.unsubscribed===true));
+  }finally{s.restore();}
+});
 test("confirmed subscribers do not receive a second confirmation",async()=>{
   const s=setup();try{
     const body={email:"person@example.com",language:"fr",consent:true,turnstileToken:"ok"};
