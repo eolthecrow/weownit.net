@@ -17,6 +17,7 @@ block.querySelector("[data-newsletter-micro]").textContent=c.micro;
 block.querySelector("[data-newsletter-title]").textContent=c.title;
 block.querySelector("[data-newsletter-description]").textContent=c.description;
 block.querySelector('input[type="email"]').placeholder=c.email;
+block.querySelector('input[type="email"]').setAttribute("aria-label",c.email);
 submit.textContent=c.action;
 block.querySelector("[data-newsletter-consent]").textContent=c.consent;
 block.querySelector("[data-newsletter-privacy]").textContent=c.privacy;
