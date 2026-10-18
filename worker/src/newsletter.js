@@ -27,7 +27,7 @@ async function verifyTurnstile(responseToken,env){
   const response=await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify",{method:"POST",body:new URLSearchParams({secret:env.TURNSTILE_SECRET,response:responseToken})});
   if(!response.ok)return false;
   const data=await response.json();
-  return data.success===true && ["weownit.net","www.weownit.net"].includes(data.hostname) && (!data.action||data.action==="subscribe");
+  return data.success===true && ["weownit.net","www.weownit.net"].includes(data.hostname) && data.action==="subscribe";
 }
 async function readJson(req){
   if(Number(req.headers.get("content-length")||0)>5000)return null;
