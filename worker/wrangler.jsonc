@@ -23,7 +23,7 @@
     {
       "binding": "SUBSCRIBERS_DB",
       "database_name": "weownit_subscribers",
-      "database_id": "UUID_REAL_DIN_CLOUDFLARE"
+      "database_id": "b381eda6-7b56-4770-82fd-d9e204022cc8"
     }
   ],
   "observability": {
