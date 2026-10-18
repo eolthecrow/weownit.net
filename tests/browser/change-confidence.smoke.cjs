@@ -10,9 +10,9 @@ async function main(){await new Promise(resolve=>server.listen(0,'127.0.0.1',res
  try{for(const width of [360,390,430,1440])for(const language of ['en','ro','fr']){
   const context=await browser.newContext({viewport:{width,height:900},hasTouch:width<500,acceptDownloads:true});
   await context.route('**/*',route=>route.request().url().startsWith(base+'/')?route.continue():route.abort());
-  const page=await context.newPage(),errors=[],requests=[];page.on('pageerror',e=>errors.push(e.message));page.on('request',r=>requests.push(r.url()+' '+(r.postData()||'')));
+  const page=await context.newPage(),errors=[],requests=[];page.setDefaultTimeout(15000);page.setDefaultNavigationTimeout(20000);page.on('pageerror',e=>{errors.push(e.message);console.error('Page error:',e.message);});page.on('request',r=>requests.push(r.url()+' '+(r.postData()||'')));
   await page.goto(base+'/tools-existing.html?lang='+language,{waitUntil:'load'});await page.locator('#fc-demo').click();
-  await page.waitForFunction(()=>window.ChangeConfidenceUI?.getRecord()?.result.summary.total===3);
+  try{await page.waitForFunction(()=>window.ChangeConfidenceUI?.getRecord()?.result.summary.total===3);}catch(error){console.error(JSON.stringify(await page.evaluate(()=>({status:document.getElementById('fw-status')?.textContent,decision:document.getElementById('confidence-record')?.textContent,context:document.getElementById('confidence-context')?.textContent,worker:typeof window.ChangeConfidenceRunner,api:typeof window.ChangeConfidenceUI}))));throw error;}
   await geometry(page,width+' '+language+' initial change result');
   await page.locator('#fc-rows .fc-contract-meta summary').first().click();
   await page.locator('[data-fc-row="0"][data-fc-field="contractId"]').fill('SMOKE-001');
