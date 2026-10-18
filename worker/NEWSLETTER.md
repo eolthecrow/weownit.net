@@ -5,11 +5,15 @@ Site design and EN/RO/FR navigation remain unchanged. No subscriber emails are s
 
 ## Requirements / setup (Cloudflare Free + Resend Free tiers)
 
-1. In Cloudflare create **D1** database: from worker/ run npx wrangler d1 create weownit_subscribers.
-2. Copy the actual database_id from Wrangler output into worker/wrangler.jsonc as:
-   "d1_databases": [{"binding":"SUBSCRIBERS_DB","database_name":"weownit_subscribers","database_id":"<REAL_UUID>"}]
-   Add comma after the preceding object property as needed. Do not commit a placeholder UUID.
-3. Apply the migration: npx wrangler d1 migrations apply weownit_subscribers --remote (after adding the binding).
+1. **Recommended Windows setup**: in the `worker/` folder, after `npm ci` and `npx wrangler login`, run:
+   `powershell -ExecutionPolicy Bypass -File .\setup-newsletter.ps1`
+   This asks for confirmation and creates `weownit_subscribers` in EU jurisdiction.
+   Wrangler's `--update-config` writes the real `SUBSCRIBERS_DB` binding and database UUID into `worker/wrangler.jsonc`. The script DOES NOT deploy or store private keys.
+2. **Manual alternative or already-existing D1**: create/select `weownit_subscribers` in Cloudflare Dashboard, then add to `worker/wrangler.jsonc`:
+   `"d1_databases": [{"binding":"SUBSCRIBERS_DB","database_name":"weownit_subscribers","database_id":"<REAL_UUID>"}]`
+   Add a comma after the preceding object property if necessary. Never commit a fake UUID.
+3. Once the binding is verified, apply the migration explicitly:
+   `npx wrangler d1 migrations apply weownit_subscribers --remote`.
 4. Create a Turnstile widget for weownit.net and www.weownit.net, using action "subscribe".
    Put its public SITE KEY into window.WEOWNIT_TURNSTILE_SITE_KEY in index.html.
    Set the private value through: npx wrangler secret put TURNSTILE_SECRET.
