@@ -380,7 +380,13 @@ export default {
     }
 
     if (url.pathname.startsWith("/newsletter/")) {
-      return handleNewsletter(request, env, url);
+      const response = await handleNewsletter(request, env, url);
+      if (url.pathname === "/newsletter/subscribe") {
+        const headers = new Headers(response.headers);
+        for (const [name, value] of Object.entries(corsHeaders(origin))) headers.set(name, value);
+        return new Response(response.body, { status: response.status, headers });
+      }
+      return response;
     }
 
     if ((request.method === "GET" || request.method === "POST") && url.pathname === "/download-event") {
