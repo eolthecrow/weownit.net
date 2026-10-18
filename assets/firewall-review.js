@@ -512,6 +512,7 @@
     "exportGuide": "Utilisez un export complet des politiques avec leur contexte et les objets associés. Check Point : exportez toutes les pages access-rulebase et le dictionnaire d’objets via mgmt_cli avec --format json. Palo Alto : sortie show du mode configuration au format set, json ou xml. Fortinet JSON : conservez la réponse REST avec path, name, vdom et results."
   }
 };
+  for(const [lang,messages] of Object.entries({en:{unsupportedCLI:'an edit script or unsupported CLI command was found. Supply a complete ordered export.',duplicateIdentity:'a policy or object identity occurs more than once in the same context. Supply one complete export.'},ro:{unsupportedCLI:'a fost găsit un script de modificare sau o comandă CLI neacceptată. Furnizează un export complet și ordonat.',duplicateIdentity:'o politică sau un obiect apare de mai multe ori în același context. Furnizează un singur export complet.'},fr:{unsupportedCLI:'script de modification ou commande CLI non prise en charge. Fournissez un export complet et ordonné.',duplicateIdentity:'identité de politique ou d’objet répétée dans le même contexte. Fournissez un export complet unique.'}}))Object.assign(dictionaries[lang].errors,messages);
   const coverageLabels={"en": {"content": "Content", "contentDirection": "Content direction", "servicePorts": "TCP service ports", "evaluated": "Evaluated", "skipped": "Skipped", "coverageDetail": "Coverage per check", "overlap": "Literal overlap eligibility", "reason": "Reason", "line": "Line", "objectsTitle": "Object definitions", "disabled": "Disabled", "notAllow": "Not an allow policy", "unknownLogging": "Logging unknown", "unknownProtection": "Protection unknown", "negated": "Negated criteria", "complex": "Unsupported conditions", "incomplete": "Missing criteria", "unknownOrder": "Order unknown", "unknownContext": "Time / VPN unknown", "unknownAction": "Action unknown", "pairLimit": "Scope exceeds 350 active policies"}, "ro": {"content": "Conținut", "contentDirection": "Direcția conținutului", "servicePorts": "Porturi TCP ale serviciilor", "evaluated": "Evaluate", "skipped": "Omise", "coverageDetail": "Acoperire pentru fiecare verificare", "overlap": "Eligibilitate pentru suprapuneri literale", "reason": "Motiv", "line": "Linia", "objectsTitle": "Definiții ale obiectelor", "disabled": "Dezactivate", "notAllow": "Politică fără acțiune allow", "unknownLogging": "Jurnalizare necunoscută", "unknownProtection": "Protecție necunoscută", "negated": "Criterii negate", "complex": "Condiții nesimulate", "incomplete": "Criterii lipsă", "unknownOrder": "Ordine necunoscută", "unknownContext": "Timp / VPN necunoscut", "unknownAction": "Acțiune necunoscută", "pairLimit": "Context cu peste 350 de politici active"}, "fr": {"content": "Contenu", "contentDirection": "Direction du contenu", "servicePorts": "Ports TCP des services", "evaluated": "Évaluées", "skipped": "Ignorées", "coverageDetail": "Couverture par contrôle", "overlap": "Éligibilité aux chevauchements littéraux", "reason": "Motif", "line": "Ligne", "objectsTitle": "Définitions des objets", "disabled": "Désactivées", "notAllow": "Politique sans action allow", "unknownLogging": "Journalisation inconnue", "unknownProtection": "Protection inconnue", "negated": "Critères inversés", "complex": "Conditions non simulées", "incomplete": "Critères manquants", "unknownOrder": "Ordre inconnu", "unknownContext": "Temps / VPN inconnu", "unknownAction": "Action inconnue", "pairLimit": "Contexte de plus de 350 politiques actives"}};
   for(const lang of Object.keys(dictionaries)){const d=dictionaries[lang];Object.assign(d,{content:coverageLabels[lang].content,contentDirection:coverageLabels[lang].contentDirection,contentNegation:{en:'Negated content',ro:'Conținut negat',fr:'Contenu inversé'}[lang],servicePorts:coverageLabels[lang].servicePorts});d.warnings.objectDiffUnavailable={en:'Object comparison is unavailable for a legacy snapshot without object definitions. Policy-field comparison still runs.',ro:'Compararea obiectelor nu este disponibilă pentru un snapshot vechi fără definiții de obiecte. Câmpurile politicilor sunt comparate în continuare.',fr:'Comparaison des objets indisponible pour un ancien snapshot sans définitions. Les champs des politiques restent comparés.'}[lang];d.errors.malformedCLI={en:'unbalanced quotes or incomplete CLI blocks. Use a complete export.',ro:'ghilimele neînchise sau blocuri CLI incomplete. Folosește un export complet.',fr:'guillemets ou blocs CLI incomplets. Utilisez un export complet.'}[lang];d.errors.conflictingPages={en:'duplicate exports contain conflicting rule or object definitions.',ro:'exporturile duplicate conțin definiții contradictorii de reguli sau obiecte.',fr:'les exports dupliqués contiennent des règles ou objets contradictoires.'}[lang];d.compareHint={en:'Compares policy fields and supplied address/service/group definitions. Order changes are checked only when established. Cross-format comparison requires matching contexts. No routing, NAT or application simulation.',ro:'Compară câmpurile politicilor și definițiile furnizate pentru adrese, servicii și grupuri. Ordinea este comparată doar când este cunoscută. Formatele trebuie să aibă contexte compatibile. Fără simulare de rutare, NAT sau aplicații.',fr:'Compare les champs des politiques et les définitions fournies des adresses, services et groupes. Ordre comparé seulement s’il est établi. Contextes compatibles requis. Sans simulation de routage, NAT ou applications.'}[lang];}
   for(const l of Object.keys(dictionaries)){Object.assign(dictionaries[l],{
@@ -523,7 +524,7 @@
   const t=()=>dictionaries[language];
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const display=v=>Array.isArray(v)?v.map(display).join(', '):v===core.ANY?t().any:['on','off','unknown'].includes(v)?t()[v]:String(v??'');
-  const status=()=>{ $('fw-status').textContent=errorCode?t().errorPrefix+(change.error(errorCode)||t().errors[errorCode]||t().errors.unexpected)+(errorLine?' · '+coverageLabels[language].line+' '+errorLine:''):statusKey?t()[statusKey]:'';$('fw-status').dataset.error=String(!!errorCode); };
+  const status=()=>{ $('fw-status').textContent=errorCode?t().errorPrefix+(change.error(errorCode)||t().errors[errorCode]||window.ChangeConfidenceUI?.error(errorCode)||t().errors.unexpected)+(errorLine?' · '+coverageLabels[language].line+' '+errorLine:''):statusKey?t()[statusKey]:'';$('fw-status').dataset.error=String(!!errorCode); };
   function evidence(f) {return '<dl class="fw-evidence">'+Object.entries(f.evidence).map(([k,v])=>'<dt>'+esc(t()[k]||k)+'</dt><dd>'+esc(display(v))+'</dd>').join('')+'</dl>';}
   function findingHTML(f) {const c=t().checks[f.code];return '<details class="fw-finding"><summary><span class="fw-badge '+f.severity+'">'+esc(t()[f.severity])+'</span><span class="fw-finding-title">'+esc(c[0])+'</span><span class="fw-rule-ref">'+esc(f.ruleName)+' · '+esc(f.ruleId)+'</span></summary><div class="fw-finding-body"><p>'+esc(t().scopeLabel)+': '+esc(f.scope)+'</p>'+(f.relatedId?'<p>'+esc(t().related)+': '+esc(f.relatedName)+' · '+esc(f.relatedId)+'</p>':'')+evidence(f)+'<p><strong>'+esc(t().remediation)+':</strong> '+esc(c[1])+'</p></div></details>';}
   function renderFindings() {
@@ -549,7 +550,7 @@
     return counts+items.slice(0,limit).join('')+(items.length>limit?'<p class="fw-hint">'+limit+' / '+items.length+'</p>':'');
   }
   function renderResults() {
-    change.render(result?changeReport:null);$('fw-results').hidden=hardeningMode||!result;if(!result){for(const id of ['fw-result-title','fw-counts','fw-summary','fw-warnings','fw-diff-content','fw-findings','fw-policy-table','fw-coverage'])$(id).textContent='';$('fw-diff').hidden=true;return;}
+    if(!result)window.ChangeConfidenceUI?.invalidate();change.render(result?changeReport:null);$('fw-results').hidden=hardeningMode||!result;if(!result){for(const id of ['fw-result-title','fw-counts','fw-summary','fw-warnings','fw-diff-content','fw-findings','fw-policy-table','fw-coverage'])$(id).textContent='';$('fw-diff').hidden=true;return;}
     $('fw-result-title').textContent=names[result.vendor]+' · '+t().review;
     const c=result.counts;
     $('fw-counts').textContent=result.format+' · '+t().active+': '+c.active+' · '+t().disabled+': '+c.disabled+' · '+t().scopes+': '+c.scopes;
@@ -563,10 +564,13 @@
     document.querySelectorAll('[data-fw]').forEach(el=>{const value=t()[el.dataset.fw];if(typeof value==='string')el.textContent=value;});
     $('fw-input').placeholder=t().inputPlaceholder;$('fw-search').placeholder=t().search;$('fw-search').setAttribute('aria-label',t().search);$('fw-severity').setAttribute('aria-label',t().allSeverities);status();renderResults();
   }
-  async function readInput(fileID,textID) {
+  const parserRunner=window.ChangeConfidenceRunner?.create();
+  async function readInput(fileID,textID,side) {
     const files=Array.from($(fileID).files || []);
-    if(files.length){if(files.reduce((n,f)=>n+f.size,0)>core.MAX_BYTES)throw Object.assign(new Error(),{code:'tooLarge'});return Promise.all(files.map(f=>f.text()));}
-    return [$(textID).value];
+    if(files.length){if(files.reduce((n,f)=>n+f.size,0)>core.MAX_BYTES)throw Object.assign(new Error(),{code:'tooLarge'});
+      const sources=await Promise.all(files.map(async f=>{const bytes=f.arrayBuffer?new Uint8Array(await f.arrayBuffer()):new TextEncoder().encode(await f.text());return {side,name:f.name||'local export',bytes,basis:f.arrayBuffer?'original-file-bytes':'utf8-text'};}));
+      return {sources,texts:sources.map(s=>new TextDecoder().decode(s.bytes))};}
+    const value=$(textID).value;return {texts:[value],sources:[{side,name:'pasted '+side+' export',bytes:new TextEncoder().encode(value),basis:'utf8-text'}]};
   }
   async function analyze(event) {
     event?.preventDefault();if(busy)return;const ticket=++generation;busy=true;
@@ -574,28 +578,30 @@
     $('fw-form').querySelectorAll('button').forEach(b=>b.disabled=true);
     try {
       await new Promise(resolve=>setTimeout(resolve,25));
-      const inputs=await readInput('fw-file','fw-input');
-      const parsed=core.parse(inputs,$('fw-vendor').value);
+      const inputs=await readInput('fw-file','fw-input','after');
+      const parsed=parserRunner?await parserRunner.parse(inputs.texts,$('fw-vendor').value):core.parse(inputs.texts,$('fw-vendor').value);
       const report=core.analyze(parsed);
-      let delta=null,earlier=null;
-      if($('fw-before').value.trim()||$('fw-before-file').files.length) {earlier=core.parse(await readInput('fw-before-file','fw-before'),parsed.vendor);delta=core.diff(earlier,parsed);}
+      let delta=null,earlier=null,earlierInputs=null;
+      if($('fw-before').value.trim()||$('fw-before-file').files.length) {earlierInputs=await readInput('fw-before-file','fw-before','before');earlier=parserRunner?await parserRunner.parse(earlierInputs.texts,parsed.vendor):core.parse(earlierInputs.texts,parsed.vendor);delta=core.diff(earlier,parsed);}
       if(ticket!==generation)return;
       change.scopes(earlier,parsed);
       const impact=await change.run(earlier,parsed,delta);
+      if(ticket!==generation)return;
+      if(impact&&window.ChangeConfidenceUI)await window.ChangeConfidenceUI.review({before:earlier,after:parsed,result:impact,sources:[...earlierInputs.sources,...inputs.sources]},()=>ticket===generation);
       if(ticket!==generation)return;
       changeReport=impact;beforeModel=earlier;result=report;currentModel=parsed;comparison=delta;created=new Date().toISOString();statusKey='done';renderResults();change.publish?.(changeReport,earlier,parsed);if(changeReport)$('fc-results').scrollIntoView?.({behavior:'smooth',block:'start'});
     } catch(e) {if(ticket===generation){errorCode=e.code||'unexpected';errorLine=e.line||0;statusKey='';}}
     finally {busy=false;$('fw-form').querySelectorAll('button').forEach(b=>b.disabled=false);status();}
   }
   function clear() {
-    generation++;change.reset();result=null;currentModel=null;comparison=null;changeReport=null;beforeModel=null;created=null;errorCode='';errorLine=0;statusKey='cleared';
+    generation++;parserRunner?.cancel();change.reset();result=null;currentModel=null;comparison=null;changeReport=null;beforeModel=null;created=null;errorCode='';errorLine=0;statusKey='cleared';
     for(const id of ['fw-input','fw-before','fw-file','fw-before-file','fw-search'])$(id).value='';
     $('fw-severity').value='all';$('fw-before-panel').open=false;renderResults();status();
   }
   function download(kind) {
     if(!result)return;
     let content,mime;
-    const report={tool:'weownit Firewall Change Review',version:core.VERSION,generatedAt:created,language,scope:t().scope,...result,comparison,changeReview:changeReport,...(changeReport&&beforeModel?{beforeSnapshot:core.snapshot(beforeModel)}:{})};
+    const report={tool:'weownit Firewall Change Review',version:core.VERSION,generatedAt:created,language,scope:t().scope,...result,comparison,changeReview:changeReport,decisionRecord:window.ChangeConfidenceUI?.getRecord()||null,...(changeReport&&beforeModel?{beforeSnapshot:core.snapshot(beforeModel)}:{})};
     if(kind==='json') {content=JSON.stringify({...report,...core.snapshot(currentModel)},null,2);mime='application/json';}
     else if(kind==='xml') {content=core.snapshotXML(currentModel);mime='application/xml';}
     else {
@@ -605,14 +611,15 @@
     const url=URL.createObjectURL(new Blob([content],{type:mime})),a=document.createElement('a');
     a.href=url;a.download='weownit_Firewall_Review_'+result.vendor+'_'+created.slice(0,10)+'.'+kind;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
   }
+  window.FirewallReviewWorkspace={restoreModels:(before,after,review)=>{currentModel=after;beforeModel=before;result=core.analyze(after);comparison=core.diff(before,after);changeReport=review;created=new Date().toISOString();errorCode='';statusKey='done';renderResults();status();}};
   document.addEventListener('fw:hardeningmode',()=>{hardeningMode=true;$('fw-results').hidden=true;});
   document.addEventListener('fw:policymode',()=>{hardeningMode=false;$('fw-results').hidden=!result;});
-  document.addEventListener('fw:scenariochange',()=>{generation++;change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='';errorCode='';status();});
+  document.addEventListener('fw:scenariochange',()=>{generation++;parserRunner?.cancel();change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='';errorCode='';status();});
   $('fw-form').addEventListener('submit',analyze);$('fw-clear').addEventListener('click',clear);
   document.querySelectorAll('[data-fw-demo]').forEach(b=>b.addEventListener('click',()=>{clear();$('fw-vendor').value=b.dataset.fwVendor||b.dataset.fwDemo;$('fw-input').value=window.FirewallReviewDemos[b.dataset.fwDemo];analyze();}));
-  $('fw-file').addEventListener('change',()=>{generation++;change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='selected';errorCode='';errorLine=0;status();});
-  $('fw-before-file').addEventListener('change',()=>{generation++;change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='beforeSelected';errorCode='';errorLine=0;status();});
-  for(const id of ['fw-input','fw-before','fw-vendor']) $(id).addEventListener('input',()=>{generation++;change.cancel();result=null;currentModel=null;comparison=null;changeReport=null;beforeModel=null;renderResults();errorCode='';errorLine=0;statusKey='';status();});
+  $('fw-file').addEventListener('change',()=>{generation++;parserRunner?.cancel();change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='selected';errorCode='';errorLine=0;status();});
+  $('fw-before-file').addEventListener('change',()=>{generation++;parserRunner?.cancel();change.cancel();changeReport=null;result=null;currentModel=null;comparison=null;renderResults();statusKey='beforeSelected';errorCode='';errorLine=0;status();});
+  for(const id of ['fw-input','fw-before','fw-vendor']) $(id).addEventListener('input',()=>{generation++;parserRunner?.cancel();change.cancel();result=null;currentModel=null;comparison=null;changeReport=null;beforeModel=null;renderResults();errorCode='';errorLine=0;statusKey='';status();});
   $('fw-severity').addEventListener('change',renderFindings);$('fw-search').addEventListener('input',renderFindings);
   $('fw-export-json').addEventListener('click',()=>download('json'));$('fw-export-xml').addEventListener('click',()=>download('xml'));$('fw-export-html').addEventListener('click',()=>download('html'));
   document.addEventListener('site:languagechange',e=>{language=dictionaries[e.detail.language]?e.detail.language:'en';translate();});

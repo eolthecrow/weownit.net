@@ -1,5 +1,7 @@
 # Network & Security Assistant — Cloudflare Worker
 
+> Legacy starter only. The active site backend is maintained in [`../worker/`](../worker/README.md). Do not deploy this starter as a replacement for the active chat/contact/CVE service. WIT Change Confidence runs locally and does not require another Worker deployment.
+
 This backend is optional. The website chatbox works immediately in local demo mode with no API calls.
 
 To enable real AI responses while staying on Cloudflare's free allowances:

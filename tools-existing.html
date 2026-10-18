@@ -63,6 +63,7 @@
   <script src="assets/i18n.js?v=8"></script>
   <link rel="stylesheet" href="assets/incident-triage.css?v=3">
   <link rel="stylesheet" href="assets/connected-case.css?v=endpoint-1">
+<link rel="stylesheet" href="assets/change-confidence.css?v=1">
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -194,13 +195,13 @@
           <div class="fw-upload"><label for="fw-file" data-fw="file">Local files (maximum 5 MB in total)</label><input id="fw-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div>
           <p id="fw-format-hint" class="fw-hint" data-fw="formatHint">Fortinet: firewall policy/security-policy CLI export, including VDOMs. Palo Alto: config XML, including Panorama rulebases. Check Point: extracted access-rulebase and objects JSON; select related JSON files together. Archives and Gaia CLI are not supported.</p>
           <details class="fw-before" id="fw-before-panel"><summary data-fw="compare">Compare with an earlier configuration (optional)</summary><label class="fw-label" for="fw-before" data-fw="before">Earlier configuration — same vendor</label><textarea id="fw-before" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880"></textarea><div class="fw-upload"><label for="fw-before-file" data-fw="beforeFile">Earlier local files</label><input id="fw-before-file" type="file" accept=".conf,.txt,.xml,.json" multiple></div><p class="fw-hint" data-fw="compareHint">Compares policy fields and order. It does not simulate routing, NAT or application availability.</p></details>
-<div class="fc-scenarios"><label class="fc-toggle"><input type="checkbox" id="fc-enable"><span data-fc="enable">Evaluate before / after traffic scenarios</span></label><div id="fc-editor" hidden><p class="fw-hint" data-fc="hint">Use exact IPv4 hosts and exported policy contexts.</p><datalist id="fc-scopes"></datalist><div id="fc-rows"></div><div class="fw-input-actions"><button type="button" id="fc-add" data-fc="add">Add scenario</button><button type="button" id="fc-export" data-fc="export">Export scenarios JSON</button><button type="button" id="fc-export-csv" data-fc="csvExport">Export CSV</button><label class="fc-import"><span data-fc="import">Import scenarios JSON</span><input id="fc-import" type="file" accept=".json,.csv"></label></div><p class="fw-status" id="fc-message" role="status" aria-live="polite"></p></div></div>
+<div class="fc-scenarios"><label class="fc-toggle"><input type="checkbox" id="fc-enable"><span data-fc="enable">Evaluate before / after traffic scenarios</span></label><div id="fc-editor" hidden><p class="fw-hint" data-fc="hint">Use exact IPv4 hosts and exported policy contexts.</p><datalist id="fc-scopes"></datalist><div id="confidence-context"></div><div id="fc-rows"></div><div class="fw-input-actions"><button type="button" id="fc-add" data-fc="add">Add scenario</button><button type="button" id="fc-export" data-fc="export">Export scenarios JSON</button><button type="button" id="fc-export-csv" data-fc="csvExport">Export CSV</button><label class="fc-import"><span data-fc="import">Import scenarios JSON</span><input id="fc-import" type="file" accept=".json,.csv"></label></div><p class="fw-status" id="fc-message" role="status" aria-live="polite"></p></div></div>
           <div class="fw-input-actions"><button class="fw-primary" type="submit" data-fw="analyze">Review configuration</button><button id="fw-clear" type="button" data-fw="clear">Clear data</button></div>
           <p id="fw-status" class="fw-status" role="status" aria-live="polite"></p>
         </form>
         <div id="fw-results" class="fw-results" hidden>
           <div class="fw-result-head"><h3 id="fw-result-title"></h3><div class="fw-export"><button type="button" id="fw-export-html" data-fw="exportHTML">Download HTML report</button><button type="button" id="fw-export-json" data-fw="exportJSON">JSON report + reusable snapshot</button><button type="button" id="fw-export-xml" data-fw="exportXML">XML review snapshot</button></div></div>
-          <button type="button" id="cc-return" data-cc="policyReady" hidden>Return to connected case</button><div id="fc-results" aria-live="polite" hidden></div><p id="fw-counts" class="fw-counts"></p>
+          <button type="button" id="cc-return" data-cc="policyReady" hidden>Return to connected case</button><div id="fc-results" aria-live="polite" hidden></div><section id="confidence-record" aria-live="polite" hidden></section><p id="fw-counts" class="fw-counts"></p>
           <div id="fw-summary" class="fw-summary"></div>
           <details class="fw-limits" open><summary data-fw="coverage">Coverage and analysis limits</summary><div id="fw-coverage" class="fw-table-wrap"></div><ul id="fw-warnings"></ul></details>
           <div id="fw-diff" hidden><h3 data-fw="changes">Configuration changes</h3><div id="fw-diff-content"></div></div>
@@ -413,11 +414,11 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
 <script src="assets/chatbox.js?v=23" defer></script>
 <script src="assets/webcheck-preview.js?v=4" defer></script>
 <script type="module" src="assets/cve-risk-lens.js?v=brand-lowercase-20261001"></script>
-<script src="assets/firewall-review-core.js?v=6" defer></script>
+<script src="assets/firewall-review-core.js?v=confidence-1" defer></script>
 <script src="assets/firewall-review-demo.js?v=3" defer></script>
-<script src="assets/firewall-change-core.js?v=2" defer></script>
-<script src="assets/firewall-change-ui.js?v=review-integrated-20261011" defer></script>
-<script src="assets/firewall-review.js?v=simplify-20261011" defer></script>
+<script src="assets/firewall-change-core.js?v=confidence-1" defer></script><script src="assets/change-confidence-core.js?v=1"></script><script src="assets/change-confidence-i18n.js?v=1"></script><script src="assets/change-confidence-runner.js?v=1"></script>
+<script src="assets/firewall-change-ui.js?v=confidence-1" defer></script>
+<script src="assets/firewall-review.js?v=confidence-1" defer></script><script src="assets/change-confidence-ui.js?v=1" defer></script>
 <script src="assets/vendor-hardening-core.js?v=1" defer></script>
 <script src="assets/vendor-hardening-demos.js?v=1" defer></script>
 <script src="assets/vendor-hardening-ui.js?v=mode-fix-20261008" defer></script>

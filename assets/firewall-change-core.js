@@ -1,7 +1,7 @@
 /* weownit Firewall Change Review: bounded, local IPv4 policy scenarios. */
 (function(root){
   'use strict';
-  const ANY='__ANY__', VERSION='2.0.0', MAX_SCENARIOS=100, MAX_CELLS=256, MAX_REVIEW_CELLS=1024;
+  const ANY='__ANY__', VERSION='2.1.0', MAX_SCENARIOS=100, MAX_CELLS=256, MAX_REVIEW_CELLS=1024;
   const fail=code=>{throw Object.assign(new Error(code),{code});};
   const ip=s=>{if(typeof s!=='string'||!/^\d{1,3}(\.\d{1,3}){3}$/.test(s))return null;const p=s.split('.').map(Number);return p.every(n=>n<=255)?p.reduce((n,v)=>n*256+v,0):null;};
   const mask=bits=>bits===0?0:(0xffffffff << (32-bits))>>>0;
@@ -112,15 +112,17 @@
     if(target!==true||!sourceEntries.length)return target;
     return sourcePort==null?null:or(sourceEntries.flatMap(v=>v.split(/[ ,]+/)).map(v=>portRange(v,sourcePort)));
   }
+  const CONTRACT_FIELDS={contractId:80,owner:120,serviceName:120,purpose:500,criticality:20,expiresOn:10,retestPlan:500};
+  function contract(s){if(!s||typeof s!=='object')fail('invalidScenarios');const out={};for(const [key,max] of Object.entries(CONTRACT_FIELDS)){if(s[key]==null||s[key]==='')continue;if(typeof s[key]!=='string'||s[key].length>max)fail('invalidContracts');out[key]=s[key];}if(out.criticality&&!['low','medium','high'].includes(out.criticality))fail('invalidContracts');if(out.expiresOn&&(!/^\d{4}-\d{2}-\d{2}$/.test(out.expiresOn)||!Number.isFinite(Date.parse(out.expiresOn+'T00:00:00Z'))||new Date(out.expiresOn+'T00:00:00Z').toISOString().slice(0,10)!==out.expiresOn))fail('invalidContracts');return out;}
   function scenarios(input){
     if(!Array.isArray(input)||!input.length||input.length>MAX_SCENARIOS)fail('invalidScenarios');
-    return input.map((s,i)=>{
+    const ids=new Set();return input.map((s,i)=>{const metadata=contract(s);if(metadata.contractId){if(ids.has(metadata.contractId))fail('invalidContracts');ids.add(metadata.contractId);}
       if(!s||typeof s!=='object'||['sourceIP','destinationIP','from','to','beforeScope','afterScope'].some(k=>typeof s[k]!=='string'||!s[k].trim()||s[k].length>200)||!addressRange(s.sourceIP)||!addressRange(s.destinationIP)||!['tcp','udp'].includes(s.protocol)||!numericRange(s.port)||!['permit','block'].includes(s.expected)||s.expectedBefore!=null&&!['','permit','block'].includes(s.expectedBefore)||s.sourcePort!=null&&(!Number.isInteger(s.sourcePort)||s.sourcePort<1||s.sourcePort>65535))fail('invalidScenarios');
-      return {name:String(s.name||'Flow '+(i+1)).slice(0,200),sourceIP:s.sourceIP.trim(),destinationIP:s.destinationIP.trim(),protocol:s.protocol,port:typeof s.port==='number'?s.port:String(s.port),...(s.sourcePort!=null?{sourcePort:s.sourcePort}:{}),...(s.expectedBefore?{expectedBefore:s.expectedBefore}:{}),from:s.from,to:s.to,beforeScope:s.beforeScope,afterScope:s.afterScope,expected:s.expected};
+      return {...metadata,name:String(s.name||'Flow '+(i+1)).slice(0,200),sourceIP:s.sourceIP.trim(),destinationIP:s.destinationIP.trim(),protocol:s.protocol,port:typeof s.port==='number'?s.port:String(s.port),...(s.sourcePort!=null?{sourcePort:s.sourcePort}:{}),...(s.expectedBefore?{expectedBefore:s.expectedBefore}:{}),from:s.from,to:s.to,beforeScope:s.beforeScope,afterScope:s.afterScope,expected:s.expected};
     });
   }
   function evaluate(model,s,side){
-    const scope=s[side+'Scope'],trace=[],unknown=(reason,r)=>({verdict:'inconclusive',reason,scope,rule:r?{id:r.id,name:r.name,order:r.order}:null,trace});
+    const scope=s[side+'Scope'],trace=[],unknown=(reason,r)=>({verdict:'inconclusive',reason,scope,rule:r?{id:r.id,name:r.name,order:r.order,...(r.sourceLine?{sourceLine:r.sourceLine}:{})}:null,trace});
     if(model.scenarioEngineVersion===0)return unknown('legacySnapshot');
     const rules=model.rules.filter(r=>r.scope===scope&&r.enabled).sort((a,b)=>a.order-b.order);
     if(!rules.length)return unknown('missingScope');
@@ -146,7 +148,7 @@
       else if(!['accept','allow','deny','drop','reject','reset-client','reset-server','reset-both'].includes(r.action))reason='unknownAction';
       trace.push({id:r.id,name:r.name,tests,status:reason?'inconclusive':'match'});
       if(reason)return unknown(reason,r);
-      return {verdict:['allow','accept'].includes(r.action)?'permit':'block',reason:'firstMatch',scope,rule:{id:r.id,name:r.name,order:r.order},trace};
+      return {verdict:['allow','accept'].includes(r.action)?'permit':'block',reason:'firstMatch',scope,rule:{id:r.id,name:r.name,order:r.order,...(r.sourceLine?{sourceLine:r.sourceLine}:{})},trace};
     }
     return unknown('noExplicitMatch');
   }
@@ -187,5 +189,5 @@
     for(const flow of flows){const ids=new Set(flow.regions.flatMap(r=>[r.before.rule?.id,r.after.rule?.id]).filter(Boolean));flow.relatedObjects=objectImpact.filter(d=>[...d.beforeRules,...d.afterRules].some(r=>ids.has(r.id)&&[flow.scenario.beforeScope,flow.scenario.afterScope].includes(r.scope))).map(d=>({name:d.name,type:d.type,scope:d.scope}));}
     return {version:VERSION,scope:'Supplied IPv4 policy scenarios and exact static-selector partitions only; no routing, NAT, live connectivity, identity, App-ID or effective inherited/layered policy.',limits:{maxCellsPerScenario:MAX_CELLS,maxCellsPerReview:MAX_REVIEW_CELLS,usedCells:MAX_REVIEW_CELLS-budget},summary:{total:flows.length,pass:flows.filter(f=>f.status==='pass').length,regression:flows.filter(f=>f.status==='regression').length,inconclusive:flows.filter(f=>f.status==='inconclusive').length,changed:flows.filter(f=>f.changed===true).length},baselineSummary:{requested:flows.filter(f=>f.scenario.expectedBefore).length,regression:flows.filter(f=>f.baselineStatus==='regression').length,inconclusive:flows.filter(f=>f.baselineStatus==='inconclusive').length},matrix,flows,objectImpact};
   }
-  const api={VERSION,MAX_SCENARIOS,MAX_CELLS,MAX_REVIEW_CELLS,review,evaluate,scenarios};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.FirewallChangeReview=api;
+  const api={VERSION,MAX_SCENARIOS,MAX_CELLS,MAX_REVIEW_CELLS,review,evaluate,scenarios,CONTRACT_FIELDS};if(typeof module!=='undefined'&&module.exports)module.exports=api;root.FirewallChangeReview=api;
 })(typeof window!=='undefined'?window:globalThis);

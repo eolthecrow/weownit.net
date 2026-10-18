@@ -1,0 +1,24 @@
+name: Verify local security tools
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', 'tools.html', 'tools-existing.html', '.github/workflows/verify-tools.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test synthetic local workflows and public-data failure handling
+        run: node --test tests/*.test.cjs worker/test/*.test.mjs
+      - name: Test public snapshot evidence handling
+        run: python -m unittest discover -s tests -p 'test_*.py'
