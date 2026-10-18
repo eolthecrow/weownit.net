@@ -100,7 +100,7 @@ async function doUnsubscribe(req,env,value,lang){
   try{
     // Ensure Resend is suppressed before declaring local opt-out complete.
     try { await resend(env,"/contacts/"+encodeURIComponent(item.email),"PATCH",{unsubscribed:true}); }
-    catch(err) { if(!/Resend 404/.test(String(err.message)))throw err; }
+    catch(err) { if(item.status!=="pending"||!/Resend 404/.test(String(err.message)))throw err; }
     // Pending subscribers do not exist in Resend; 404 is expected for their opt-out.
     await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET status='unsubscribed',unsubscribed_at=?,confirm_hash=NULL,confirm_expires_at=NULL WHERE unsubscribe_hash=?").bind(Date.now(),digest).run();
     return page(copy.done,"<p>"+h(copy.done)+"</p>",lang);
