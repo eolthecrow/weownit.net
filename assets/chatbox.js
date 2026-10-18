@@ -242,6 +242,8 @@
       add(greeting,"bot");
       return;
     }
+    const siteAnswer=window.WeownitSiteFacts?.answer(q,language);
+    if(siteAnswer){input.value="";add(q,"user");add(siteAnswer,"bot");return;}
     const localTarget=localIntentTarget(q,language);
     if(localTarget){
       window.location.href=localTarget;
@@ -290,3 +292,4 @@
 
   refresh();
 })();
+
