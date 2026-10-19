@@ -1,11 +1,14 @@
-
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "network-security-assistant",
   "main": "src/index.js",
   "compatibility_date": "2026-09-25",
   "vars": {
-    "CONTACT_FROM_EMAIL": "contact@weownit.net"
+    "CONTACT_FROM_EMAIL": "contact@weownit.net",
+    "NEWSLETTER_FROM_EMAIL": "weownit.net <updates@weownit.net>",
+    "RESEND_SEGMENT_EN": "f479b983-cfc6-4a7b-a9eb-03017b543e3c",
+    "RESEND_SEGMENT_FR": "a828b8bb-94d5-42ce-b08d-0d7ad01b4788",
+    "RESEND_SEGMENT_RO": "39483845-13c4-4744-9950-918368b31c1d"
   },
   "ai": {
     "binding": "AI"
