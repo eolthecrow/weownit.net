@@ -366,12 +366,14 @@ export default {
     const url = new URL(request.url);
     const origin = request.headers.get("Origin");
 
-    const newsletterAction = ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname);
-    // Email apps can supply an external Origin when opening a confirmation link.
-    // GET only renders a form: it never confirms or unsubscribes the recipient.
-    const publicNewsletterLanding = newsletterAction && request.method === "GET";
-    const sameOriginAction = newsletterAction && origin === url.origin;
-    if (!publicNewsletterLanding && !isAllowedOrigin(origin) && !sameOriginAction) {
+    // Email clients can submit confirmation forms with Origin: null or with their
+    // own origin. These two token-only routes authenticate using an unguessable,
+    // cryptographically random server-validated bearer token (not Origin).
+    // Keep Origin restrictions on subscribe and every other API route.
+    const newsletterTokenAction =
+      ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname) &&
+      (request.method === "GET" || request.method === "POST");
+    if (!newsletterTokenAction && !isAllowedOrigin(origin)) {
       return json({ error: "Origin not allowed." }, 403, "https://weownit.net");
     }
 

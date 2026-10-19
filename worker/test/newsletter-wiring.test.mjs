@@ -35,12 +35,16 @@ test("unsubscribe landing GET accepts external Origin",async()=>{
   assert.equal(res.status,200);
   assert.match(await res.text(),/This link is invalid or expired/);
 });
-test("confirmation POST still rejects third-party Origin",async()=>{
-  const req=new Request("https://network-security-assistant.example.workers.dev/newsletter/confirm",{
-    method:"POST",headers:{Origin:"https://attacker.example","Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
-  });
-  const res=await worker.fetch(req,{}, {});
-  assert.equal(res.status,403);
+test("confirmation POST from external or null email-webview Origin validates token",async()=>{
+  const url="https://network-security-assistant.example.workers.dev/newsletter/confirm";
+  for(const origin of ["null","https://outlook.live.com","https://attacker.example"]){
+    const req=new Request(url,{
+      method:"POST",headers:{Origin:origin,"Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
+    });
+    const res=await worker.fetch(req,{}, {});
+    assert.equal(res.status,200);
+    assert.match(await res.text(),/This link is invalid or expired/);
+  }
 });
 test("confirmation POST still accepts same-origin form",async()=>{
   const url="https://network-security-assistant.example.workers.dev/newsletter/confirm";
@@ -53,6 +57,39 @@ test("confirmation POST still accepts same-origin form",async()=>{
 });
 test("newsletter subscribe POST remains blocked for untrusted Origin",async()=>{
   const req=new Request(endpoint,{method:"POST",headers:{Origin:"null","Content-Type":"application/json"},body:"{}"});
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,403);
+});
+
+test("unsubscribe POST from null email-webview Origin validates token",async()=>{
+  const url="https://network-security-assistant.example.workers.dev/newsletter/unsubscribe";
+  const req=new Request(url,{
+    method:"POST",headers:{Origin:"null","Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
+  });
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,200);
+  assert.match(await res.text(),/This link is invalid or expired/);
+});
+test("email token POST without valid token is inert, even with external Origin",async()=>{
+  const url="https://network-security-assistant.example.workers.dev/newsletter/confirm";
+  const req=new Request(url,{
+    method:"POST",headers:{Origin:"https://outlook.live.com","Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
+  });
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,200);
+  assert.match(await res.text(),/invalid or expired/);
+});
+test("non-token POST remains blocked for external Origin",async()=>{
+  const req=new Request("https://network-security-assistant.example.workers.dev/contact",{
+    method:"POST",headers:{Origin:"https://outlook.live.com","Content-Type":"application/json"},body:"{}"
+  });
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,403);
+});
+test("newsletter token paths do not admit cross-origin PUT",async()=>{
+  const req=new Request("https://network-security-assistant.example.workers.dev/newsletter/confirm",{
+    method:"PUT",headers:{Origin:"https://outlook.live.com"}
+  });
   const res=await worker.fetch(req,{}, {});
   assert.equal(res.status,403);
 });
