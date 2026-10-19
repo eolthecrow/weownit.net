@@ -1,3 +1,4 @@
+
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "network-security-assistant",
@@ -16,6 +17,13 @@
       "allowed_sender_addresses": [
         "contact@weownit.net"
       ]
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "SUBSCRIBERS_DB",
+      "database_name": "weownit_subscribers",
+      "database_id": "b381eda6-7b56-4770-82fd-d9e204022cc8"
     }
   ],
   "observability": {
