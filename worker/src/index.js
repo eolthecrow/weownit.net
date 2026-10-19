@@ -368,7 +368,7 @@ export default {
 
     // Email clients can submit confirmation forms with Origin: null or with their
     // own origin. These two token-only routes authenticate using an unguessable,
-    // single-use server-validated token (not the browser's Origin header).
+    // cryptographically random server-validated bearer token (not Origin).
     // Keep Origin restrictions on subscribe and every other API route.
     const newsletterTokenAction =
       ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname) &&
