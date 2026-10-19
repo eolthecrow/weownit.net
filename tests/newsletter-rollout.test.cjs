@@ -46,7 +46,7 @@ test("public Turnstile key does not activate subscriptions",async()=>{
 test("newsletter can be intentionally enabled after deployment configuration",async()=>{
   const page=makePage(true);
   assert.equal(page.renderCount,1);
-  assert.equal(page.submit.disabled,true);
+  assert.equal(page.submit.disabled,false);
   page.captchaConfig.callback("mock-token");
   assert.equal(page.submit.disabled,false);
   await page.submitForm();
@@ -62,4 +62,32 @@ test("public homepage explicitly enables newsletter only with Turnstile and cons
   assert.match(html,/name="consent"[^>]*required/);
   assert.match(html,/https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js/);
   assert.match(html,/<button type="submit" disabled>/);
+});
+
+test("signup remains clickable without a Turnstile token but sends no request",async()=>{
+  const page=makePage(true);
+  assert.equal(page.submit.disabled,false);
+  await page.submitForm();
+  assert.equal(page.requestCount,0);
+  assert.equal(page.status.textContent,"Please complete the verification.");
+  assert.equal(page.submit.disabled,false);
+});
+test("expired and failed Turnstile never silently disable Subscribe",async()=>{
+  const page=makePage(true);
+  page.captchaConfig["expired-callback"]();
+  assert.equal(page.submit.disabled,false);
+  assert.equal(page.status.textContent,"Please complete the verification.");
+  page.captchaConfig["error-callback"]();
+  assert.equal(page.submit.disabled,false);
+  assert.match(page.status.textContent,/Verification could not load/);
+  await page.submitForm();
+  assert.equal(page.requestCount,0);
+});
+test("missing Turnstile displays actionable feedback and no network request",async()=>{
+  const page=makePage(true);
+  page.win.turnstile=undefined;
+  assert.equal(page.submit.disabled,false);
+  await page.submitForm();
+  assert.equal(page.requestCount,0);
+  assert.match(page.status.textContent,/Verification could not load/);
 });
