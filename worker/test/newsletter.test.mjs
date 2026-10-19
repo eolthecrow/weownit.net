@@ -171,3 +171,33 @@ test("Resend webhook suppresses local subscriber only with valid Svix HMAC",asyn
     assert.equal(s.db.rows.get("person@example.com").status,"confirmed");
   }finally{s.restore();}
 });
+
+test("confirmation and unsubscribe success copy is shown once in EN RO FR",async()=>{
+  const expected={
+    en:"Your preference has been updated.",
+    ro:"Preferința ta a fost actualizată.",
+    fr:"Votre préférence a été mise à jour."
+  };
+  for(const [lang,message] of Object.entries(expected)){
+    const s=setup();
+    try{
+      const accepted=await route(jsonReq({email:"person@example.com",language:lang,consent:true,turnstileToken:"ok"}),s.env);
+      assert.equal(accepted.status,202);
+      const mail=s.calls.find(x=>x.url.endsWith("/emails"));
+      const urls=mail.payload.text.match(/https:\/\/\S+/g);
+      assert.equal(urls.length,2);
+      const confirm=new URL(urls[0]);
+      const confirmed=await route(postReq(base+"/newsletter/confirm",{token:confirm.searchParams.get("token"),lang}),s.env);
+      assert.equal(s.db.rows.get("person@example.com").status,"confirmed");
+      const confirmedHtml=await confirmed.text();
+      assert.ok(confirmedHtml.includes("<h1>"+message+"</h1>"));
+      assert.ok(!confirmedHtml.includes("<p>"+message+"</p>"),"No repeated confirmation message for "+lang);
+      const optout=new URL(urls[1]);
+      const unsubscribed=await route(postReq(base+"/newsletter/unsubscribe",{token:optout.searchParams.get("token"),lang}),s.env);
+      assert.equal(s.db.rows.get("person@example.com").status,"unsubscribed");
+      const unsubscribedHtml=await unsubscribed.text();
+      assert.ok(unsubscribedHtml.includes("<h1>"+message+"</h1>"));
+      assert.ok(!unsubscribedHtml.includes("<p>"+message+"</p>"),"No repeated unsubscribe message for "+lang);
+    }finally{s.restore();}
+  }
+});
