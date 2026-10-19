@@ -1,0 +1,12 @@
+/* Extends the existing tool; no global navigation or palette changes. */
+.fc-contract-meta{margin:16px 0;border-top:1px solid var(--line,#284049);padding-top:12px}
+.fc-contract-meta summary{cursor:pointer;font-size:13px;padding:6px 0}
+.fc-contract-meta label{display:block;font-size:12px;margin:10px 0;overflow-wrap:anywhere}
+.fc-contract-meta input:not([type=checkbox]){display:block;width:100%;min-width:0;min-height:44px;margin-top:6px;padding:10px;border:1px solid var(--line,#284049);background:transparent;color:inherit;font:inherit}
+.fc-contract-meta .fc-check{display:flex;align-items:flex-start;gap:10px;line-height:1.6}
+.fc-check input{flex:0 0 auto;margin-top:5px}
+#confidence-record{margin:20px 0;padding:18px;border:1px solid var(--line,#284049);overflow-wrap:anywhere}
+.confidence-hash{font-size:11px;color:var(--muted,#9cb6bd)}
+.confidence-hash code{overflow-wrap:anywhere;word-break:break-all}
+#confidence-record button{min-height:44px;max-width:100%;white-space:normal}
+@media(max-width:600px){#confidence-record{padding:12px}.fc-contract-meta .fc-fields{grid-template-columns:1fr}.fc-contract-meta input:not([type=checkbox]){font-size:16px}}

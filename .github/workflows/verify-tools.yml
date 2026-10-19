@@ -1,0 +1,43 @@
+name: Verify local security tools
+on:
+  pull_request:
+  push:
+    branches: [main]
+    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', 'tools.html', 'tools-existing.html', '.github/workflows/verify-tools.yml']
+permissions:
+  contents: read
+concurrency:
+  group: security-tools-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Test synthetic local workflows and public-data failure handling
+        run: node --test tests/*.test.cjs worker/test/*.test.mjs
+      - name: Test public snapshot evidence handling
+        run: python -m unittest discover -s tests -p 'test_*.py'
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install isolated pinned browser test runtime
+        run: npm install --prefix "$RUNNER_TEMP/wit-browser" --no-save --package-lock=false playwright@1.62.1
+      - name: Install Chromium and operating-system dependencies
+        run: node "$RUNNER_TEMP/wit-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Render desktop and phone-sized workflows in EN RO FR
+        env:
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+        run: node tests/browser/change-confidence.smoke.cjs

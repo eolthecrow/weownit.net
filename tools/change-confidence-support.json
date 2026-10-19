@@ -1,0 +1,20 @@
+{
+  "schema": "weownit.change-confidence.support",
+  "schemaVersion": 1,
+  "profile": "local-static-ipv4-v1",
+  "lastReviewed": "2026-10-18",
+  "qualification": "synthetic-conformance; physical mobile and appliance qualification pending",
+  "parserVersion": "1.5.0",
+  "evaluatorVersion": "2.1.0",
+  "recordVersion": "1.0.0",
+  "vendors": {
+    "fortinet": {"traffic": "bounded-local-firewall-policy", "formats": ["full set-based FortiOS CLI export", "documented REST JSON wrappers", "versioned normalized snapshots"], "osVersionsQualifiedOnAppliance": []},
+    "paloalto": {"traffic": "bounded-local-vsys-rulebase", "formats": ["configuration XML", "full set CLI", "documented JSON variants", "versioned normalized snapshots"], "osVersionsQualifiedOnAppliance": []},
+    "checkpoint": {"traffic": "unsupported-effective-layers", "structuralReview": true},
+    "cisco": {"traffic": "unsupported", "existingFunctions": ["IOS/IOS XE selected hardening", "supported incident log subsets"]}
+  },
+  "supported": ["IPv4 hosts/CIDRs/ranges", "static address and service groups", "TCP/UDP destination ports/ranges", "optional exact source port", "known ordered first-match rules", "explicit baseline and candidate expectations"],
+  "excluded": ["routing", "NAT", "live connectivity", "identity", "App-ID", "effective manager inheritance", "effective Check Point layers", "Cisco ASA/FTD/FMC policy", "authenticated acquisition"],
+  "limits": {"snapshotBytes": 5242880, "rules": 5000, "scenarios": 100, "cellsPerScenario": 256, "cellsPerReview": 1024, "recordBytes": 12582912, "localJobTimeoutMs": 30000},
+  "fixtures": ["tests/firewall-change.test.cjs", "tests/firewall-review.test.cjs", "tests/change-confidence.test.cjs", "tests/change-confidence-ui.test.cjs", "tests/security-canvas.test.cjs"]
+}

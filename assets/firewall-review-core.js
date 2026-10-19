@@ -1,7 +1,7 @@
 /* weownit Firewall Review: static, local, conservative policy analysis. No network or storage APIs. */
 (function (root) {
   'use strict';
-  const VERSION = '1.4.0';
+  const VERSION = '1.5.0';
   const SCHEMA = 'weownit.firewall-review.snapshot';
   const MAX_BYTES = 5 * 1024 * 1024, MAX_RULES = 5000, PAIR_LIMIT = 350;
   const ANY = '__ANY__';
@@ -46,8 +46,9 @@
     for (const raw of text.split(/\r?\n/)) {
       lineNumber++;const line = raw.trim(); if (!line || line.startsWith('#')) continue;
       const t = tokens(line,lineNumber), cmd = t.shift(), parent = stack[stack.length - 1];
+      if (!['config','edit','next','end','set'].includes(cmd)) fail('unsupportedCLI',lineNumber);
       if (cmd === 'config' || cmd === 'edit') {
-        const n = {kind:cmd, name:t.join(' '), line:0, children:[], props:Object.create(null)};
+        const n = {kind:cmd, name:t.join(' '), line:lineNumber, children:[], props:Object.create(null)};
         parent.children.push(n); stack.push(n);
       } else if (cmd === 'next' || cmd === 'end') {
         const expected = cmd === 'next' ? 'edit' : 'config';
@@ -72,8 +73,10 @@
     }
     walk(base);
     for (const [scope, configs] of scopes) {
-      const addresses = new Map(), services = new Map();
+      const addresses = new Map(), services = new Map(), identities = new Map();
       for (const c of configs) for (const e of c.children.filter(x => x.kind === 'edit')) {
+        const identity=c.name+'\0'+e.name;
+        if(identities.has(identity)){const error=Object.assign(new Error('duplicateIdentity'),{code:'duplicateIdentity',line:e.line,firstLine:identities.get(identity)});throw error;}identities.set(identity,e.line);
         if(!['firewall policy','firewall security-policy'].includes(c.name))definition(m,scope,c.name,e.name,e.props);
         if (c.name === 'firewall address') {
           const subnet=e.props.subnet;
@@ -102,7 +105,7 @@
         const log=get('logtraffic'), utm=get('utm-status');
         const ngfw=c.name==='firewall security-policy';
         const profiles=['av-profile','ips-sensor','webfilter-profile','dnsfilter-profile','emailfilter-profile','dlp-profile','file-filter-profile','application-list','ssl-ssh-profile'].flatMap(k=>(p[k]||[]).map(v=>k+':'+v));
-        add(m, rule({id:e.name,name:get('name') || 'Policy '+e.name,scope,src,dst,service,from:cliAny(p.srcintf || []),to:cliAny(p.dstintf || []),action:get('action') || 'deny',enabled:get('status') !== 'disable',logging:log==='disable'?'off':['all','utm'].includes(log)?'on':'unknown',protection:utm==='disable'?'off':utm==='enable'?'on':'unknown',comment:get('comments'),schedule:get('schedule') || 'unknown',users:clean(p.users || p.groups || [ANY]),negated:['srcaddr-negate','dstaddr-negate','service-negate'].some(k=>get(k)==='enable'),complex:['internet-service','internet-service-src','identity-based','match-vip-only'].some(k=>get(k)==='enable'),complete:src.length>0 && dst.length>0 && service.length>0 && !!p.srcintf && !!p.dstintf}));
+        add(m, rule({sourceLine:e.line,id:e.name,name:get('name') || 'Policy '+e.name,scope,src,dst,service,from:cliAny(p.srcintf || []),to:cliAny(p.dstintf || []),action:get('action') || 'deny',enabled:get('status') !== 'disable',logging:log==='disable'?'off':['all','utm'].includes(log)?'on':'unknown',protection:utm==='disable'?'off':utm==='enable'?'on':'unknown',comment:get('comments'),schedule:get('schedule') || 'unknown',users:clean(p.users || p.groups || [ANY]),negated:['srcaddr-negate','dstaddr-negate','service-negate'].some(k=>get(k)==='enable'),complex:['internet-service','internet-service-src','identity-based','match-vip-only'].some(k=>get(k)==='enable'),complete:src.length>0 && dst.length>0 && service.length>0 && !!p.srcintf && !!p.dstintf}));
         const r=m.rules[m.rules.length-1];
         r.srcRefs=clean(p.srcaddr||[]);r.dstRefs=clean(p.dstaddr||[]);r.serviceRefs=clean(p.service||[]);
         if(unsupportedFortinetMatches.some(k=>p[k]?.length&&!(p[k].length===1&&['disable','0','0x00'].includes(p[k][0]))))r.complex=true;
@@ -239,12 +242,12 @@
   function snapshot(m) {
     return {schema:SCHEMA,schemaVersion:1,scenarioEngineVersion:m.scenarioEngineVersion||0,vendor:m.vendor,sourceFormat:m.sourceFormat||m.format,objects:m.objects,...(m.definitionsAvailable?{objectDefinitions:m.objectDefinitions}:{}),
       warnings:m.warnings.map(w=>({code:w.code,detail:w.detail||''})),
-      policies:m.rules.map(r=>Object.fromEntries([...scalarFields,...selectorFields,...extraSelectors,...booleanFields,'order'].map(k=>[k,r[k]])))};
+      policies:m.rules.map(r=>Object.fromEntries([...scalarFields,...selectorFields,...extraSelectors,...booleanFields,'order'].map(k=>[k,r[k]]))).map((p,i)=>({...p,...(m.rules[i].sourceLine?{sourceLine:m.rules[i].sourceLine}:{})}))};
   }
   function snapshotXML(m) {
     const s=snapshot(m);
     return '<?xml version="1.0" encoding="UTF-8"?>\n<firewall-review-snapshot schema="'+SCHEMA+'" schema-version="1" scenario-engine-version="'+s.scenarioEngineVersion+'" vendor="'+s.vendor+'">\n'+
-      '<source-format>'+xmlEscape(s.sourceFormat)+'</source-format><objects>'+s.objects+'</objects>\n<warnings>'+s.warnings.map(w=>'<warning code="'+xmlEscape(w.code)+'">'+xmlEscape(w.detail)+'</warning>').join('')+'</warnings>\n'+(s.objectDefinitions?'<object-definitions>'+s.objectDefinitions.map(d=>'<object scope="'+xmlEscape(d.scope)+'" type="'+xmlEscape(d.type)+'" name="'+xmlEscape(d.name)+'">'+Object.entries(d.fields).map(([k,v])=>'<field name="'+xmlEscape(k)+'">'+v.map(x=>'<value>'+xmlEscape(x)+'</value>').join('')+'</field>').join('')+'</object>').join('')+'</object-definitions>\n':'')+'<policies>'+s.policies.map(r=>'<policy>'+scalarFields.map(k=>'<'+k+'>'+xmlEscape(r[k])+'</'+k+'>').join('')+[...selectorFields,...extraSelectors].map(k=>'<'+k+'>'+r[k].map(v=>'<value>'+xmlEscape(v)+'</value>').join('')+'</'+k+'>').join('')+booleanFields.map(k=>'<'+k+'>'+r[k]+'</'+k+'>').join('')+'<order>'+r.order+'</order></policy>').join('\n')+'</policies>\n</firewall-review-snapshot>';
+      '<source-format>'+xmlEscape(s.sourceFormat)+'</source-format><objects>'+s.objects+'</objects>\n<warnings>'+s.warnings.map(w=>'<warning code="'+xmlEscape(w.code)+'">'+xmlEscape(w.detail)+'</warning>').join('')+'</warnings>\n'+(s.objectDefinitions?'<object-definitions>'+s.objectDefinitions.map(d=>'<object scope="'+xmlEscape(d.scope)+'" type="'+xmlEscape(d.type)+'" name="'+xmlEscape(d.name)+'">'+Object.entries(d.fields).map(([k,v])=>'<field name="'+xmlEscape(k)+'">'+v.map(x=>'<value>'+xmlEscape(x)+'</value>').join('')+'</field>').join('')+'</object>').join('')+'</object-definitions>\n':'')+'<policies>'+s.policies.map(r=>'<policy>'+scalarFields.map(k=>'<'+k+'>'+xmlEscape(r[k])+'</'+k+'>').join('')+[...selectorFields,...extraSelectors].map(k=>'<'+k+'>'+r[k].map(v=>'<value>'+xmlEscape(v)+'</value>').join('')+'</'+k+'>').join('')+booleanFields.map(k=>'<'+k+'>'+r[k]+'</'+k+'>').join('')+(r.sourceLine?'<source-line>'+r.sourceLine+'</source-line>':'')+'<order>'+r.order+'</order></policy>').join('\n')+'</policies>\n</firewall-review-snapshot>';
   }
   function snapshotModel(data,expectedVendor) {
     if(!plain(data)||data.schema!==SCHEMA||data.schemaVersion!==1||!['fortinet','paloalto','checkpoint'].includes(data.vendor))fail('invalidSnapshot');
@@ -265,6 +268,7 @@
       const r=rule(Object.fromEntries([...scalarFields,...selectorFields,...extraSelectors,...booleanFields,'order'].map(k=>[k,extraSelectors.includes(k)?clean(p[k]||[]):Array.isArray(p[k])?clean(p[k]):p[k]])));
       if(r.urlCategories.length||r.appCategories.length||r.appGroups.length||r.src6.length||r.dst6.length||r.scope.endsWith('/security-policy')||r.content.some(v=>v!==ANY)||r.contentNegation.length)r.complex=true;
       if(!r.src.length||!r.dst.length||!r.service.length||!r.from.length||!r.to.length||!r.apps.length||r.unresolved.length)r.complete=false;
+      if(p.sourceLine!=null){if(!Number.isSafeInteger(p.sourceLine)||p.sourceLine<1||p.sourceLine>10000000)fail('invalidSnapshot');r.sourceLine=p.sourceLine;}
       m.rules.push(r);
     }
     for(const w of data.warnings){if(!plain(w)||typeof w.code!=='string'||typeof w.detail!=='string')fail('invalidSnapshot');note(m,w.code,w.detail);}
@@ -283,6 +287,7 @@
       for(const k of selectorFields){if(children(p,k).length!==1)fail('invalidSnapshot');r[k]=children(child(p,k),'value').map(v=>v.textContent);}
       for(const k of extraSelectors){if(children(p,k).length>1)fail('invalidSnapshot');if(child(p,k))r[k]=children(child(p,k),'value').map(v=>v.textContent);}
       for(const k of booleanFields){const value=txt(p,k);if(children(p,k).length!==1||!['true','false'].includes(value))fail('invalidSnapshot');r[k]=value==='true';}
+      if(children(p,'source-line').length>1)fail('invalidSnapshot');if(child(p,'source-line'))r.sourceLine=Number(txt(p,'source-line'));
       r.order=Number(txt(p,'order'));data.policies.push(r);
     }
     const m=snapshotModel(data,expectedVendor);m.format='weownit review snapshot XML';return m;
@@ -324,7 +329,7 @@
     }
     const m=parseFortinet(lines.join('\n'));m.format='FortiOS REST API JSON';
     // API array order is not treated as proof of effective rule evaluation order.
-    m.rules.forEach(r=>r.orderKnown=false);note(m,'apiOrder');
+    m.rules.forEach(r=>{r.orderKnown=false;delete r.sourceLine;});note(m,'apiOrder');
     warnings.forEach(w=>note(m,w));note(m,'apiSnapshot');return m;
   }
   const panContainers=new Set(['devices','vsys','device-group','rules','address','address-group','service','service-group']);

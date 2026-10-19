@@ -125,6 +125,18 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
     }
     throw new Error('tool');
   }
+  let runner=null;
+  function cancel(){runner?.cancel();}
+  async function inspectAsync(kind,vendor,input){
+    if(!root.ChangeConfidenceRunner||!['policy','change'].includes(kind))return inspect(kind,vendor,input);
+    runner??=root.ChangeConfidenceRunner.create();
+    if(kind==='policy'){const model=await runner.parse(input.current,vendor);return {kind,model,result:root.FirewallReview.analyze(model)};}
+    const before=await runner.parse(input.current,vendor),after=await runner.parse(input.after,vendor);
+    const scenarios=root.FirewallChangeReview.scenarios(JSON.parse(input.scenarios));
+    const result=await runner.run({type:'review',before,after,scenarios,delta:root.FirewallReview.diff(before,after)});
+    let decisionRecord=null,recordError='';try{decisionRecord=await root.ChangeConfidence.build({before,after,result,sources:[{side:'before',name:'Canvas before text',bytes:new TextEncoder().encode(input.current),basis:'utf8-text'},{side:'after',name:'Canvas proposed text',bytes:new TextEncoder().encode(input.after),basis:'utf8-text'}]});}catch(e){recordError=e.code||'unexpected';}
+    return {kind,result,decisionRecord,recordError};
+  }
   function signals(item){
     if(!item||item.skipped)return {state:'notAssessed',attention:0,unknown:1};
     if(item.kind==='hardening')return {state:item.model.summary.fail?'needsReview':item.model.summary.unknown?'partial':'observed',attention:item.model.summary.fail+(item.comparison?.summary.regression||0),unknown:item.model.summary.unknown};
@@ -140,7 +152,7 @@ set rulebase security rules Final-drop description "Synthetic cleanup"`;
     const values=path.map(k=>signals(results[k]));
     return {completed:path.filter(k=>results[k]&&!results[k].skipped).length,total:path.length,attention:values.reduce((n,v)=>n+v.attention,0),unknown:values.reduce((n,v)=>n+v.unknown,0),state:values.some(v=>v.state==='needsReview')?'needsReview':values.some(v=>v.state==='notAssessed')?'notAssessed':'partial'};
   }
-  const api={VENDORS,CONCERNS,route,domain,policyLab,inspect,signals,summary};
+  const api={VENDORS,CONCERNS,route,domain,policyLab,inspect,inspectAsync,cancel,signals,summary};
   root.SecurityCanvas=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof window!=='undefined'?window:globalThis);
 

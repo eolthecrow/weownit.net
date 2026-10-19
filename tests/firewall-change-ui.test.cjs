@@ -8,7 +8,7 @@ async function harness(language='en'){
   element('fw-vendor').value='auto';element('fw-severity').value='all';
   const document={documentElement:{lang:language},getElementById:element,querySelectorAll:selector=>['[data-fc-mode]','[data-fc]'].includes(selector)?[element('fc-mode-policy'),element('fc-mode-change')]:selector==='.fc-modes'?[element('fc-mode-group')]:[],addEventListener(name,fn){(listeners[name]??=[]).push(fn);},dispatchEvent(e){for(const fn of listeners[e.type]||[])fn(e);},body:{append(){}},createElement:()=>({click(){},remove(){}})};
   class Worker{postMessage(data){queueMicrotask(()=>{if(this.cancelled)return;try{this.onmessage({data:{result:change.review(data.before,data.after,data.scenarios,data.delta)}});}catch(e){this.onmessage({data:{error:e.code||'unexpected'}});}});}terminate(){this.cancelled=true;}}
-  const context=vm.createContext({window:null,document,Blob,Event,URL:{createObjectURL(b){blobs.push(b);return 'blob:local';},revokeObjectURL(){}},Worker,FirewallReview:core,FirewallChangeReview:change,setTimeout:fn=>{queueMicrotask(fn);return 0;}});context.window=context;
+  const context=vm.createContext({window:null,document,Blob,TextEncoder,TextDecoder,Event,URL:{createObjectURL(b){blobs.push(b);return 'blob:local';},revokeObjectURL(){}},Worker,FirewallReview:core,FirewallChangeReview:change,setTimeout:fn=>{queueMicrotask(fn);return 0;}});context.window=context;
   for(const file of ['firewall-review-demo.js','firewall-change-ui.js','firewall-review.js'])vm.runInContext(fs.readFileSync(path.join(__dirname,'../assets',file),'utf8'),context);
   element('fc-demo').click=()=>element('fc-demo').handlers.click();
   element('fw-clear').click=()=>element('fw-clear').handlers.click();let pending;
