@@ -53,3 +53,13 @@ test("newsletter can be intentionally enabled after deployment configuration",as
   assert.equal(page.requestCount,1);
   assert.equal(page.status.textContent,"Check your inbox for a confirmation link.");
 });
+
+test("public homepage explicitly enables newsletter only with Turnstile and consent",()=>{
+  const html=fs.readFileSync(path.join(__dirname,"../index.html"),"utf8");
+  assert.match(html,/window\.WEOWNIT_NEWSLETTER_ENABLED=true;/);
+  assert.match(html,/window\.WEOWNIT_TURNSTILE_SITE_KEY="0x4AAAAAAFalTPL7cj_-vR2k"/);
+  assert.match(html,/<form[^>]*id="newsletter-form"/);
+  assert.match(html,/name="consent"[^>]*required/);
+  assert.match(html,/https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js/);
+  assert.match(html,/<button type="submit" disabled>/);
+});
