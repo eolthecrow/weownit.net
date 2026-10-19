@@ -88,7 +88,7 @@ async function doConfirmation(req,env,value,lang){
     await addResendContact(env,item.email,item.language);
     const now=Date.now();
     await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET status='confirmed',confirmed_at=?,confirm_hash=NULL,confirm_expires_at=NULL WHERE confirm_hash=? AND status='pending' AND confirm_expires_at>=?").bind(now,digest,now).run();
-    return page(copy.done,"<p>"+h(copy.done)+"</p>",lang);
+    return page(copy.done,"",lang);
   }catch(err){console.error("Newsletter confirmation error",String(err.message).slice(0,50));return page(copy.failed,"",lang);}
 }
 async function doUnsubscribe(req,env,value,lang){
@@ -103,7 +103,7 @@ async function doUnsubscribe(req,env,value,lang){
     catch(err) { if(item.status!=="pending"||!/Resend 404/.test(String(err.message)))throw err; }
     // Pending subscribers do not exist in Resend; 404 is expected for their opt-out.
     await env.SUBSCRIBERS_DB.prepare("UPDATE subscribers SET status='unsubscribed',unsubscribed_at=?,confirm_hash=NULL,confirm_expires_at=NULL WHERE unsubscribe_hash=?").bind(Date.now(),digest).run();
-    return page(copy.done,"<p>"+h(copy.done)+"</p>",lang);
+    return page(copy.done,"",lang);
   }catch(err){console.error("Newsletter unsubscribe error",String(err.message).slice(0,50));return page(copy.failed,"",lang);}
 }
 
