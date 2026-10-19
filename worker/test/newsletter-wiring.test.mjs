@@ -20,3 +20,39 @@ test("cross-origin newsletter calls are rejected",async()=>{
   assert.equal(response.status,403);
   assert.notEqual(response.headers.get("Access-Control-Allow-Origin"),"https://attacker.example");
 });
+
+test("email confirmation GET accepts external Origin without mutating state",async()=>{
+  const url="https://network-security-assistant.example.workers.dev/newsletter/confirm?token=invalid";
+  for(const origin of ["null","https://outlook.live.com","https://attacker.example"]){
+    const res=await worker.fetch(new Request(url,{headers:{Origin:origin}}),{}, {});
+    assert.equal(res.status,200);
+    assert.match(await res.text(),/This link is invalid or expired/);
+  }
+});
+test("unsubscribe landing GET accepts external Origin",async()=>{
+  const req=new Request("https://network-security-assistant.example.workers.dev/newsletter/unsubscribe?token=invalid",{headers:{Origin:"https://mail.google.com"}});
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,200);
+  assert.match(await res.text(),/This link is invalid or expired/);
+});
+test("confirmation POST still rejects third-party Origin",async()=>{
+  const req=new Request("https://network-security-assistant.example.workers.dev/newsletter/confirm",{
+    method:"POST",headers:{Origin:"https://attacker.example","Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
+  });
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,403);
+});
+test("confirmation POST still accepts same-origin form",async()=>{
+  const url="https://network-security-assistant.example.workers.dev/newsletter/confirm";
+  const req=new Request(url,{
+    method:"POST",headers:{Origin:"https://network-security-assistant.example.workers.dev","Content-Type":"application/x-www-form-urlencoded"},body:"token=invalid&lang=en"
+  });
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,200);
+  assert.match(await res.text(),/This link is invalid or expired/);
+});
+test("newsletter subscribe POST remains blocked for untrusted Origin",async()=>{
+  const req=new Request(endpoint,{method:"POST",headers:{Origin:"null","Content-Type":"application/json"},body:"{}"});
+  const res=await worker.fetch(req,{}, {});
+  assert.equal(res.status,403);
+});

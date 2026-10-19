@@ -367,8 +367,11 @@ export default {
     const origin = request.headers.get("Origin");
 
     const newsletterAction = ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname);
+    // Email apps can supply an external Origin when opening a confirmation link.
+    // GET only renders a form: it never confirms or unsubscribes the recipient.
+    const publicNewsletterLanding = newsletterAction && request.method === "GET";
     const sameOriginAction = newsletterAction && origin === url.origin;
-    if (!isAllowedOrigin(origin) && !sameOriginAction) {
+    if (!publicNewsletterLanding && !isAllowedOrigin(origin) && !sameOriginAction) {
       return json({ error: "Origin not allowed." }, 403, "https://weownit.net");
     }
 
