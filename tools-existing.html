@@ -64,6 +64,7 @@
   <link rel="stylesheet" href="assets/incident-triage.css?v=3">
   <link rel="stylesheet" href="assets/connected-case.css?v=endpoint-1">
 <link rel="stylesheet" href="assets/change-confidence.css?v=1">
+<link rel="stylesheet" href="assets/firewall-migration.css?v=1">
 </head>
 <body>
 <a class="site-skip" href="#main">Skip to content</a>
@@ -228,6 +229,38 @@
         </div>
       </div>
       <p class="fw-hint" data-fw="scope">Static policy review, not a full security audit or a connectivity guarantee. Unsupported conditions and missing information are reported explicitly. Configurations are held in this page only until cleared or closed; reports are saved locally when requested.</p>
+      <details id="firewall-migration">
+        <summary data-mig="title">Migration Converter</summary>
+        <p class="fw-hint" data-mig="lead">Convert supported objects and services into another vendor’s configuration syntax. Policy drafts: FortiGate ↔ Palo Alto only.</p>
+        <p class="fw-privacy" data-mig="privacy">Local processing · No configuration upload · No backend required</p>
+        <form id="mig-form">
+          <div class="mig-grid">
+            <label><span data-mig="source">Source platform</span><select id="mig-source"><option value="auto" data-mig="auto">Detect automatically</option><option value="fortinet">FortiGate · CLI</option><option value="paloalto">Palo Alto · XML / JSON / set CLI</option><option value="asa">Cisco ASA · CLI</option><option value="checkpoint" data-mig="cpSource">Check Point · Management JSON</option><option value="fmc" data-mig="fmcSource">Cisco FTD / FMC / FDM · unsupported</option></select></label>
+            <label><span data-mig="target">Destination platform</span><select id="mig-target"><option value="paloalto">Palo Alto · set CLI</option><option value="fortinet">FortiGate · CLI</option><option value="asa" data-mig="asaTarget">Cisco ASA · objects CLI</option><option value="checkpoint" data-mig="cpTarget">Check Point · object request plan JSON</option></select></label>
+            <label><span data-mig="mode">Conversion scope</span><select id="mig-mode"><option value="objects" data-mig="objects">Objects and services only</option><option value="policy" data-mig="policy">Objects + policy draft</option></select></label>
+          </div>
+          <p data-mig="demo">Synthetic examples</p><div class="fw-demos"><button type="button" data-mig-demo="fortinet">FortiGate</button><button type="button" data-mig-demo="paloalto">Palo Alto</button><button type="button" data-mig-demo="asa">Cisco ASA</button><button type="button" data-mig-demo="checkpoint">Check Point</button></div>
+          <label for="mig-input" data-mig="input">Paste a native export</label><textarea id="mig-input" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5242880" aria-describedby="mig-formats mig-status"></textarea>
+          <label for="mig-files" data-mig="files">Or select related local files · 5 MiB total</label><input type="file" id="mig-files" accept=".conf,.cfg,.txt,.xml,.json" multiple>
+          <p id="mig-formats" class="fw-hint" data-mig="formats"></p>
+          <div class="mig-grid"><label><span data-mig="scope">Source context</span><select id="mig-scope"><option value="" data-mig="auto">Detect automatically</option></select></label><label><span data-mig="context">Target VDOM / VSYS</span><input id="mig-context" value="vsys1" maxlength="63" autocomplete="off"></label></div>
+          <div id="mig-acknowledgements" hidden>
+            <label for="mig-mappings" data-mig="mapping">Interface / zone mapping</label><textarea id="mig-mappings" maxlength="12000" spellcheck="false" aria-describedby="mig-mapping-hint"></textarea><p id="mig-mapping-hint" class="fw-hint" data-mig="mappingHint"></p>
+            <label class="mig-check"><input type="checkbox" id="mig-complete"><span data-mig="complete"></span></label><label class="mig-check"><input type="checkbox" id="mig-lab"><span data-mig="lab"></span></label>
+          </div>
+          <p class="fw-hint" data-mig="limit"></p>
+          <div class="fw-input-actions"><button class="fw-primary" type="submit" id="mig-run" data-mig="run">Analyze &amp; convert</button><button type="button" id="mig-cancel" data-mig="cancel" hidden>Cancel</button><button type="button" id="mig-clear" data-mig="clear">Clear local data</button></div>
+          <p id="mig-status" class="fw-status" role="status" aria-live="polite"></p>
+        </form>
+        <section id="mig-result" aria-live="polite" hidden>
+          <h3 id="mig-outcome"></h3><p id="mig-counts" class="fw-hint"></p><p class="fw-hint" data-mig="validation"></p>
+          <div class="fw-input-actions"><button type="button" id="mig-download" data-mig="download" disabled>Download configuration fragment</button><button type="button" id="mig-report" data-mig="report" disabled>Download migration report JSON</button></div>
+          <div id="mig-blockers-box"><h4 data-mig="blockers">Export blockers</h4><ul id="mig-blockers"></ul></div>
+          <details><summary data-mig="warnings">Scope and exclusions</summary><ul id="mig-warnings"></ul></details>
+          <details><summary data-mig="lineage">Source → target mapping</summary><p class="fw-hint" data-mig="lineageLimit"></p><div class="fw-table-wrap"><table><thead><tr><th data-mig="sourceName">Source name</th><th data-mig="sourceLocation">Source location</th><th data-mig="targetName">Generated target name</th></tr></thead><tbody id="mig-lineage"></tbody></table></div></details>
+          <div id="mig-output-box"><label for="mig-output" data-mig="output">Generated fragment</label><textarea id="mig-output" readonly spellcheck="false"></textarea></div>
+        </section>
+      </details>
       <noscript><p>JavaScript is required for local Firewall Review.</p></noscript>
     </div>
   </section>
@@ -432,6 +465,11 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
 <script src="assets/incident-triage-ui.js?v=endpoint-1" defer></script>
 <script src="assets/connected-case-ui.js?v=connected-2" defer></script>
 <script src="assets/endpoint-evidence-ui.js?v=endpoint-1" defer></script>
+<script src="assets/firewall-migration-core.js?v=1" defer></script>
+<script src="assets/firewall-migration-emit.js?v=1" defer></script>
+<script src="assets/firewall-migration-i18n.js?v=1" defer></script>
+<script src="assets/firewall-migration-demos.js?v=1" defer></script>
+<script src="assets/firewall-migration-ui.js?v=1" defer></script>
 </body>
 </html>
 
