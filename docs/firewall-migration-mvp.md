@@ -49,6 +49,10 @@ CI also runs the existing Change Confidence browser suite and `tests/browser/fir
 
 Before any production firewall use: use an isolated empty target matching the intended firmware/API version, import the fragment with vendor validation, inspect warnings/defaults, and compare a synthetic packet corpus including denied, disabled, source-port and boundary cases. This MVP has no live firewall evidence. Do not market it as a lossless universal FortiConverter replacement.
 
+## Vendor semantics reference
+
+The predefined PAN-OS `service-http` is TCP **80 and 8080**, while `service-https` is TCP 443. The compiler materializes/splits these definitions rather than treating service-http as port 80 alone; an explicit source definition takes precedence. Reference: [Palo Alto Networks, Policy Objects, PAN-OS 11.1](https://docs.paloaltonetworks.com/pan-os/11-1/pan-os-admin/policy/policy-objects). This narrowly verified fact is not general version qualification. Numeric port 0 is outside the MVP model; supported service-port space is 1–65535.
+
 ## Follow-on implementation
 
 1. Qualify explicit source/target firmware pairs with redistributable synthetic native exports and real target lab import evidence; fix version-specific emitters before claiming release support.

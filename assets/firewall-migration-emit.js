@@ -24,7 +24,7 @@
     function builtin(kind,ref){
       if(kind==='address'&&(['any',any].includes(ref)||model.vendor==='fortinet'&&ref==='all'))return any;
       if(kind==='service'&&(['any',any].includes(ref)||model.vendor==='fortinet'&&ref==='ALL'))return any;
-      const known=model.vendor==='fortinet'?{HTTP:['tcp','80'],HTTPS:['tcp','443'],SSH:['tcp','22']}:model.vendor==='paloalto'?{'service-http':['tcp','80'],'service-https':['tcp','443']}:{};
+      const known=model.vendor==='fortinet'?{HTTP:['tcp','80'],HTTPS:['tcp','443'],SSH:['tcp','22']}:model.vendor==='paloalto'?{'service-http':['tcp','80,8080'],'service-https':['tcp','443']}:{};
       if(kind==='service'&&known[ref]){const [protocol,destination]=known[ref],id='builtin/'+ref;if(!compiled.has(id))compiled.set(id,{id,name:name(id,ref,'s'),kind:'service',type:'transport',terms:[{protocol,destination,source:'1-65535'}],source:'built-in '+ref,children:[]});return compiled.get(id).name;}return null;
     }
     function resolve(kind,ref,trail=[]){
