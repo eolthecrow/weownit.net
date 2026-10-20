@@ -203,7 +203,7 @@
   }
   function detect(texts){
     const s=texts.join('\n');if(/^(?:FTD|Firepower)\s+(?:Version|Threat Defense)/im.test(s))return 'fmc';if(/^\s*(?:object(?:-group)?\s+(?:network|service)|ASA Version|access-list)\b/m.test(s))return 'asa';
-    if(/^\s*config\s+(?:vdom|firewall|system)\b/m.test(s))return 'fortinet';if(/^\s*set\s+(?:vsys|address|address-group|service|service-group|rulebase|device-group)\b/m.test(s)||/<(?:config|response)\b/.test(s))return 'paloalto';
+    if(/^\s*config\s+(?:vdom|firewall|system)\b/m.test(s))return 'fortinet';if(/^\s*\{/.test(s)&&/"(?:config|vsys|device-group)"\s*:/.test(s))return 'paloalto';if(/^\s*set\s+(?:vsys|address|address-group|service|service-group|rulebase|device-group)\b/m.test(s)||/<(?:config|response)\b/.test(s))return 'paloalto';
     if(/"(?:objects-dictionary|rulebase|ipv4-address|subnet4)"\s*:/.test(s)||/"type"\s*:\s*"(?:host|network|service-tcp|service-udp|group|service-group)"/.test(s))return 'checkpoint';
     if(/"type"\s*:\s*"(?:Host|Network|NetworkGroup|ProtocolPortObject|AccessRule)"/.test(s))return 'fmc';fail('format');
   }
