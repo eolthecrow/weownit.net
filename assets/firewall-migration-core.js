@@ -65,7 +65,7 @@
         const supported=['firewall address','firewall addrgrp','firewall service custom','firewall service group','firewall policy'];
         if(supported.includes(n.name)){
           for(const e of n.children){if(e.kind!=='edit')fail('malformed',e.line);const identity=key(n.name,scope,e.name);if(seen.has(identity))fail('duplicate',e.line);seen.add(identity);const p=e.props,v=k=>scalar(p[k]),src='line '+e.line;let o;
-            if(n.name==='firewall address'){const type=v('type')||'ipmask';o=address(m,scope,e.name,type==='ipmask'?'subnet':type==='iprange'?'range':type==='fqdn'?'fqdn':'unsupported',{ip:one(p.subnet)||'',mask:p.subnet?.[1],start:v('start-ip'),end:v('end-ip'),fqdn:v('fqdn')},src);fields(o,p,['type','subnet','start-ip','end-ip','fqdn','uuid','comment','color']);}
+            if(n.name==='firewall address'){const type=v('type')||'ipmask';o=address(m,scope,e.name,type==='ipmask'?'subnet':type==='iprange'?'range':type==='fqdn'?'fqdn':'unsupported',{ip:one(p.subnet)||'',mask:p.subnet?.[1],start:v('start-ip'),end:v('end-ip'),fqdn:v('fqdn')},src);fields(o,p,['type','subnet','start-ip','end-ip','fqdn','uuid','comment','color']);const shape=type==='ipmask'?['subnet']:type==='iprange'?['start-ip','end-ip']:type==='fqdn'?['fqdn']:[];for(const k of ['subnet','start-ip','end-ip','fqdn'])if(p[k]&&!shape.includes(k))o.issues.push(issue('field',k,src));}
             else if(n.name==='firewall addrgrp'){o=group(m,'address-group',scope,e.name,p.member||[],src);fields(o,p,['member','uuid','comment','color']);}
             else if(n.name==='firewall service custom'){
               const terms=[];for(const protocol of ['tcp','udp'])for(const port of p[protocol+'-portrange']||[]){const a=port.split(':');terms.push({protocol,destination:a[0],source:a[1]});if(a.length>2)terms.push({protocol:'unsupported'});}
@@ -161,7 +161,7 @@
         else if(v.type==='service-group')o=group(m,'service-group',scope,name,list(v.members).map(x=>typeof x==='string'?x:x.uid),path);
         else if(v.type==='access-rule'){rule(m,{scope:'policy',name,source:path,issues:[issue('policySource',v.type,path)]});}
         else if(!['access-section','access-layer','CpmiAnyObject','RulebaseAction','Track','time','Global'].includes(v.type))o=add(m,'unsupported',scope,name,{type:v.type,issues:[issue('unsupported',v.type,path)]},path);
-        if(o){o.uid=v.uid;if(v.type==='network'&&Number.isInteger(v['mask-length4'])){o.issues=[];checked(o,()=>{o.value=cidr(v.subnet4+'/'+v['mask-length4']);});}if(v['ipv6-address']||v.subnet6)o.issues.push(issue('unsupported','IPv6',path));
+        if(o){o.uid=v.uid;if(v.type==='network'&&Number.isInteger(v['mask-length4'])){o.issues=[];checked(o,()=>{o.value=cidr(v.subnet4+'/'+v['mask-length4']);});}if(v.type==='network'){if(!Object.hasOwn(v,'mask-length4')&&!v['subnet-mask'])o.issues.push(issue('address','missing mask',path));if(Object.hasOwn(v,'mask-length4')&&!Number.isInteger(v['mask-length4']))o.issues.push(issue('address','mask-length4',path));if(Number.isInteger(v['mask-length4'])&&v['subnet-mask'])checked(o,()=>{if(cidr(v.subnet4,v['subnet-mask'])!==cidr(v.subnet4+'/'+v['mask-length4']))fail('address');});}if(v['ipv6-address']||v.subnet6)o.issues.push(issue('unsupported','IPv6',path));
           const common=['uid','type','name','domain','meta-info','read-only','icon','color','comments','tags','groups','nat-settings'];
           const specific={host:['ipv4-address'],network:['subnet4','subnet-mask','mask-length4'],'address-range':['ipv4-address-first','ipv4-address-last'],group:['members'],'service-tcp':['port','source-port'],'service-udp':['port','source-port'],'service-group':['members']}[v.type]||[];fields(o,v,[...common,...specific]);}
       }
@@ -186,8 +186,8 @@
       }else{
         const kind=b.kind==='network-group'?'address-group':'service-group',refs=[];o=group(m,kind,'context',b.name,refs,b.source);
         for(const x of b.lines){const t=x.t;
-          if(t[0]==='description')continue;if(t[0]==='group-object'||t[0]==='network-object'&&t[1]==='object'||t[0]==='service-object'&&t[1]==='object'){refs.push(t.at(-1));continue;}
-          if(t[0]==='network-object'&&kind==='address-group'){const name=b.name+'__member_'+refs.length;const a=address(m,'context',name,'subnet',{ip:t[1]==='host'?t[2]:t[1],mask:t[1]==='host'?undefined:t[2]},x.source);refs.push(a.name);}
+          if(t[0]==='description')continue;if(t[0]==='group-object'||t[0]==='network-object'&&t[1]==='object'||t[0]==='service-object'&&t[1]==='object'){if(t.length!==(t[0]==='group-object'?2:3))o.issues.push(issue('field','member tokens',x.source));refs.push(t.at(-1));continue;}
+          if(t[0]==='network-object'&&kind==='address-group'){if(t.length!==3)o.issues.push(issue('field','member tokens',x.source));const name=b.name+'__member_'+refs.length;const a=address(m,'context',name,'subnet',{ip:t[1]==='host'?t[2]:t[1],mask:t[1]==='host'?undefined:t[2]},x.source);refs.push(a.name);}
           else if((t[0]==='port-object'||t[0]==='service-object')&&kind==='service-group'){const name=b.name+'__member_'+refs.length;checked(o,()=>{const a=t[0]==='port-object'?term([b.protocol,'destination',...t.slice(1)]):term(t.slice(1));service(m,'context',name,[a],x.source);refs.push(name);});}
           else o.issues.push(issue('field',t[0],x.source));
         }o.members=uniq(refs);

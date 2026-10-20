@@ -28,7 +28,7 @@
       if(kind==='service'&&known[ref]){const [protocol,destination]=known[ref],id='builtin/'+ref;if(!compiled.has(id))compiled.set(id,{id,name:name(id,ref,'s'),kind:'service',type:'transport',terms:[{protocol,destination,source:'1-65535'}],source:'built-in '+ref,children:[]});return compiled.get(id).name;}return null;
     }
     function resolve(kind,ref,trail=[]){
-      const object=lookup(kind,ref)||lookup(kind+'-group',ref);if(!object){const b=builtin(kind,ref);if(b)return b;blockers.push(issue('reference',ref));return '';}
+      const object=lookup(kind,ref)||lookup(kind+'-group',ref);if(!object){const b=builtin(kind,ref);if(b){if(kind==='address'&&b===any&&mode==='policy'){const id='builtin/ipv4-any';if(!compiled.has(id))compiled.set(id,{id,name:name(id,'ipv4-any','a'),kind:'address',type:'subnet',value:'0.0.0.0/0',source:'built-in IPv4 selector',children:[]});return compiled.get(id).name;}return b;}blockers.push(issue('reference',ref));return '';}
       if(trail.includes(object.id)||trail.length>=30){blockers.push(issue('cycle',object.name,object.source));return '';}
       if(compiled.has(object.id))return compiled.get(object.id).name;
       if(object.issues.length){blockers.push(...object.issues);return '';}
@@ -44,7 +44,7 @@
       if(!rules.length)blockers.push(issue('noRules'));if(!options.labTargetDeclared)blockers.push(issue('labTarget'));if(!options.completeDeclared)blockers.push(issue('complete'));
       blockers.push(...model.policyIssues);
       const zone=z=>{if(z==='any')return 'any';if(!zoneMap[z]){blockers.push(issue('zone',z));return '';}return zoneMap[z];};
-      for(const r of rules){blockers.push(...r.issues);if([r.from,r.to,r.src,r.dst,r.services].some(a=>!Array.isArray(a)||!a.length))blockers.push(issue('selector',r.name,r.source));
+      for(const r of rules){blockers.push(...r.issues);if([r.from,r.to].some(a=>a.includes('any')&&a.length!==1))blockers.push(issue('selector',r.name,r.source));if([r.from,r.to,r.src,r.dst,r.services].some(a=>!Array.isArray(a)||!a.length))blockers.push(issue('selector',r.name,r.source));
         const id='rule/'+r.scope+'/'+r.nativeId,n='wit_r_'+String(targetRules.length+1)+'_'+hash(id);
         const out={name:n,enabled:r.enabled,action:r.action,logging:r.logging,logStart:r.logStart,from:r.from.map(zone),to:r.to.map(zone),src:r.src.map(s=>resolve('address',s)),dst:r.dst.map(s=>resolve('address',s)),services:r.services.map(s=>resolve('service',s))};targetRules.push(out);lineage.push({sourceName:r.name,source:r.source,sourceScope:r.scope,targetName:n,type:'policy'});
       }
@@ -110,7 +110,7 @@
       }
     }
     if(normalizedBlockers.length)output='';
-    return {schema:'weownit.firewall-migration.report',schemaVersion:1,engine:api.VERSION,profile:api.PROFILE,source:{vendor:model.vendor,format:model.format,scope},target:{vendor:target,context},mode,status:normalizedBlockers.length?'blocked':'fragment-generated',counts:{objects:objects.length,rules:rules.length,targetObjects:[...compiled.values()].reduce((n,o)=>n+(o.kind==='service'?o.children.length+(o.children.length>1?1:0):1),0)},blockers:normalizedBlockers,warnings:unique(warnings.map(x=>JSON.stringify(x))).map(x=>JSON.parse(x)),lineage,output,extension:target==='checkpoint'?'json':'txt',validation:{syntax:'generated-only',modelEquivalence:'not-established',appliance:'not-tested',connectivity:'not-tested',approval:'not-granted'},contexts:model.contexts};
+    return {schema:'weownit.firewall-migration.report',schemaVersion:1,engine:api.VERSION,profile:api.PROFILE,source:{vendor:model.vendor,format:model.format,scope},target:{vendor:target,context},mode,assumptions:{completeSourceDeclared:options.completeDeclared===true,emptyIsolatedLabDeclared:options.labTargetDeclared===true,verified:false,zoneMappings:{...zoneMap}},status:normalizedBlockers.length?'blocked':'fragment-generated',counts:{objects:objects.length,rules:rules.length,targetObjects:[...compiled.values()].reduce((n,o)=>n+(o.kind==='service'?o.children.length+(o.children.length>1?1:0):1),0)},blockers:normalizedBlockers,warnings:unique(warnings.map(x=>JSON.stringify(x))).map(x=>JSON.parse(x)),lineage,output,extension:target==='checkpoint'?'json':'txt',validation:{syntax:'generated-only',modelEquivalence:'not-established',appliance:'not-tested',connectivity:'not-tested',approval:'not-granted'},contexts:model.contexts};
   }
   Object.assign(api,{targets,compile,mappings});root.FirewallMigration=api;if(typeof module==='object'&&module.exports)module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
