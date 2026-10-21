@@ -4,7 +4,33 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Work-mode verification — 2026-10-21
+## Sandbox deployment verified by user — 2026-10-21
+
+Evidence: Wrangler deployment output and remote curl/D1 output supplied by the
+user from their WSL terminal; not direct Cloudflare dashboard inspection.
+
+- Worker: `weownit-payments`
+- URL: https://weownit-payments.vlad-network-security.workers.dev
+- Reported deployment version: `439e7724-879d-4a13-aa73-cb66a0efe4ac`
+  (before the subsequent admin-secret update; the current version was not re-read).
+- `GET /health`: HTTP 200, `sandbox-only`, `checkout: not-connected`,
+  `public_downloads: disabled`.
+- Anonymous `POST /admin/probe`: HTTP 401.
+- Authorized `POST /admin/probe`: HTTP 200, `object_found: true`,
+  fixed key `products/network-security-assessment-test.zip`, size 799 bytes.
+  The pasted response was truncated after these fields.
+- Remote D1 query: month `2026-10`, `class_a: 0`, `class_b: 1`.
+  Together with the successful probe this verifies the deployed D1 reservation
+  and R2 HEAD path. No secret value was included in the evidence.
+- Earlier Work browser sign-in failure is no longer a deployment blocker:
+  the user completed deployment through local Wrangler.
+- Still pending: account/bucket privacy and jurisdiction recheck, real R2 usage
+  metrics, billing alert configuration, and remote quota-exhaustion testing.
+  Quota concurrency/exhaustion has only been tested locally.
+- Stripe webhook, purchase ledger and authorized customer downloads remain
+  unimplemented. No live payments or Store integration. Keep PR Draft/unmerged.
+
+## Earlier Work-mode verification — 2026-10-21
 
 - Checked out PR head `6b25f7328807449ee263912492d326c6b794f07e`.
 - `npm test`: 11/11 unit tests passed.
@@ -24,17 +50,16 @@ Branch: `feature/r2-preventive-limits-20261021`
   jurisdiction, deployed bindings, or remote resource availability.
 - Added a dependency lockfile and local integration checks to the isolated
   payments CI workflow. No changes to the public site or AI Worker source.
-- **Remote deployment BLOCKED:** Cloudflare sign-in in the Work browser
+- **Earlier automated deployment attempt blocked:** Cloudflare sign-in in the Work browser
   returned `API Request Failed: post https://dash.cloudflare.com/api/v4/login (403)`.
   No account dashboard access was obtained. This does not prove incorrect
   credentials or a bot-detection block. No further automated sign-in retries.
 - No Worker deployment, remote R2/D1 changes, admin-secret configuration,
   billing alert changes, Stripe changes, or merge were performed in this run.
-- Next: restore supported Cloudflare access, inspect real D1 UUID and bucket
-  jurisdiction, then complete steps 5–10 below. Do not mistake the passing
-  local checks for a completed Cloudflare deployment.
+- This section describes the earlier automated run. The later user-led remote
+  deployment and validation are recorded above.
 
-## Current state (confirmed with screenshots, not direct Cloudflare API)
+## Current state (user-provided screenshots and CLI evidence)
 
 - Private Standard R2 bucket: `weownit-toolkits` (public access disabled)
 - Test object: `products/network-security-assessment-test.zip` (799 bytes)
@@ -45,7 +70,8 @@ Branch: `feature/r2-preventive-limits-20261021`
 - Live Stripe, Store checkout, and Lemon Squeezy MUST NOT MODIFY
 - PR #22 contains separate `payments/` Worker code and unit tests.
   GitHub Actions `Payments R2 guard tests` succeeded as of Oct 21.
-- Cloudflare Worker `weownit-payments` has NOT been confirmed deployed.
+- Cloudflare Worker `weownit-payments` deployed and basic remote checks passed
+  through the user's local Wrangler/curl workflow; see verification above.
 
 ## Scope: safe sandbox-only deploy
 
