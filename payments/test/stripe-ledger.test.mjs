@@ -22,6 +22,13 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
     const schema = await readFile(new URL("../stripe-test-schema.sql", import.meta.url), "utf8");
     const migrate = () => db.batch(schema.split(";").map(sql => sql.trim()).filter(Boolean).map(sql => db.prepare(sql)));
     await migrate();
+    const catalogSchema = await readFile(new URL("../product-catalog-schema.sql", import.meta.url), "utf8");
+    await db.batch(catalogSchema.split(";").map(sql => sql.trim()).filter(Boolean).map(sql => db.prepare(sql)));
+    await db.prepare("DELETE FROM sandbox_products").run();
+    await db.prepare(`INSERT INTO sandbox_products
+      (id,title,price_id,object_key,currency,unit_amount,object_size_bytes)
+      VALUES ('network-security-assessment-test','Test assessment','price_unitfixture',
+      'products/network-security-assessment-test.zip','eur',2500,799)`).run();
     await db.prepare(await readFile(new URL("../r2-guard-schema.sql", import.meta.url), "utf8")).run();
     await db.prepare("INSERT INTO r2_budget_monthly (month, class_a, class_b) VALUES ('2026-10', 0, 17)").run();
     const count = async (table) => (await db.prepare(`SELECT COUNT(*) AS n FROM ${table}`).first()).n;
@@ -33,7 +40,7 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
     });
     const send = (event, stripe = fakeStripe()) => handleStripeWebhook(signedRequest(event), env, { stripeClient: stripe });
 
-    await t.test("confirmed purchase uses API data and fixed server product mapping; no delivery", async () => {
+    await t.test("confirmed purchase uses API data and catalog snapshot; no delivery", async () => {
       const response = await send(eventFor("first"));
       assert.equal(response.status, 200);
       assert.deepEqual(await response.json(), { received: true, outcome: "recorded", delivery: "disabled" });
@@ -118,7 +125,8 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
       invalidItems.push(lineItems({ has_more: true }), lineItems({ data: [] }));
       const before = await count("stripe_test_purchases");
       for (let i = 0; i < invalidItems.length; i++) {
-        const response = await send(eventFor("baditems" + i), fakeStripe({ items: invalidItems[i] }));
+        const session = uniqueSession("baditems" + i);
+        const response = await send(eventForSession("baditems" + i, session), fakeStripe({ session, items: invalidItems[i] }));
         assert.equal(response.status, 200);
         assert.equal((await response.json()).outcome, "ignored");
       }
@@ -127,7 +135,8 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
         { currency: "usd" }, { status: "expired" }, { payment_intent: null },
         { id: "cs_test_mismatch" }, { amount_total: 2499 },
       ].entries()) {
-        const response = await send(eventFor("badsession" + i), fakeStripe({ session: paidSession(change) }));
+        const session = uniqueSession("badsession" + i);
+        const response = await send(eventForSession("badsession" + i, session), fakeStripe({ session: { ...session, ...change } }));
         assert.equal((await response.json()).outcome, "ignored");
       }
       assert.equal(await count("stripe_test_purchases"), before);
@@ -154,6 +163,38 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
       await db.prepare("DROP TRIGGER deny_test_event").run();
       assert.equal((await send(event, fakeStripe({ session }))).status, 200);
       assert.ok(await purchase(session.id));
+    });
+
+    await t.test("catalog change during verification cannot record a new purchase or consume the event", async () => {
+      const session = uniqueSession("catalograce");
+      const event = eventForSession("catalograce", session);
+      // Simulate an admin edit immediately before the actual purchase batch.
+      const racingDB = {
+        prepare: db.prepare.bind(db),
+        async batch(statements) {
+          await db.prepare("UPDATE sandbox_products SET state = 'archived', revision = revision + 1").run();
+          return db.batch(statements);
+        },
+      };
+      const response = await handleStripeWebhook(signedRequest(event), { ...env, R2_BUDGET_DB: racingDB }, { stripeClient: fakeStripe({ session }) });
+      assert.equal(response.status, 503);
+      assert.equal(await purchase(session.id), null);
+      assert.equal(await db.prepare("SELECT event_id FROM stripe_test_events WHERE event_id = ?").bind(event.id).first(), null);
+      await db.prepare("UPDATE sandbox_products SET state = 'active', revision = revision + 1").run();
+      assert.equal((await send(event, fakeStripe({ session }))).status, 200);
+    });
+
+    await t.test("archive blocks new payments while retaining historical receipt and signed-event deduplication", async () => {
+      await db.prepare("UPDATE sandbox_products SET state = 'archived', revision = revision + 1").run();
+      const session = uniqueSession("archived");
+      const response = await send(eventForSession("archived", session), fakeStripe({ session }));
+      assert.equal((await response.json()).outcome, "ignored");
+      assert.equal(await purchase(session.id), null);
+      const stripe = fakeStripe();
+      assert.equal((await send(eventFor("historical"), stripe)).status, 200);
+      assert.equal(stripe.calls.length, 0);
+      assert.equal((await purchase("cs_test_unitfixture")).object_key, "products/network-security-assessment-test.zip");
+      await db.prepare("UPDATE sandbox_products SET state = 'active', revision = revision + 1").run();
     });
 
     await t.test("missing ledger schema fails closed without fetching Stripe data", async () => {

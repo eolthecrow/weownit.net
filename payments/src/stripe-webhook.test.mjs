@@ -10,11 +10,10 @@ const untouchedDB = {
 };
 const env = { ...config, R2_BUDGET_DB: untouchedDB };
 
-test("webhook is opt-in and accepts only a test API key and concrete test-price config", async () => {
+test("webhook is opt-in and accepts only test keys; catalog replaces per-price env vars", async () => {
   for (const change of [
     { STRIPE_WEBHOOK_ENABLED: "false" }, { STRIPE_SECRET_KEY: "sk_live_invalid" },
     { STRIPE_SECRET_KEY: undefined }, { STRIPE_WEBHOOK_SECRET: undefined },
-    { STRIPE_TEST_PRICE_ID: "REPLACE_WITH_TEST_PRICE_ID" }, { STRIPE_TEST_CURRENCY: "EUR" },
   ]) {
     assert.equal(stripeWebhookConfigured({ ...env, ...change }), false);
     const response = await handleStripeWebhook(signedRequest(eventFor("config")), { ...env, ...change });
@@ -22,6 +21,7 @@ test("webhook is opt-in and accepts only a test API key and concrete test-price 
   }
   assert.equal(stripeWebhookConfigured(env), true);
   assert.equal(stripeWebhookConfigured({ ...env, STRIPE_SECRET_KEY: "rk_test_readfixture" }), true);
+  assert.equal(stripeWebhookConfigured({ ...env, STRIPE_TEST_PRICE_ID: undefined, STRIPE_TEST_CURRENCY: undefined }), true);
 });
 
 test("missing, altered and stale/future signatures are denied before DB or API", async () => {

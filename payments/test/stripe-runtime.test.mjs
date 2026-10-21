@@ -15,6 +15,7 @@ test("bundled Worker verifies Stripe signatures inside local workerd", async () 
     secrets: {
       STRIPE_SECRET_KEY: config.STRIPE_SECRET_KEY,
       STRIPE_WEBHOOK_SECRET: config.STRIPE_WEBHOOK_SECRET,
+      ADMIN_PROBE_TOKEN: "b".repeat(64),
     },
   }] });
   try {
@@ -36,6 +37,11 @@ test("bundled Worker verifies Stripe signatures inside local workerd", async () 
     const missingSchema = await send(signedRequest(eventFor("noschema")));
     assert.equal(missingSchema.status, 503);
     assert.equal((await server.fetch("/download")).status, 404);
+    const shell = await server.fetch("/admin");
+    assert.equal(shell.status, 200);
+    assert.match(shell.headers.get("Content-Security-Policy"), /script-src 'self'/);
+    assert.equal((await server.fetch("/admin/api/products")).status, 401);
+    assert.equal((await server.fetch("/admin/api/products", { headers: { Authorization: "Bearer " + "b".repeat(64) } })).status, 503);
   } finally {
     await server.close();
   }

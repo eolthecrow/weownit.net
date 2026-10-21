@@ -35,3 +35,24 @@ jobs:
         run: npm run test:integration
         env:
           WRANGLER_SEND_METRICS: "false"
+  admin-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: payments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - name: Install isolated browser test runtime
+        run: npm install --prefix "$RUNNER_TEMP/catalog-browser" --no-save --package-lock=false playwright@1.62.1
+      - name: Install Chromium
+        run: node "$RUNNER_TEMP/catalog-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Verify add, edit, remove and restore on desktop and mobile
+        run: npm run test:browser
+        env:
+          WRANGLER_SEND_METRICS: "false"
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/catalog-browser/node_modules/playwright

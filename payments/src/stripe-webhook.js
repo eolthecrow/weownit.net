@@ -1,31 +1,14 @@
 import Stripe from "stripe";
 import { respond } from "./http.js";
+import { createStripeClient, stripeWebhookConfigured } from "./stripe-client.js";
+import { supportedPrice } from "./product-catalog.js";
+export { createStripeClient, stripeWebhookConfigured } from "./stripe-client.js";
 
 const MAX_BODY_BYTES = 65_536;
 const SUPPORTED_EVENTS = new Set([
   "checkout.session.completed",
   "checkout.session.async_payment_succeeded",
 ]);
-// First sandbox milestone: one fixed test product, no delivery or entitlements.
-const PRODUCT_ID = "network-security-assessment-test";
-const OBJECT_KEY = "products/network-security-assessment-test.zip";
-
-export function stripeWebhookConfigured(env) {
-  return env?.STRIPE_WEBHOOK_ENABLED === "true" &&
-    /^(sk|rk)_test_[A-Za-z0-9]+$/.test(env?.STRIPE_SECRET_KEY || "") &&
-    /^whsec_[A-Za-z0-9]{24,}$/.test(env?.STRIPE_WEBHOOK_SECRET || "") &&
-    /^price_[A-Za-z0-9]+$/.test(env?.STRIPE_TEST_PRICE_ID || "") &&
-    /^[a-z]{3}$/.test(env?.STRIPE_TEST_CURRENCY || "");
-}
-
-export function createStripeClient(secretKey) {
-  return new Stripe(secretKey, {
-    httpClient: Stripe.createFetchHttpClient(),
-    maxNetworkRetries: 0, // Stripe will retry a non-2xx webhook; never ack a lost write.
-    timeout: 5_000,
-  });
-}
-
 async function readBoundedBody(request) {
   if (Number(request.headers.get("Content-Length")) > MAX_BODY_BYTES) {
     throw new RangeError("Body too large");
@@ -54,27 +37,26 @@ async function readBoundedBody(request) {
   return new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 }
 
-function sessionRejection(session, expectedId, currency) {
+function sessionRejection(session, expectedId) {
   if (session?.object !== "checkout.session" || session.id !== expectedId ||
       session.livemode !== false) return "invalid-test-session";
   if (session.mode !== "payment") return "unsupported-checkout-mode";
   if (session.status !== "complete" || session.payment_status !== "paid") return "payment-not-paid";
   if (!Number.isSafeInteger(session.amount_total) || session.amount_total <= 0 ||
-      session.currency !== currency ||
+      !/^[a-z]{3}$/.test(session.currency || "") ||
       !/^pi_[A-Za-z0-9]+$/.test(session.payment_intent || "")) return "invalid-payment-details";
   return null;
 }
 
-function itemsRejection(items, session, env) {
+function itemsRejection(items, session, product) {
   if (items?.object !== "list" || items.has_more !== false ||
       !Array.isArray(items.data) || items.data.length !== 1) return "unsupported-line-items";
   const item = items.data[0];
   const price = item?.price;
-  if (item.quantity !== 1 || price?.object !== "price" ||
-      price.id !== env.STRIPE_TEST_PRICE_ID || price.livemode !== false ||
-      price.type !== "one_time" || price.recurring != null ||
-      price.custom_unit_amount != null || !Number.isSafeInteger(price.unit_amount) ||
-      price.unit_amount <= 0 || price.currency !== env.STRIPE_TEST_CURRENCY ||
+  if (!product || product.state !== "active" || !supportedPrice(price, false) ||
+      item.quantity !== 1 || price.id !== product.price_id ||
+      price.unit_amount !== product.unit_amount || price.currency !== product.currency ||
+      session.currency !== product.currency ||
       item.currency !== session.currency ||
       item.amount_subtotal !== price.unit_amount ||
       session.amount_subtotal !== item.amount_subtotal ||
@@ -87,6 +69,14 @@ function eventInsert(db, event, sessionId, outcome, reason) {
     (event_id, event_type, session_id, outcome, reason)
     VALUES (?, ?, ?, ?, ?) ON CONFLICT(event_id) DO NOTHING`)
     .bind(event.id, event.type, sessionId, outcome, reason);
+}
+
+function recordedEventInsert(db, event, sessionId) {
+  return db.prepare(`INSERT INTO stripe_test_events
+    (event_id, event_type, session_id, outcome, reason)
+    SELECT ?, ?, ?, 'recorded', NULL WHERE EXISTS
+      (SELECT 1 FROM stripe_test_purchases WHERE session_id = ?)
+    ON CONFLICT(event_id) DO NOTHING`).bind(event.id, event.type, sessionId, sessionId);
 }
 
 // stripeClient is an explicit test dependency; production never obtains it from
@@ -136,13 +126,27 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
     const duplicate = await db.prepare("SELECT event_id FROM stripe_test_events WHERE event_id = ?")
       .bind(event.id).first();
     if (duplicate) return respond({ received: true, outcome: "duplicate" });
+    // Historical receipts survive catalog edits/removal. This records only a
+    // second signed event for an already-observed purchase, never new access.
+    const existingPurchase = await db.prepare("SELECT session_id FROM stripe_test_purchases WHERE session_id = ?")
+      .bind(sessionId).first();
+    if (existingPurchase) {
+      await recordedEventInsert(db, event, sessionId).run();
+      return respond({ received: true, outcome: "recorded", delivery: "disabled" });
+    }
 
     // Never trust payment state, money or product metadata in the webhook alone.
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    let rejection = sessionRejection(session, sessionId, env.STRIPE_TEST_CURRENCY);
+    let rejection = sessionRejection(session, sessionId);
+    let product;
     if (!rejection) {
       const items = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 2 });
-      rejection = itemsRejection(items, session, env);
+      const priceId = items?.data?.[0]?.price?.id;
+      if (typeof priceId === "string") {
+        product = await db.prepare("SELECT * FROM sandbox_products WHERE price_id = ? AND state = 'active'")
+          .bind(priceId).first();
+      }
+      rejection = itemsRejection(items, session, product);
     }
     if (rejection) {
       await eventInsert(db, event, sessionId, "ignored", rejection).run();
@@ -155,13 +159,16 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
       db.prepare(`INSERT INTO stripe_test_purchases
         (session_id, payment_intent_id, price_id, product_id, object_key,
          amount_total, currency, payment_status, delivery_status)
-        VALUES (?, ?, ?, ?, ?, ?, ?, 'paid', 'disabled')
+        SELECT ?, ?, price_id, id, object_key, ?, currency, 'paid', 'disabled'
+        FROM sandbox_products WHERE id = ? AND revision = ? AND state = 'active'
         ON CONFLICT(session_id) DO NOTHING`).bind(
-        session.id, session.payment_intent, env.STRIPE_TEST_PRICE_ID,
-        PRODUCT_ID, OBJECT_KEY, session.amount_total, session.currency,
+        session.id, session.payment_intent, session.amount_total, product.id, product.revision,
       ),
-      eventInsert(db, event, sessionId, "recorded", null),
+      recordedEventInsert(db, event, sessionId),
     ]);
+    const recorded = await db.prepare("SELECT session_id FROM stripe_test_purchases WHERE session_id = ?")
+      .bind(sessionId).first();
+    if (!recorded) return respond({ error: "Catalog changed during processing; retry event" }, 503);
     return respond({ received: true, outcome: "recorded", delivery: "disabled" });
   } catch {
     // Non-2xx tells Stripe to retry. Never acknowledge data that wasn't saved.

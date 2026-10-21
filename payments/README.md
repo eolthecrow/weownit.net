@@ -4,6 +4,7 @@ Acest director conține un Worker nou numit `weownit-payments`. Nu modifică sit
 
 ## Ce este implementat acum
 
+- `/admin`: interfață pentru adăugare, editare, ștergere reversibilă și restaurare a produselor din catalogul D1. Listează prețuri Stripe sandbox și ZIP-uri R2; instalare: [ADMIN_CATALOG_SETUP.md](ADMIN_CATALOG_SETUP.md).
 - `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
 - `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
 - `POST /stripe/webhook`: cod pregătit pentru notificări Stripe semnate, exclusiv sandbox, și registru de plăți D1. Dezactivat până la configurare. Vezi [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
@@ -18,7 +19,7 @@ Acest director conține un Worker nou numit `weownit-payments`. Nu modifică sit
 | R2 Class A (numai operațiuni prin Worker) | 700.000/lună UTC |
 | R2 Class B (numai operațiuni prin Worker) | 7.000.000/lună UTC |
 
-**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat. Utilizatorul a confirmat crearea alertei de buget; monitorizarea efectivă la nivel de cont rămâne de verificat. Deocamdată numai probe-ul administrativ folosește contorul Class B; verificarea de stocare și Class A sunt helper-e, nu un control global activ.
+**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat. Utilizatorul a confirmat crearea alertei de buget; monitorizarea efectivă la nivel de cont rămâne de verificat. Probe-ul și verificările HEAD ale catalogului folosesc Class B; listarea arhivelor prin catalog folosește Class A. Verificarea de stocare rămâne un helper, fără control asupra încărcărilor în dashboard.
 
 ## Ce există deja în Cloudflare (confirmat de utilizator)
 

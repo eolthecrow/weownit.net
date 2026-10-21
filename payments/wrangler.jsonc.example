@@ -5,9 +5,7 @@
   "compatibility_date": "2026-10-21",
   "workers_dev": true,
   "vars": {
-    "STRIPE_WEBHOOK_ENABLED": "false",
-    "STRIPE_TEST_PRICE_ID": "REPLACE_WITH_TEST_PRICE_ID",
-    "STRIPE_TEST_CURRENCY": "eur"
+    "STRIPE_WEBHOOK_ENABLED": "false"
   },
   "r2_buckets": [
     {

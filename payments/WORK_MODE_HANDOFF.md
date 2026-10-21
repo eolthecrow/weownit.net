@@ -4,7 +4,37 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Next phase prepared — Stripe sandbox webhook (not deployed)
+## Current phase prepared — self-service sandbox product catalog (not deployed)
+
+- User requested adding/removing products without repeated code/config changes.
+- Added `/admin` login shell and authenticated catalog API: add/edit, reversible
+  removal, restore, and paginated Stripe price/R2 ZIP pickers. The API verifies
+  each price in the intended test account and HEAD-checks the selected ZIP.
+- Token is kept only in page memory; no cookies or browser storage. All catalog
+  API routes require `ADMIN_PROBE_TOKEN`, deny cross-origin requests and return
+  no-store responses. The shell contains no catalog data or credentials.
+- Product mappings and per-product currency/amount now live in `sandbox_products`
+  in D1. The webhook no longer uses `STRIPE_TEST_PRICE_ID` or
+  `STRIPE_TEST_CURRENCY`. One product/quantity per Checkout Session remains.
+- Additive migration preserves the existing known 10 RON assessment mapping.
+  Rerunning never resets edits, archived entries, receipts or budget counters.
+- Revisions prevent lost updates. Transaction-time checks prevent a catalog edit
+  or removal from racing a new receipt. Prior purchase snapshots are unchanged.
+- No Stripe/R2 object deletion, Stripe object creation, ZIP upload, public Store
+  editing or customer delivery. These are explicit in the interface and guide.
+- Added `npm run deploy:catalog`: validates the isolated deployment target,
+  runs unit/integration tests and build check, applies three additive schemas,
+  then deploys the separate Worker. User must run it in their WSL worktree.
+- Tests cover local D1/R2, signatures, concurrency, rollback, access control,
+  and the browser flow at desktop/mobile widths, including safe rendering of
+  markup in product titles. Local browser checks use synthetic data only.
+- Next: follow `ADMIN_CATALOG_SETUP.md`, deploy from WSL, verify `/admin` against
+  the actual sandbox, and complete the actual Stripe checkout test. These are
+  not replaced by passing local/CI tests. PR remains Draft/unmerged.
+- Source revert point before this phase:
+  `aa5feb53ee5d0351036632faa160565d20ac6feb`.
+
+## Earlier phase prepared — Stripe sandbox webhook
 
 - User reports the Cloudflare budget alert is now created; settings and email
   delivery have not been independently inspected.

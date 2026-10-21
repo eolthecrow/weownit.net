@@ -1,6 +1,8 @@
 import { reserveR2Operation, R2LimitReached } from "../r2-guard.mjs";
 import { respond } from "./http.js";
 import { handleStripeWebhook, stripeWebhookConfigured } from "./stripe-webhook.js";
+import { handleCatalog } from "./product-catalog.js";
+import { adminAsset } from "./admin-page.js";
 
 // Sandbox-only. No checkout creation or customer download endpoint.
 // The object key is selected by the server, never by a request parameter.
@@ -21,6 +23,11 @@ async function tokenMatches(input, expected) {
 export async function handleRequest(request, env) {
   const { pathname } = new URL(request.url);
 
+  if (request.method === "GET") {
+    const asset = adminAsset(pathname); if (asset) return asset;
+  }
+  if (pathname.startsWith("/admin/api/")) return handleCatalog(request, env);
+
   if (pathname === "/health" && request.method === "GET") {
     return respond({
       service: "weownit-payments",
@@ -28,6 +35,7 @@ export async function handleRequest(request, env) {
       checkout: "not-connected",
       public_downloads: "disabled",
       stripe_webhook: stripeWebhookConfigured(env) ? "sandbox-configured" : "disabled",
+      catalog: "d1",
     });
   }
 

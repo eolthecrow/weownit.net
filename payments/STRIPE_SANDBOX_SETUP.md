@@ -31,38 +31,36 @@ changes/conflicts, stop and inspect; do not reset or overwrite them. The ignored
 local `wrangler.jsonc` with the actual D1 UUID is preserved. Do not copy the
 example over that file during an update.
 
-## 2. Identify the sandbox price
+## 2. Install the catalog and identify sandbox products
 
-In the **intended Stripe sandbox**, open the product used by the existing test
-Payment Link or Checkout. Copy its exact `price_...` ID and currency. A `prod_...`
-product ID or a Payment Link ID is not a Price ID. Price IDs do not encode their
-mode, so choose the price while viewing the intended sandbox.
+Follow [ADMIN_CATALOG_SETUP.md](ADMIN_CATALOG_SETUP.md) for the one-time catalog
+installation. `/admin` lists Stripe prices and R2 ZIPs and saves their mappings
+in D1. No per-product environment variables or redeploy are needed afterward.
+The migration preserves the user's existing assessment mapping at 10 RON.
 
-This revision supports one fixed, one-time, positive-value price, quantity 1,
-one line item and no shipping charges. It maps that price on the server to
-`network-security-assessment-test` and
-`products/network-security-assessment-test.zip`. Subscriptions, variable prices,
-multiple products, quantity changes and zero-total orders are not supported.
+The catalog supports multiple fixed, one-time, positive-value prices. Each
+Checkout Session must contain one product, quantity 1 and no shipping charges.
+Subscriptions, variable prices, carts, quantity changes and zero-total orders
+remain unsupported. Snapshot receipts preserve the original catalog mapping.
 
-Add this top-level object to the existing local `wrangler.jsonc`, replacing the
-price and using its actual lowercase currency:
+The only required webhook variable in the existing local `wrangler.jsonc` is:
 
 ```json
 "vars": {
-  "STRIPE_WEBHOOK_ENABLED": "true",
-  "STRIPE_TEST_PRICE_ID": "price_REPLACE_WITH_SANDBOX_PRICE_ID",
-  "STRIPE_TEST_CURRENCY": "eur"
+  "STRIPE_WEBHOOK_ENABLED": "true"
 },
 ```
 
 Keep the existing Worker name, R2/D1 bindings, D1 UUID and jurisdiction settings.
 The example file defaults to disabled. Never put API keys or webhook secrets
 in `vars`, source code, Git, screenshots, chat or command-line arguments.
+Legacy `STRIPE_TEST_PRICE_ID` and `STRIPE_TEST_CURRENCY` values are ignored.
 
 ## 3. Apply the additive ledger schema
 
 ```bash
 npx wrangler d1 execute weownit_r2_budget --remote --file ./stripe-test-schema.sql
+npx wrangler d1 execute weownit_r2_budget --remote --file ./product-catalog-schema.sql
 ```
 
 This creates `stripe_test_purchases` and `stripe_test_events`; it does not reset
@@ -72,7 +70,8 @@ the R2 quota table. It is safe to rerun this CREATE TABLE IF NOT EXISTS migratio
 
 Get an API key for the same sandbox as the price and checkout. Use a test key
 beginning `sk_test_`, or a restricted test key `rk_test_` with sufficient read
-permissions for Checkout Sessions and their line items. The Worker rejects
+permissions for Checkout Sessions/line items and Prices/Products for the admin
+catalog. The Worker rejects
 live API-key prefixes. Enter the value at Wrangler's hidden prompt:
 
 ```bash
@@ -118,7 +117,7 @@ curl -i -X POST https://weownit-payments.vlad-network-security.workers.dev/strip
 Expected: health 200 with `stripe_webhook: sandbox-configured`; unsigned webhook
 400. Health indicates configuration is present, not a successful Stripe/D1 test.
 
-Open the existing **sandbox** Payment Link/Checkout for the configured price.
+Open a **sandbox** Payment Link/Checkout for an active catalog price.
 Make one test payment using Stripe test card `4242 4242 4242 4242`, any future
 expiry and any three-digit CVC. Do not change the public Store's checkout.
 
@@ -130,7 +129,7 @@ In Stripe, inspect that payment's actual webhook delivery. Expected response:
 
 A successful test checkout in Stripe by itself does not prove Worker recording.
 A generic `stripe trigger` fixture often uses a different price and is purposely
-ignored by this price allowlist. Use an actual Checkout for the configured price.
+ignored by the catalog allowlist. Use an actual Checkout for an active catalog price.
 
 ## 7. Verify D1 and duplicate-event behavior
 
@@ -161,7 +160,7 @@ different success events for the same session also produce only one purchase.
 | 413 | Payload exceeds the 64 KiB limit. |
 | 503 | Disabled/missing config, missing schema, unavailable Stripe API, or D1 error. Correct it, then retry. |
 
-An ignored supported event is saved. If you correct its price/currency config
+An ignored supported event is saved. If you correct its catalog mapping
 afterward, make a new test checkout; resending the old ignored event remains a
 duplicate. A 503 is not saved, so that same event can be retried safely.
 
