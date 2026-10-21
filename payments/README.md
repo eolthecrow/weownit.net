@@ -1,64 +1,80 @@
-# weownit.net — R2 preventive limits (STAGED, NOT DEPLOYED)
+# weownit.net — Worker separat de plăți (SANDBOX, NEPUBLICAT)
 
-This is a **preparatory module**, not a configured Cloudflare service.
-It does not change the live website, the existing `network-security-assistant`
-Worker, Stripe links, or Lemon Squeezy.
+Acest director conține un Worker nou numit `weownit-payments`. Nu modifică site-ul public, `network-security-assistant`, Stripe Checkout sau Lemon Squeezy.
 
-Approved guard thresholds:
-- **Storage:** 8,000,000,000 bytes (8 GB decimal) for private bucket uploads.
-- **Class A:** 700,000 Worker-controlled operations per UTC calendar month.
-- **Class B:** 7,000,000 Worker-controlled operations per UTC calendar month.
+## Ce este implementat acum
 
-Cloudflare Standard R2 includes 10 GB-month, 1 million Class A operations,
-and 10 million Class B operations, measured at account level. These
-application-local limits are deliberately lower, but **cannot guarantee a
-$0 bill**. The monthly UTC reset used here may differ from the billing
-period; Cloudflare analytics can be delayed, and other buckets, Dashboard
-uploads, S3 API calls, lifecycle operations, and other Workers may consume
-the same allowances. 8 GB current storage is not the same as 8 GB-month.
+- `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
+- `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
+- Nu există rute de descărcare publică, Stripe webhooks sau plăți live.
+- Operațiunile R2 efectuate de acest Worker sunt refuzate dacă D1 nu poate confirma rezerva.
 
-## What has been prepared
+## Praguri preventive agreate
 
-- `r2-guard.mjs`: fixed thresholds, storage-headroom helper, and D1-backed
-  atomic reservations for Worker-controlled Class A and B operations.
-- `r2-guard-schema.sql`: D1 counter table.
-- `r2-guard.test.mjs`: local unit tests with a fake D1 adapter.
-- A fail-closed internal R2 `get` helper. **It is not an HTTP endpoint** and
-  does not authenticate customers. The future payment Worker MUST verify
-  a Stripe payment and select the product's R2 key on the server before use.
+| Resursă | Prag |
+|---|---:|
+| Stocare instantanee pentru încărcările viitoare ale aplicației | 8.000.000.000 bytes |
+| R2 Class A (numai operațiuni prin Worker) | 700.000/lună UTC |
+| R2 Class B (numai operațiuni prin Worker) | 7.000.000/lună UTC |
 
-Run tests with `node --test payments/r2-guard.test.mjs` (Node 18+).
+**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat, iar monitorizarea reală R2/alertele de buget trebuie configurate ulterior. Deocamdată numai probe-ul administrativ folosește contorul Class B; verificarea de stocare și Class A sunt helper-e, nu un control global activ.
 
-## Before activation (NOT DONE)
+## Ce există deja în Cloudflare (confirmat de utilizator)
 
-1. In Cloudflare Dashboard, create a private **Standard** bucket
-   `weownit-toolkits`; keep public `r2.dev` and custom domains disabled.
-   Use EU jurisdiction only if chosen during bucket creation.
-2. Create a separate D1 database (e.g., `weownit_r2_budget`) and apply
-   `r2-guard-schema.sql`.
-3. Create the isolated `weownit-payments` Worker. Add D1 binding named
-   `R2_BUDGET_DB` and R2 binding named `TOOLKITS_R2`. Set
-   `jurisdiction: "eu"` on R2 binding only for an EU-jurisdiction bucket.
-4. Before routing ANY traffic, reconcile existing operations and stored
-   bytes against **real Cloudflare R2 analytics** using the GraphQL API.
-   Track both per-bucket and account-wide use: a free-tier allowance is
-   shared among eligible Standard R2 buckets.
-5. Only expose authenticated, payment-verified downloads. Reserve a Class B
-   operation before every R2 read. Reserve Class A operations before writes,
-   list, and delete as appropriate. Deny reads when D1 is unavailable.
-   Keep all other access paths disabled. There is NO public download route yet.
-6. Build a separate inventory/atomic write guard for storage bytes before
-   enabling uploads through Workers. The current
-   `assertStorageHeadroom` helper checks a supplied snapshot; it does NOT
-   stop uploads from the Cloudflare Dashboard or an S3 client.
-7. Configure Cloudflare cost/budget notifications in the Dashboard; these
-   notifications do not suspend billing or storage operations. Test exact
-   cutoff conditions, D1 outages, replayed webhooks, and concurrent traffic
-   before any live checkout is enabled.
-8. Protect paying customers: if downloads must pause, provide an alternative
-   fulfillment path rather than silently losing purchases.
+- Bucket privat Standard: `weownit-toolkits`.
+- Fișier test: `products/network-security-assessment-test.zip`.
+- D1: `weownit_r2_budget` cu tabelul `r2_budget_monthly` creat.
 
-## Revert point
-This work lives on `feature/r2-preventive-limits-20261021`. Main is
-unchanged; do not merge or deploy until R2/D1 resources are provisioned and
-the guard is wired to the payments Worker.
+## Publicare separată prin Wrangler (un singur deploy după configurare)
+
+Clonează branch-ul separat și intră în directorul noului Worker:
+
+```bash
+git clone --branch feature/r2-preventive-limits-20261021 --single-branch https://github.com/eolthecrow/weownit.net.git weownit-payments-test
+cd weownit-payments-test/payments
+npm install
+npm test
+cp wrangler.jsonc.example wrangler.jsonc
+```
+
+În Cloudflare > D1 > `weownit_r2_budget` găsești UUID-ul complet al bazei. În fișierul local `wrangler.jsonc`, înlocuiește `REPLACE_WITH_REAL_D1_UUID` cu acel UUID. Păstrează numele binding-urilor `TOOLKITS_R2` și `R2_BUDGET_DB`. Dacă R2 a fost creat explicit cu jurisdicție UE, adaugă `"jurisdiction": "eu"` în obiectul din `r2_buckets`. Pentru bucket obișnuit nu adăuga jurisdicția.
+
+Execută:
+
+```bash
+npx wrangler login
+npx wrangler deploy
+```
+
+Primul deploy creează Worker-ul separat `weownit-payments` în Cloudflare. Nu schimbă domeniul public sau alte Workers.
+
+Înainte de verificarea administrativă, generează local un token și înregistrează-l în Cloudflare. Nu publica și nu trimite tokenul în conversație:
+
+```bash
+ADMIN_PROBE_TOKEN="$(openssl rand -hex 32)"
+printf %s "$ADMIN_PROBE_TOKEN" | npx wrangler secret put ADMIN_PROBE_TOKEN
+```
+
+Verifică înlocuind subdomeniul cu adresa reală afișată de Wrangler:
+
+```bash
+curl -i https://weownit-payments.<subdomain>.workers.dev/health
+curl -i -X POST -H "Authorization: Bearer $ADMIN_PROBE_TOKEN" https://weownit-payments.<subdomain>.workers.dev/admin/probe
+unset ADMIN_PROBE_TOKEN
+```
+
+Probe-ul trebuie să confirme `object_found: true`, mărimea ZIP-ului și creșterea contorului `class_b`. Verifică în consola D1:
+
+```sql
+SELECT * FROM r2_budget_monthly ORDER BY month DESC;
+```
+
+## Ce NU este implementat încă
+
+1. Webhook Stripe cu validarea semnăturii și un registru al achizițiilor.
+2. Autorizarea individuală a descărcărilor și emiterea de acces temporar.
+3. Inventar atomic al stocării și reconciliere cu analytics R2 la nivel de cont.
+4. Alerta Cloudflare de cost și modalitatea de livrare alternativă când limita e atinsă.
+5. Validarea fiscală/legală pentru vânzări reale.
+
+**Revert:** Totul este pe `feature/r2-preventive-limits-20261021`. Nu este integrat în `main`. Nu face merge și nu conecta Store-ul înaintea validării fluxului complet.
