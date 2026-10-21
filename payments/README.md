@@ -32,8 +32,9 @@ Clonează branch-ul separat și intră în directorul noului Worker:
 ```bash
 git clone --branch feature/r2-preventive-limits-20261021 --single-branch https://github.com/eolthecrow/weownit.net.git weownit-payments-test
 cd weownit-payments-test/payments
-npm install
+npm ci
 npm test
+npm run test:integration
 cp wrangler.jsonc.example wrangler.jsonc
 ```
 

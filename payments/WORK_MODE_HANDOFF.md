@@ -4,6 +4,36 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
+## Work-mode verification — 2026-10-21
+
+- Checked out PR head `6b25f7328807449ee263912492d326c6b794f07e`.
+- `npm test`: 11/11 unit tests passed.
+- Added `npm run test:integration`: six local binding scenarios passed
+  (Node reports seven including the parent test). Uses Wrangler local workerd
+  D1/R2 bindings with `remoteBindings: false` and `persist: false`, a separate
+  dummy database/bucket configuration, and an ephemeral random admin token.
+- Real local D1 SQL accepted exactly one of 20 simultaneous reservations at
+  the final available slot for each of Class A and B. Both counters stopped at
+  their limits. The exhausted probe returned 429 without touching R2.
+- Verified local health/invalid-token handling, metadata-only HEAD response,
+  conservative accounting on missing objects/R2 failure, schema failure denial,
+  and absence of public download/webhook routes.
+- `wrangler deploy --dry-run --config wrangler.jsonc` passed after copying the
+  example to the ignored local configuration. This only builds the Worker;
+  it does NOT validate the real D1 UUID, Cloudflare permissions, bucket
+  jurisdiction, deployed bindings, or remote resource availability.
+- Added a dependency lockfile and local integration checks to the isolated
+  payments CI workflow. No changes to the public site or AI Worker source.
+- **Remote deployment BLOCKED:** Cloudflare sign-in in the Work browser
+  returned `API Request Failed: post https://dash.cloudflare.com/api/v4/login (403)`.
+  No account dashboard access was obtained. This does not prove incorrect
+  credentials or a bot-detection block. No further automated sign-in retries.
+- No Worker deployment, remote R2/D1 changes, admin-secret configuration,
+  billing alert changes, Stripe changes, or merge were performed in this run.
+- Next: restore supported Cloudflare access, inspect real D1 UUID and bucket
+  jurisdiction, then complete steps 5–10 below. Do not mistake the passing
+  local checks for a completed Cloudflare deployment.
+
 ## Current state (confirmed with screenshots, not direct Cloudflare API)
 
 - Private Standard R2 bucket: `weownit-toolkits` (public access disabled)

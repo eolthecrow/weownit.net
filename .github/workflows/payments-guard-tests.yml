@@ -29,3 +29,9 @@ jobs:
           node-version: "22"
       - name: Test isolated payments Worker
         run: npm test
+      - name: Install locked local test runtime
+        run: npm ci
+      - name: Test local D1 and R2 integration
+        run: npm run test:integration
+        env:
+          WRANGLER_SEND_METRICS: "false"
