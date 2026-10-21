@@ -75,15 +75,22 @@ export const ADMIN_JS = String.raw`'use strict';
     var selectedFile = editing ? editing.object_key : $('fileSelect').value;
     $('priceSelect').replaceChildren(option('', 'Alege un preț'));
     prices.forEach(function (price) {
-      var used = products.some(function (p) { return p.price_id === price.price_id; });
-      var e = option(price.price_id, price.title + ' · ' + price.display_price + (used ? ' — în catalog' : ''));
-      e.disabled = used && (!editing || editing.price_id !== price.price_id); $('priceSelect').append(e);
+      var existing = products.find(function (p) { return p.price_id === price.price_id; });
+      var suffix = existing ? (existing.state === 'archived' ? ' — poate fi readăugat' : ' — deja activ în catalog') : '';
+      var e = option(price.price_id, price.title + ' · ' + price.display_price + suffix);
+      e.disabled = !!existing && existing.state === 'active' && (!editing || editing.price_id !== price.price_id); $('priceSelect').append(e);
     });
     if (editing && !prices.some(function (p) { return p.price_id === editing.price_id; })) {
       $('priceSelect').append(option(editing.price_id, editing.title + ' · ' + editing.display_price));
     }
     $('priceSelect').value = selectedPrice;
     $('priceSelect').disabled = !!editing;
+    if (!editing) {
+      var selectedProduct = products.find(function (p) { return p.price_id === $('priceSelect').value; });
+      $('priceHelp').textContent = selectedProduct && selectedProduct.state === 'archived'
+        ? 'La Adaugă produs, produsul retras revine în catalog cu numele și arhiva alese.'
+        : 'Numele, suma și moneda sunt preluate automat din Stripe sandbox.';
+    }
     $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
     files.forEach(function (file) { $('fileSelect').append(option(file.key, file.key.slice(9) + ' · ' + Math.max(1, Math.round(file.size / 1024)) + ' KB')); });
     if (editing && !files.some(function (f) { return f.key === editing.object_key; })) {
@@ -163,15 +170,25 @@ export const ADMIN_JS = String.raw`'use strict';
   $('productForm').addEventListener('submit', function (event) {
     event.preventDefault(); var button = $('saveProduct');
     run(button, async function () {
-      var editId = editing && editing.id;
+      var existing = !editing && products.find(function (p) { return p.price_id === $('priceSelect').value && p.state === 'archived'; });
+      var editId = editing ? editing.id : existing && existing.id;
       var body = { title: $('titleInput').value.trim(), object_key: $('fileSelect').value };
-      if (editing) body.revision = editing.revision; else body.price_id = $('priceSelect').value;
-      var data = await api(editing ? 'products/' + encodeURIComponent(editing.id) : 'products', { method: editing ? 'PATCH' : 'POST', body: body });
+      if (editing || existing) body.revision = (editing || existing).revision; else body.price_id = $('priceSelect').value;
+      var path = editId ? 'products/' + encodeURIComponent(editId) + (existing ? '/restore' : '') : 'products';
+      var data = await api(path, { method: editing ? 'PATCH' : 'POST', body: body });
       products = editId ? products.map(function (p) { return p.id === editId ? data.product : p; }) : products.concat([data.product]);
-      resetForm(); renderProducts(); message(editId ? 'Modificările au fost salvate.' : 'Produs adăugat în catalogul sandbox.');
+      resetForm(); renderProducts(); message(existing ? 'Produs readăugat în catalogul sandbox.' : editId ? 'Modificările au fost salvate.' : 'Produs adăugat în catalogul sandbox.');
     });
   });
-  $('priceSelect').addEventListener('change', function () { var price = prices.find(function (p) { return p.price_id === $('priceSelect').value; }); if (price && !editing) $('titleInput').value = price.title; });
+  $('priceSelect').addEventListener('change', function () {
+    var price = prices.find(function (p) { return p.price_id === $('priceSelect').value; });
+    if (price && !editing) {
+      var existing = products.find(function (p) { return p.price_id === price.price_id && p.state === 'archived'; });
+      $('titleInput').value = existing ? existing.title : price.title;
+      if (existing && files.some(function (f) { return f.key === existing.object_key; })) $('fileSelect').value = existing.object_key;
+    }
+    renderOptions();
+  });
   $('showArchived').addEventListener('change', renderProducts);
   $('cancelEdit').addEventListener('click', resetForm); $('logout').addEventListener('click', logout);
   [['refreshCatalog', function () { return loadProducts(false); }], ['moreProducts', function () { return loadProducts(true); }],

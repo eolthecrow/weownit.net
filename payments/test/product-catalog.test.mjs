@@ -85,6 +85,34 @@ test("catalog add/edit/remove/restore with real local D1 and R2", async (t) => {
       assert.notEqual(created.object_key, before.object_key);
       assert.equal((await db.prepare("SELECT object_key FROM stripe_test_purchases LIMIT 1").first()).object_key, before.object_key);
     });
+    await t.test("re-adding an archived price atomically applies the form, validates dependencies and preserves identity/history", async () => {
+      const history = await db.prepare("SELECT * FROM stripe_test_purchases ORDER BY session_id").all();
+      created = (await (await call("products/" + created.id + "/archive", "POST", { revision: created.revision })).json()).product;
+      const body = { revision: created.revision, title: "Readăugat din formular", object_key: "products/incident-response.zip" };
+      const route = "products/" + created.id + "/restore";
+      for (const object_key of ["private/secret.zip", "products/missing.zip"]) {
+        assert.equal((await call(route, "POST", { ...body, object_key })).status, 400);
+      }
+      const originalPrice = ctx.prices.get(created.price_id);
+      ctx.prices.set(created.price_id, { ...originalPrice, livemode: true });
+      assert.equal((await call(route, "POST", body)).status, 400);
+      ctx.prices.set(created.price_id, { ...originalPrice, unit_amount: originalPrice.unit_amount + 1 });
+      assert.equal((await call(route, "POST", body)).status, 400);
+      ctx.prices.set(created.price_id, originalPrice);
+      const unchanged = await db.prepare("SELECT * FROM sandbox_products WHERE id = ?").bind(created.id).first();
+      assert.equal(unchanged.state, "archived"); assert.equal(unchanged.revision, created.revision);
+      assert.equal(unchanged.title, created.title); assert.equal(unchanged.object_key, created.object_key);
+      const responses = await Promise.all([call(route, "POST", body), call(route, "POST", { ...body, title: "Concurrent re-add" })]);
+      assert.deepEqual(responses.map(r => r.status).sort(), [200, 409]);
+      const restored = (await responses.find(r => r.status === 200).json()).product;
+      assert.equal(restored.id, created.id); assert.equal(restored.revision, created.revision + 1);
+      assert.equal(restored.state, "active"); assert.equal(restored.object_key, body.object_key);
+      assert.ok([body.title, "Concurrent re-add"].includes(restored.title));
+      assert.equal(restored.currency, created.currency); assert.equal(restored.unit_amount, created.unit_amount);
+      assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM sandbox_products WHERE price_id = ?").bind(created.price_id).first()).n, 1);
+      assert.deepEqual((await db.prepare("SELECT * FROM stripe_test_purchases ORDER BY session_id").all()).results, history.results);
+      created = restored;
+    });
     await t.test("multiple catalog currencies can record independent paid checkouts", async () => {
       const response = await call("products", "POST", { price_id: "price_hardeningfixture", object_key: "products/firewall-hardening.zip" });
       assert.equal(response.status, 201);

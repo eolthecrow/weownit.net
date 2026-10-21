@@ -4,7 +4,26 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Current phase prepared — self-service sandbox product catalog (not deployed)
+## Current follow-up — re-add removed products from the left-hand form (source only)
+
+- User screenshots show the deployed `/admin` shell, authenticated D1 catalog,
+  and the assessment price returned by Stripe. A removed mapping was hidden by
+  the archive filter while its price was disabled in the add form.
+- Removed products can now be selected in **Adaugă produs**, marked **poate fi
+  readăugat**. Submission restores the same mapping with the chosen name/ZIP.
+  Active prices remain disabled to prevent duplicates.
+- Reuses the revision-checked restore endpoint with optional name/ZIP fields;
+  verifies the sandbox price, unchanged amount/currency and selected R2 object
+  before the atomic D1 update. Purchase snapshots remain unchanged.
+- Integration coverage includes invalid/missing ZIPs, live/changed prices,
+  concurrent re-adds and historical identity/snapshot preservation. Browser
+  coverage exercises the left-hand flow with archived products hidden.
+- This follow-up still requires deployment from WSL. No new schema or secrets.
+  Revert source to `50d12b6bcfda2ff4e55e57574e76d944c9f4550a` if needed.
+- Actual sandbox checkout/webhook and customer downloads remain unverified or
+  unimplemented; showing a price is not payment verification. Keep Draft/unmerged.
+
+## Earlier phase prepared — self-service sandbox product catalog
 
 - User requested adding/removing products without repeated code/config changes.
 - Added `/admin` login shell and authenticated catalog API: add/edit, reversible

@@ -65,6 +65,30 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
       await card.getByRole("button", { name: "Șterge din catalog" }).click();
       await page.getByRole("status").filter({ hasText: "Produs retras din catalog" }).waitFor();
       assert.equal(await page.getByRole("heading", { name: title, exact: true }).count(), 0);
+      // The owner's normal add form must also work for a previously removed
+      // price, even while archived products are hidden in the catalog.
+      const previous = await ctx.db.prepare("SELECT * FROM sandbox_products WHERE price_id = 'price_unitfixture'").first();
+      const priceOption = page.locator('#priceSelect option[value="price_unitfixture"]');
+      assert.match(await priceOption.textContent(), /poate fi readăugat/);
+      assert.equal(await priceOption.isEnabled(), true);
+      await page.getByLabel("Preț Stripe", { exact: true }).selectOption("price_unitfixture");
+      assert.equal(await page.getByLabel("Nume afișat").inputValue(), title);
+      await page.getByLabel("Nume afișat").fill(title + " readăugat");
+      await page.getByLabel("Arhivă ZIP", { exact: true }).selectOption("products/firewall-hardening.zip");
+      await page.getByRole("button", { name: "Adaugă produs", exact: true }).click();
+      await page.getByRole("status").filter({ hasText: "Produs readăugat" }).waitFor();
+      const restored = await ctx.db.prepare("SELECT * FROM sandbox_products WHERE price_id = 'price_unitfixture'").first();
+      assert.equal(restored.id, previous.id); assert.equal(restored.revision, previous.revision + 1);
+      assert.equal(restored.title, title + " readăugat");
+      assert.equal(restored.object_key, "products/firewall-hardening.zip"); assert.equal(restored.state, "active");
+      card = page.locator("article.product").filter({ hasText: restored.title });
+      assert.equal(await card.count(), 1);
+      assert.equal(await priceOption.isDisabled(), true);
+      assert.match(await priceOption.textContent(), /deja activ/);
+      // Keep covering the separate restore action as well.
+      page.once("dialog", dialog => dialog.accept());
+      await card.getByRole("button", { name: "Șterge din catalog" }).click();
+      await page.getByRole("status").filter({ hasText: "Produs retras din catalog" }).waitFor();
       await page.getByLabel("Arată și produsele șterse").check();
       await card.getByRole("button", { name: "Restaurează" }).click();
       await page.getByRole("status").filter({ hasText: "Produs restaurat" }).waitFor();

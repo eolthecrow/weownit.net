@@ -93,8 +93,11 @@ Reîncărcarea paginii necesită din nou conectarea; Deconectare elimină datele
    folosește fără redeploy sau modificarea destinației Stripe.
 
 Prețurile live, recurente, variabile și gratuite nu apar în listă. Listele au
-paginare, cu butoane pentru încărcarea următoarelor rezultate. Prețurile deja
-asociate nu pot fi adăugate a doua oară; restaurează intrarea existentă.
+paginare, cu butoane pentru încărcarea următoarelor rezultate. Un preț deja activ
+este dezactivat în formular pentru a evita dublurile. Dacă produsul a fost retras,
+prețul este selectabil și marcat **poate fi readăugat**: alege numele și ZIP-ul,
+apoi **Adaugă produs**. Produsul revine în catalog păstrând aceeași identitate și
+istoricul; nu trebuie să deschizi lista produselor șterse.
 
 ## Editare, ștergere și restaurare
 
@@ -102,7 +105,9 @@ asociate nu pot fi adăugate a doua oară; restaurează intrarea existentă.
   păstrarea istoricului; pentru un preț nou, adaugă o asociere nouă.
 - **Șterge din catalog** retrage reversibil asocierea. Nu șterge ZIP-ul, produsul
   Stripe, Payment Link-urile sau plățile deja înregistrate.
-- Bifează **Arată și produsele șterse**, apoi **Restaurează** pentru reactivare.
+- Poți readăuga un produs retras direct din formularul din stânga, prin
+  **Adaugă produs**. Alternativ, bifează **Arată și produsele șterse**, apoi
+  **Restaurează** pentru reactivare cu numele și ZIP-ul păstrate.
 - Ștergerea nu dezactivează Payment Link-ul în Stripe. Dacă nu mai dorești
   checkout-uri de test pentru acel preț, dezactivează separat linkul în Stripe.
   Webhook-ul nu va înregistra achiziții noi pentru o asociere retrasă.

@@ -149,7 +149,7 @@ export async function handleCatalog(request, env, { stripeClient } = {}) {
       const [_, id, action] = match;
       const method = action ? "POST" : "PATCH";
       if (request.method !== method) return respond({ error: "Rută inexistentă." }, 404);
-      const data = await bodyObject(request, action ? ["revision"] : ["revision", "title", "object_key"]);
+      const data = await bodyObject(request, action === "archive" ? ["revision"] : ["revision", "title", "object_key"]);
       const revision = revisionValue(data.revision);
       const current = await db.prepare("SELECT * FROM sandbox_products WHERE id = ?").bind(id).first();
       if (!current) return respond({ error: "Produsul nu există." }, 404);
@@ -160,6 +160,8 @@ export async function handleCatalog(request, env, { stripeClient } = {}) {
       else if (action === "restore") {
         const price = await getPrice(client(), current.price_id);
         if (price.currency !== current.currency || price.unit_amount !== current.unit_amount) throw new InputError("Prețul Stripe nu mai corespunde intrării.");
+        title = titleValue(data.title, current.title);
+        key = data.object_key ?? current.object_key;
         size = (await checkFile(env, key)).size; state = "active";
       } else {
         title = titleValue(data.title, current.title);
