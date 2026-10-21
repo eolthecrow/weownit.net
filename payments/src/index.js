@@ -1,19 +1,10 @@
 import { reserveR2Operation, R2LimitReached } from "../r2-guard.mjs";
+import { respond } from "./http.js";
+import { handleStripeWebhook, stripeWebhookConfigured } from "./stripe-webhook.js";
 
-// Sandbox-only. This is not an online store, webhook, or download endpoint.
+// Sandbox-only. No checkout creation or customer download endpoint.
 // The object key is selected by the server, never by a request parameter.
 const TEST_OBJECT_KEY = "products/network-security-assessment-test.zip";
-
-function respond(data, status = 200) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store",
-      "X-Content-Type-Options": "nosniff",
-    },
-  });
-}
 
 async function tokenMatches(input, expected) {
   // Hash both values to compare equal-length digests, without early exit.
@@ -36,7 +27,12 @@ export async function handleRequest(request, env) {
       status: "sandbox-only",
       checkout: "not-connected",
       public_downloads: "disabled",
+      stripe_webhook: stripeWebhookConfigured(env) ? "sandbox-configured" : "disabled",
     });
+  }
+
+  if (pathname === "/stripe/webhook" && request.method === "POST") {
+    return handleStripeWebhook(request, env);
   }
 
   // No CORS support, no arbitrary object access, no publicly accessible ZIP.

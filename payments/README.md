@@ -1,4 +1,4 @@
-# weownit.net — Worker separat de plăți (SANDBOX, NEPUBLICAT)
+# weownit.net — Worker separat de plăți (SANDBOX)
 
 Acest director conține un Worker nou numit `weownit-payments`. Nu modifică site-ul public, `network-security-assistant`, Stripe Checkout sau Lemon Squeezy.
 
@@ -6,7 +6,8 @@ Acest director conține un Worker nou numit `weownit-payments`. Nu modifică sit
 
 - `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
 - `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
-- Nu există rute de descărcare publică, Stripe webhooks sau plăți live.
+- `POST /stripe/webhook`: cod pregătit pentru notificări Stripe semnate, exclusiv sandbox, și registru de plăți D1. Dezactivat până la configurare. Vezi [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
+- Nu există rute de descărcare publică sau plăți live. Webhook-ul pregătit în branch nu este încă validat printr-o plată reală de test pe deployment.
 - Operațiunile R2 efectuate de acest Worker sunt refuzate dacă D1 nu poate confirma rezerva.
 
 ## Praguri preventive agreate
@@ -17,7 +18,7 @@ Acest director conține un Worker nou numit `weownit-payments`. Nu modifică sit
 | R2 Class A (numai operațiuni prin Worker) | 700.000/lună UTC |
 | R2 Class B (numai operațiuni prin Worker) | 7.000.000/lună UTC |
 
-**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat, iar monitorizarea reală R2/alertele de buget trebuie configurate ulterior. Deocamdată numai probe-ul administrativ folosește contorul Class B; verificarea de stocare și Class A sunt helper-e, nu un control global activ.
+**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat. Utilizatorul a confirmat crearea alertei de buget; monitorizarea efectivă la nivel de cont rămâne de verificat. Deocamdată numai probe-ul administrativ folosește contorul Class B; verificarea de stocare și Class A sunt helper-e, nu un control global activ.
 
 ## Ce există deja în Cloudflare (confirmat de utilizator)
 
@@ -72,10 +73,10 @@ SELECT * FROM r2_budget_monthly ORDER BY month DESC;
 
 ## Ce NU este implementat încă
 
-1. Webhook Stripe cu validarea semnăturii și un registru al achizițiilor.
+1. Configurarea/publicarea noii versiuni webhook și validarea integrală cu checkout-ul Stripe sandbox. Codul webhook-ului și registrul D1 sunt pregătite în acest branch.
 2. Autorizarea individuală a descărcărilor și emiterea de acces temporar.
 3. Inventar atomic al stocării și reconciliere cu analytics R2 la nivel de cont.
-4. Alerta Cloudflare de cost și modalitatea de livrare alternativă când limita e atinsă.
+4. Verificarea alertei Cloudflare de cost, reconcilierea consumului și modalitatea de livrare alternativă când limita e atinsă.
 5. Validarea fiscală/legală pentru vânzări reale.
 
 **Revert:** Totul este pe `feature/r2-preventive-limits-20261021`. Nu este integrat în `main`. Nu face merge și nu conecta Store-ul înaintea validării fluxului complet.

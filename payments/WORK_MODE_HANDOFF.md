@@ -4,6 +4,28 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
+## Next phase prepared — Stripe sandbox webhook (not deployed)
+
+- User reports the Cloudflare budget alert is now created; settings and email
+  delivery have not been independently inspected.
+- Added opt-in `POST /stripe/webhook`, official pinned Stripe SDK, bounded raw
+  body/signature/timestamp verification, test-only API-key and event checks,
+  retrieval of authoritative Checkout Session/line-item data, and a single-price
+  allowlist mapped to the fixed test ZIP. No R2 operation in the webhook.
+- Additive `stripe-test-schema.sql` records test payment observations and event
+  deduplication. Transactional D1 writes and unique Checkout Session/payment
+  intent IDs prevent duplicate purchases. Failures return non-2xx for retry.
+- This revision is prepared in the branch, not remotely deployed or tested
+  against the user's actual Stripe sandbox. Keep this distinct from the older
+  successfully deployed R2/D1 probe described below.
+- Next user steps: follow `STRIPE_SANDBOX_SETUP.md`, pull branch updates without
+  overwriting the ignored local Wrangler config, identify the actual sandbox
+  Price ID/currency, apply the additive schema, configure test secrets, deploy,
+  register the Snapshot webhook destination and make a real sandbox checkout.
+- No download authorization, delivery, refunds/dispute reconciliation, live
+  payments, Store changes, or merge. Pre-webhook revert point:
+  `69e793da28c7d96e6029c2a64c3e3cc04e96258f`.
+
 ## Sandbox deployment verified by user — 2026-10-21
 
 Evidence: Wrangler deployment output and remote curl/D1 output supplied by the
@@ -25,10 +47,12 @@ user from their WSL terminal; not direct Cloudflare dashboard inspection.
 - Earlier Work browser sign-in failure is no longer a deployment blocker:
   the user completed deployment through local Wrangler.
 - Still pending: account/bucket privacy and jurisdiction recheck, real R2 usage
-  metrics, billing alert configuration, and remote quota-exhaustion testing.
+  metrics, budget-alert settings/delivery verification, and remote quota-exhaustion testing.
   Quota concurrency/exhaustion has only been tested locally.
-- Stripe webhook, purchase ledger and authorized customer downloads remain
-  unimplemented. No live payments or Store integration. Keep PR Draft/unmerged.
+- At this deployed revision, Stripe webhook and purchase ledger were absent.
+  The next phase above adds their source, pending configuration and deployment.
+  Authorized customer downloads remain unimplemented. No live payments or Store
+  integration. Keep PR Draft/unmerged.
 
 ## Earlier Work-mode verification — 2026-10-21
 

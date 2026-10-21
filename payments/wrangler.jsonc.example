@@ -4,6 +4,11 @@
   "main": "src/index.js",
   "compatibility_date": "2026-10-21",
   "workers_dev": true,
+  "vars": {
+    "STRIPE_WEBHOOK_ENABLED": "false",
+    "STRIPE_TEST_PRICE_ID": "REPLACE_WITH_TEST_PRICE_ID",
+    "STRIPE_TEST_CURRENCY": "eur"
+  },
   "r2_buckets": [
     {
       "binding": "TOOLKITS_R2",

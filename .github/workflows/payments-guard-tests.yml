@@ -27,10 +27,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Test isolated payments Worker
-        run: npm test
       - name: Install locked local test runtime
         run: npm ci
+      - name: Test isolated payments Worker
+        run: npm test
       - name: Test local D1 and R2 integration
         run: npm run test:integration
         env:
