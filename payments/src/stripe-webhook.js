@@ -5,6 +5,7 @@ import { supportedPrice } from "./product-catalog.js";
 export { createStripeClient, stripeWebhookConfigured } from "./stripe-client.js";
 
 const MAX_BODY_BYTES = 65_536;
+export const MAX_CHECKOUT_QUANTITY = 3;
 const SUPPORTED_EVENTS = new Set([
   "checkout.session.completed",
   "checkout.session.async_payment_succeeded",
@@ -53,12 +54,15 @@ function itemsRejection(items, session, product) {
       !Array.isArray(items.data) || items.data.length !== 1) return "unsupported-line-items";
   const item = items.data[0];
   const price = item?.price;
+  if (!Number.isSafeInteger(item?.quantity) || item.quantity < 1 ||
+      item.quantity > MAX_CHECKOUT_QUANTITY) return "unsupported-quantity";
+  const subtotal = price?.unit_amount * item.quantity;
   if (!product || product.state !== "active" || !supportedPrice(price, false) ||
-      item.quantity !== 1 || price.id !== product.price_id ||
+      !Number.isSafeInteger(subtotal) || price.id !== product.price_id ||
       price.unit_amount !== product.unit_amount || price.currency !== product.currency ||
       session.currency !== product.currency ||
       item.currency !== session.currency ||
-      item.amount_subtotal !== price.unit_amount ||
+      item.amount_subtotal !== subtotal ||
       session.amount_subtotal !== item.amount_subtotal ||
       item.amount_total !== session.amount_total) return "unmatched-test-product";
   return null;
@@ -138,7 +142,7 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
     // Never trust payment state, money or product metadata in the webhook alone.
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     let rejection = sessionRejection(session, sessionId);
-    let product;
+    let product, quantity;
     if (!rejection) {
       const items = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 2 });
       const priceId = items?.data?.[0]?.price?.id;
@@ -147,6 +151,7 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
           .bind(priceId).first();
       }
       rejection = itemsRejection(items, session, product);
+      quantity = items?.data?.[0]?.quantity;
     }
     if (rejection) {
       await eventInsert(db, event, sessionId, "ignored", rejection).run();
@@ -158,11 +163,11 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
     await db.batch([
       db.prepare(`INSERT INTO stripe_test_purchases
         (session_id, payment_intent_id, price_id, product_id, object_key,
-         amount_total, currency, payment_status, delivery_status)
-        SELECT ?, ?, price_id, id, object_key, ?, currency, 'paid', 'disabled'
+         amount_total, currency, quantity, payment_status, delivery_status)
+        SELECT ?, ?, price_id, id, object_key, ?, currency, ?, 'paid', 'disabled'
         FROM sandbox_products WHERE id = ? AND revision = ? AND state = 'active'
         ON CONFLICT(session_id) DO NOTHING`).bind(
-        session.id, session.payment_intent, session.amount_total, product.id, product.revision,
+        session.id, session.payment_intent, session.amount_total, quantity, product.id, product.revision,
       ),
       recordedEventInsert(db, event, sessionId),
     ]);

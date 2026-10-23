@@ -4,7 +4,30 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Current follow-up — re-add removed products from the left-hand form (source only)
+## Current follow-up — sandbox checkout quantities 1–3 (source only)
+
+- User clarified they want customers to buy 2 or 3 units of one product per
+  checkout. The Worker now accepts integer quantities 1–3, verifies Stripe's
+  unit price times quantity against line/session subtotals and snapshots the
+  quantity into `stripe_test_purchases`.
+- A checkout still has one distinct catalog price. No multi-product cart,
+  license issuance, customer download, email, live payment or Store change.
+- `deploy:catalog` applies existing schemas, inspects the ledger with PRAGMA,
+  and conditionally adds the quantity column before deploying the Worker.
+  Old one-unit receipts default to 1. Repeated installs skip the ALTER.
+- User must deploy this revision from WSL, then enable **Let customers adjust
+  quantity** in the sandbox Payment Link, with minimum 1 and maximum 3.
+- Test actual sandbox checkouts at 10/20/30 RON for quantities 1/2/3, and verify
+  `recorded` delivery plus D1 quantity/amount. Local tests do not prove that
+  Stripe account configuration or the remote webhook is operational.
+- Validation: 23 unit tests and 34 reported local integration tests passed,
+  including old-ledger migration, quantity bounds, 20/30 RON receipts, duplicate
+  events and rollback checks. Worker build dry-run passed (~742 KiB / 94 KiB gzip).
+- Source revert point: `e5478cbc8bff920d80f567df16c7501cf113b1e3`. The additive
+  column may remain on revert and defaults to 1 for the prior Worker.
+- Keep PR Draft/unmerged and live payments disabled.
+
+## Earlier follow-up — re-add removed products from the left-hand form
 
 - User screenshots show the deployed `/admin` shell, authenticated D1 catalog,
   and the assessment price returned by Stripe. A removed mapping was hidden by

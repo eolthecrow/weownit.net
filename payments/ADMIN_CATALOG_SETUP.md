@@ -21,7 +21,9 @@ Fișierul local ignorat `wrangler.jsonc` cu UUID-ul D1 este păstrat.
 
 `deploy:catalog` validează că ținta este exclusiv `weownit-payments`, rulează
 testele unitare și de integrare, verifică construirea, aplică cele trei scheme
-D1 additive și publică Worker-ul. Nu face merge sau modificări la site-ul public.
+D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți și
+publică Worker-ul. Verificarea coloanei permite repetarea instalării fără a
+reseta plățile. Nu face merge sau modificări la site-ul public.
 Are nevoie de autentificarea Wrangler deja configurată; dacă aceasta a expirat,
 rulează `npx wrangler login` înainte. Scriptul se oprește la primul pas eșuat.
 
@@ -121,8 +123,11 @@ Catalogul nu creează automat produse/prețuri în Stripe, nu încarcă sau ște
 fișiere în R2 și nu publică produse în Store. Aceste operațiuni rămân în
 dashboard-urile lor; pagina elimină copierea identificatorilor și editarea codului.
 
-Worker-ul și interfața acceptă exclusiv sandbox. Rămâne un produs, o unitate și
-un preț fix per Checkout Session; catalogul poate avea mai multe produse/monede.
+Worker-ul și interfața acceptă exclusiv sandbox. Rămâne un produs și un preț fix
+per Checkout Session, cu 1–3 unități; catalogul poate avea mai multe produse/monede.
+Cantitatea se alege în Stripe Checkout, activând **Let customers adjust quantity**
+în Payment Link-ul sandbox, cu minimum 1 și maximum 3. Catalogul nu este stoc și
+nu necesită intrări duplicate pentru două sau trei unități din același produs.
 Descărcările, emailurile, drepturile de acces și reconcilierea refund/dispute nu
 sunt încă implementate. Continuă configurarea/testul webhook-ului din
 [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).

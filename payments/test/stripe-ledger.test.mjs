@@ -50,6 +50,7 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
       assert.equal(row.product_id, "network-security-assessment-test");
       assert.equal(row.delivery_status, "disabled");
       assert.equal(row.currency, "eur");
+      assert.equal(row.quantity, 1);
       assert.equal(r2Touches, 0);
     });
 
@@ -88,6 +89,34 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
       assert.equal(await count("stripe_test_events"), 3);
     });
 
+    await t.test("two and three units at 10 RON are verified from Stripe, saved and deduplicated", async () => {
+      await db.prepare(`INSERT INTO sandbox_products
+        (id,title,price_id,object_key,currency,unit_amount,object_size_bytes)
+        VALUES ('quantity-ron','Quantity test','price_quantityron',
+        'products/network-security-assessment-test.zip','ron',1000,799)`).run();
+      for (const quantity of [2, 3]) {
+        const amount = quantity * 1000;
+        const session = uniqueSession("quantity" + quantity);
+        Object.assign(session, { currency: "ron", amount_subtotal: amount, amount_total: amount });
+        const items = lineItems();
+        Object.assign(items.data[0], { quantity, currency: "ron", amount_subtotal: amount, amount_total: amount });
+        Object.assign(items.data[0].price, { id: "price_quantityron", currency: "ron", unit_amount: 1000 });
+        const event = eventForSession("quantity" + quantity, session);
+        // Neither the quantity nor the amount in the event payload is authoritative.
+        event.data.object.quantity = 1;
+        const result = await send(event, fakeStripe({ session, items }));
+        assert.equal(result.status, 200); assert.equal((await result.json()).outcome, "recorded");
+        const row = await purchase(session.id);
+        assert.equal(row.quantity, quantity); assert.equal(row.amount_total, amount);
+        assert.equal(row.currency, "ron"); assert.equal(row.delivery_status, "disabled");
+        assert.equal((await (await send(event)).json()).outcome, "duplicate");
+        const repeated = await send(eventForSession("quantityrepeat" + quantity, session));
+        assert.equal((await repeated.json()).outcome, "recorded");
+        assert.deepEqual(await purchase(session.id), row);
+        assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM stripe_test_purchases WHERE session_id = ?").bind(session.id).first()).n, 1);
+      }
+    });
+
     await t.test("20 simultaneous deliveries of one signed event record exactly one purchase/event", async () => {
       const session = uniqueSession("concurrent");
       const before = await count("stripe_test_events");
@@ -122,6 +151,13 @@ test("signed sandbox webhook with actual local D1 transactions", async (t) => {
         const items = lineItems(); items.data[0].price = { ...items.data[0].price, ...change }; invalidItems.push(items);
       }
       const quantity = lineItems(); quantity.data[0].quantity = 2; invalidItems.push(quantity);
+      for (const value of [0, -1, 1.5, 4, 100, "2", null, Number.MAX_SAFE_INTEGER]) {
+        const items = lineItems(); items.data[0].quantity = value; invalidItems.push(items);
+      }
+      const overflow = lineItems();
+      overflow.data[0].quantity = 3; overflow.data[0].price.unit_amount = Number.MAX_SAFE_INTEGER;
+      invalidItems.push(overflow);
+      const multiple = lineItems(); multiple.data.push(structuredClone(multiple.data[0])); invalidItems.push(multiple);
       invalidItems.push(lineItems({ has_more: true }), lineItems({ data: [] }));
       const before = await count("stripe_test_purchases");
       for (let i = 0; i < invalidItems.length; i++) {

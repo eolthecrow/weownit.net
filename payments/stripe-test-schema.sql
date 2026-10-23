@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS stripe_test_purchases (
   object_key TEXT NOT NULL,
   amount_total INTEGER NOT NULL CHECK (amount_total > 0),
   currency TEXT NOT NULL CHECK (length(currency) = 3),
+  quantity INTEGER NOT NULL DEFAULT 1 CHECK (typeof(quantity) = 'integer' AND quantity BETWEEN 1 AND 3),
   payment_status TEXT NOT NULL CHECK (payment_status = 'paid'),
   delivery_status TEXT NOT NULL DEFAULT 'disabled' CHECK (delivery_status = 'disabled'),
   observed_at TEXT NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now'))

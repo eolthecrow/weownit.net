@@ -39,9 +39,15 @@ in D1. No per-product environment variables or redeploy are needed afterward.
 The migration preserves the user's existing assessment mapping at 10 RON.
 
 The catalog supports multiple fixed, one-time, positive-value prices. Each
-Checkout Session must contain one product, quantity 1 and no shipping charges.
-Subscriptions, variable prices, carts, quantity changes and zero-total orders
-remain unsupported. Snapshot receipts preserve the original catalog mapping.
+Checkout Session must contain one product, integer quantity 1–3 and no shipping
+charges. Subscriptions, variable prices, multi-product carts and zero-total
+orders remain unsupported. Snapshot receipts preserve the original catalog
+mapping and the quantity returned by the Stripe API.
+
+For an existing deployment, run `npm run deploy:catalog` after pulling this
+revision. It checks the remote ledger schema and adds `quantity` only when
+missing. Older receipts become quantity 1, matching the previous one-unit rule.
+Do not deploy the new webhook over an old ledger without this migration.
 
 The only required webhook variable in the existing local `wrangler.jsonc` is:
 
@@ -121,6 +127,24 @@ Open a **sandbox** Payment Link/Checkout for an active catalog price.
 Make one test payment using Stripe test card `4242 4242 4242 4242`, any future
 expiry and any three-digit CVC. Do not change the public Store's checkout.
 
+### Allow customers to choose two or three units
+
+After deploying this revision, create/edit the **sandbox Payment Link**, go to
+**Payment page → Product**, and enable **Let customers adjust quantity** on the
+product. Set default quantity **1**, minimum **1** and maximum **3**, then save.
+The admin catalog still contains one product entry. Its price is per unit.
+
+At 10 RON per unit, run separate checkouts with quantity 1, 2 and 3, expecting
+10, 20 and 30 RON respectively when no tax/discount is configured. Check each
+actual webhook delivery and D1 row. Quantity 4, zero, fractions, mismatched
+subtotals and multiple different products are rejected by the Worker.
+
+The Worker validates `unit_amount × quantity` against the line/session subtotal
+and checks the session total against the same Stripe line item's total. It
+reads all quantities/money from Stripe, never from customer input or webhook
+metadata. Quantity is a payment observation, not a license or download grant.
+Customer delivery and multi-seat licensing still need their own implementation.
+
 In Stripe, inspect that payment's actual webhook delivery. Expected response:
 
 ```json
@@ -135,7 +159,7 @@ ignored by the catalog allowlist. Use an actual Checkout for an active catalog p
 
 ```bash
 npx wrangler d1 execute weownit_r2_budget --remote \
-  --command "SELECT session_id, price_id, amount_total, currency, payment_status, delivery_status FROM stripe_test_purchases ORDER BY observed_at DESC LIMIT 5;"
+  --command "SELECT session_id, price_id, quantity, amount_total, currency, payment_status, delivery_status FROM stripe_test_purchases ORDER BY observed_at DESC LIMIT 5;"
 
 npx wrangler d1 execute weownit_r2_budget --remote \
   --command "SELECT event_id, event_type, outcome, reason FROM stripe_test_events ORDER BY received_at DESC LIMIT 10;"
@@ -143,6 +167,8 @@ npx wrangler d1 execute weownit_r2_budget --remote \
 
 Expected: one purchase with the correct price, currency and total in the
 currency's minor units, `payment_status=paid` and `delivery_status=disabled`.
+For the 10 RON price, quantities 1, 2 and 3 have totals 1000, 2000 and 3000
+minor units respectively (without tax/discount).
 The ledger stores no email addresses, card details or secret values.
 
 Resend the same event using Stripe's delivery controls. Expected: HTTP 200 with
@@ -187,6 +213,7 @@ point is commit `69e793da28c7d96e6029c2a64c3e3cc04e96258f`.
 ## Primary references
 
 - https://docs.stripe.com/webhooks
+- https://docs.stripe.com/payment-links/customize#allow-adjustable-quantities
 - https://docs.stripe.com/checkout/fulfillment
 - https://docs.stripe.com/api/checkout/sessions/line_items
 - https://github.com/stripe/stripe-node
