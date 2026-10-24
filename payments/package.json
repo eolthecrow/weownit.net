@@ -1,0 +1,20 @@
+{
+  "name": "weownit-payments",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "node --test r2-guard.test.mjs src/index.test.mjs src/stripe-webhook.test.mjs src/product-catalog.test.mjs test/deploy-catalog.test.mjs",
+    "test:integration": "node --test test/local-bindings.test.mjs test/stripe-ledger.test.mjs test/stripe-runtime.test.mjs test/stripe-quantity.test.mjs test/product-catalog.test.mjs",
+    "test:browser": "node --test test/admin-browser.test.mjs",
+    "deploy:catalog": "node scripts/deploy-catalog.mjs"
+  },
+  "devDependencies": {
+    "jsonc-parser": "3.3.1",
+    "wrangler": "^4.0.0"
+  },
+  "dependencies": {
+    "stripe": "23.0.0"
+  }
+}
