@@ -1,0 +1,20 @@
+/* Scoped extension of the existing firewall workspace. */
+#firewall-migration{margin:24px 0 0;border-top:1px solid var(--line);padding-top:18px;scroll-margin-top:100px}
+#firewall-migration>summary{font-size:1.15rem;font-weight:650;cursor:pointer;padding:8px 0;min-height:44px}
+#firewall-migration .mig-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0}
+#firewall-migration label{display:block;font-size:13px;margin:10px 0;color:var(--muted)}
+#firewall-migration :is(select,input:not([type=checkbox]),textarea){display:block;width:100%;min-width:0;min-height:44px;border:1px solid var(--line-strong);background:var(--bg);color:var(--ink);padding:10px;margin-top:6px;font:14px/1.5 var(--mono);border-radius:0}
+#firewall-migration textarea{min-height:230px;resize:vertical;tab-size:2}
+#firewall-migration #mig-mappings{min-height:100px}
+#firewall-migration button{min-height:44px;max-width:100%;white-space:normal}
+#firewall-migration .mig-check{display:flex;align-items:flex-start;gap:10px;line-height:1.6}
+#firewall-migration .mig-check input{flex:0 0 auto;margin-top:5px}
+#firewall-migration :is(code,td,li,p){overflow-wrap:anywhere}
+#firewall-migration :is(input,select,textarea,button,summary):focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#firewall-migration [data-status=blocked]{color:#ffb4a9}
+#firewall-migration [data-status=fragment-generated]{color:var(--accent)}
+#firewall-migration #mig-output{min-height:300px;font-size:12px}
+#firewall-migration table{width:100%;border-collapse:collapse;font-size:12px}
+#firewall-migration :is(th,td){text-align:left;padding:10px;border-bottom:1px solid var(--line);vertical-align:top}
+#firewall-migration button:disabled{opacity:.5;cursor:not-allowed}
+@media(max-width:700px){#firewall-migration .mig-grid{grid-template-columns:1fr}#firewall-migration :is(select,input:not([type=checkbox]),textarea){font-size:16px}#firewall-migration #mig-output{font-size:13px}}
