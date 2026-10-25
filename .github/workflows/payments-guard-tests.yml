@@ -19,6 +19,10 @@ jobs:
   unit-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        npm-version: ["10.9.4", "11.9.0"]
     defaults:
       run:
         working-directory: payments
@@ -27,6 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+      - name: Select npm version for lockfile compatibility
+        run: npm install --global npm@${{ matrix.npm-version }}
       - name: Install locked local test runtime
         run: npm ci
       - name: Test isolated payments Worker

@@ -4,7 +4,24 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Current follow-up — local dependency security update (2026-10-25)
+## Current follow-up — npm 10 clean-install compatibility (2026-10-25)
+
+- User's `npm ci` failed with `Missing: undici@7.29.1 from lock file`, although
+  audit reported zero and the earlier clean install passed under npm 11.9.0.
+- Reproduced the exact failure in a fresh directory with npm 10.9.4. The scoped
+  Miniflare override is interpreted differently during npm 10 lock validation.
+- Replaced the scoped override with root `undici: 7.30.1`. The lockfile package
+  resolution is unchanged and the vulnerable version is not reintroduced.
+- Fresh clean-install checks pass under npm 8.19.4, 10.9.4 and 11.9.0. CI's
+  backend job now covers npm 10.9.4 and 11.9.0 explicitly.
+- Full installation with lifecycle scripts under npm 10.9.4 also passes, with
+  zero audit findings, all 23 unit and 34 integration tests and the Worker build.
+- User's remote health still reports `stripe_webhook: disabled`. This is a
+  separate missing/invalid Stripe configuration condition, not caused by npm.
+  Confirm enabled flag and the two deployed Stripe secrets before checkout.
+- Source revert point: `2f45e9bc8bfd463c936e4d109ff20169cb5d7734`.
+
+## Earlier follow-up — local dependency security update (2026-10-25)
 
 - User's WSL run passed all 34 integration tests and the Worker dry-run, applied
   the three base schemas remotely, and reached confirmation for the conditional
