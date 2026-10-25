@@ -41,3 +41,7 @@ jobs:
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
         run: node tests/browser/change-confidence.smoke.cjs
+      - name: Exercise local migration fragments, blockers and downloads in EN RO FR
+        env:
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+        run: node tests/browser/firewall-migration.smoke.cjs
