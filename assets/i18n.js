@@ -38,9 +38,9 @@
     "Kits, modèles et ressources numériques pour les réseaux et la cybersécurité, proposés par Vladimir Arjoca."
   ],
   "tools": [
-    "Web-Check, CVE Risk Lens and local Firewall Change Review: configuration evidence and before/after traffic scenarios.",
-    "Web-Check, CVE Risk Lens și Firewall Change Review local: configurații și scenarii de trafic înainte/după.",
-    "Web-Check, CVE Risk Lens et Firewall Change Review local : configurations et scénarios de trafic avant/après."
+    "Web-Check, CVE Risk Lens and local exposure comparisons with traceable sources, coverage limits and next actions.",
+    "Web-Check, CVE Risk Lens și comparații locale ale expunerii, cu surse, limite și pași următori.",
+    "Web-Check, CVE Risk Lens et comparaisons locales de l’exposition : sources, limites et prochaines actions."
   ]
 };
   const labels = {
