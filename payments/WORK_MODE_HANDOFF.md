@@ -4,6 +4,26 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
+## Current follow-up — local dependency security update (2026-10-25)
+
+- User's WSL run passed all 34 integration tests and the Worker dry-run, applied
+  the three base schemas remotely, and reached confirmation for the conditional
+  quantity-column migration. Final Worker upload is not yet evidenced.
+- Reproduced npm audit's three affected dependency entries (Undici plus its
+  Miniflare/Wrangler parents). Plain `npm audit fix` did not resolve them because
+  Miniflare retains an exact vulnerable Undici dependency.
+- Scoped the Miniflare dependency to patched `undici@7.30.1` with an npm override
+  and updated the lockfile. Wrangler remains 4.151.3. Revisit/remove this override
+  once the upstream Miniflare dependency is patched.
+- Verified with a clean `npm ci`: `npm audit` reports zero vulnerabilities,
+  all 23 unit and 34 reported integration tests pass, and Worker dry-run passes.
+- This updates local development/deployment tooling only. After finishing the
+  in-progress deployment, pull the feature branch and run `npm ci` then
+  `npm audit`. No extra schema migration or Worker deployment is needed solely
+  for this dependency update.
+- No merge or live-payment activation. Source revert point before this update:
+  `cbf57eb95151ef934bcb8517c9801fdf629ae967`.
+
 ## Current follow-up — sandbox checkout quantities 1–3 (source only)
 
 - User clarified they want customers to buy 2 or 3 units of one product per
