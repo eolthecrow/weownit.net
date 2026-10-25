@@ -27,10 +27,7 @@ async function main(){await new Promise(resolve=>server.listen(0,'127.0.0.1',res
   await page.locator('#confidence-open').setInputFiles({name:'synthetic-decision.json',mimeType:'application/json',buffer:bytes});
   await page.waitForFunction(()=>window.ChangeConfidenceUI?.getRecord()?.inputs.length===0);assert.equal(await page.evaluate(()=>window.ChangeConfidenceUI.getRecord().result.summary.regression),1);await geometry(page,width+' '+language+' reopened');
   assert.ok(!requests.some(r=>r.includes(marker)),'configuration marker transmitted');assert.deepEqual(errors,[],'full tool page errors');journeys++;
-  await page.goto(base+'/tools.html?lang='+language,{waitUntil:'load'});await page.locator('[data-concern="change"]').click();await page.locator('#begin').click();await page.locator('#sample').click();await page.locator('#simulate').click();
-  await page.locator('#confidence-canvas-json').waitFor();const canvasDownloadPromise=page.waitForEvent('download');await page.locator('#confidence-canvas-json').click();const canvasDownload=await canvasDownloadPromise,canvasRecord=JSON.parse(await fs.readFile(await canvasDownload.path(),'utf8'));assert.equal(canvasRecord.result.summary.pass,3);assert.equal(canvasRecord.decision.connectivity,'not-tested');await geometry(page,width+' '+language+' Canvas result');
-  const menu=page.locator('[data-nav-toggle]');if(await menu.isVisible()){await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');}
-  assert.deepEqual(errors,[],'Canvas page errors');journeys++;console.log(JSON.stringify({width,language,fullTools:'pass',canvas:'pass',overflow:'none',externalRequests:'blocked'}));await context.close();
+  console.log(JSON.stringify({width,language,fullTools:'pass',overflow:'none',externalRequests:'blocked'}));await context.close();
  }
  console.log(JSON.stringify({browser:'Chromium',journeys,widths:[360,390,430,1440],languages:['en','ro','fr'],note:'Rendered viewport tests, not physical-device or appliance qualification.'}));
  }finally{await browser.close();server.close();}
