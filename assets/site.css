@@ -364,3 +364,7 @@ header .global-nav-shell{
   *,*::before,*::after{animation:none!important;transition:none!important}
   .site-back-to-top{transition:none}
 }
+
+
+/* About is available through Contact; existing URLs remain valid. */
+[data-global-nav] [data-nav-label="about"],.rail-nav a[href^="about.html"]{display:none}
