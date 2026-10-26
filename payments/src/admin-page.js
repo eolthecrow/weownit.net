@@ -42,14 +42,14 @@ h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1.5px;margin:
 
 export const ADMIN_JS = String.raw`'use strict';
 (function () {
-  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null;
+  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false;
   var productCursor = null, priceCursor = null, fileCursor = null;
   var $ = function (id) { return document.getElementById(id); };
   function message(text, error) { $('message').textContent = text || ''; $('message').className = error ? 'error' : ''; }
   function node(tag, text, className) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (className) e.className = className; return e; }
   function option(value, text) { var e = node('option', text); e.value = value; return e; }
   function logout() {
-    token = ''; epoch++; products = []; prices = []; files = []; editing = null;
+    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false;
     $('adminToken').value = ''; $('productList').replaceChildren(); $('productForm').reset();
     $('priceSelect').replaceChildren(option('', 'Alege un preț')); $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
     $('catalogView').hidden = true; $('loginView').hidden = false; message('');
@@ -123,13 +123,18 @@ export const ADMIN_JS = String.raw`'use strict';
       if (product.state === 'archived') heading.append(node('span', 'Șters din catalog', 'status-tag'));
       article.append(heading, node('p', product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
+      if (checkoutEnabled && product.state === 'active') {
+        var buyLink = node('a', 'Testează cumpărarea', 'text-button');
+        buyLink.href = '/buy/' + encodeURIComponent(product.id) + '?lang=ro';
+        buyLink.target = '_blank'; buyLink.rel = 'noopener noreferrer'; actions.append(buyLink);
+      }
       var editButton = node('button', 'Editează', 'text-button'); editButton.type = 'button';
       editButton.addEventListener('click', function () { edit(product); }); actions.append(editButton);
       var change = node('button', product.state === 'active' ? 'Șterge din catalog' : 'Restaurează', 'text-button' + (product.state === 'active' ? ' delete' : ''));
       change.type = 'button';
       change.addEventListener('click', function () {
         var archive = product.state === 'active';
-        if (archive && !window.confirm('Retragi acest produs din catalog? Asocierea nu va mai accepta plăți noi în Worker. Prețul Stripe, linkurile sale și ZIP-ul R2 nu sunt șterse sau dezactivate. Poți restaura produsul.')) return;
+        if (archive && !window.confirm('Retragi acest produs din catalog? Nu se vor mai putea iniția cumpărări noi din pagina Worker. Checkout-urile deja inițiate pot fi finalizate. Prețul Stripe, linkurile sale și ZIP-ul R2 nu sunt șterse sau dezactivate. Poți restaura produsul.')) return;
         run(change, async function () {
           var data = await api('products/' + encodeURIComponent(product.id) + (archive ? '/archive' : '/restore'), {
             method: 'POST', body: { revision: product.revision }
@@ -145,6 +150,7 @@ export const ADMIN_JS = String.raw`'use strict';
   }
   async function loadProducts(append) {
     var data = await api('products' + (append && productCursor ? '?cursor=' + encodeURIComponent(productCursor) : ''));
+    checkoutEnabled = data.checkout_enabled === true;
     products = append ? products.concat(data.products) : data.products; productCursor = data.cursor;
     renderProducts(); renderOptions();
   }

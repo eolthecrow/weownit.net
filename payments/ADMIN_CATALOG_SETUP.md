@@ -112,7 +112,9 @@ istoricul; nu trebuie să deschizi lista produselor șterse.
   **Restaurează** pentru reactivare cu numele și ZIP-ul păstrate.
 - Ștergerea nu dezactivează Payment Link-ul în Stripe. Dacă nu mai dorești
   checkout-uri de test pentru acel preț, dezactivează separat linkul în Stripe.
-  Webhook-ul nu va înregistra achiziții noi pentru o asociere retrasă.
+  Webhook-ul nu va înregistra achiziții noi din Payment Link pentru o asociere
+  retrasă. Checkout-urile legate de browser și acceptate anterior retragerii pot
+  fi finalizate și livrate din snapshot-ul lor.
 - Numele și fișierul unei plăți deja înregistrate rămân cele de la procesare;
   editările ulterioare ale catalogului nu rescriu acea înregistrare.
 - Două editări simultane nu se suprascriu: pagina cere actualizarea listei.
@@ -128,8 +130,12 @@ per Checkout Session, cu 1–3 unități; catalogul poate avea mai multe produse
 Cantitatea se alege în Stripe Checkout, activând **Let customers adjust quantity**
 în Payment Link-ul sandbox, cu minimum 1 și maximum 3. Catalogul nu este stoc și
 nu necesită intrări duplicate pentru două sau trei unități din același produs.
-Descărcările, emailurile, drepturile de acces și reconcilierea refund/dispute nu
-sunt încă implementate. Continuă configurarea/testul webhook-ului din
+Livrarea sandbox este acum pregătită separat, cu activare explicită: vezi
+[SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md). După activare, fiecare
+produs activ afișează **Testează cumpărarea**, care deschide fluxul de test într-o
+filă nouă, păstrând administrarea deschisă. Fără activare, linkul nu apare.
+Emailurile, accesul pe alte dispozitive și reconcilierea completă refund/dispute
+rămân neimplementate. Continuă configurarea/testul webhook-ului din
 [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
 
 Operațiunile administrative de listare R2 consumă rezervări Class A; verificările

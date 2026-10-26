@@ -1,14 +1,16 @@
 # Stripe sandbox — webhook and payment ledger
 
-This phase adds payment verification and a test ledger only. It does not create
-Checkout Sessions, change the Store, send emails, grant download access, or
-enable live payments. The 799-byte ZIP remains a test object.
+This guide covers webhook verification and the test observation ledger.
+Browser-bound sandbox Checkout creation and temporary downloads are a separate,
+explicitly enabled flow: see [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
+No public Store change, emails or live payments. The 799-byte ZIP remains a test object.
 
 ## Deployment status
 
-The earlier R2/D1 probe Worker is deployed. This webhook revision must still be
-pulled, configured and deployed by the user. Local tests and GitHub CI do not
-replace a real Checkout test against the deployed endpoint.
+The user deployed the webhook, reported `sandbox-configured`, and provided a
+remote D1 receipt for quantity 2 / 20 RON. They report testing quantity 3 too.
+The newer browser-bound delivery revision remains source-only. Local tests and
+GitHub CI do not replace an actual Checkout/download test against the deployment.
 
 The user reports the Cloudflare budget alert is created. Its threshold,
 recipients and delivery have not been independently inspected.
@@ -143,7 +145,8 @@ The Worker validates `unit_amount × quantity` against the line/session subtotal
 and checks the session total against the same Stripe line item's total. It
 reads all quantities/money from Stripe, never from customer input or webhook
 metadata. Quantity is a payment observation, not a license or download grant.
-Customer delivery and multi-seat licensing still need their own implementation.
+Temporary browser-bound delivery is available through the separately enabled
+flow described in `SANDBOX_DELIVERY_SETUP.md`. Multi-seat licensing is not implemented.
 
 In Stripe, inspect that payment's actual webhook delivery. Expected response:
 
@@ -190,17 +193,23 @@ An ignored supported event is saved. If you correct its catalog mapping
 afterward, make a new test checkout; resending the old ignored event remains a
 duplicate. A 503 is not saved, so that same event can be retried safely.
 
-## What this still does not validate or implement
+## Boundaries of the observation ledger
 
-- No customer delivery, ownership validation, temporary links, email or download
-  route. `stripe_test_purchases` is an observation ledger, not an access grant.
-- Refunds, disputes and post-payment reconciliation are not processed. `paid`
+- Payment Link receipts alone do not grant download access. The separate
+  browser-bound flow validates ownership, emits temporary access and streams the
+  private ZIP. It must be explicitly enabled and deployed using its setup guide.
+- Email and cross-device recovery are not implemented. `stripe_test_purchases`
+  remains an observation ledger, not an access grant; its legacy delivery status
+  remains disabled. The new flow has separate grants and a delivery-status view.
+- Full refund/dispute reconciliation is not implemented. The new download flow
+  checks current PaymentIntent/Charge state before access and denies refunds or
+  disputes. It does not change the payment itself. `paid`
   describes the API state when the event was processed, not a permanent right.
 - No live keys, purchases, product sales or real customer fulfillment.
 - No account-wide cost cap or R2 analytics reconciliation. Webhook verification
   reads Stripe and writes D1; it does not read R2 or consume its guard counters.
 
-Do not connect the Store or enable real fulfillment until these remaining
+Do not connect the Store or enable live fulfillment until these remaining
 controls are implemented and tested. Keep PR #22 Draft and unmerged.
 
 ## Disable or revert

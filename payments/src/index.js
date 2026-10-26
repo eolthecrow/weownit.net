@@ -3,8 +3,10 @@ import { respond } from "./http.js";
 import { handleStripeWebhook, stripeWebhookConfigured } from "./stripe-webhook.js";
 import { handleCatalog } from "./product-catalog.js";
 import { adminAsset } from "./admin-page.js";
+import { customerAsset } from "./customer-page.js";
+import { handleSandboxCustomer, sandboxDeliveryConfigured } from "./sandbox-delivery.js";
 
-// Sandbox-only. No checkout creation or customer download endpoint.
+// Sandbox-only. Customer checkout/downloads are explicitly opt-in and browser-bound.
 // The object key is selected by the server, never by a request parameter.
 const TEST_OBJECT_KEY = "products/network-security-assessment-test.zip";
 
@@ -20,27 +22,32 @@ async function tokenMatches(input, expected) {
   return difference === 0;
 }
 
-export async function handleRequest(request, env) {
+export async function handleRequest(request, env, dependencies = {}) {
   const { pathname } = new URL(request.url);
 
   if (request.method === "GET") {
     const asset = adminAsset(pathname); if (asset) return asset;
+    if (sandboxDeliveryConfigured(env)) {
+      const customer = customerAsset(pathname); if (customer) return customer;
+    }
   }
-  if (pathname.startsWith("/admin/api/")) return handleCatalog(request, env);
+  if (pathname.startsWith("/customer/")) return handleSandboxCustomer(request, env, dependencies);
+  if (pathname.startsWith("/admin/api/")) return handleCatalog(request, env, dependencies);
 
   if (pathname === "/health" && request.method === "GET") {
     return respond({
       service: "weownit-payments",
       status: "sandbox-only",
-      checkout: "not-connected",
+      checkout: sandboxDeliveryConfigured(env) ? "sandbox-browser-bound" : "not-connected",
       public_downloads: "disabled",
+      sandbox_fulfillment: sandboxDeliveryConfigured(env) ? "browser-bound-configured" : "disabled",
       stripe_webhook: stripeWebhookConfigured(env) ? "sandbox-configured" : "disabled",
       catalog: "d1",
     });
   }
 
   if (pathname === "/stripe/webhook" && request.method === "POST") {
-    return handleStripeWebhook(request, env);
+    return handleStripeWebhook(request, env, dependencies);
   }
 
   // No CORS support, no arbitrary object access, no publicly accessible ZIP.
@@ -83,4 +90,4 @@ export async function handleRequest(request, env) {
   }
 }
 
-export default { fetch: handleRequest };
+export default { fetch: (request, env) => handleRequest(request, env) };

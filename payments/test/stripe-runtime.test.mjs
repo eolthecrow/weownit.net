@@ -9,6 +9,7 @@ test("bundled Worker verifies Stripe signatures inside local workerd", async () 
     configPath: fileURLToPath(new URL("./wrangler.local.jsonc", import.meta.url)),
     vars: {
       STRIPE_WEBHOOK_ENABLED: config.STRIPE_WEBHOOK_ENABLED,
+      SANDBOX_FULFILLMENT_ENABLED: "true",
       STRIPE_TEST_PRICE_ID: config.STRIPE_TEST_PRICE_ID,
       STRIPE_TEST_CURRENCY: config.STRIPE_TEST_CURRENCY,
     },
@@ -22,7 +23,9 @@ test("bundled Worker verifies Stripe signatures inside local workerd", async () 
     await server.listen();
     const health = await server.fetch("/health");
     assert.equal(health.status, 200);
-    assert.equal((await health.json()).stripe_webhook, "sandbox-configured");
+    const status = await health.json();
+    assert.equal(status.stripe_webhook, "sandbox-configured");
+    assert.equal(status.sandbox_fulfillment, "browser-bound-configured");
     const send = async (request) => server.fetch("/stripe/webhook", {
       method: "POST", headers: request.headers, body: await request.text(),
     });
@@ -37,6 +40,9 @@ test("bundled Worker verifies Stripe signatures inside local workerd", async () 
     const missingSchema = await send(signedRequest(eventFor("noschema")));
     assert.equal(missingSchema.status, 503);
     assert.equal((await server.fetch("/download")).status, 404);
+    assert.equal((await server.fetch("/buy/network-security-assessment-test")).status, 200);
+    assert.equal((await server.fetch("/complete")).status, 200);
+    assert.equal((await server.fetch("/customer/checkout", { method: "POST", headers: { Origin: "https://evil.invalid" }, body: "{}" })).status, 403);
     const shell = await server.fetch("/admin");
     assert.equal(shell.status, 200);
     assert.match(shell.headers.get("Content-Security-Policy"), /script-src 'self'/);

@@ -4,7 +4,57 @@ Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`
 
-## Current follow-up — npm 10 clean-install compatibility (2026-10-25)
+## Current phase — browser-bound sandbox downloads (2026-10-26, source only)
+
+- User explicitly requested continuing implementation and deferring manual
+  checks, reporting that quantity 3 was checked. Earlier supplied remote D1
+  output confirms quantity 2 / 2000 bani / RON / paid. The reported deployment
+  version was `db9a6bec-bb94-4a5d-8bc7-6c022ff06798`, health sandbox-configured.
+- Added opt-in `/buy/<id>` and `/complete` pages in RO/EN/FR, with an admin
+  **Testează cumpărarea** link only when the feature is enabled. Public site,
+  AI Worker and existing public checkout are untouched.
+- Checkout Sessions are created server-side with test credentials, card payment,
+  fixed catalog price, quantity 1–3, no adaptive currency/tax/promo configuration,
+  and an immutable D1 attempt linked to a Secure/HttpOnly host-only buyer cookie.
+- Only the signed webhook creates a payment observation. Already-accepted
+  browser-bound checkouts retain their ZIP snapshot across later catalog edits
+  or archival. New checkout creation is blocked when a product is archived.
+  Older Payment Links remain observation-only and cannot mint download access.
+- Receipt/download require the same buyer cookie. Random tickets live for
+  10 minutes, are submitted in POST bodies, and are stored hashed. Renewal is
+  bounded to 24 hours from initiation and never resets the three-start limit.
+- PaymentIntent and expanded Charge are re-read before ticket issuance and
+  before streaming. Refunds including partial refunds, disputes, live/nonpaid
+  or mismatched payments and Stripe/D1 errors deny access. Revocation cannot
+  stop a stream already started; complete post-payment reconciliation is absent.
+- Private R2 GET reserves Class B before storage access and streams the body.
+  Atomic ticket consumption bounds concurrent starts; failed/interrupted R2
+  transfers retain the start. No Range resume, email recovery, cross-device
+  access or multi-seat license issuance.
+- Sandbox creation limits: 20/minute, 100/24h globally and 5/hour per cookie.
+  Receipt checks are limited to 30 per attempt with a 3-second minimum interval.
+- Additive `sandbox-delivery-schema.sql` creates attempts, hashed grants and
+  `sandbox_delivery_status`. The deploy helper applies it before the code.
+  Historical ledger `delivery_status=disabled` is retained; use the new view for
+  fulfillment status. No data/counter reset.
+- `SANDBOX_FULFILLMENT_ENABLED` defaults false in the example. Installation and
+  deferred manual checks are in `SANDBOX_DELIVERY_SETUP.md`. Existing secrets
+  suffice; restricted keys now also need Checkout create and PaymentIntent/
+  Charge read. Health indicates configured, not a completed customer purchase.
+- Local browser tests use actual local D1/R2, synthetic Stripe and a real
+  Chromium attachment download. They cover RO/EN/FR at 1365/360/430 px, language
+  switching, expiry/reissue, dispute denial and no browser storage of tickets.
+  Customer pages use same-origin referrer policy (no cross-origin referrers)
+  so native download forms retain Origin for strict CSRF checks.
+- Final local validation: 23 unit tests, 50 reported integration tests (including
+  parent tests), and both browser suites passed. Audit reports zero findings;
+  Worker dry-run builds 776.03 KiB uncompressed / 103.08 KiB gzip. This evidence
+  covers local/synthetic Stripe behavior, not the new remote customer journey.
+- Remote delivery testing is explicitly deferred. Keep Draft/unmerged; no live
+  payments or public Store hookup. Revert source to
+  `4d6b197d5ffdaef825d485c0eea2e32fea45d52d`; additive tables/view can remain.
+
+## Earlier follow-up — npm 10 clean-install compatibility (2026-10-25)
 
 - User's `npm ci` failed with `Missing: undici@7.29.1 from lock file`, although
   audit reported zero and the earlier clean install passed under npm 11.9.0.

@@ -1,15 +1,16 @@
 # weownit.net — Worker separat de plăți (SANDBOX)
 
-Acest director conține un Worker nou numit `weownit-payments`. Nu modifică site-ul public, `network-security-assistant`, Stripe Checkout sau Lemon Squeezy.
+Acest director conține Worker-ul separat `weownit-payments`. Nu modifică site-ul public, `network-security-assistant` sau checkout-ul public actual. Poate crea sesiuni Stripe Checkout noi, exclusiv în sandbox, cu activare explicită.
 
 ## Ce este implementat acum
 
 - `/admin`: interfață pentru adăugare, editare, ștergere reversibilă și restaurare a produselor din catalogul D1. Listează prețuri Stripe sandbox și ZIP-uri R2; instalare: [ADMIN_CATALOG_SETUP.md](ADMIN_CATALOG_SETUP.md).
+- `/buy/<product-id>` și `/complete`: cumpărare sandbox și confirmare în RO/EN/FR, cu acces temporar la ZIP legat de browser. Dezactivate implicit. Instalare: [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
 - `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
 - `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
 - `POST /stripe/webhook`: cod pregătit pentru notificări Stripe semnate, exclusiv sandbox, și registru de plăți D1. Dezactivat până la configurare. Vezi [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
 - Checkout cu un singur produs și 1–3 unități: verifică subtotalul din Stripe și salvează cantitatea în D1. La actualizarea unui deployment existent, folosește `npm run deploy:catalog` pentru migrarea condiționată a coloanei `quantity`.
-- Nu există rute de descărcare publică sau plăți live. Webhook-ul pregătit în branch nu este încă validat printr-o plată reală de test pe deployment.
+- Nu există acces neautorizat la ZIP sau plăți live. Registrul remote a fost confirmat prin rezultatul D1 furnizat de utilizator pentru 2 unități / 20 RON; utilizatorul raportează și verificarea cantității 3. Noua livrare legată de browser este pregătită în sursă și încă necesită deployment și verificări manuale.
 - Operațiunile R2 efectuate de acest Worker sunt refuzate dacă D1 nu poate confirma rezerva.
 
 ## Praguri preventive agreate
@@ -75,8 +76,8 @@ SELECT * FROM r2_budget_monthly ORDER BY month DESC;
 
 ## Ce NU este implementat încă
 
-1. Configurarea/publicarea noii versiuni webhook și validarea integrală cu checkout-ul Stripe sandbox. Codul webhook-ului și registrul D1 sunt pregătite în acest branch.
-2. Autorizarea individuală a descărcărilor și emiterea de acces temporar.
+1. Publicarea și verificarea manuală a noii livrări sandbox din [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
+2. Recuperarea accesului prin email, acces pe alte dispozitive și licențe multi-user. Controlul curent al refund/dispute verifică Stripe la cerere, fără reconciliere completă.
 3. Inventar atomic al stocării și reconciliere cu analytics R2 la nivel de cont.
 4. Verificarea alertei Cloudflare de cost, reconcilierea consumului și modalitatea de livrare alternativă când limita e atinsă.
 5. Validarea fiscală/legală pentru vânzări reale.

@@ -2,6 +2,7 @@ import { respond } from "./http.js";
 import { adminAuthError } from "./admin-auth.js";
 import { createStripeClient } from "./stripe-client.js";
 import { reserveR2Operation, R2LimitReached } from "../r2-guard.mjs";
+import { sandboxDeliveryConfigured } from "./delivery-config.js";
 
 const KEY = /^products\/[a-z0-9][a-z0-9/_.-]*\.zip$/i;
 const ID = /^[a-z0-9][a-z0-9-]{1,79}$/;
@@ -11,8 +12,9 @@ const THREE_DECIMAL = new Set(["bhd", "jod", "kwd", "omr", "tnd"]);
 class InputError extends Error {}
 
 export const validProductKey = (key) => typeof key === "string" && key.length <= 512 && KEY.test(key) && !key.includes("..");
+export const currencyMinorUnits = currency => ZERO_DECIMAL.has(currency) ? 0 : THREE_DECIMAL.has(currency) ? 3 : 2;
 export function displayPrice(amount, currency) {
-  const decimals = ZERO_DECIMAL.has(currency) ? 0 : THREE_DECIMAL.has(currency) ? 3 : 2;
+  const decimals = currencyMinorUnits(currency);
   return new Intl.NumberFormat("ro-RO", {
     style: "currency", currency: currency.toUpperCase(), minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -108,7 +110,8 @@ export async function handleCatalog(request, env, { stripeClient } = {}) {
       const rows = await db.prepare("SELECT * FROM sandbox_products WHERE id > ? ORDER BY id LIMIT 101")
         .bind(cursor || "").all();
       const products = rows.results.slice(0, 100);
-      return respond({ products: products.map(view), cursor: rows.results.length > 100 ? products.at(-1).id : null });
+      return respond({ products: products.map(view), cursor: rows.results.length > 100 ? products.at(-1).id : null,
+        checkout_enabled: sandboxDeliveryConfigured(env) });
     }
     if (route === "prices" && request.method === "GET") {
       if (cursor && !PRICE.test(cursor)) throw new InputError("Pagină Stripe invalidă.");

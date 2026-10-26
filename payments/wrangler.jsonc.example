@@ -5,7 +5,8 @@
   "compatibility_date": "2026-10-21",
   "workers_dev": true,
   "vars": {
-    "STRIPE_WEBHOOK_ENABLED": "false"
+    "STRIPE_WEBHOOK_ENABLED": "false",
+    "SANDBOX_FULFILLMENT_ENABLED": "false"
   },
   "r2_buckets": [
     {

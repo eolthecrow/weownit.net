@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { respond } from "./http.js";
 import { createStripeClient, stripeWebhookConfigured } from "./stripe-client.js";
 import { supportedPrice } from "./product-catalog.js";
+import { DELIVERY_FLOW } from "./delivery-config.js";
 export { createStripeClient, stripeWebhookConfigured } from "./stripe-client.js";
 
 const MAX_BODY_BYTES = 65_536;
@@ -142,15 +143,26 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
     // Never trust payment state, money or product metadata in the webhook alone.
     const session = await stripe.checkout.sessions.retrieve(sessionId);
     let rejection = sessionRejection(session, sessionId);
-    let product, quantity;
+    let product, quantity, ownedAttempt;
     if (!rejection) {
       const items = await stripe.checkout.sessions.listLineItems(sessionId, { limit: 2 });
       const priceId = items?.data?.[0]?.price?.id;
-      if (typeof priceId === "string") {
+      if (session.metadata?.sandbox_flow === DELIVERY_FLOW) {
+        ownedAttempt = await db.prepare("SELECT * FROM sandbox_checkout_attempts WHERE id = ? AND session_id = ?")
+          .bind(session.client_reference_id || "", session.id).first();
+        if (!ownedAttempt) return respond({ error: "Checkout binding unavailable; retry event" }, 503);
+        if (ownedAttempt.price_id !== priceId || ownedAttempt.quantity !== items?.data?.[0]?.quantity) {
+          rejection = "unmatched-sandbox-checkout";
+        } else {
+          // Honor a checkout accepted while the product was active. Later
+          // catalog edits/removal cannot switch its file or strand its payment.
+          product = { ...ownedAttempt, id: ownedAttempt.product_id, state: "active" };
+        }
+      } else if (typeof priceId === "string") {
         product = await db.prepare("SELECT * FROM sandbox_products WHERE price_id = ? AND state = 'active'")
           .bind(priceId).first();
       }
-      rejection = itemsRejection(items, session, product);
+      rejection ||= itemsRejection(items, session, product);
       quantity = items?.data?.[0]?.quantity;
     }
     if (rejection) {
@@ -160,15 +172,25 @@ export async function handleStripeWebhook(request, env, { stripeClient } = {}) {
 
     // D1 batch is transactional: either the purchase and event both persist, or
     // neither does. Unique session and payment-intent IDs prevent double recording.
-    await db.batch([
-      db.prepare(`INSERT INTO stripe_test_purchases
+    const purchaseInsert = ownedAttempt
+      ? db.prepare(`INSERT INTO stripe_test_purchases
+        (session_id, payment_intent_id, price_id, product_id, object_key,
+         amount_total, currency, quantity, payment_status, delivery_status)
+        SELECT ?, ?, price_id, product_id, object_key, ?, currency, quantity, 'paid', 'disabled'
+        FROM sandbox_checkout_attempts WHERE id = ? AND session_id = ?
+        ON CONFLICT(session_id) DO NOTHING`).bind(
+        session.id, session.payment_intent, session.amount_total, ownedAttempt.id, session.id,
+      )
+      : db.prepare(`INSERT INTO stripe_test_purchases
         (session_id, payment_intent_id, price_id, product_id, object_key,
          amount_total, currency, quantity, payment_status, delivery_status)
         SELECT ?, ?, price_id, id, object_key, ?, currency, ?, 'paid', 'disabled'
         FROM sandbox_products WHERE id = ? AND revision = ? AND state = 'active'
         ON CONFLICT(session_id) DO NOTHING`).bind(
         session.id, session.payment_intent, session.amount_total, quantity, product.id, product.revision,
-      ),
+      );
+    await db.batch([
+      purchaseInsert,
       recordedEventInsert(db, event, sessionId),
     ]);
     const recorded = await db.prepare("SELECT session_id FROM stripe_test_purchases WHERE session_id = ?")
