@@ -43,6 +43,12 @@ def published_articles(data, today=None):
             for key in ('title', 'desc', 'facts', 'context', 'checks', 'status', 'tech', 'step', 'take', 'help', 'support'):
                 if not article.get(lang, {}).get(key):
                     raise ValueError(f'Missing {lang}.{key} in {slug}')
+            for key in ('checks', 'deliverables'):
+                if key == 'deliverables' and key not in article[lang]:
+                    continue
+                values = article[lang].get(key)
+                if not isinstance(values, list) or not values or any(not isinstance(v, str) or not v.strip() for v in values):
+                    raise ValueError(f'Invalid {lang}.{key} in {slug}')
         selected.append(article)
     return selected
 
@@ -83,7 +89,7 @@ def article_body(article, lang='en'):
     <h2 id="impact">{e(t['context'])}</h2><p>{e(c['context'])}</p><h2 id="actions">{e(t['checks'])}</h2><ol>{''.join('<li>'+e(s)+'</li>' for s in c['checks'])}</ol>
     {f'<p><a class="sb-read" href="../tools.html?lang={lang}#cve-risk-lens">{e(t["tool"])}</a></p>' if article.get('cves') else ''}
     <div class="sb-takeaway"><span class="sb-micro">{e(t['takeaway'])}</span><p>{e(c['take'])}</p></div>
-    <section class="sb-support" id="support"><span class="sb-micro">{e(t['help'])}</span><h2>{e(t['supportTitle'])}</h2><p>{e(c['support'])}</p><strong>{e(t['deliverables'])}</strong><ul>{''.join('<li>'+e(s)+'</li>' for s in t['deliverableList'])}</ul><a class="sb-button" href="../contact.html?lang={lang}">{e(t['supportCta'])}</a><p class="sb-small">{e(t['supportNote'])}</p></section>
+    <section class="sb-support" id="support"><span class="sb-micro">{e(t['help'])}</span><h2>{e(t['supportTitle'])}</h2><p>{e(c['support'])}</p><strong>{e(t['deliverables'])}</strong><ul>{''.join('<li>'+e(s)+'</li>' for s in c.get('deliverables', t['deliverableList']))}</ul><a class="sb-button" href="../contact.html?lang={lang}">{e(t['supportCta'])}</a><p class="sb-small">{e(t['supportNote'])}</p></section>
     <section class="sb-sources" id="sources"><h2>{e(t['references'])}</h2><p>{source_links(article)}</p><p class="sb-small">{e(t['sourceNote'])}</p></section></article>
     <nav class="sb-toc" aria-label="{e(t['article'])}">{''.join(f'<a href="#{anchor}">{e(t[key])}</a>' for anchor,key in [('reported','problem'),('impact','context'),('actions','checks'),('support','help'),('sources','references')])}</nav></div>'''.replace('\n    \n','\n\n')
 
@@ -105,7 +111,7 @@ def shell(path, content, title, description, article=None):
     structured_json = json.dumps(schema,ensure_ascii=False).replace('<','\\u003c')
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=1"><link rel="stylesheet" href="{prefix}assets/site.css?v=21"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
-<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v=1" defer></script><script src="{prefix}assets/security-briefing.js?v=1" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
+<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v=2" defer></script><script src="{prefix}assets/security-briefing.js?v=2" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
 '''
 
 
@@ -131,7 +137,7 @@ def outputs(data, today=None):
         out[f'briefing/feed-{lang}.xml']='<?xml version="1.0" encoding="UTF-8"?>\n'+ET.tostring(rss,encoding='unicode')+'\n'
     # An English, crawlable fallback also works before any client script loads.
     home='''<!-- security-briefing:start -->
-      <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">Selected news and actions relevant to your infrastructure.</p></div><div class="sb-grid" id="sb-home-cards">'''+'''</div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
+      <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">'''+e(t['homeNewsIntro'])+'''</p></div><div class="sb-grid" id="sb-home-cards">'''+'''</div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
       <!-- security-briefing:end -->'''
     home=home.replace('<div class="sb-grid" id="sb-home-cards"></div>','<div class="sb-grid" id="sb-home-cards">'+''.join(card(a) for a in [a for a in articles if not a.get('archive')][:3])+'</div>')
     index=(ROOT/'index.html').read_text()

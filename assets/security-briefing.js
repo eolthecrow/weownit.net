@@ -38,6 +38,8 @@
       text('#sb-search-label',t.search);document.getElementById('sb-search').placeholder=t.search;
       text('.sb-editorial p',t.bottom);document.getElementById('sb-rss').href='briefing/feed-'+language+'.xml';renderResults();
       document.title=t.listTitle;
+      document.querySelector('meta[name="description"]').content=t.intro;
+      document.querySelector('meta[property="og:description"]').content=t.intro;
     } else if(article){
       const record=data.articles.find(a=>a.slug===document.body.dataset.sbSlug);
       if(!record)return;
