@@ -33,21 +33,28 @@ checks, not infrastructure assessments or continuous monitoring.
 
 ## Editorial selection and recommended solutions
 
-Cover cybersecurity broadly: exploited vulnerabilities, threat intelligence,
-ransomware, offensive research with defensive lessons, identity, cloud, software
-supply chains, detection and recovery. Vendor relevance is useful context, not a
-requirement for publication. Keep the existing page, filters and article structure.
+Prioritize attacks, vulnerabilities and defensive lessons affecting firewalls, VPN,
+network infrastructure, administration and incident response. Include broader
+cybersecurity events when they have a clear infrastructure or business impact.
+Select 3–5 relevant stories per edition; fewer is better than filler. Do not force
+vendor balance. Original reporting and applicable technical evidence take priority
+ over novelty or CVSS. Label historical events and updated research accurately.
 
-Choose stories with a verified primary source, an identifiable affected audience,
-actionable checks and a result that can be validated. Rarity or a high CVSS score
-alone is insufficient. Do not imply a documented case represents all organizations.
-Distinguish a new publication from a historical incident and a source update from
-an original disclosure; `date` is labeled as the source date, not always publication.
+Monitor Cisco Talos (https://blog.talosintelligence.com/), Unit 42
+(https://unit42.paloaltonetworks.com/), Google Threat Intelligence / Mandiant
+(https://cloud.google.com/blog/topics/threat-intelligence), SANS ISC
+(https://isc.sans.edu/), Rapid7 (https://www.rapid7.com/blog/), BleepingComputer
+(https://www.bleepingcomputer.com/) and The Hacker News (https://thehackernews.com/).
+Use CISA KEV and Fortinet, Palo Alto Networks, Cisco and Check Point advisories to
+verify exploitation, applicability and fixes. These are editorial discovery sources,
+not integrated automated feeds. Read primary research and vendor advisories; do not
+republish source text. Deduplicate coverage, distinguish reported exploitation from
+possible risk, and verify dates, affected versions and uncertainty before release.
 
-The first three non-archive records form the homepage selection. Maintain variety
-there: one vulnerability, one ransomware development and one threat research item.
-The current selection is PHP2Shell, GlobalProtect/ransomware and MythicRatatoskr.
-Identity and CI/CD remain in the listing; the historical Akira case stays archived.
+The first three non-archive records form the homepage selection. Choose the most
+useful mix of management exposure, network attack and defensive lessons. Connect
+specific practical checks to existing services and realistic scoped deliverables,
+without promising incident resolution, guaranteed prevention or 24/7 availability.
 
 Keep reported facts separate from our applicability assessment and recommendations.
 Each current article contains five practical steps covering verification, response,
@@ -81,3 +88,4 @@ Source content initially reviewed on 2026-10-26:
 - GitHub workflow security recommendations: https://docs.github.com/en/actions/reference/security/secure-use
 - Microsoft access revocation behavior: https://learn.microsoft.com/en-us/entra/identity/users/users-revoke-access
 - Microsoft Token Protection coverage and requirements: https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-token-protection
+

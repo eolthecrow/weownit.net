@@ -14,7 +14,7 @@
       "label": "Security Briefing",
       "eyebrow": "Știri · Threat intelligence · Remediere",
       "title": "Amenințări actuale.<br><em>Acțiuni concrete.</em>",
-      "intro": "Știri și cercetări de securitate cibernetică: vulnerabilități, ransomware, identitate, cloud și supply chain. Fapte documentate, verificări practice și remedieri care pot fi validate.",
+      "intro": "Cercetări selectate despre rețele și securitate cibernetică: atacuri, vulnerabilități și verificări practice, cu soluții adaptate mediului tău.",
       "filters": [
         "Toate",
         "Vulnerabilități",
@@ -83,7 +83,7 @@
       "label": "Security Briefing",
       "eyebrow": "News · Threat intelligence · Remediation",
       "title": "Current threats.<br><em>Practical action.</em>",
-      "intro": "Cybersecurity news and research: vulnerabilities, ransomware, identity, cloud and software supply chains. Reported facts, practical checks and remediation you can validate.",
+      "intro": "Selected network and cybersecurity research: attacks, vulnerabilities and practical checks, with solutions scoped to your environment.",
       "filters": [
         "All",
         "Vulnerabilities",
@@ -152,7 +152,7 @@
       "label": "Security Briefing",
       "eyebrow": "Actualités · Threat intelligence · Remédiation",
       "title": "Menaces actuelles.<br><em>Actions concrètes.</em>",
-      "intro": "Actualités et recherches en cybersécurité : vulnérabilités, rançongiciels, identité, cloud et chaîne logicielle. Faits documentés, vérifications pratiques et remédiation vérifiable.",
+      "intro": "Une sélection sur les réseaux et la cybersécurité : attaques, vulnérabilités et vérifications pratiques, avec des solutions adaptées à votre environnement.",
       "filters": [
         "Tous",
         "Vulnérabilités",
@@ -211,108 +211,95 @@
   },
   "articles": [
     {
-      "id": "php",
+      "id": 7,
       "cat": 1,
-      "date": "2026-10-21",
+      "date": "2026-10-14",
       "sources": [
         [
-          "PHP",
-          "https://www.php.net/archive/2026.php#2026-10-21-5"
-        ],
-        [
-          "ENISA",
-          "https://www.enisa.europa.eu/news/joint-statement-on-critical-php-vulnerabilities"
-        ],
-        [
           "Palo Alto Networks PSIRT",
-          "https://security.paloaltonetworks.com/CVE-2026-109618"
-        ],
-        [
-          "Cisco PSIRT",
-          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-php-october26-Jj384Daq"
+          "https://security.paloaltonetworks.com/CVE-2026-0322"
         ]
       ],
-      "ro": {
-        "title": "PHP2Shell: aplicații expuse și managementul infrastructurii",
-        "desc": "De la runtime-ul aplicației la interfețe de administrare: confirmă produsul afectat înainte să alegi remedierea.",
-        "status": "Remedieri disponibile sau planificate, în funcție de produs",
-        "tech": "PHP · Aplicații web · PAN-OS / Panorama · Cisco",
-        "step": "Inventar și aplicabilitate",
-        "facts": "PHP a publicat remedieri pentru CVE-2026-109618 și CVE-2026-109619 pe 21 octombrie. Palo Alto și Cisco au publicat evaluări pentru produsele lor; impactul și calendarul remedierilor diferă.",
+      "status": "published",
+      "publishedAt": "2026-10-27",
+      "reviewedAt": "2026-10-27",
+      "archive": false,
+      "slug": "pan-os-management-interface-cve-2026-0322",
+      "cves": [
+        "CVE-2026-0322"
+      ],
+      "en": {
+        "title": "PAN-OS management access: check exposure and update",
+        "desc": "A management interface vulnerability can allow authenticated attackers to execute code. Check exposure and the vendor’s fixed versions.",
+        "status": "Limited exploitation observed · Vendor advisory",
+        "tech": "PAN-OS · Panorama · Management interface",
+        "step": "Inventory versions and management access",
+        "facts": "Palo Alto Networks reports CVE-2026-0322 allows an authenticated attacker with network access to execute code with root privileges. The vendor reports very limited exploitation against the management interface.",
+        "context": "The advisory applies to affected PA-Series and VM-Series firewalls and Panorama; Cloud NGFW and Prisma Access are not affected. Risk is highest when management is reachable from the internet. Check the vendor’s current version table for applicability.",
         "checks": [
-          "Aplicabilitate: inventariază aplicațiile PHP și echipamentele de administrare; înregistrează versiunea, expunerea, responsabilul și advisory-ul aplicabil fiecăruia.",
-          "Reducerea expunerii: limitează administrarea la surse de încredere și la un jump host controlat. Pentru aplicații care nu pot fi actualizate imediat, agreează restricții temporare și o dată de expirare.",
-          "Remediere: actualizează runtime-ul sau firmware-ul conform furnizorului, cu backup și rollback pregătite. Verifică dacă remedierea este deja disponibilă pentru ramura folosită; o dată estimată nu este un patch publicat.",
-          "Investigare: păstrează logurile web, de administrare și de proces; escaladează cererile suspecte, execuția neașteptată și conexiunile de ieșire neobișnuite. Un patch nu elimină automat o persistență existentă.",
-          "Validare: confirmă pachetul remediat și procesele repornite, apoi testează aplicația și accesul administrativ dintr-o sursă permisă și una blocată. Înregistrează excepțiile rămase."
+          "Inventory: identify PAN-OS and Panorama versions, management interfaces and reachable sources.",
+          "Restrict: limit management access to trusted internal sources or a jump host while retaining tested recovery access. This reduces risk but is not a substitute for the fix.",
+          "Remediate: select a fixed supported release from the vendor advisory; prepare backup, maintenance window and rollback.",
+          "Investigate: preserve management and authentication logs; review unusual privileged logins and configuration changes. Investigate suspected compromise separately.",
+          "Validate: confirm the version, test authorized management access and denied access from untrusted networks, and record remaining exceptions."
         ],
-        "take": "Criteriul de închidere: fiecare activ afectat are dovada remedierii sau o excepție temporară cu responsabil și termen. O regulă WAF/IPS nu înlocuiește actualizarea.",
-        "help": "Evaluarea expunerii și validarea schimbării",
-        "support": "weownit.net poate corela inventarul cu advisories, revizui accesul către management și defini planul de schimbare. Administratorul aplicației sau al platformei validează compatibilitatea; includerea implementării se agreează separat.",
-        "context": "Nu deduce impactul unui appliance din severitatea vulnerabilității PHP. Advisory-ul Palo Alto delimitează managementul web și XML API; GlobalProtect portal/gateway nu sunt afectate de această problemă. Pentru aplicații, verifică runtime-ul efectiv, inclusiv containerele și pachetele cu remedieri backportate.",
+        "take": "A patched version reduces exposure; it does not establish whether previous compromise occurred.",
+        "help": "Firewall hardening and management exposure review",
+        "support": "weownit.net can inventory the affected management paths, review administrative access and prepare a scoped remediation and validation plan. Investigation of suspected compromise is agreed separately.",
         "deliverables": [
-          "Registru de aplicabilitate: activ, versiune, expunere și remediere",
-          "Plan de schimbare și rollback cu responsabili",
-          "Dovezi de versiune și teste de acces după intervenție"
+          "Management exposure and affected-version inventory",
+          "Prioritized access restrictions and upgrade plan",
+          "Post-change access tests and documented exceptions"
         ]
       },
-      "en": {
-        "title": "PHP2Shell: exposed applications and infrastructure management",
-        "desc": "From application runtimes to management interfaces: confirm the affected product before choosing the fix.",
-        "status": "Fixes released or planned, depending on the product",
-        "tech": "PHP · Web applications · PAN-OS / Panorama · Cisco",
-        "step": "Inventory and applicability",
-        "facts": "PHP released fixes for CVE-2026-109618 and CVE-2026-109619 on October 21. Palo Alto and Cisco published product assessments; impact and fix schedules differ.",
+      "ro": {
+        "title": "Accesul de management PAN-OS: verifică expunerea și actualizează",
+        "desc": "O vulnerabilitate a interfeței de management poate permite execuția de cod unui atacator autentificat. Verifică expunerea și versiunile corectate de vendor.",
+        "status": "Exploatare limitată observată · Advisory vendor",
+        "tech": "PAN-OS · Panorama · Interfață de management",
+        "step": "Inventariază versiunile și accesul de management",
+        "facts": "Palo Alto Networks raportează că CVE-2026-0322 permite unui atacator autentificat cu acces de rețea să execute cod cu privilegii root. Vendorul a observat exploatare foarte limitată împotriva interfeței de management.",
+        "context": "Advisory-ul se aplică versiunilor afectate pe firewalluri PA-Series și VM-Series și pe Panorama; Cloud NGFW și Prisma Access nu sunt afectate. Riscul este mai mare când managementul este accesibil din internet. Verifică tabelul actualizat al vendorului.",
         "checks": [
-          "Applicability: inventory PHP applications and management appliances; record each version, exposure, owner and applicable advisory.",
-          "Reduce exposure: restrict administration to trusted sources and a controlled jump host. Agree temporary restrictions and an expiry date for applications that cannot yet be updated.",
-          "Remediate: update the runtime or firmware using vendor guidance, with backups and rollback ready. Check whether the fix is released for your branch; an estimated date is not a published patch.",
-          "Investigate: preserve web, management and process logs; escalate suspicious requests, unexpected execution and unusual outbound connections. Patching does not automatically remove existing persistence.",
-          "Validate: confirm the fixed package and restarted processes, then test application behavior and management access from an allowed and a blocked source. Record remaining exceptions."
+          "Inventariere: identifică versiunile PAN-OS și Panorama, interfețele de management și sursele care le pot accesa.",
+          "Restricționare: limitează managementul la surse interne de încredere sau un jump host, păstrând accesul de recuperare testat. Aceasta reduce riscul, dar nu înlocuiește actualizarea.",
+          "Remediere: alege o versiune suportată și corectată din advisory; pregătește backup, fereastră de schimbare și rollback.",
+          "Investigare: păstrează logurile de management și autentificare; verifică autentificări privilegiate și schimbări de configurație neobișnuite. Investighează separat o posibilă compromitere.",
+          "Validare: confirmă versiunea, testează accesul autorizat și blocarea surselor neautorizate, apoi documentează excepțiile."
         ],
-        "take": "Closure criterion: every affected asset has evidence of remediation or a time-limited exception with an owner. WAF/IPS rules do not replace the update.",
-        "help": "Exposure assessment and change validation",
-        "support": "weownit.net can map inventory to advisories, review management access and define the change plan. The application or platform administrator validates compatibility; implementation is scoped separately.",
-        "context": "Do not derive an appliance’s impact from the PHP severity alone. The Palo Alto advisory scopes this issue to web management and XML API; GlobalProtect portals/gateways are not affected by this issue. For applications, identify the running runtime, including containers and vendor-backported packages.",
+        "take": "Actualizarea reduce expunerea, dar nu stabilește dacă sistemul a fost compromis anterior.",
+        "help": "Hardening firewall și evaluarea expunerii managementului",
+        "support": "weownit.net poate inventaria căile de management afectate, evalua accesul administrativ și pregăti un plan de remediere și validare cu arie agreată. Investigarea unei posibile compromiteri se stabilește separat.",
         "deliverables": [
-          "Applicability register: asset, version, exposure and fix",
-          "Change and rollback plan with owners",
-          "Version evidence and access tests after the change"
+          "Inventar al expunerii și al versiunilor afectate",
+          "Restricții prioritizate și plan de actualizare",
+          "Teste de acces după schimbare și excepții documentate"
         ]
       },
       "fr": {
-        "title": "PHP2Shell : applications exposées et administration de l’infrastructure",
-        "desc": "Du moteur applicatif aux interfaces d’administration : confirmer le produit concerné avant de choisir la correction.",
-        "status": "Correctifs disponibles ou prévus selon le produit",
-        "tech": "PHP · Applications web · PAN-OS / Panorama · Cisco",
-        "step": "Inventaire et applicabilité",
-        "facts": "PHP a publié des correctifs pour CVE-2026-109618 et CVE-2026-109619 le 21 octobre. Palo Alto et Cisco ont publié des évaluations de leurs produits ; impacts et calendriers diffèrent.",
+        "title": "Administration PAN-OS : vérifier l’exposition et mettre à jour",
+        "desc": "Une vulnérabilité de l’interface d’administration peut permettre l’exécution de code par un attaquant authentifié. Vérifiez l’exposition et les versions corrigées.",
+        "status": "Exploitation limitée observée · Avis fournisseur",
+        "tech": "PAN-OS · Panorama · Interface d’administration",
+        "step": "Inventorier les versions et les accès d’administration",
+        "facts": "Palo Alto Networks indique que CVE-2026-0322 permet à un attaquant authentifié disposant d’un accès réseau d’exécuter du code avec les privilèges root. Le fournisseur a observé une exploitation très limitée contre l’interface d’administration.",
+        "context": "L’avis concerne les versions affectées des pare-feu PA-Series et VM-Series et de Panorama ; Cloud NGFW et Prisma Access ne sont pas concernés. Le risque est plus élevé si l’administration est accessible depuis Internet. Consultez le tableau actualisé du fournisseur.",
         "checks": [
-          "Applicabilité : inventorier applications PHP et équipements d’administration ; consigner version, exposition, responsable et avis applicable.",
-          "Réduire l’exposition : limiter l’administration aux sources de confiance et à un bastion contrôlé. Définir des restrictions temporaires et une échéance pour les applications en attente de mise à jour.",
-          "Corriger : mettre à jour le moteur ou le firmware selon le fournisseur, avec sauvegarde et retour arrière préparés. Vérifier la disponibilité du correctif pour la branche utilisée ; une date estimée ne constitue pas un correctif publié.",
-          "Investiguer : conserver les journaux web, d’administration et des processus ; examiner requêtes suspectes, exécutions inattendues et connexions sortantes inhabituelles. Un correctif ne supprime pas automatiquement une persistance existante.",
-          "Valider : confirmer le paquet corrigé et les processus redémarrés, puis tester l’application et l’administration depuis une source autorisée et une source bloquée. Consigner les exceptions restantes."
+          "Inventorier les versions PAN-OS et Panorama, les interfaces d’administration et les sources qui peuvent y accéder.",
+          "Restreindre l’accès aux sources internes de confiance ou à un bastion, en conservant un accès de secours testé. Cela réduit le risque sans remplacer le correctif.",
+          "Corriger : choisir une version prise en charge et corrigée selon l’avis, puis préparer sauvegarde, fenêtre de maintenance et retour arrière.",
+          "Investiguer : conserver les journaux d’administration et d’authentification ; examiner les connexions privilégiées et changements inhabituels. Une compromission suspectée exige une investigation distincte.",
+          "Valider la version et tester les accès autorisés ainsi que le blocage des sources non autorisées ; documenter les exceptions."
         ],
-        "take": "Critère de clôture : chaque actif concerné possède une preuve de correction ou une exception temporaire avec responsable et échéance. Les règles WAF/IPS ne remplacent pas la mise à jour.",
-        "help": "Évaluation de l’exposition et validation du changement",
-        "support": "weownit.net peut rapprocher inventaire et avis, revoir les accès d’administration et définir le plan de changement. L’administrateur applicatif ou de plateforme valide la compatibilité ; l’implémentation est délimitée séparément.",
-        "context": "Ne déduisez pas l’impact sur un équipement de la seule sévérité PHP. L’avis Palo Alto délimite l’interface web d’administration et l’API XML ; les portails/passerelles GlobalProtect ne sont pas concernés par ce problème. Pour les applications, identifiez le moteur réellement exécuté, y compris les conteneurs et les paquets corrigés par rétroportage.",
+        "take": "La mise à jour réduit l’exposition mais ne prouve pas l’absence de compromission antérieure.",
+        "help": "Durcissement du pare-feu et revue de l’exposition administrative",
+        "support": "weownit.net peut inventorier les accès d’administration concernés, examiner les accès privilégiés et préparer un plan de correction et de validation au périmètre convenu. Une investigation de compromission est définie séparément.",
         "deliverables": [
-          "Registre d’applicabilité : actif, version, exposition et correctif",
-          "Plan de changement et retour arrière avec responsables",
-          "Preuves de version et tests d’accès après intervention"
+          "Inventaire de l’exposition et des versions concernées",
+          "Restrictions prioritaires et plan de mise à jour",
+          "Tests d’accès après changement et exceptions documentées"
         ]
-      },
-      "status": "published",
-      "publishedAt": "2026-10-26",
-      "reviewedAt": "2026-10-26",
-      "archive": false,
-      "slug": "php-critical-vulnerabilities",
-      "cves": [
-        "CVE-2026-109618",
-        "CVE-2026-109619"
-      ]
+      }
     },
     {
       "id": 5,
@@ -497,6 +484,110 @@
           "Scénario bénin de détection et preuves du résultat"
         ]
       }
+    },
+    {
+      "id": "php",
+      "cat": 1,
+      "date": "2026-10-21",
+      "sources": [
+        [
+          "PHP",
+          "https://www.php.net/archive/2026.php#2026-10-21-5"
+        ],
+        [
+          "ENISA",
+          "https://www.enisa.europa.eu/news/joint-statement-on-critical-php-vulnerabilities"
+        ],
+        [
+          "Palo Alto Networks PSIRT",
+          "https://security.paloaltonetworks.com/CVE-2026-109618"
+        ],
+        [
+          "Cisco PSIRT",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-php-october26-Jj384Daq"
+        ]
+      ],
+      "ro": {
+        "title": "PHP2Shell: aplicații expuse și managementul infrastructurii",
+        "desc": "De la runtime-ul aplicației la interfețe de administrare: confirmă produsul afectat înainte să alegi remedierea.",
+        "status": "Remedieri disponibile sau planificate, în funcție de produs",
+        "tech": "PHP · Aplicații web · PAN-OS / Panorama · Cisco",
+        "step": "Inventar și aplicabilitate",
+        "facts": "PHP a publicat remedieri pentru CVE-2026-109618 și CVE-2026-109619 pe 21 octombrie. Palo Alto și Cisco au publicat evaluări pentru produsele lor; impactul și calendarul remedierilor diferă.",
+        "checks": [
+          "Aplicabilitate: inventariază aplicațiile PHP și echipamentele de administrare; înregistrează versiunea, expunerea, responsabilul și advisory-ul aplicabil fiecăruia.",
+          "Reducerea expunerii: limitează administrarea la surse de încredere și la un jump host controlat. Pentru aplicații care nu pot fi actualizate imediat, agreează restricții temporare și o dată de expirare.",
+          "Remediere: actualizează runtime-ul sau firmware-ul conform furnizorului, cu backup și rollback pregătite. Verifică dacă remedierea este deja disponibilă pentru ramura folosită; o dată estimată nu este un patch publicat.",
+          "Investigare: păstrează logurile web, de administrare și de proces; escaladează cererile suspecte, execuția neașteptată și conexiunile de ieșire neobișnuite. Un patch nu elimină automat o persistență existentă.",
+          "Validare: confirmă pachetul remediat și procesele repornite, apoi testează aplicația și accesul administrativ dintr-o sursă permisă și una blocată. Înregistrează excepțiile rămase."
+        ],
+        "take": "Criteriul de închidere: fiecare activ afectat are dovada remedierii sau o excepție temporară cu responsabil și termen. O regulă WAF/IPS nu înlocuiește actualizarea.",
+        "help": "Evaluarea expunerii și validarea schimbării",
+        "support": "weownit.net poate corela inventarul cu advisories, revizui accesul către management și defini planul de schimbare. Administratorul aplicației sau al platformei validează compatibilitatea; includerea implementării se agreează separat.",
+        "context": "Nu deduce impactul unui appliance din severitatea vulnerabilității PHP. Advisory-ul Palo Alto delimitează managementul web și XML API; GlobalProtect portal/gateway nu sunt afectate de această problemă. Pentru aplicații, verifică runtime-ul efectiv, inclusiv containerele și pachetele cu remedieri backportate.",
+        "deliverables": [
+          "Registru de aplicabilitate: activ, versiune, expunere și remediere",
+          "Plan de schimbare și rollback cu responsabili",
+          "Dovezi de versiune și teste de acces după intervenție"
+        ]
+      },
+      "en": {
+        "title": "PHP2Shell: exposed applications and infrastructure management",
+        "desc": "From application runtimes to management interfaces: confirm the affected product before choosing the fix.",
+        "status": "Fixes released or planned, depending on the product",
+        "tech": "PHP · Web applications · PAN-OS / Panorama · Cisco",
+        "step": "Inventory and applicability",
+        "facts": "PHP released fixes for CVE-2026-109618 and CVE-2026-109619 on October 21. Palo Alto and Cisco published product assessments; impact and fix schedules differ.",
+        "checks": [
+          "Applicability: inventory PHP applications and management appliances; record each version, exposure, owner and applicable advisory.",
+          "Reduce exposure: restrict administration to trusted sources and a controlled jump host. Agree temporary restrictions and an expiry date for applications that cannot yet be updated.",
+          "Remediate: update the runtime or firmware using vendor guidance, with backups and rollback ready. Check whether the fix is released for your branch; an estimated date is not a published patch.",
+          "Investigate: preserve web, management and process logs; escalate suspicious requests, unexpected execution and unusual outbound connections. Patching does not automatically remove existing persistence.",
+          "Validate: confirm the fixed package and restarted processes, then test application behavior and management access from an allowed and a blocked source. Record remaining exceptions."
+        ],
+        "take": "Closure criterion: every affected asset has evidence of remediation or a time-limited exception with an owner. WAF/IPS rules do not replace the update.",
+        "help": "Exposure assessment and change validation",
+        "support": "weownit.net can map inventory to advisories, review management access and define the change plan. The application or platform administrator validates compatibility; implementation is scoped separately.",
+        "context": "Do not derive an appliance’s impact from the PHP severity alone. The Palo Alto advisory scopes this issue to web management and XML API; GlobalProtect portals/gateways are not affected by this issue. For applications, identify the running runtime, including containers and vendor-backported packages.",
+        "deliverables": [
+          "Applicability register: asset, version, exposure and fix",
+          "Change and rollback plan with owners",
+          "Version evidence and access tests after the change"
+        ]
+      },
+      "fr": {
+        "title": "PHP2Shell : applications exposées et administration de l’infrastructure",
+        "desc": "Du moteur applicatif aux interfaces d’administration : confirmer le produit concerné avant de choisir la correction.",
+        "status": "Correctifs disponibles ou prévus selon le produit",
+        "tech": "PHP · Applications web · PAN-OS / Panorama · Cisco",
+        "step": "Inventaire et applicabilité",
+        "facts": "PHP a publié des correctifs pour CVE-2026-109618 et CVE-2026-109619 le 21 octobre. Palo Alto et Cisco ont publié des évaluations de leurs produits ; impacts et calendriers diffèrent.",
+        "checks": [
+          "Applicabilité : inventorier applications PHP et équipements d’administration ; consigner version, exposition, responsable et avis applicable.",
+          "Réduire l’exposition : limiter l’administration aux sources de confiance et à un bastion contrôlé. Définir des restrictions temporaires et une échéance pour les applications en attente de mise à jour.",
+          "Corriger : mettre à jour le moteur ou le firmware selon le fournisseur, avec sauvegarde et retour arrière préparés. Vérifier la disponibilité du correctif pour la branche utilisée ; une date estimée ne constitue pas un correctif publié.",
+          "Investiguer : conserver les journaux web, d’administration et des processus ; examiner requêtes suspectes, exécutions inattendues et connexions sortantes inhabituelles. Un correctif ne supprime pas automatiquement une persistance existante.",
+          "Valider : confirmer le paquet corrigé et les processus redémarrés, puis tester l’application et l’administration depuis une source autorisée et une source bloquée. Consigner les exceptions restantes."
+        ],
+        "take": "Critère de clôture : chaque actif concerné possède une preuve de correction ou une exception temporaire avec responsable et échéance. Les règles WAF/IPS ne remplacent pas la mise à jour.",
+        "help": "Évaluation de l’exposition et validation du changement",
+        "support": "weownit.net peut rapprocher inventaire et avis, revoir les accès d’administration et définir le plan de changement. L’administrateur applicatif ou de plateforme valide la compatibilité ; l’implémentation est délimitée séparément.",
+        "context": "Ne déduisez pas l’impact sur un équipement de la seule sévérité PHP. L’avis Palo Alto délimite l’interface web d’administration et l’API XML ; les portails/passerelles GlobalProtect ne sont pas concernés par ce problème. Pour les applications, identifiez le moteur réellement exécuté, y compris les conteneurs et les paquets corrigés par rétroportage.",
+        "deliverables": [
+          "Registre d’applicabilité : actif, version, exposition et correctif",
+          "Plan de changement et retour arrière avec responsables",
+          "Preuves de version et tests d’accès après intervention"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "php-critical-vulnerabilities",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ]
     },
     {
       "id": "gheist",
