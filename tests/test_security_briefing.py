@@ -27,23 +27,23 @@ class BriefingTests(unittest.TestCase):
         for state,day in [('draft','2026-10-26'),('published','2099-01-01')]:
             data=copy.deepcopy(self.data);record=data['articles'][0]
             record['status']=state;record['publishedAt']=day;record['slug']='hidden-draft-marker'
-            generated=builder.outputs(data,date(2026,10,26))
+            generated=builder.outputs(data,date(2026,10,27))
             self.assertNotIn('briefing/hidden-draft-marker.html',generated)
             for path,body in generated.items():self.assertNotIn('hidden-draft-marker',body,path)
 
     def test_publication_requires_safe_sources_and_all_three_languages(self):
         for value in ['javascript:alert(1)','http://example.com/','https://user:secret@example.com/']:
             data=copy.deepcopy(self.data);data['articles'][0]['sources']=[['Unsafe',value]]
-            with self.assertRaises(ValueError):builder.published_articles(data,date(2026,10,26))
+            with self.assertRaises(ValueError):builder.published_articles(data,date(2026,10,27))
         del self.data['articles'][0]['fr']['checks']
-        with self.assertRaises(ValueError):builder.published_articles(self.data,date(2026,10,26))
+        with self.assertRaises(ValueError):builder.published_articles(self.data,date(2026,10,27))
 
     def test_editorial_text_cannot_inject_script_and_rss_is_valid(self):
         self.data['articles'][0]['en']['title']='</script><script>alert("test")</script>'
-        generated=builder.outputs(self.data,date(2026,10,26))
+        generated=builder.outputs(self.data,date(2026,10,27))
         client=generated['assets/security-briefing-data.js']
         self.assertNotIn('</script>',client)
-        article=generated['briefing/php-critical-vulnerabilities.html']
+        article=generated['briefing/'+self.data['articles'][0]['slug']+'.html']
         self.assertIn('&lt;script&gt;',article)
         self.assertNotIn('<script>alert(',article)
         for lang in ('en','ro','fr'):
@@ -54,18 +54,18 @@ class BriefingTests(unittest.TestCase):
     def test_article_deliverables_are_localized_escaped_and_optional(self):
         record=self.data['articles'][0]
         record['en']['deliverables']=['<script>custom</script>']
-        generated=builder.outputs(self.data,date(2026,10,26))
+        generated=builder.outputs(self.data,date(2026,10,27))
         self.assertIn('&lt;script&gt;custom&lt;/script&gt;',generated['briefing/'+record['slug']+'.html'])
         del record['en']['deliverables']
-        generated=builder.outputs(self.data,date(2026,10,26))
+        generated=builder.outputs(self.data,date(2026,10,27))
         self.assertIn(self.data['ui']['en']['deliverableList'][0],generated['briefing/'+record['slug']+'.html'])
         for key in ('checks','deliverables'):
             for value in ('wrong type',[],['']):
                 data=copy.deepcopy(self.data);data['articles'][0]['fr'][key]=value
-                with self.assertRaises(ValueError):builder.published_articles(data,date(2026,10,26))
+                with self.assertRaises(ValueError):builder.published_articles(data,date(2026,10,27))
 
     def test_home_selection_covers_three_topics_and_keeps_archive_out(self):
-        selected=[a for a in builder.published_articles(self.data,date(2026,10,26)) if not a.get('archive')][:3]
+        selected=[a for a in builder.published_articles(self.data,date(2026,10,27)) if not a.get('archive')][:3]
         self.assertEqual({a['cat'] for a in selected},{1,2,3})
         for article in self.data['articles']:
             for lang in ('en','ro','fr'):
@@ -73,7 +73,7 @@ class BriefingTests(unittest.TestCase):
                 self.assertTrue(article[lang]['deliverables'])
 
     def test_generated_links_resolve_in_root_and_nested_routes(self):
-        generated=builder.outputs(self.data,date(2026,10,26))
+        generated=builder.outputs(self.data,date(2026,10,27))
         for name,body in generated.items():
             if not name.endswith('.html'):continue
             parser=Links();parser.feed(body)
@@ -87,3 +87,4 @@ class BriefingTests(unittest.TestCase):
 
 
 if __name__=='__main__':unittest.main()
+

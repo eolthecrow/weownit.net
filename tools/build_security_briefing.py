@@ -2,6 +2,7 @@
 """Build source-attributed static briefings, RSS and the homepage excerpt. No network."""
 import argparse
 from datetime import date, datetime, timezone
+from zoneinfo import ZoneInfo
 from email.utils import format_datetime
 from html import escape as e
 import json
@@ -16,7 +17,7 @@ PUBLIC = 'https://weownit.net/'
 
 
 def published_articles(data, today=None):
-    today = today or datetime.now(timezone.utc).date()
+    today = today or datetime.now(ZoneInfo("Europe/Bucharest")).date()
     selected, seen = [], set()
     for article in data['articles']:
         slug = article['slug']
@@ -172,3 +173,4 @@ def main():
 
 
 if __name__=='__main__':main()
+
