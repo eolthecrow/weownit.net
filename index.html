@@ -210,8 +210,8 @@
     @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto } *,*::before,*::after { transition:none!important } .vendor-toolkit-track { animation:none; transform:none } .vendor-toolkit-group[aria-hidden="true"] { display:none } .vendor-toolkit-marquee { overflow-x:auto } }
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
-  <link rel="stylesheet" href="assets/site.css?v=20">
-  <script src="assets/i18n.js?v=8"></script>
+  <link rel="stylesheet" href="assets/site.css?v=21">
+  <script src="assets/i18n.js?v=10"></script>
   <script type="application/ld+json">
   {
     "@context":"https://schema.org",
@@ -237,6 +237,7 @@
   }
   </script>
   <link rel="stylesheet" href="assets/newsletter.css?v=1">
+  <link rel="stylesheet" href="assets/security-briefing.css?v=1">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -249,8 +250,9 @@
         <a href="#services"><span>01</span> Services</a>
         <a href="tools.html"><span>02</span> Tools</a>
         <a href="store.html"><span>03</span> Products</a>
-        <a href="about.html"><span>04</span> About</a>
-        <a href="contact.html"><span>05</span> Contact</a>
+        <a href="briefing.html"><span>04</span> Briefing</a>
+        <a href="about.html"><span>05</span> About</a>
+        <a href="contact.html"><span>06</span> Contact</a>
       </nav>
       <div class="rail-foot"><b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania</div>
     </aside>
@@ -309,6 +311,24 @@
           <p class="trusted-note">External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net.</p>
         </div>
       </section>
+      <!-- security-briefing:start -->
+      <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">Selected news and actions relevant to your infrastructure.</p></div><div class="sb-grid" id="sb-home-cards"><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Vulnerabilities</span><span>Source published: 2026-10-21</span></p><span class="sb-status">Critical · Updates published</span>
+    <h3><a href="briefing/php-critical-vulnerabilities.html?lang=en">PHP: two critical vulnerabilities. What should you check before updating?</a></h3>
+    <p class="sb-summary">ENISA urges action on two RCE vulnerabilities. Internet-facing applications take priority.</p><p class="sb-service"><strong>How we can help</strong><br>Exposure assessment and change coordination</p>
+    <a class="sb-read" href="briefing/php-critical-vulnerabilities.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Threat intel</span><span>Source published: 2026-10-25</span></p><span class="sb-status">Documented campaign</span>
+    <h3><a href="briefing/gheist-github-actions.html?lang=en">Gheist: stolen GitHub tokens expose secrets through Actions</a></h3>
+    <p class="sb-summary">Wiz documents abuse of compromised tokens to extract repository secrets.</p><p class="sb-service"><strong>How we can help</strong><br>Access and automation review</p>
+    <a class="sb-read" href="briefing/gheist-github-actions.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Hacking</span><span>Reviewed: 2026-10-26</span></p><span class="sb-status">Activity observed by researchers</span>
+    <h3><a href="briefing/microsoft-365-token-replay.html?lang=en">Microsoft 365: stolen sessions and token replay attacks</a></h3>
+    <p class="sb-summary">Huntress describes account compromise through reuse of captured sessions.</p><p class="sb-service"><strong>How we can help</strong><br>Triage and access review</p>
+    <a class="sb-read" href="briefing/microsoft-365-token-replay.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article></div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
+      <!-- security-briefing:end -->
       <section id="about" class="section" aria-labelledby="about-title"><div class="about-grid"><div><span class="micro">About</span><h2 id="about-title">Vladimir Arjoca.</h2></div><div><p class="lead">Network &amp; Security Consultant with 10+ years of hands-on experience across enterprise and service-provider environments.</p><p>My focus is technical security: networks, firewalls, data-center infrastructure, monitoring, automation, and incident response. weownit.net brings together consulting, practical tools, and guides to help teams make and verify better decisions.</p><div class="expertise" aria-label="Areas of experience"><span>FortiGate / FortiManager</span><span>Palo Alto / Panorama</span><span>Cisco networking</span><span>Observability</span><span>Ansible / CI</span></div></div></div></section>
       <section id="contact" class="contact" aria-labelledby="contact-title"><div><span class="micro">Get in touch</span><h2 id="contact-title">Where does your network need attention?</h2><p>Share the issue, platforms, approximate size, and desired outcome. I will use this context to define the scope and a practical next step.</p></div><a class="button" href="contact.html">Discuss your project <span class="arrow" aria-hidden="true">↗</span></a></section>
       <section id="updates" class="newsletter-block" aria-labelledby="updates-title">
@@ -337,7 +357,7 @@
           description: "Network and security consulting for SMBs and IT teams: firewall reviews, network assessments, segmentation, and prioritized remediation by Vladimir Arjoca.",
           skip: "Skip to content",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Services", "Tools", "Products", "About", "Contact"],
+          nav: ["Services", "Tools", "Products", "Briefing", "About", "Contact"],
           railFoot: "<b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania",
           topLabel: "NETWORK & SECURITY / CONSULTING & PRACTICAL GUIDANCE",
           topRight: "ASSESS · SECURE · VALIDATE",
@@ -449,7 +469,7 @@
           description: "Conseil en réseaux et sécurité pour les PME et équipes IT : revue de pare-feu, évaluation réseau, segmentation et remédiation priorisée par Vladimir Arjoca.",
           skip: "Aller au contenu",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Services", "Outils", "Produits", "À propos", "Contact"],
+          nav: ["Services", "Outils", "Produits", "Briefing", "À propos", "Contact"],
           railFoot: "<b>Vladimir Arjoca</b><br>Conseil réseau &amp; sécurité<br>Bucarest, Roumanie",
           topLabel: "RÉSEAUX & SÉCURITÉ / CONSEIL & GUIDES PRATIQUES",
           topRight: "ÉVALUER · SÉCURISER · VALIDER",
@@ -561,7 +581,7 @@
           description: "Consultanță pentru rețele și securitate dedicată IMM-urilor și echipelor IT: review firewall, evaluare de rețea, segmentare și remedieri prioritizate, cu Vladimir Arjoca.",
           skip: "Sari la conținut",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Servicii", "Instrumente", "Produse", "Despre", "Contact"],
+          nav: ["Servicii", "Instrumente", "Produse", "Briefing", "Despre", "Contact"],
           railFoot: "<b>Vladimir Arjoca</b><br>Consultanță în rețele &amp; securitate<br>București, România",
           topLabel: "REȚELE & SECURITATE / CONSULTANȚĂ & GHIDARE PRACTICĂ",
           topRight: "EVALUARE · SECURIZARE · VALIDARE",
@@ -848,6 +868,8 @@
   <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
   <script src="assets/site-assistant-facts.js?v=1" defer></script>
 <script src="assets/chatbox.js?v=23" defer></script>
+<script src="assets/security-briefing-data.js?v=1" defer></script>
+<script src="assets/security-briefing.js?v=1" defer></script>
 </body>
 </html>
 

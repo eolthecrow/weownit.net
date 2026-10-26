@@ -37,6 +37,11 @@
     "Pachete, șabloane și resurse digitale pentru rețele și securitate cibernetică, realizate de Vladimir Arjoca.",
     "Kits, modèles et ressources numériques pour les réseaux et la cybersécurité, proposés par Vladimir Arjoca."
   ],
+  "briefing": [
+    "Vulnerabilities, ransomware and attack campaigns: original sources, practical checks and remediation support from weownit.net.",
+    "Vulnerabilități, ransomware și campanii de atac: surse originale, verificări practice și sprijin pentru remediere de la weownit.net.",
+    "Vulnérabilités, rançongiciels et campagnes d’attaque : sources originales, vérifications pratiques et accompagnement par weownit.net."
+  ],
   "tools": [
     "Web-Check, CVE Risk Lens and local exposure comparisons with traceable sources, coverage limits and next actions.",
     "Web-Check, CVE Risk Lens și comparații locale ale expunerii, cu surse, limite și pași următori.",
@@ -49,9 +54,9 @@
     fr: {privacy:"Confidentialité", skip:"Aller au contenu", language:"Langue", back:"← Contact"}
   };
   const navigation = {
-    en: {services:"Services", tools:"Tools", resources:"Products", store:"Products", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
-    ro: {services:"Servicii", tools:"Instrumente", resources:"Produse", store:"Produse", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
-    fr: {services:"Services", tools:"Outils", resources:"Produits", store:"Produits", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
+    en: {services:"Services", tools:"Tools", briefing:"Briefing", resources:"Products", store:"Products", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
+    ro: {services:"Servicii", tools:"Instrumente", briefing:"Briefing", resources:"Produse", store:"Produse", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
+    fr: {services:"Services", tools:"Outils", briefing:"Briefing", resources:"Produits", store:"Produits", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
   };
   function getInitialLanguage() {
     const explicit = normalizeLanguage(new URL(location.href).searchParams.get("lang"));

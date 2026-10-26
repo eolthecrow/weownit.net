@@ -1,0 +1,493 @@
+{
+  "version": 1,
+  "ui": {
+    "ro": {
+      "nav": [
+        "Servicii",
+        "Tools",
+        "Store",
+        "Briefing",
+        "Despre",
+        "Contact"
+      ],
+      "home": "Prima pagină",
+      "label": "Security Briefing",
+      "eyebrow": "Știri · Threat intelligence · Remediere",
+      "title": "Amenințări actuale.<br><em>Acțiuni concrete.</em>",
+      "intro": "Vulnerabilități, ransomware și campanii de atac. Ce s-a publicat, cine poate fi afectat și cum abordăm remedierea.",
+      "filters": [
+        "Toate",
+        "Vulnerabilități",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Caută tehnologie sau subiect",
+      "edition": "Selecție editorială",
+      "date": "26 octombrie 2026",
+      "feature": "În atenție",
+      "read": "Analiză și măsuri",
+      "latest": "Alte subiecte de urmărit",
+      "empty": "Niciun rezultat. Încearcă alt termen sau altă categorie.",
+      "sourceDate": "Publicat de sursă",
+      "reviewed": "Consultat",
+      "source": "Sursă originală",
+      "scope": "Ce urmărești",
+      "action": "Primul pas",
+      "help": "Cum putem ajuta",
+      "more": "Vezi toate știrile →",
+      "homeNews": "Ce merită atenția ta.",
+      "homeNewsIntro": "Știri selectate și măsuri aplicabile în infrastructura ta.",
+      "back": "← Înapoi la briefing",
+      "problem": "Ce s-a publicat",
+      "checks": "Ce verifici și cum remediezi",
+      "takeaway": "Ce trebuie să rămână clar",
+      "supportTitle": "Cum te poate ajuta weownit.net",
+      "supportCta": "Discută evaluarea și remedierea ↗",
+      "deliverables": "Livrabile propuse",
+      "deliverableList": [
+        "Arie și acces agreate înainte de intervenție",
+        "Constatări documentate și priorități de remediere",
+        "Dovezi ale verificării după schimbare"
+      ],
+      "supportNote": "Disponibilitatea și aria intervenției se stabilesc înainte de începere. Formularul nu este un canal de urgență.",
+      "references": "Surse și delimitări",
+      "analysis": "Analiză editorială weownit.net",
+      "sourceNote": "Sinteză editorială a cercetării citate. Verificările și aria serviciului de mai jos sunt recomandări weownit.net, de adaptat mediului tău; nu a fost efectuată o evaluare a sistemelor tale.",
+      "menu": "Meniu",
+      "skip": "Sari la conținut",
+      "footer": "Știri documentate. Verificări practice. Remediere.",
+      "bottom": "Surse originale citate. Recomandările se adaptează mediului; o știre nu confirmă compromiterea unui sistem.",
+      "count": "materiale",
+      "article": "Articol",
+      "detail": "Subiect",
+      "sources": "Publicații & surse",
+      "rss": "RSS",
+      "results": "rezultate",
+      "noJS": "Toate materialele sunt disponibile mai jos fără JavaScript. Activează-l pentru căutare și filtrare.",
+      "context": "Aplicabilitate și impact",
+      "publishedLabel": "Publicare weownit.net",
+      "tool": "Investighează CVE-ul cu CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net"
+    },
+    "en": {
+      "nav": [
+        "Services",
+        "Tools",
+        "Store",
+        "Briefing",
+        "About",
+        "Contact"
+      ],
+      "home": "Home",
+      "label": "Security Briefing",
+      "eyebrow": "News · Threat intelligence · Remediation",
+      "title": "Current threats.<br><em>Practical action.</em>",
+      "intro": "Vulnerabilities, ransomware and attack campaigns. What was reported, who may be affected and how we approach remediation.",
+      "filters": [
+        "All",
+        "Vulnerabilities",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Search technology or topic",
+      "edition": "Editorial selection",
+      "date": "26 October 2026",
+      "feature": "In focus",
+      "read": "Analysis and actions",
+      "latest": "More to watch",
+      "empty": "No results. Try another term or category.",
+      "sourceDate": "Source published",
+      "reviewed": "Reviewed",
+      "source": "Original source",
+      "scope": "What to examine",
+      "action": "First step",
+      "help": "How we can help",
+      "more": "All briefings →",
+      "homeNews": "What deserves your attention.",
+      "homeNewsIntro": "Selected news and actions relevant to your infrastructure.",
+      "back": "← Back to briefing",
+      "problem": "What was reported",
+      "checks": "What to check and remediate",
+      "takeaway": "What to keep in mind",
+      "supportTitle": "How weownit.net can help",
+      "supportCta": "Discuss assessment and remediation ↗",
+      "deliverables": "Proposed deliverables",
+      "deliverableList": [
+        "Agreed scope and access before work starts",
+        "Documented findings and remediation priorities",
+        "Evidence from checks after the change"
+      ],
+      "supportNote": "Availability and scope are agreed before work starts. This form is not an emergency channel.",
+      "references": "Sources and boundaries",
+      "analysis": "weownit.net editorial analysis",
+      "sourceNote": "Editorial synthesis of the cited research. The checks and service scope below are weownit.net recommendations to adapt to your environment; no assessment of your systems has been performed.",
+      "menu": "Menu",
+      "skip": "Skip to content",
+      "footer": "Sourced news. Practical checks. Remediation.",
+      "bottom": "Original sources cited. Recommendations depend on the environment; a news report does not confirm a system compromise.",
+      "count": "reports",
+      "article": "Article",
+      "detail": "Topic",
+      "sources": "Publications & sources",
+      "rss": "RSS",
+      "results": "results",
+      "noJS": "All briefings are available below without JavaScript. Enable it to search or filter.",
+      "context": "Applicability and impact",
+      "publishedLabel": "weownit.net publication",
+      "tool": "Investigate the CVE with CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net"
+    },
+    "fr": {
+      "nav": [
+        "Services",
+        "Outils",
+        "Store",
+        "Briefing",
+        "À propos",
+        "Contact"
+      ],
+      "home": "Accueil",
+      "label": "Security Briefing",
+      "eyebrow": "Actualités · Threat intelligence · Remédiation",
+      "title": "Menaces actuelles.<br><em>Actions concrètes.</em>",
+      "intro": "Vulnérabilités, rançongiciels et campagnes d’attaque. Les faits publiés, les environnements concernés et notre approche de la remédiation.",
+      "filters": [
+        "Tous",
+        "Vulnérabilités",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Rechercher une technologie ou un sujet",
+      "edition": "Sélection éditoriale",
+      "date": "26 octobre 2026",
+      "feature": "À la une",
+      "read": "Analyse et mesures",
+      "latest": "À suivre également",
+      "empty": "Aucun résultat. Essayez un autre terme ou une autre catégorie.",
+      "sourceDate": "Publication de la source",
+      "reviewed": "Consulté",
+      "source": "Source originale",
+      "scope": "Points à examiner",
+      "action": "Première étape",
+      "help": "Notre accompagnement",
+      "more": "Tous les briefings →",
+      "homeNews": "Ce qui mérite votre attention.",
+      "homeNewsIntro": "Actualités sélectionnées et mesures applicables à votre infrastructure.",
+      "back": "← Retour au briefing",
+      "problem": "Les faits publiés",
+      "checks": "Vérifications et remédiation",
+      "takeaway": "À retenir",
+      "supportTitle": "Comment weownit.net peut vous aider",
+      "supportCta": "Discuter de l’évaluation et de la remédiation ↗",
+      "deliverables": "Livrables proposés",
+      "deliverableList": [
+        "Périmètre et accès convenus avant intervention",
+        "Constats documentés et priorités de remédiation",
+        "Preuves des vérifications après changement"
+      ],
+      "supportNote": "Disponibilité et périmètre convenus avant intervention. Ce formulaire n’est pas un canal d’urgence.",
+      "references": "Sources et limites",
+      "analysis": "Analyse éditoriale weownit.net",
+      "sourceNote": "Synthèse éditoriale de la recherche citée. Les vérifications et le périmètre proposés par weownit.net sont à adapter à votre environnement ; vos systèmes n’ont pas fait l’objet d’une évaluation.",
+      "menu": "Menu",
+      "skip": "Aller au contenu",
+      "footer": "Actualités sourcées. Vérifications pratiques. Remédiation.",
+      "bottom": "Sources originales citées. Les recommandations dépendent du contexte ; une actualité ne confirme pas la compromission d’un système.",
+      "count": "publications",
+      "article": "Article",
+      "detail": "Sujet",
+      "sources": "Publications & sources",
+      "rss": "RSS",
+      "results": "résultats",
+      "noJS": "Les articles restent accessibles sans JavaScript. Activez-le pour rechercher ou filtrer.",
+      "context": "Applicabilité et impact",
+      "publishedLabel": "Publication weownit.net",
+      "tool": "Examiner le CVE avec CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net"
+    }
+  },
+  "articles": [
+    {
+      "id": "php",
+      "cat": 1,
+      "date": "2026-10-21",
+      "sources": [
+        [
+          "PHP",
+          "https://www.php.net/archive/2026.php#2026-10-21-5"
+        ],
+        [
+          "ENISA",
+          "https://www.enisa.europa.eu/news/joint-statement-on-critical-php-vulnerabilities"
+        ]
+      ],
+      "ro": {
+        "title": "PHP: două vulnerabilități critice. Ce verifici înainte de actualizare?",
+        "desc": "ENISA cere intervenție pentru două vulnerabilități RCE. Prioritatea: aplicațiile expuse la Internet.",
+        "status": "Critic · Actualizări publicate",
+        "tech": "PHP · Aplicații web",
+        "step": "Inventar și aplicabilitate",
+        "facts": "PHP a publicat remedieri pentru CVE-2026-109618 și CVE-2026-109619 pe 21 octombrie. ENISA recomandă acțiune imediată.",
+        "checks": [
+          "Identifică runtime-urile PHP din inventar și confirmă pachetele cu administratorul aplicației.",
+          "Stabilește o fereastră de schimbare, backup și criterii de rollback; coordonează actualizarea cu echipa aplicației.",
+          "Validează serviciul și versiunea după schimbare; verifică și informarea PHP din 23 octombrie."
+        ],
+        "take": "Aplicabilitatea se confirmă în mediul real. Succesul actualizării se validează tehnic și funcțional.",
+        "help": "Evaluarea expunerii și coordonarea schimbării",
+        "support": "Putem defini aria afectată, dependențele și un plan de schimbare, împreună cu administratorul aplicației. Verificarea de după intervenție urmărește expunerea și funcționarea serviciului.",
+        "context": "Prioritizează aplicațiile PHP accesibile public și identifică runtime-ul real împreună cu responsabilul lui. Un header de server sau numele CMS-ului nu demonstrează instalarea unui pachet remediat."
+      },
+      "en": {
+        "title": "PHP: two critical vulnerabilities. What should you check before updating?",
+        "desc": "ENISA urges action on two RCE vulnerabilities. Internet-facing applications take priority.",
+        "status": "Critical · Updates published",
+        "tech": "PHP · Web applications",
+        "step": "Inventory and applicability",
+        "facts": "PHP released fixes for CVE-2026-109618 and CVE-2026-109619 on 21 October. ENISA recommends immediate action.",
+        "checks": [
+          "Identify PHP runtimes in your inventory and confirm packages with the application administrator.",
+          "Agree a change window, backup and rollback criteria; coordinate the update with the application team.",
+          "Validate the service and version afterwards; also review PHP’s 23 October notice."
+        ],
+        "take": "Confirm applicability in the actual environment. Validate the update technically and functionally.",
+        "help": "Exposure assessment and change coordination",
+        "support": "We can define affected scope, dependencies and a change plan with the application administrator. Post-change checks cover exposure and service operation.",
+        "context": "Prioritize publicly reachable PHP applications and identify the actual runtime with its owner. A server header or CMS name alone is insufficient to establish whether a patched package is installed."
+      },
+      "fr": {
+        "title": "PHP : deux failles critiques. Que vérifier avant la mise à jour ?",
+        "desc": "L’ENISA appelle à traiter deux vulnérabilités RCE. Priorité aux applications exposées à Internet.",
+        "status": "Critique · Correctifs publiés",
+        "tech": "PHP · Applications web",
+        "step": "Inventaire et applicabilité",
+        "facts": "PHP a publié des correctifs pour CVE-2026-109618 et CVE-2026-109619 le 21 octobre. L’ENISA recommande une action immédiate.",
+        "checks": [
+          "Inventoriez les environnements PHP et confirmez les paquets avec l’administrateur applicatif.",
+          "Définissez une fenêtre de changement, une sauvegarde et un retour arrière avec l’équipe applicative.",
+          "Validez le service et la version après intervention ; consultez aussi l’information PHP du 23 octobre."
+        ],
+        "take": "Confirmez l’applicabilité dans l’environnement réel. Validez le changement techniquement et fonctionnellement.",
+        "help": "Évaluation de l’exposition et coordination du changement",
+        "support": "Nous pouvons définir le périmètre, les dépendances et un plan avec l’administrateur applicatif. Les vérifications après changement couvrent l’exposition et le fonctionnement du service.",
+        "context": "Priorisez les applications PHP accessibles au public et identifiez le runtime avec son responsable. Un en-tête serveur ou le nom du CMS ne prouve pas qu’un paquet corrigé est installé."
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "php-critical-vulnerabilities",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ]
+    },
+    {
+      "id": "gheist",
+      "cat": 2,
+      "date": "2026-10-25",
+      "sources": [
+        [
+          "Wiz Research",
+          "https://www.wiz.io/blog/gheist-attempted-scaled-abuse-of-stolen-github-tokens-stumbles"
+        ]
+      ],
+      "ro": {
+        "title": "Gheist: tokenuri GitHub furate, secrete expuse prin Actions",
+        "desc": "Wiz documentează abuzarea tokenurilor compromise pentru extragerea secretelor din repository-uri.",
+        "status": "Campanie documentată",
+        "tech": "GitHub · CI/CD · Secrete",
+        "step": "Delimitează accesul tokenurilor",
+        "facts": "Potrivit Wiz, Gheist folosește tokenuri furate pentru a introduce workflow-uri care extrag secrete prin logurile GitHub Actions.",
+        "checks": [
+          "Păstrează dovezile relevante înainte de curățare și delimitează accesul permis tokenurilor suspecte.",
+          "Coordonează revocarea și rotația credențialelor cu responsabilii aplicațiilor.",
+          "Revizuiește permisiunile de automatizare și documentează verificările de după intervenție."
+        ],
+        "take": "Evaluarea trebuie să urmărească și sistemele accesibile cu credențialele expuse.",
+        "help": "Review de acces și automatizare",
+        "support": "Putem delimita expunerea, revizui permisiunile de automatizare și coordona planul de remediere. Analiza aprofundată a aplicațiilor sau a mediilor cloud se stabilește separat.",
+        "context": "Corelează accesul la repository-uri cu credențialele și serviciile dependente. Evaluarea trebuie să includă și efectul schimbării credențialelor asupra deployment-urilor și operațiunilor."
+      },
+      "en": {
+        "title": "Gheist: stolen GitHub tokens expose secrets through Actions",
+        "desc": "Wiz documents abuse of compromised tokens to extract repository secrets.",
+        "status": "Documented campaign",
+        "tech": "GitHub · CI/CD · Secrets",
+        "step": "Scope token access",
+        "facts": "According to Wiz, Gheist uses stolen tokens to introduce workflows that extract secrets through GitHub Actions logs.",
+        "checks": [
+          "Preserve relevant evidence before cleanup and scope the access allowed by suspect tokens.",
+          "Coordinate revocation and credential rotation with application owners.",
+          "Review automation permissions and document post-remediation checks."
+        ],
+        "take": "The assessment should follow systems accessible with exposed credentials.",
+        "help": "Access and automation review",
+        "support": "We can scope exposure, review automation permissions and coordinate remediation. In-depth application or cloud investigations are scoped separately.",
+        "context": "Map repository access to downstream credentials and services. The assessment boundary must include the impact of changing credentials on deployments and operations."
+      },
+      "fr": {
+        "title": "Gheist : des jetons GitHub volés exposent les secrets via Actions",
+        "desc": "Wiz documente l’abus de jetons compromis pour extraire les secrets des dépôts.",
+        "status": "Campagne documentée",
+        "tech": "GitHub · CI/CD · Secrets",
+        "step": "Délimiter les accès des jetons",
+        "facts": "Selon Wiz, Gheist utilise des jetons volés pour introduire des workflows qui extraient les secrets via les logs GitHub Actions.",
+        "checks": [
+          "Préservez les preuves avant nettoyage et délimitez les accès des jetons suspects.",
+          "Coordonnez la révocation et la rotation des identifiants avec les responsables applicatifs.",
+          "Révisez les permissions d’automatisation et documentez les contrôles après intervention."
+        ],
+        "take": "L’évaluation doit couvrir les systèmes accessibles avec les identifiants exposés.",
+        "help": "Revue des accès et de l’automatisation",
+        "support": "Nous pouvons délimiter l’exposition, revoir les permissions et coordonner la remédiation. L’investigation approfondie des applications ou du cloud est définie séparément.",
+        "context": "Reliez les accès aux dépôts aux identifiants et services dépendants. Incluez l’effet d’une rotation des identifiants sur les déploiements et les opérations."
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "gheist-github-actions",
+      "cves": []
+    },
+    {
+      "id": "m365",
+      "cat": 4,
+      "date": null,
+      "sources": [
+        [
+          "Huntress",
+          "https://www.huntress.com/blog/token-replay-spray"
+        ]
+      ],
+      "ro": {
+        "title": "Microsoft 365: atacuri cu sesiuni furate și token replay",
+        "desc": "Huntress descrie compromiterea conturilor prin reutilizarea sesiunilor capturate.",
+        "status": "Activitate observată de cercetători",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Verifică autentificările și persistența",
+        "facts": "Huntress raportează reutilizarea sesiunilor Microsoft 365 și adăugarea unor dispozitive și metode MFA de către atacatori.",
+        "checks": [
+          "Conservă logurile relevante și coordonează investigarea cu administratorul tenantului.",
+          "Revizuiește sesiunile, dispozitivele și metodele de autentificare suspecte.",
+          "Definește validarea după intervenție și urmărește tentativele de acces ulterioare."
+        ],
+        "take": "Măsurile se aleg după dovezi și se coordonează cu responsabilul identității.",
+        "help": "Triere și review de acces",
+        "support": "Putem sprijini trierea dovezilor, evaluarea accesului și coordonarea unui plan cu administratorul Microsoft 365. Operațiunile specializate se definesc în aria intervenției.",
+        "context": "Verifică dovezile tenantului înainte de a decide ce identități sau sesiuni restricționezi. Coordonează containment-ul cu administratorul și responsabilul de business pentru păstrarea accesului esențial."
+      },
+      "en": {
+        "title": "Microsoft 365: stolen sessions and token replay attacks",
+        "desc": "Huntress describes account compromise through reuse of captured sessions.",
+        "status": "Activity observed by researchers",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Review sign-ins and persistence",
+        "facts": "Huntress reports Microsoft 365 session replay and devices and MFA methods registered by attackers.",
+        "checks": [
+          "Preserve relevant logs and coordinate investigation with the tenant administrator.",
+          "Review suspicious sessions, devices and authentication methods.",
+          "Define post-response validation and monitor subsequent access attempts."
+        ],
+        "take": "Choose actions from evidence and coordinate with the identity owner.",
+        "help": "Triage and access review",
+        "support": "We can support evidence triage, access assessment and a response plan with the Microsoft 365 administrator. Specialist operations are explicitly scoped.",
+        "context": "Check the tenant’s evidence before deciding which identities or sessions to restrict. Coordinate containment with the tenant administrator and business owner to preserve essential access."
+      },
+      "fr": {
+        "title": "Microsoft 365 : sessions volées et attaques par rejeu de jetons",
+        "desc": "Huntress décrit des compromissions par réutilisation de sessions capturées.",
+        "status": "Activité observée par les chercheurs",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Vérifier les connexions et la persistance",
+        "facts": "Huntress rapporte le rejeu de sessions Microsoft 365 et l’enregistrement de dispositifs et méthodes MFA par les attaquants.",
+        "checks": [
+          "Préservez les logs et coordonnez l’investigation avec l’administrateur du tenant.",
+          "Examinez les sessions, dispositifs et méthodes d’authentification suspects.",
+          "Définissez les contrôles après intervention et surveillez les accès ultérieurs."
+        ],
+        "take": "Choisissez les mesures à partir des preuves avec le responsable des identités.",
+        "help": "Triage et revue des accès",
+        "support": "Nous pouvons accompagner le triage, l’évaluation des accès et la coordination avec l’administrateur Microsoft 365. Les opérations spécialisées sont explicitement délimitées.",
+        "context": "Vérifiez les preuves du tenant avant de restreindre des identités ou sessions. Coordonnez le confinement avec l’administrateur et le responsable métier pour préserver les accès essentiels."
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "microsoft-365-token-replay",
+      "cves": []
+    },
+    {
+      "id": "akira",
+      "cat": 3,
+      "date": "2026-06-29",
+      "sources": [
+        [
+          "The DFIR Report",
+          "https://thedfirreport.com/2026/06/29/from-bing-search-to-ransomware-bumblebee-and-adaptixc2-deliver-akira-3/"
+        ]
+      ],
+      "ro": {
+        "title": "De la un installer fals la Akira ransomware",
+        "desc": "Un studiu de caz DFIR urmărește o intruziune din iulie 2025 până la ransomware.",
+        "status": "Studiu de caz · Arhivă",
+        "tech": "Windows · Active Directory · Rețea",
+        "step": "Analizează căile de propagare",
+        "facts": "The DFIR Report descrie o intruziune inițiată cu un installer troianizat, urmată de mișcare laterală și ransomware Akira.",
+        "checks": [
+          "Modelează un scenariu sintetic de acces inițial și definește limitele exercițiului.",
+          "Revizuiește fluxurile administrative între utilizatori, servere și sistemele de backup.",
+          "Testează controalele și recuperarea în condiții agreate; documentează lipsurile."
+        ],
+        "take": "Raportul oferă lecții de apărare; indicatorii istorici necesită context înainte de utilizare.",
+        "help": "Segmentare și pregătire pentru incidente",
+        "support": "Putem evalua segmentarea, accesul administrativ și pregătirea pentru recuperare. Livrabilele pot include fluxuri de acces, priorități de remediere și un exercițiu de validare. Recuperarea datelor nu este garantată.",
+        "context": "Folosește cazul istoric pentru a examina căile administrative și ipotezele de recuperare. Testează un scenariu sintetic în condiții agreate, fără a executa malware în producție."
+      },
+      "en": {
+        "title": "From a fake installer to Akira ransomware",
+        "desc": "A DFIR case study follows a July 2025 intrusion through to ransomware.",
+        "status": "Case study · Archive",
+        "tech": "Windows · Active Directory · Network",
+        "step": "Examine propagation paths",
+        "facts": "The DFIR Report describes an intrusion starting with a trojanized installer, followed by lateral movement and Akira ransomware.",
+        "checks": [
+          "Model a synthetic initial-access scenario and agree exercise boundaries.",
+          "Review administrative flows between users, servers and backup systems.",
+          "Test controls and recovery under agreed conditions; document gaps."
+        ],
+        "take": "The report offers defensive lessons; historical indicators need context before use.",
+        "help": "Segmentation and incident readiness",
+        "support": "We can assess segmentation, administrative access and recovery readiness. Deliverables can include access flows, remediation priorities and a validation exercise. Data recovery is not guaranteed.",
+        "context": "Use this historical case to examine administrative paths and recovery assumptions. Test a synthetic scenario under agreed conditions rather than replaying malware in production."
+      },
+      "fr": {
+        "title": "D’un faux installateur au ransomware Akira",
+        "desc": "Une étude DFIR retrace une intrusion de juillet 2025 jusqu’au ransomware.",
+        "status": "Étude de cas · Archives",
+        "tech": "Windows · Active Directory · Réseau",
+        "step": "Examiner les chemins de propagation",
+        "facts": "The DFIR Report décrit une intrusion par installateur piégé, suivie de mouvements latéraux et du ransomware Akira.",
+        "checks": [
+          "Modélisez un scénario synthétique d’accès initial et convenez des limites de l’exercice.",
+          "Révisez les flux administratifs entre utilisateurs, serveurs et systèmes de sauvegarde.",
+          "Testez les contrôles et la reprise dans les conditions convenues ; documentez les lacunes."
+        ],
+        "take": "Ce rapport apporte des leçons défensives ; ses indicateurs historiques nécessitent du contexte.",
+        "help": "Segmentation et préparation aux incidents",
+        "support": "Nous pouvons évaluer la segmentation, les accès administratifs et la préparation à la reprise. Livrables possibles : flux, priorités de remédiation et exercice de validation. La récupération des données n’est pas garantie.",
+        "context": "Utilisez ce cas historique pour examiner les chemins administratifs et les hypothèses de reprise. Testez un scénario synthétique dans les conditions convenues, sans exécuter de malware en production."
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": true,
+      "slug": "akira-ransomware-intrusion",
+      "cves": []
+    }
+  ]
+}

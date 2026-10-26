@@ -193,7 +193,7 @@ header .global-nav-shell{
   .global-nav-panel.is-open{display:block}
   .global-nav-links{
     display:grid;
-    grid-template-columns:repeat(5,minmax(0,1fr));
+    grid-template-columns:repeat(3,minmax(0,1fr));
     width:min(620px,100%);
     margin-left:auto;
     gap:.2rem;
