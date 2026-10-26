@@ -49,7 +49,28 @@ class BriefingTests(unittest.TestCase):
         for lang in ('en','ro','fr'):
             feed=ET.fromstring(generated['briefing/feed-'+lang+'.xml'])
             self.assertEqual(feed.findtext('channel/language'),lang)
-            self.assertEqual(len(feed.findall('channel/item')),4)
+            self.assertEqual(len(feed.findall('channel/item')),len(self.data['articles']))
+
+    def test_article_deliverables_are_localized_escaped_and_optional(self):
+        record=self.data['articles'][0]
+        record['en']['deliverables']=['<script>custom</script>']
+        generated=builder.outputs(self.data,date(2026,10,26))
+        self.assertIn('&lt;script&gt;custom&lt;/script&gt;',generated['briefing/'+record['slug']+'.html'])
+        del record['en']['deliverables']
+        generated=builder.outputs(self.data,date(2026,10,26))
+        self.assertIn(self.data['ui']['en']['deliverableList'][0],generated['briefing/'+record['slug']+'.html'])
+        for key in ('checks','deliverables'):
+            for value in ('wrong type',[],['']):
+                data=copy.deepcopy(self.data);data['articles'][0]['fr'][key]=value
+                with self.assertRaises(ValueError):builder.published_articles(data,date(2026,10,26))
+
+    def test_home_selection_covers_three_topics_and_keeps_archive_out(self):
+        selected=[a for a in builder.published_articles(self.data,date(2026,10,26)) if not a.get('archive')][:3]
+        self.assertEqual({a['cat'] for a in selected},{1,2,3})
+        for article in self.data['articles']:
+            for lang in ('en','ro','fr'):
+                self.assertEqual(len(article[lang]['checks']),5)
+                self.assertTrue(article[lang]['deliverables'])
 
     def test_generated_links_resolve_in_root_and_nested_routes(self):
         generated=builder.outputs(self.data,date(2026,10,26))
