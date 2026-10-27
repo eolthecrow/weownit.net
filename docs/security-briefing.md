@@ -1,12 +1,33 @@
 # Security Briefing
 
-Static editorial publication on GitHub Pages. No Worker, bot, Telegram integration,
-external runtime feed, automatic article generation or publishing schedule is enabled.
+Static editorial publication on GitHub Pages. A GitHub Actions workflow collects candidate titles on Sunday and prepares a publication pull request on Monday. These steps require editorial review; they do not write articles, merge, publish, email or send Telegram messages automatically. The site itself has no runtime feed.
 
-The homepage and `briefing.html` share the same published records. Six individual
+The homepage and `briefing.html` share the same published records. Individual
 HTML pages provide readable English content without JavaScript; the existing
 `SiteI18n` language preference switches all text and links between EN, RO and FR.
 RSS feeds and sitemap entries are generated for each language.
+
+## Weekly review
+
+The scheduled workflow `Weekly security briefing preparation` collects source titles into
+`briefing-candidates.json` and a readable `briefing-review.md` artifact. Find it under
+GitHub → Actions → the workflow run → Artifacts (retained 30 days). Title keyword
+topics are only a triage hint, not evidence of impact or relevance; unclassified
+titles remain visible. Review failures in the artifact and retry a failed source.
+
+Select, reject or hold each item. Open the research and original vendor advisory,
+verify dates, applicability, exploitation and uncertainties; write practical checks
+and explain scoped weownit.net support and deliverables in EN/RO/FR. Edit the JSON
+and mark records published only after editorial approval. Monday's workflow prepares
+a PR when generated output changes; merge review is required for publication. If no
+new eligible content is available, the previous edition remains. Schedules and
+GitHub Actions availability are best effort, so check the run and PR. Telegram and
+email are not configured.
+
+Sources include CISA, Unit 42, ESET, Talos, Google Threat Intelligence, SANS ISC,
+Rapid7 Labs, BleepingComputer and The Hacker News; feeds are discovery only. Consult
+Fortinet, Palo Alto, Cisco, Check Point and CISA primary advisories as applicable.
+Do not reproduce third-party full articles.
 
 ## Edit or publish
 
@@ -33,7 +54,7 @@ checks, not infrastructure assessments or continuous monitoring.
 
 ## Editorial selection and recommended solutions
 
-Cover cybersecurity broadly: exploited vulnerabilities, threat intelligence,
+Prioritize actionable network and security stories, including attacks and incidents affecting infrastructure; do not restrict coverage to firewalls. Cover cybersecurity broadly: exploited vulnerabilities, threat intelligence,
 ransomware, offensive research with defensive lessons, identity, cloud, software
 supply chains, detection and recovery. Vendor relevance is useful context, not a
 requirement for publication. Keep the existing page, filters and article structure.
@@ -46,7 +67,7 @@ an original disclosure; `date` is labeled as the source date, not always publica
 
 The first three non-archive records form the homepage selection. Maintain variety
 there: one vulnerability, one ransomware development and one threat research item.
-The current selection is PHP2Shell, GlobalProtect/ransomware and MythicRatatoskr.
+The current selection is PAN-OS management, GlobalProtect/ransomware and MythicRatatoskr.
 Identity and CI/CD remain in the listing; the historical Akira case stays archived.
 
 Keep reported facts separate from our applicability assessment and recommendations.
@@ -81,3 +102,4 @@ Source content initially reviewed on 2026-10-26:
 - GitHub workflow security recommendations: https://docs.github.com/en/actions/reference/security/secure-use
 - Microsoft access revocation behavior: https://learn.microsoft.com/en-us/entra/identity/users/users-revoke-access
 - Microsoft Token Protection coverage and requirements: https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-token-protection
+
