@@ -1,0 +1,64 @@
+name: Payments R2 guard tests
+
+on:
+  push:
+    branches:
+      - feature/r2-preventive-limits-20261021
+    paths:
+      - "payments/**"
+      - ".github/workflows/payments-guard-tests.yml"
+  pull_request:
+    paths:
+      - "payments/**"
+      - ".github/workflows/payments-guard-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  unit-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        npm-version: ["10.9.4", "11.9.0"]
+    defaults:
+      run:
+        working-directory: payments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Select npm version for lockfile compatibility
+        run: npm install --global npm@${{ matrix.npm-version }}
+      - name: Install locked local test runtime
+        run: npm ci
+      - name: Test isolated payments Worker
+        run: npm test
+      - name: Test local D1 and R2 integration
+        run: npm run test:integration
+        env:
+          WRANGLER_SEND_METRICS: "false"
+  admin-browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: payments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - name: Install isolated browser test runtime
+        run: npm install --prefix "$RUNNER_TEMP/catalog-browser" --no-save --package-lock=false playwright@1.62.1
+      - name: Install Chromium
+        run: node "$RUNNER_TEMP/catalog-browser/node_modules/playwright/cli.js" install --with-deps chromium
+      - name: Verify admin catalog and RO/EN/FR customer checkout/download on desktop and mobile
+        run: npm run test:browser
+        env:
+          WRANGLER_SEND_METRICS: "false"
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/catalog-browser/node_modules/playwright

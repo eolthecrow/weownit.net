@@ -1,0 +1,24 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "weownit-payments",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": true,
+  "vars": {
+    "STRIPE_WEBHOOK_ENABLED": "false",
+    "SANDBOX_FULFILLMENT_ENABLED": "false"
+  },
+  "r2_buckets": [
+    {
+      "binding": "TOOLKITS_R2",
+      "bucket_name": "weownit-toolkits"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "R2_BUDGET_DB",
+      "database_name": "weownit_r2_budget",
+      "database_id": "REPLACE_WITH_REAL_D1_UUID"
+    }
+  ]
+}

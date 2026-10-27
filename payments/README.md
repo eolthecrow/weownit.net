@@ -1,0 +1,85 @@
+# weownit.net — Worker separat de plăți (SANDBOX)
+
+Acest director conține Worker-ul separat `weownit-payments`. Nu modifică site-ul public, `network-security-assistant` sau checkout-ul public actual. Poate crea sesiuni Stripe Checkout noi, exclusiv în sandbox, cu activare explicită.
+
+## Ce este implementat acum
+
+- `/admin`: interfață pentru adăugare, editare, ștergere reversibilă și restaurare a produselor din catalogul D1. Listează prețuri Stripe sandbox și ZIP-uri R2; instalare: [ADMIN_CATALOG_SETUP.md](ADMIN_CATALOG_SETUP.md).
+- `/buy/<product-id>` și `/complete`: cumpărare sandbox și confirmare în RO/EN/FR, cu acces temporar la ZIP legat de browser. Dezactivate implicit. Instalare: [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
+- `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
+- `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
+- `POST /stripe/webhook`: cod pregătit pentru notificări Stripe semnate, exclusiv sandbox, și registru de plăți D1. Dezactivat până la configurare. Vezi [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
+- Checkout cu un singur produs și 1–3 unități: verifică subtotalul din Stripe și salvează cantitatea în D1. La actualizarea unui deployment existent, folosește `npm run deploy:catalog` pentru migrarea condiționată a coloanei `quantity`.
+- Nu există acces neautorizat la ZIP sau plăți live. Registrul remote a fost confirmat prin rezultatul D1 furnizat de utilizator pentru 2 unități / 20 RON; utilizatorul raportează și verificarea cantității 3. Noua livrare legată de browser este pregătită în sursă și încă necesită deployment și verificări manuale.
+- Operațiunile R2 efectuate de acest Worker sunt refuzate dacă D1 nu poate confirma rezerva.
+
+## Praguri preventive agreate
+
+| Resursă | Prag |
+|---|---:|
+| Stocare instantanee pentru încărcările viitoare ale aplicației | 8.000.000.000 bytes |
+| R2 Class A (numai operațiuni prin Worker) | 700.000/lună UTC |
+| R2 Class B (numai operațiuni prin Worker) | 7.000.000/lună UTC |
+
+**Atenție:** limitele nu măsoară utilizarea întregului cont Cloudflare și nu garantează o factură de 0 USD. Cloudflare facturează stocarea în GB-month, nu în GB instantanee. D1 Free are un plafon zilnic separat. Utilizatorul a confirmat crearea alertei de buget; monitorizarea efectivă la nivel de cont rămâne de verificat. Probe-ul și verificările HEAD ale catalogului folosesc Class B; listarea arhivelor prin catalog folosește Class A. Verificarea de stocare rămâne un helper, fără control asupra încărcărilor în dashboard.
+
+## Ce există deja în Cloudflare (confirmat de utilizator)
+
+- Bucket privat Standard: `weownit-toolkits`.
+- Fișier test: `products/network-security-assessment-test.zip`.
+- D1: `weownit_r2_budget` cu tabelul `r2_budget_monthly` creat.
+
+## Publicare separată prin Wrangler (un singur deploy după configurare)
+
+Clonează branch-ul separat și intră în directorul noului Worker:
+
+```bash
+git clone --branch feature/r2-preventive-limits-20261021 --single-branch https://github.com/eolthecrow/weownit.net.git weownit-payments-test
+cd weownit-payments-test/payments
+npm ci
+npm test
+npm run test:integration
+cp wrangler.jsonc.example wrangler.jsonc
+```
+
+În Cloudflare > D1 > `weownit_r2_budget` găsești UUID-ul complet al bazei. În fișierul local `wrangler.jsonc`, înlocuiește `REPLACE_WITH_REAL_D1_UUID` cu acel UUID. Păstrează numele binding-urilor `TOOLKITS_R2` și `R2_BUDGET_DB`. Dacă R2 a fost creat explicit cu jurisdicție UE, adaugă `"jurisdiction": "eu"` în obiectul din `r2_buckets`. Pentru bucket obișnuit nu adăuga jurisdicția.
+
+Execută:
+
+```bash
+npx wrangler login
+npx wrangler deploy
+```
+
+Primul deploy creează Worker-ul separat `weownit-payments` în Cloudflare. Nu schimbă domeniul public sau alte Workers.
+
+Înainte de verificarea administrativă, generează local un token și înregistrează-l în Cloudflare. Nu publica și nu trimite tokenul în conversație:
+
+```bash
+ADMIN_PROBE_TOKEN="$(openssl rand -hex 32)"
+printf %s "$ADMIN_PROBE_TOKEN" | npx wrangler secret put ADMIN_PROBE_TOKEN
+```
+
+Verifică înlocuind subdomeniul cu adresa reală afișată de Wrangler:
+
+```bash
+curl -i https://weownit-payments.<subdomain>.workers.dev/health
+curl -i -X POST -H "Authorization: Bearer $ADMIN_PROBE_TOKEN" https://weownit-payments.<subdomain>.workers.dev/admin/probe
+unset ADMIN_PROBE_TOKEN
+```
+
+Probe-ul trebuie să confirme `object_found: true`, mărimea ZIP-ului și creșterea contorului `class_b`. Verifică în consola D1:
+
+```sql
+SELECT * FROM r2_budget_monthly ORDER BY month DESC;
+```
+
+## Ce NU este implementat încă
+
+1. Publicarea și verificarea manuală a noii livrări sandbox din [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
+2. Recuperarea accesului prin email, acces pe alte dispozitive și licențe multi-user. Controlul curent al refund/dispute verifică Stripe la cerere, fără reconciliere completă.
+3. Inventar atomic al stocării și reconciliere cu analytics R2 la nivel de cont.
+4. Verificarea alertei Cloudflare de cost, reconcilierea consumului și modalitatea de livrare alternativă când limita e atinsă.
+5. Validarea fiscală/legală pentru vânzări reale.
+
+**Revert:** Totul este pe `feature/r2-preventive-limits-20261021`. Nu este integrat în `main`. Nu face merge și nu conecta Store-ul înaintea validării fluxului complet.
