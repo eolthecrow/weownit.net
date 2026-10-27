@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build source-attributed static briefings, RSS and the homepage excerpt. No network."""
 import argparse
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 from email.utils import format_datetime
 from html import escape as e
 import json
@@ -50,7 +50,19 @@ def published_articles(data, today=None):
                 if not isinstance(values, list) or not values or any(not isinstance(v, str) or not v.strip() for v in values):
                     raise ValueError(f'Invalid {lang}.{key} in {slug}')
         selected.append(article)
-    return selected
+    return sorted(selected, key=lambda a: a['publishedAt'], reverse=True)
+
+
+def edition(article):
+    day = date.fromisoformat(article['publishedAt'])
+    return (day - timedelta(days=day.weekday())).isoformat()
+
+
+def split_editions(articles):
+    eligible = [a for a in articles if not a.get('archive')]
+    latest = max((edition(a) for a in eligible), default=None)
+    current = [a for a in eligible if edition(a) == latest]
+    return latest, current, [a for a in articles if a not in current]
 
 
 def meta(article, lang):
@@ -76,7 +88,14 @@ def card(article, lang='en', prefix='', featured=False):
 
 def listing(articles, lang='en'):
     t = DATA['ui'][lang]
-    return (card(articles[0],lang,featured=True) if articles else '') + f'<div class="sb-grid">'+''.join(card(a,lang) for a in articles[1:])+'</div>'
+    latest, current, archive = split_editions(articles)
+    def section(title, group, featured=False):
+        if not group: return ''
+        first = card(group[0],lang,featured=True) if featured else ''
+        rest = group[1:] if featured else group
+        return '<section class="sb-edition"><h2 class="sb-edition-title">'+e(title)+'</h2>'+first+'<div class="sb-grid">'+''.join(card(a,lang) for a in rest)+'</div></section>'
+    return (section(t['currentEdition']+' · '+latest, current, True) if latest else '')+section(t['archiveTitle'], archive)
+
 
 
 def article_body(article, lang='en'):
@@ -110,8 +129,8 @@ def shell(path, content, title, description, article=None):
     alternatives=''.join(f'<link rel="alternate" hreflang="{lang}" href="{PUBLIC+path}?lang={lang}">' for lang in LANGUAGES)
     structured_json = json.dumps(schema,ensure_ascii=False).replace('<','\\u003c')
     return f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=1"><link rel="stylesheet" href="{prefix}assets/site.css?v=21"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
-<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v=2" defer></script><script src="{prefix}assets/security-briefing.js?v=2" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=2"><link rel="stylesheet" href="{prefix}assets/site.css?v=21"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
+<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v=3" defer></script><script src="{prefix}assets/security-briefing.js?v=3" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
 '''
 
 
@@ -119,6 +138,7 @@ def outputs(data, today=None):
     global DATA
     DATA = data
     articles = published_articles(data, today)
+    latest, current, archive = split_editions(articles)
     t = data['ui']['en']
     heading = t['title'].replace('<br>',' ').replace('<em>','').replace('</em>','')
     content = f'''<header class="sb-heading"><p class="sb-eyebrow">{e(t['eyebrow'])}</p><h1>{e(heading)}</h1><p class="sb-lead">{e(t['intro'])}</p></header><div class="sb-toolbar"><div class="sb-filters" role="group" aria-label="Topics">{''.join(f'<button type="button" data-sb-cat="{i}" aria-pressed="{str(i==0).lower()}">{e(name)}</button>' for i,name in enumerate(t['filters']))}</div><label class="sb-search-label"><span class="sb-sr-only" id="sb-search-label">{e(t['search'])}</span><input type="search" id="sb-search" aria-labelledby="sb-search-label" placeholder="{e(t['search'],quote=True)}" maxlength="120"></label></div><p class="sb-result-count" id="sb-result-count" role="status"></p><div id="sb-results">{listing(articles)}</div><noscript><p>{e(t['noJS'])}</p></noscript><div class="sb-editorial"><p>{e(t['bottom'])}</p><a id="sb-rss" href="briefing/feed-en.xml">RSS ↗</a></div>'''
@@ -126,7 +146,7 @@ def outputs(data, today=None):
     for article in articles:
         path = 'briefing/'+article['slug']+'.html'
         out[path] = shell(path,'<div id="sb-article">'+article_body(article)+'</div>',article['en']['title']+' — weownit.net',article['en']['desc'],article)
-    public_data = {'ui':data['ui'],'articles':articles,'markup':{a['slug']:{lang:{'card':card(a,lang),'featured':card(a,lang,featured=True),'article':article_body(a,lang)} for lang in LANGUAGES} for a in articles}}
+    public_data = {'ui':data['ui'],'articles':articles,'currentEdition':latest,'markup':{a['slug']:{lang:{'card':card(a,lang),'featured':card(a,lang,featured=True),'article':article_body(a,lang)} for lang in LANGUAGES} for a in articles}}
     out['assets/security-briefing-data.js'] = '/* Generated from content/security-briefing.json; published records only. */\nwindow.SecurityBriefingData='+json.dumps(public_data,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')+';\n'
     for lang in LANGUAGES:
         rss=ET.Element('rss',version='2.0');channel=ET.SubElement(rss,'channel')
@@ -139,7 +159,7 @@ def outputs(data, today=None):
     home='''<!-- security-briefing:start -->
       <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">'''+e(t['homeNewsIntro'])+'''</p></div><div class="sb-grid" id="sb-home-cards">'''+'''</div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
       <!-- security-briefing:end -->'''
-    home=home.replace('<div class="sb-grid" id="sb-home-cards"></div>','<div class="sb-grid" id="sb-home-cards">'+''.join(card(a) for a in [a for a in articles if not a.get('archive')][:3])+'</div>')
+    home=home.replace('<div class="sb-grid" id="sb-home-cards"></div>','<div class="sb-grid" id="sb-home-cards">'+''.join(card(a) for a in current[:3])+'</div>')
     index=(ROOT/'index.html').read_text()
     if '<!-- security-briefing:start -->' in index:
         index=re.sub(r'<!-- security-briefing:start -->.*?<!-- security-briefing:end -->',lambda _:home,index,flags=re.S)

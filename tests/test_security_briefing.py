@@ -72,6 +72,31 @@ class BriefingTests(unittest.TestCase):
                 self.assertEqual(len(article[lang]['checks']),5)
                 self.assertTrue(article[lang]['deliverables'])
 
+    def test_latest_edition_rolls_over_without_losing_history(self):
+        data=copy.deepcopy(self.data)
+        newer=copy.deepcopy(data['articles'][0]);newer.update(slug='new-edition', publishedAt='2026-11-02', reviewedAt='2026-10-26', archive=False)
+        data['articles'].append(newer)
+        old=builder.published_articles(data,date(2026,11,1))
+        edition, current, archived=builder.split_editions(old)
+        self.assertEqual(edition,'2026-10-26')
+        self.assertNotIn('new-edition',[a['slug'] for a in old])
+        published=builder.published_articles(data,date(2026,11,2))
+        edition,current,archived=builder.split_editions(published)
+        self.assertEqual(edition,'2026-11-02')
+        self.assertEqual([a['slug'] for a in current],['new-edition'])
+        self.assertEqual(len(archived),len(self.data['articles']))
+        generated=builder.outputs(data,date(2026,11,2))
+        self.assertIn('briefing/php-critical-vulnerabilities.html',generated)
+        self.assertIn('Archive',generated['briefing.html'])
+        self.assertNotIn('briefing/php-critical-vulnerabilities.html?lang=en',generated['index.html'])
+
+    def test_archive_only_does_not_crash_or_show_current_edition(self):
+        data=copy.deepcopy(self.data)
+        for article in data['articles']:article['archive']=True
+        generated=builder.outputs(data,date(2026,10,26))
+        self.assertIn('Archive',generated['briefing.html'])
+        self.assertNotIn('Latest edition ·',generated['briefing.html'])
+
     def test_generated_links_resolve_in_root_and_nested_routes(self):
         generated=builder.outputs(self.data,date(2026,10,26))
         for name,body in generated.items():

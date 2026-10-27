@@ -68,7 +68,9 @@
       "context": "Aplicabilitate și impact",
       "publishedLabel": "Publicare weownit.net",
       "tool": "Investighează CVE-ul cu CVE Risk Lens →",
-      "listTitle": "Security Briefing — weownit.net"
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Cea mai recentă ediție",
+      "archiveTitle": "Arhivă"
     },
     "en": {
       "nav": [
@@ -137,7 +139,9 @@
       "context": "Applicability and impact",
       "publishedLabel": "weownit.net publication",
       "tool": "Investigate the CVE with CVE Risk Lens →",
-      "listTitle": "Security Briefing — weownit.net"
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Latest edition",
+      "archiveTitle": "Archive"
     },
     "fr": {
       "nav": [
@@ -206,7 +210,9 @@
       "context": "Applicabilité et impact",
       "publishedLabel": "Publication weownit.net",
       "tool": "Examiner le CVE avec CVE Risk Lens →",
-      "listTitle": "Security Briefing — weownit.net"
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Dernière édition",
+      "archiveTitle": "Archives"
     }
   },
   "articles": [

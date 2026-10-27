@@ -10,17 +10,25 @@
   let language=SiteI18n.getInitialLanguage(),category=0,query='';
   const normalize=text=>String(text).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLocaleLowerCase(language);
   const text=(selector,value)=>{const node=document.querySelector(selector);if(node)node.textContent=value;};
+  const edition=value=>{const day=new Date(value+'T00:00:00Z');day.setUTCDate(day.getUTCDate()-((day.getUTCDay()+6)%7));return day.toISOString().slice(0,10);};
   const current=()=>data.ui[language]||data.ui.en;
   function renderResults(){
     const t=current();
     const selected=data.articles.filter(a=>(!category||a.cat===category)&&normalize(a[language].title+' '+a[language].desc+' '+a[language].tech+' '+a.cves.join(' ')+' '+a.sources.map(s=>s[0]).join(' ')).includes(normalize(query)));
     results.replaceChildren();
+    const isCurrent=a=>!a.archive && edition(a.publishedAt)===data.currentEdition;
+    function section(title, records, featured){
+      if(!records.length)return;
+      const group=document.createElement('section');group.className='sb-edition';
+      const heading=document.createElement('h2');heading.className='sb-edition-title';heading.textContent=title;group.append(heading);
+      if(featured)group.insertAdjacentHTML('beforeend',data.markup[records[0].slug][language].featured);
+      const grid=document.createElement('div');grid.className='sb-grid';
+      grid.innerHTML=(featured?records.slice(1):records).map(a=>data.markup[a.slug][language].card).join('');group.append(grid);results.append(group);
+    }
     if(!selected.length){const p=document.createElement('p');p.className='sb-small';p.textContent=t.empty;results.append(p);}
     else {
-      // Markup is escaped by tools/build_security_briefing.py and checked into this repository.
-      results.innerHTML=data.markup[selected[0].slug][language].featured;
-      const grid=document.createElement('div');grid.className='sb-grid';
-      grid.innerHTML=selected.slice(1).map(a=>data.markup[a.slug][language].card).join('');results.append(grid);
+      section(t.currentEdition+' · '+data.currentEdition,selected.filter(isCurrent),true);
+      section(t.archiveTitle,selected.filter(a=>!isCurrent(a)),false);
     }
     text('#sb-result-count',selected.length+' '+t.results);
     document.querySelectorAll('[data-sb-cat]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.sbCat)===category)));
@@ -30,7 +38,7 @@
     const t=current();
     if(home){
       text('#sb-home-title',t.homeNews);text('#sb-home-intro',t.homeNewsIntro);text('#sb-home-all',t.more);
-      home.innerHTML=data.articles.filter(a=>!a.archive).slice(0,3).map(a=>data.markup[a.slug][language].card).join('');
+      home.innerHTML=data.articles.filter(a=>!a.archive && edition(a.publishedAt)===data.currentEdition).slice(0,3).map(a=>data.markup[a.slug][language].card).join('');
     } else if(results){
       text('.sb-eyebrow',t.eyebrow);text('.sb-heading h1',t.title.replace(/<[^>]*>/g,' ').replace(/\s+/g,' ').trim());text('.sb-heading .sb-lead',t.intro);
       document.querySelector('.sb-filters').setAttribute('aria-label',t.label);

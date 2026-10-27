@@ -1,0 +1,62 @@
+name: Weekly security briefing preparation
+on:
+  schedule:
+    - cron: '17 16 * * 0'
+      timezone: 'Europe/Bucharest'
+    - cron: '23 8 * * 1'
+      timezone: 'Europe/Bucharest'
+  workflow_dispatch:
+    inputs:
+      task:
+        description: 'Select candidate collection or publication preparation'
+        type: choice
+        options: [candidates, publication]
+        default: candidates
+permissions:
+  contents: read
+jobs:
+  candidates:
+    if: github.event.schedule == '17 16 * * 0' || (github.event_name == 'workflow_dispatch' && inputs.task == 'candidates')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect unreviewed source titles
+        run: python tools/briefing_candidates.py
+      - name: Preserve shortlist even on source failure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefing-candidates
+          path: briefing-candidates.json
+          if-no-files-found: warn
+          retention-days: 30
+  publication:
+    if: github.event.schedule == '23 8 * * 1' || (github.event_name == 'workflow_dispatch' && inputs.task == 'publication')
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate eligible reviewed content
+        run: |
+          python tools/build_security_briefing.py
+          python -m unittest discover -s tests -p test_security_briefing.py
+      - name: Create reviewable publication pull request
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add index.html briefing.html briefing assets/security-briefing-data.js sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'No approved articles are due; the latest edition stays visible.'
+            exit 0
+          fi
+          branch="briefing/publication-$(date -u +%Y%m%d%H%M%S)-${GITHUB_RUN_ID}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git checkout -b "$branch"
+          git commit -m 'Prepare approved briefing publication'
+          git push origin "$branch"
+          gh pr create --base main --head "$branch" --title 'Publish reviewed security briefing' --body 'Generated from articles marked published and eligible by publication date. Review the diff and merge to publish. Telegram delivery is not configured.'
