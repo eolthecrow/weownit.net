@@ -28,7 +28,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: briefing-candidates
-          path: briefing-candidates.json
+          path: |
+            briefing-candidates.json
+            briefing-review.md
           if-no-files-found: warn
           retention-days: 30
   publication:
@@ -44,6 +46,7 @@ jobs:
         run: |
           python tools/build_security_briefing.py
           python -m unittest discover -s tests -p test_security_briefing.py
+          python -m unittest discover -s tests -p test_briefing_candidates.py
       - name: Create reviewable publication pull request
         env:
           GH_TOKEN: ${{ github.token }}
@@ -60,3 +63,4 @@ jobs:
           git commit -m 'Prepare approved briefing publication'
           git push origin "$branch"
           gh pr create --base main --head "$branch" --title 'Publish reviewed security briefing' --body 'Generated from articles marked published and eligible by publication date. Review the diff and merge to publish. Telegram delivery is not configured.'
+

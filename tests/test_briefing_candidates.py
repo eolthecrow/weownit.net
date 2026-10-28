@@ -21,4 +21,15 @@ class CandidateTests(unittest.TestCase):
         self.assertEqual(len(result['errors']),1)
         self.assertEqual(len(result['candidates']),1)
 
+    def test_rank_hints_and_review_sheet_keep_unmatched_items(self):
+        self.assertIn('Network and edge', module.classify('VPN gateway attack'))
+        self.assertEqual(module.classify('Quarterly overview'), [])
+        result={'candidates':[{'source':'Example', 'title':'VPN attack', 'url':'https://example.org/a', 'source_date':'', 'topics':module.classify('VPN attack')}, {'source':'Example', 'title':'Quarterly overview', 'url':'https://example.org/b', 'source_date':'', 'topics':[]}], 'errors':[{'source':'Offline','error':'timeout'}]}
+        sheet=module.review_markdown(result)
+        self.assertIn('Quarterly overview',sheet)
+        self.assertIn('Manual review',sheet)
+        self.assertIn('Offline: timeout',sheet)
+        self.assertIn('Pending',sheet)
+
 if __name__=='__main__':unittest.main()
+
