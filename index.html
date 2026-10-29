@@ -206,11 +206,11 @@
     .sources a { text-decoration:underline; text-underline-offset:3px; color:var(--muted) }
     .sources a:hover,.footer a:hover { color:var(--accent) }
     @media(max-width:1100px) { .shell { grid-template-columns:190px minmax(0,1fr) } .rail { padding:1.5rem 1rem } .hero { grid-template-columns:1fr } .hero-aside { max-width:none; display:none } }
-    @media(max-width:780px) { .services-grid { grid-template-columns:1fr } .proof-strip { grid-template-columns:repeat(2,minmax(0,1fr)) } .proof-item:nth-child(2) { border-right:0 } .proof-item { border-bottom:1px solid var(--line) } .proof-item:nth-child(3),.proof-item:nth-child(4) { border-bottom:0 } .vendor-toolkit { width:205px } .vendor-toolkit-group { gap:1.2rem; padding-right:1.2rem }   .shell { display:block } .rail { position:static; height:auto; min-height:0; padding:1rem 1.25rem; border-right:0; border-bottom:1px solid var(--line); display:block } .brand { font-size:.864rem } .mark { width:34px; height:34px } .rail-nav { margin-top:.9rem; display:flex; gap:1rem; overflow-x:auto; scrollbar-width:none } .rail-nav a { white-space:nowrap; padding:.25rem 0; font-size:.738rem } .rail-nav span,.rail-foot { display:none } .topline { height:auto; min-height:52px; padding:.55rem 1.25rem; font-size:.594rem; gap:.8rem } .topline-tools { gap:.55rem } .topline-right { display:none }  .hero { padding:3.3rem 1.25rem 3.6rem; display:block } h1 { font-size:clamp(2.835rem,9vw,4.77rem) } .section { padding:3.5rem 1.25rem } .section-head { display:block } .section-head > p { margin-top:1rem } .resource-grid { grid-template-columns:1fr } .resource.featured { grid-column:span 1; display:block } .resource.featured .feature-side { border:0; border-top:1px solid #42736e; padding:1.1rem 0 0; margin-top:1rem } .resource { min-height:0 } .resource .list { margin:0 0 1.2rem } .resource-top { margin-bottom:1.4rem } .sample-strip,.details-wrap,.about-grid { grid-template-columns:1fr } .contact { display:block; padding:3.7rem 1.25rem } .contact .button { margin-top:1.7rem } .footer { grid-template-columns:1fr } }
+    @media(max-width:780px) { .services-grid { grid-template-columns:1fr } .proof-strip { grid-template-columns:repeat(2,minmax(0,1fr)) } .proof-item:nth-child(2) { border-right:0 } .proof-item { border-bottom:1px solid var(--line) } .proof-item:nth-child(3),.proof-item:nth-child(4) { border-bottom:0 } .vendor-toolkit { width:205px } .vendor-toolkit-group { gap:1.2rem; padding-right:1.2rem }   .shell { display:block } .rail { position:static; height:auto; min-height:0; padding:1rem 1.25rem; border-right:0; border-bottom:1px solid var(--line); display:block } .brand { font-size:.864rem } .mark { width:34px; height:34px } .rail-nav span,.rail-foot { display:none } .topline { height:auto; min-height:52px; padding:.55rem 1.25rem; font-size:.594rem; gap:.8rem } .topline-tools { gap:.55rem } .topline-right { display:none }  .hero { padding:3.3rem 1.25rem 3.6rem; display:block } h1 { font-size:clamp(2.835rem,9vw,4.77rem) } .section { padding:3.5rem 1.25rem } .section-head { display:block } .section-head > p { margin-top:1rem } .resource-grid { grid-template-columns:1fr } .resource.featured { grid-column:span 1; display:block } .resource.featured .feature-side { border:0; border-top:1px solid #42736e; padding:1.1rem 0 0; margin-top:1rem } .resource { min-height:0 } .resource .list { margin:0 0 1.2rem } .resource-top { margin-bottom:1.4rem } .sample-strip,.details-wrap,.about-grid { grid-template-columns:1fr } .contact { display:block; padding:3.7rem 1.25rem } .contact .button { margin-top:1.7rem } .footer { grid-template-columns:1fr } }
     @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto } *,*::before,*::after { transition:none!important } .vendor-toolkit-track { animation:none; transform:none } .vendor-toolkit-group[aria-hidden="true"] { display:none } .vendor-toolkit-marquee { overflow-x:auto } }
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
-  <link rel="stylesheet" href="assets/site.css?v=21">
+  <link rel="stylesheet" href="assets/site.css?v=23">
   <script src="assets/i18n.js?v=10"></script>
   <script type="application/ld+json">
   {
@@ -247,11 +247,11 @@
       <div class="home-nav-actions" data-home-nav-actions></div>
       <button class="global-nav-toggle home-nav-toggle" type="button" aria-expanded="false" aria-controls="home-navigation" data-nav-toggle data-nav-label="menu" data-nav-breakpoint="780">Menu</button>
       <nav class="rail-nav" id="home-navigation" aria-label="Main navigation" data-global-nav>
-        <a href="#services"><span>01</span> Services</a>
-        <a href="tools.html"><span>02</span> Tools</a>
-        <a href="store.html"><span>03</span> Products</a>
-        <a href="briefing.html"><span>04</span> Briefing</a>
-        <a href="contact.html"><span>05</span> Contact</a>
+        <a href="#services" data-home-nav="services"><span>01</span> Services</a>
+        <a href="tools.html" data-home-nav="tools"><span>02</span> Tools</a>
+        <a href="store.html" data-home-nav="resources"><span>03</span> Products</a>
+        <a href="briefing.html" data-home-nav="briefing"><span>04</span> Briefing</a>
+        <a href="contact.html" data-home-nav="contact"><span>05</span> Contact</a>
       </nav>
       <div class="rail-foot"><b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania</div>
     </aside>
@@ -356,7 +356,7 @@
           description: "Network and security consulting for SMBs and IT teams: firewall reviews, network assessments, segmentation, and prioritized remediation by Vladimir Arjoca.",
           skip: "Skip to content",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Services", "Tools", "Products", "Briefing", "Contact"],
+          nav: {services:"Services", tools:"Tools", resources:"Products", briefing:"Briefing", contact:"Contact"},
           railFoot: "<b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania",
           topLabel: "NETWORK & SECURITY / CONSULTING & PRACTICAL GUIDANCE",
           topRight: "ASSESS · SECURE · VALIDATE",
@@ -468,7 +468,7 @@
           description: "Conseil en réseaux et sécurité pour les PME et équipes IT : revue de pare-feu, évaluation réseau, segmentation et remédiation priorisée par Vladimir Arjoca.",
           skip: "Aller au contenu",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Services", "Outils", "Produits", "Briefing", "Contact"],
+          nav: {services:"Services", tools:"Outils", resources:"Produits", briefing:"Briefing", contact:"Contact"},
           railFoot: "<b>Vladimir Arjoca</b><br>Conseil réseau &amp; sécurité<br>Bucarest, Roumanie",
           topLabel: "RÉSEAUX & SÉCURITÉ / CONSEIL & GUIDES PRATIQUES",
           topRight: "ÉVALUER · SÉCURISER · VALIDER",
@@ -580,7 +580,7 @@
           description: "Consultanță pentru rețele și securitate dedicată IMM-urilor și echipelor IT: review firewall, evaluare de rețea, segmentare și remedieri prioritizate, cu Vladimir Arjoca.",
           skip: "Sari la conținut",
           brand: "Network &amp; Security<br>Consultant",
-          nav: ["Servicii", "Instrumente", "Produse", "Briefing", "Contact"],
+          nav: {services:"Servicii", tools:"Instrumente", resources:"Produse", briefing:"Briefing", contact:"Contact"},
           railFoot: "<b>Vladimir Arjoca</b><br>Consultanță în rețele &amp; securitate<br>București, România",
           topLabel: "REȚELE & SECURITATE / CONSULTANȚĂ & GHIDARE PRACTICĂ",
           topRight: "EVALUARE · SECURIZARE · VALIDARE",
@@ -707,9 +707,9 @@
 
         setText(".skip", t.skip);
         setHTML(".brand span:last-child", t.brand);
-        document.querySelectorAll(".rail-nav a").forEach((el, i) => {
+        document.querySelectorAll(".rail-nav a[data-home-nav]").forEach(el => {
           const number = el.querySelector("span")?.outerHTML || "";
-          el.innerHTML = number + " " + t.nav[i];
+          el.innerHTML = number + " " + t.nav[el.dataset.homeNav];
         });
         setHTML(".rail-foot", t.railFoot);
         setText(".topline-label", t.topLabel);
@@ -871,6 +871,7 @@
 <script src="assets/security-briefing.js?v=3" defer></script>
 </body>
 </html>
+
 
 
 

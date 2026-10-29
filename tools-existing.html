@@ -56,7 +56,7 @@
     @media(max-width:780px){.hero-inner{grid-template-columns:1fr;gap:2.2rem;padding:3rem 1.4rem}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
-  <link rel="stylesheet" href="assets/site.css?v=21">
+  <link rel="stylesheet" href="assets/site.css?v=23">
   <link rel="stylesheet" href="assets/webcheck-preview.css?v=2">
   <link rel="stylesheet" href="assets/cve-risk-lens.css?v=2">
   <link rel="stylesheet" href="assets/firewall-review.css?v=hardening-1">
@@ -433,8 +433,23 @@ $xml = '&lt;Events&gt;' + ($eventXml -join [Environment]::NewLine) + '&lt;/Event
 <script src="assets/incident-triage-ui.js?v=endpoint-1" defer></script>
 <script src="assets/connected-case-ui.js?v=connected-2" defer></script>
 <script src="assets/endpoint-evidence-ui.js?v=endpoint-1" defer></script>
+<script>
+  // Deferred tool scripts register their mode handlers before DOMContentLoaded.
+  function openRequestedTool() {
+    const target = location.hash.slice(1);
+    const button = target === "firewall-change-review"
+      ? document.querySelector('[data-fc-mode="change"]')
+      : target === "vendor-hardening" ? document.getElementById("vh-toggle") : null;
+    if (!button) return;
+    button.click();
+    document.getElementById("firewall-review")?.scrollIntoView();
+  }
+  document.addEventListener("DOMContentLoaded", openRequestedTool);
+  window.addEventListener("hashchange", openRequestedTool);
+</script>
 </body>
 </html>
+
 
 
 

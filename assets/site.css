@@ -242,8 +242,8 @@ header .global-nav-shell{
   .global-nav-actions{margin-left:auto}
   .global-nav-actions .lang-switch button,
   .global-nav-actions .langs button{
-    min-width:25px;
-    min-height:32px;
+    min-width:44px;
+    min-height:44px;
     padding:.2rem .3rem;
     font-size:.62rem;
     color:var(--quiet,var(--muted));
@@ -251,10 +251,10 @@ header .global-nav-shell{
 
   .global-nav-actions :is(.lang-switch,.langs) button[aria-pressed="true"]{color:var(--accent)}
   .global-nav-toggle{
-    width:36px;
-    min-width:36px;
-    height:36px;
-    min-height:36px;
+    width:44px;
+    min-width:44px;
+    height:44px;
+    min-height:44px;
     margin-left:0;
     padding:0;
     border-color:var(--line);
@@ -305,11 +305,12 @@ header .global-nav-shell{
 /* Keep the desktop rail; share the compact mobile control contract. */
 .home-nav-actions,.home-nav-toggle{display:none}
 @media(max-width:780px){
-  .rail{display:grid!important;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.45rem}
+  .rail{display:grid;grid-template-columns:minmax(0,1fr) auto auto;align-items:center;gap:.45rem}
   .rail .brand{min-width:0;font-size:.8rem;gap:.6rem}
   .rail .brand>span:last-child{max-width:112px;line-height:1.12}
   .home-nav-actions{display:flex;align-items:center}
-  .home-nav-toggle{display:inline-flex;width:36px;min-height:36px;padding:0;margin:0;font-size:0}
+  .home-nav-actions .lang-switch button{min-width:44px;min-height:44px;padding:.2rem .3rem}
+  .home-nav-toggle{display:inline-flex;width:44px;min-width:44px;min-height:44px;padding:0;margin:0;font-size:0}
   .home-nav-toggle::before{content:"";width:15px;height:1px;background:currentColor;box-shadow:0 -5px 0 currentColor,0 5px 0 currentColor}
   .rail .rail-nav{display:none;grid-column:1/-1;grid-template-columns:repeat(2,minmax(0,1fr));margin-top:.35rem;gap:.2rem;overflow:visible}
   .rail .rail-nav.is-open{display:grid}
@@ -368,3 +369,4 @@ header .global-nav-shell{
 
 /* About is available through Contact; existing URLs remain valid. */
 [data-global-nav] [data-nav-label="about"],.rail-nav a[href^="about.html"]{display:none}
+
