@@ -5,3 +5,16 @@
 @media(max-width:780px){.briefing-page main.sb-wrap{padding-top:2rem}.sb-toolbar{flex-direction:column;align-items:stretch;gap:.4rem}.sb-search-label{flex-basis:auto}.sb-feature{display:block}.sb-feature-aside{display:none}.sb-feature .sb-service{display:block}.sb-grid{grid-template-columns:1fr;gap:1.8rem}.sb-heading h1{font-size:2.2rem}.sb-lead{font-size:.95rem}.sb-feature h2{font-size:1.7rem}.sb-card h3,.sb-home .sb-card h3{font-size:1.4rem}.sb-summary{font-size:.9rem}.sb-read{min-height:44px}.sb-editorial,.sb-footer{flex-direction:column}.sb-facts{grid-template-columns:1fr}.sb-facts>div,.sb-facts>div+div{border-left:0;padding:.8rem 0}.sb-facts>div+div{border-top:1px solid var(--line)}.sb-article-head h1{font-size:2.15rem}.sb-support{padding:1.25rem}.sb-support h2{font-size:1.3rem}.sb-meta{font-size:.65rem}.sb-prose{font-size:.9rem}.sb-prose h2,.sb-support,.sb-sources{scroll-margin-top:1rem}}
 
 .sb-edition+.sb-edition{margin-top:3rem}.sb-edition-title{font-size:1rem;font-weight:600;color:var(--muted);margin:0 0 1rem;letter-spacing:-.02em}
+
+
+/* Progressive archive disclosure: same route, keyboard-accessible, no additional navigation. */
+.sb-archive{margin-top:2.8rem;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.sb-archive-toggle{display:flex;align-items:center;gap:.9rem;min-height:58px;padding:.85rem .2rem;list-style:none;cursor:pointer;color:var(--ink);font-size:1rem;font-weight:620}
+.sb-archive-toggle::-webkit-details-marker{display:none}
+.sb-archive-toggle:hover{color:var(--accent)}
+.sb-archive-toggle:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.sb-archive-count{margin-left:auto;padding:.1rem .65rem;border:1px solid var(--line);color:var(--muted);font:.72rem/1.8 var(--mono)}
+.sb-archive-chevron{width:.5rem;height:.5rem;margin-right:.5rem;border-right:1.5px solid var(--accent);border-bottom:1.5px solid var(--accent);transform:rotate(45deg);transition:transform .18s ease}
+.sb-archive[open] .sb-archive-chevron{transform:rotate(225deg)}
+.sb-archive>.sb-grid{padding:1.5rem 0 2rem}
+@media(prefers-reduced-motion:reduce){.sb-archive-chevron{transition:none}}

@@ -14,9 +14,14 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);
    await page.goto(base+'/briefing.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);await geometry(page);
    assert.equal(await page.locator('#sb-results .sb-card').count(),data.articles.length);assert.equal(await page.locator('meta[name=description]').getAttribute('content'),data.ui[lang].intro);
-   await page.locator('[data-sb-cat="3"]').click();assert.equal(await page.locator('#sb-results .sb-card').count(),data.articles.filter(a=>a.cat===3).length);assert.ok((await page.locator('#sb-results').innerText()).includes('Akira'));assert.ok((await page.locator('#sb-results').innerText()).includes('GlobalProtect'));
+   const archive=page.locator('[data-sb-archive]');
+   assert.equal(await archive.count(),1);
+   assert.equal(await archive.evaluate(element=>element.open),false);
+   await archive.locator('summary').click();assert.equal(await archive.evaluate(element=>element.open),true);
+   await archive.locator('summary').click();assert.equal(await archive.evaluate(element=>element.open),false);
+   await page.locator('[data-sb-cat="3"]').click();assert.equal(await page.locator('#sb-results .sb-card').count(),data.articles.filter(a=>a.cat===3).length);assert.equal(await page.locator('[data-sb-archive]').evaluate(element=>element.open),true);assert.ok((await page.locator('#sb-results').innerText()).includes('Akira'));assert.ok((await page.locator('#sb-results').innerText()).includes('GlobalProtect'));
    await page.locator('[data-sb-cat="0"]').click();await page.locator('#sb-search').fill('zzznomatch');assert.equal(await page.locator('#sb-results .sb-card').count(),0);assert.ok((await page.locator('#sb-results').innerText()).includes(data.ui[lang].empty));
-   await page.locator('#sb-search').fill('Gheist');assert.equal(await page.locator('#sb-results .sb-card').count(),1);
+   await page.locator('#sb-search').fill('Gheist');assert.equal(await page.locator('#sb-results .sb-card').count(),1);assert.equal(await page.locator('[data-sb-archive]').evaluate(element=>element.open),true);
    await page.locator('#sb-results a[href*="briefing/gheist-github-actions.html"]').first().click();await page.waitForURL('**/briefing/gheist-github-actions.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('h1').innerText(),gheist[lang].title);await geometry(page);
    const next=lang==='fr'?'ro':'fr';await page.locator('[data-lang="'+next+'"]').click();assert.equal(await page.locator('h1').innerText(),gheist[next].title);assert.ok((await page.locator('.sb-support .sb-button').getAttribute('href')).includes('lang='+next));assert.ok((await page.locator('link[rel=canonical]').getAttribute('href')).includes('/briefing/gheist-github-actions.html?lang='+next));await geometry(page);
    const menu=page.locator('[data-nav-toggle]');if(await menu.isVisible()){await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');await geometry(page);await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');}

@@ -97,14 +97,22 @@ class BriefingTests(unittest.TestCase):
         self.assertEqual(len(archived),len(self.data['articles']))
         generated=builder.outputs(data,next_week)
         self.assertIn('briefing/'+self.data['articles'][0]['slug']+'.html',generated)
-        self.assertIn('Archive',generated['briefing.html'])
+        self.assertIn(self.data['ui']['en']['archiveTitle'],generated['briefing.html'])
         self.assertNotIn('briefing/'+self.data['articles'][0]['slug']+'.html?lang=en',generated['index.html'])
+
+    def test_archive_is_disclosed_on_the_same_briefing_page(self):
+        generated=builder.outputs(self.data,self.today)
+        html=generated['briefing.html']
+        self.assertIn('<details class="sb-archive" data-sb-archive>',html)
+        self.assertIn('<summary class="sb-archive-toggle">',html)
+        self.assertNotIn('<details class="sb-archive" data-sb-archive open',html)
+        self.assertIn('briefing/php-critical-vulnerabilities.html',generated)
 
     def test_archive_only_does_not_crash_or_show_current_edition(self):
         data=copy.deepcopy(self.data)
         for article in data['articles']:article['archive']=True
         generated=builder.outputs(data,self.today)
-        self.assertIn('Archive',generated['briefing.html'])
+        self.assertIn(self.data['ui']['en']['archiveTitle'],generated['briefing.html'])
         self.assertNotIn('Latest edition ·',generated['briefing.html'])
 
     def test_generated_links_resolve_in_root_and_nested_routes(self):
