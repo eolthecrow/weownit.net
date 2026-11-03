@@ -15,6 +15,7 @@
   function renderResults(){
     const t=current();
     const selected=data.articles.filter(a=>(!category||a.cat===category)&&normalize(a[language].title+' '+a[language].desc+' '+a[language].tech+' '+a.cves.join(' ')+' '+a.sources.map(s=>s[0]).join(' ')).includes(normalize(query)));
+    const wasExpanded=Boolean(results.querySelector('details[data-sb-archive]')?.open);
     results.replaceChildren();
     const isCurrent=a=>!a.archive && edition(a.publishedAt)===data.currentEdition;
     function section(title, records, featured){
@@ -28,7 +29,20 @@
     if(!selected.length){const p=document.createElement('p');p.className='sb-small';p.textContent=t.empty;results.append(p);}
     else {
       section(t.currentEdition+' · '+data.currentEdition,selected.filter(isCurrent),true);
-      section(t.archiveTitle,selected.filter(a=>!isCurrent(a)),false);
+      const older=selected.filter(a=>!isCurrent(a));
+      if(older.length){
+        const details=document.createElement('details');
+        details.className='sb-archive';details.dataset.sbArchive='';
+        details.open=wasExpanded||Boolean(category||query.trim());
+        const summary=document.createElement('summary');summary.className='sb-archive-toggle';
+        const label=document.createElement('span');label.textContent=t.archiveTitle;
+        const count=document.createElement('span');count.className='sb-archive-count';count.textContent=String(older.length);
+        const chevron=document.createElement('span');chevron.className='sb-archive-chevron';chevron.setAttribute('aria-hidden','true');
+        summary.append(label,count,chevron);
+        const grid=document.createElement('div');grid.className='sb-grid';
+        grid.innerHTML=older.map(a=>data.markup[a.slug][language].card).join('');
+        details.append(summary,grid);results.append(details);
+      }
     }
     text('#sb-result-count',selected.length+' '+t.results);
     document.querySelectorAll('[data-sb-cat]').forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.sbCat)===category)));
