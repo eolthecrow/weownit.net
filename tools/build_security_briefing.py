@@ -18,6 +18,8 @@ def data_cache_key():
     """Content-address the generated client data so caches cannot serve a stale edition."""
     canonical = json.dumps(DATA, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
     return hashlib.sha256(canonical.encode('utf-8')).hexdigest()[:12]
+
+
 LANGUAGES = ('en', 'ro', 'fr')
 PUBLIC = 'https://weownit.net/'
 
