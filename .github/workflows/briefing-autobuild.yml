@@ -1,0 +1,44 @@
+name: Build approved security briefings
+
+on:
+  push:
+    branches:
+      - 'briefing/auto-*'
+    paths:
+      - 'content/security-briefing.json'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: briefing-autobuild-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate localized pages, feeds, homepage and sitemap
+        run: python tools/build_security_briefing.py
+      - name: Test editorial data and generated output
+        run: |
+          python -m unittest discover -s tests -p 'test_security_briefing.py'
+          python tools/build_security_briefing.py --check
+      - name: Commit generated artifacts to the publication branch
+        run: |
+          git add index.html briefing.html briefing assets/security-briefing-data.js sitemap.xml
+          if git diff --cached --quiet; then
+            echo 'Generated briefing artifacts already match their source.'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Build approved security briefing pages'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
