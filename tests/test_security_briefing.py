@@ -100,6 +100,51 @@ class BriefingTests(unittest.TestCase):
         self.assertIn(self.data['ui']['en']['archiveTitle'],generated['briefing.html'])
         self.assertNotIn('briefing/'+self.data['articles'][0]['slug']+'.html?lang=en',generated['index.html'])
 
+    def test_briefing_data_cache_key_changes_with_editorial_content(self):
+        def cache_key(page):
+            self.assertIn('assets/security-briefing-data.js?v=', page)
+            return page.split('assets/security-briefing-data.js?v=', 1)[1].split('"', 1)[0]
+
+        original = builder.outputs(self.data, self.today)
+        first = cache_key(original['briefing.html'])
+        self.assertRegex(first, r'^[a-f0-9]{12}
+        generated=builder.outputs(self.data,self.today)
+        html=generated['briefing.html']
+        self.assertIn('<details class="sb-archive" data-sb-archive>',html)
+        self.assertIn('<summary class="sb-archive-toggle">',html)
+        self.assertNotIn('<details class="sb-archive" data-sb-archive open',html)
+        self.assertIn('briefing/php-critical-vulnerabilities.html',generated)
+
+    def test_archive_only_does_not_crash_or_show_current_edition(self):
+        data=copy.deepcopy(self.data)
+        for article in data['articles']:article['archive']=True
+        generated=builder.outputs(data,self.today)
+        self.assertIn(self.data['ui']['en']['archiveTitle'],generated['briefing.html'])
+        self.assertNotIn('Latest edition ·',generated['briefing.html'])
+
+    def test_generated_links_resolve_in_root_and_nested_routes(self):
+        generated=builder.outputs(self.data,self.today)
+        for name,body in generated.items():
+            if not name.endswith('.html'):continue
+            parser=Links();parser.feed(body)
+            for href in parser.links:
+                url=urlsplit(href)
+                if url.scheme or url.netloc or not url.path:continue
+                target=(ROOT/name).parent/unquote(url.path)
+                self.assertTrue(target.resolve().is_relative_to(ROOT),name+': '+href)
+                relative=str(target.resolve().relative_to(ROOT))
+                self.assertTrue(relative in generated or target.exists(),name+': '+href)
+
+
+if __name__=='__main__':unittest.main()
+)
+        changed = copy.deepcopy(self.data)
+        changed['ui']['en']['archiveTitle'] += ' (test)'
+        revised = builder.outputs(changed, self.today)
+        second = cache_key(revised['briefing.html'])
+        self.assertNotEqual(first, second)
+        self.assertIn('assets/security-briefing-data.js?v=' + second, revised['briefing/' + changed['articles'][0]['slug'] + '.html'])
+
     def test_archive_is_disclosed_on_the_same_briefing_page(self):
         generated=builder.outputs(self.data,self.today)
         html=generated['briefing.html']
