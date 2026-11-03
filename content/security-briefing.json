@@ -70,7 +70,7 @@
       "tool": "Investighează CVE-ul cu CVE Risk Lens →",
       "listTitle": "Security Briefing — weownit.net",
       "currentEdition": "Cea mai recentă ediție",
-      "archiveTitle": "Arhivă"
+      "archiveTitle": "Ediții anterioare"
     },
     "en": {
       "nav": [
@@ -141,7 +141,7 @@
       "tool": "Investigate the CVE with CVE Risk Lens →",
       "listTitle": "Security Briefing — weownit.net",
       "currentEdition": "Latest edition",
-      "archiveTitle": "Archive"
+      "archiveTitle": "Past editions"
     },
     "fr": {
       "nav": [
@@ -212,7 +212,7 @@
       "tool": "Examiner le CVE avec CVE Risk Lens →",
       "listTitle": "Security Briefing — weownit.net",
       "currentEdition": "Dernière édition",
-      "archiveTitle": "Archives"
+      "archiveTitle": "Éditions précédentes"
     }
   },
   "articles": [
