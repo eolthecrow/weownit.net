@@ -41,7 +41,7 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
           assert.match(new Headers(init.headers).get("Idempotency-Key"), /^wit-sandbox-/);
           const form = new URLSearchParams(init.body);
           assert.equal(form.get("mode"), "payment");
-          assert.equal(form.get("payment_method_types[0]"), "card");
+          assert.equal(form.has("payment_method_types[0]"), false);
           assert.equal(form.get("line_items[0][price]"), "price_1UPpuVGt8pl3xCihZrxwZEnZ");
           assert.equal(form.get("line_items[0][quantity]"), "2");
           assert.equal(form.get("adaptive_pricing[enabled]"), "false");
@@ -68,7 +68,7 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       assert.equal(attempt.owner_hash, await hashSecret(flow.cookie.split("=")[1]));
       const options = ctx.calls.find(call => call[0] === "create" && call[1].client_reference_id === attempt.id)[1];
       assert.equal(options.line_items[0].price, attempt.price_id); assert.equal(options.line_items[0].quantity, 3);
-      assert.deepEqual(options.payment_method_types, ["card"]);
+      assert.equal(options.payment_method_types, undefined);
       assert.equal(options.success_url, ctx.origin + "/complete?session_id={CHECKOUT_SESSION_ID}&lang=ro");
       assert.equal(options.client_reference_id, attempt.id);
     });
