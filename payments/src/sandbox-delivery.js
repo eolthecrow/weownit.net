@@ -126,7 +126,7 @@ export async function handleSandboxCustomer(request, env, { stripeClient, clock 
           now + DELIVERY_LIMITS.accessSeconds, data.language, product.id, product.revision, now - 60, now - 86400, ownerHash, now - 3600).first();
       if (!attempt) throw new Denied("checkout_limited", 429);
       const session = await stripe.checkout.sessions.create({
-        mode: "payment", payment_method_types: ["card"],
+        mode: "payment",
         automatic_tax: { enabled: false }, adaptive_pricing: { enabled: false },
         allow_promotion_codes: false, payment_intent_data: { capture_method: "automatic" },
         line_items: [{ price: product.price_id, quantity: data.quantity }],
