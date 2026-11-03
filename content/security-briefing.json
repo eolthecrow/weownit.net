@@ -24,7 +24,7 @@
       ],
       "search": "Caută tehnologie sau subiect",
       "edition": "Selecție editorială",
-      "date": "26 octombrie 2026",
+      "date": "3 noiembrie 2026",
       "feature": "În atenție",
       "read": "Analiză și măsuri",
       "latest": "Alte subiecte de urmărit",
@@ -95,7 +95,7 @@
       ],
       "search": "Search technology or topic",
       "edition": "Editorial selection",
-      "date": "26 October 2026",
+      "date": "3 November 2026",
       "feature": "In focus",
       "read": "Analysis and actions",
       "latest": "More to watch",
@@ -166,7 +166,7 @@
       ],
       "search": "Rechercher une technologie ou un sujet",
       "edition": "Sélection éditoriale",
-      "date": "26 octobre 2026",
+      "date": "3 novembre 2026",
       "feature": "À la une",
       "read": "Analyse et mesures",
       "latest": "À suivre également",
@@ -216,6 +216,350 @@
     }
   },
   "articles": [
+    {
+      "id": "20261101-fortinet-fortios-dos",
+      "cat": 1,
+      "date": "2026-10-27",
+      "sources": [
+        [
+          "Fortinet PSIRT",
+          "https://fortiguard.fortinet.com/psirt/FG-IR-26-181"
+        ]
+      ],
+      "en": {
+        "title": "FortiOS management HTTPS denial of service: CVE-2026-106174",
+        "desc": "FortiOS 8.0.0 and 7.6.4–7.6.6 have an improper-locking flaw that can let an unauthenticated attacker with network access disrupt the HTTPS management interface. This is an availability issue; public exploitation is not established by this advisory.",
+        "status": "Vendor fix available · exploitation not established",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Upgrade affected systems to FortiOS 8.0.1 or 7.6.7 or later as applicable; restrict management access to trusted administrative networks until verified fixed.",
+        "facts": "Official vendor / TAC guidance: Fortinet PSIRT FG-IR-26-181 identifies FortiOS 8.0.0 and 7.6.4–7.6.6 as affected; upgrade to at least 8.0.1 or 7.6.7 on the corresponding train. The advisory concerns the HTTPS administration interface; it does not establish exploitation in the wild.",
+        "context": "FortiOS 8.0.0 and 7.6.4–7.6.6 have an improper-locking flaw that can let an unauthenticated attacker with network access disrupt the HTTPS management interface. This is an availability issue; public exploitation is not established by this advisory.",
+        "checks": [
+          "Inventory FortiOS versions and all interfaces exposing the admin GUI, including trusted-host and administrative access policies; check whether the management plane is internet reachable.",
+          "Upgrade affected systems to FortiOS 8.0.1 or 7.6.7 or later as applicable; restrict management access to trusted administrative networks until verified fixed.",
+          "Record version/HA status and configuration, confirm management reachability is limited to authorized sources, verify GUI stability and successful administrative login after patching."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: review FortiGate management reachability, admin access controls and HA upgrade sequence; prepare a low-disruption change plan, capture pre/post configurations, and verify both management-plane restriction and HA stability.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "FortiOS: întreruperea interfeței HTTPS de administrare — CVE-2026-106174",
+        "desc": "FortiOS 8.0.0 și 7.6.4–7.6.6 au o vulnerabilitate de sincronizare ce poate permite unui atacator neautentificat cu acces în rețea să afecteze disponibilitatea interfeței HTTPS de administrare. Advisory-ul nu confirmă exploatarea activă.",
+        "status": "Remediere disponibilă · exploatare neconfirmată",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Actualizează versiunile afectate la FortiOS 8.0.1, respectiv 7.6.7 sau versiuni mai noi, după ramură; limitează administrarea la rețele de încredere.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Fortinet PSIRT FG-IR-26-181 indică FortiOS 8.0.0 și 7.6.4–7.6.6 ca afectate; actualizare la minimum 8.0.1 sau 7.6.7, în funcție de ramură. Advisory-ul privește interfața HTTPS de administrare, fără a confirma exploatare activă.",
+        "context": "FortiOS 8.0.0 și 7.6.4–7.6.6 au o vulnerabilitate de sincronizare ce poate permite unui atacator neautentificat cu acces în rețea să afecteze disponibilitatea interfeței HTTPS de administrare. Advisory-ul nu confirmă exploatarea activă.",
+        "checks": [
+          "Inventariază versiunile FortiOS și toate interfețele cu acces administrativ HTTPS, trusted hosts și politicile de administrare; verifică expunerea din internet.",
+          "Actualizează versiunile afectate la FortiOS 8.0.1, respectiv 7.6.7 sau versiuni mai noi, după ramură; limitează administrarea la rețele de încredere.",
+          "Documentează versiunile și starea HA, confirmă restricțiile pentru management, stabilitatea interfeței și autentificarea administrativă după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: verificarea expunerii managementului FortiGate, a restricțiilor de administrare și a planului de upgrade HA; captură de configurații înainte/după și validarea accesului restricționat și a stabilității HA.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "FortiOS : déni de service sur l’administration HTTPS (CVE-2026-106174)",
+        "desc": "Dans FortiOS 8.0.0 et 7.6.4–7.6.6, un défaut de verrouillage peut permettre à un attaquant non authentifié disposant d’un accès réseau de perturber l’interface HTTPS d’administration. L’avis n’établit pas d’exploitation active.",
+        "status": "Correctif disponible · exploitation non établie",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Installer la version corrigée, restreindre l’administration aux réseaux de confiance et préparer une sauvegarde et un retour arrière.",
+        "facts": "Recommandation officielle du fournisseur / TAC : L’avis Fortinet FG-IR-26-181 recommande FortiOS 8.0.1 ou 7.6.7, selon la branche, et précise les versions affectées.",
+        "context": "Dans FortiOS 8.0.0 et 7.6.4–7.6.6, un défaut de verrouillage peut permettre à un attaquant non authentifié disposant d’un accès réseau de perturber l’interface HTTPS d’administration. L’avis n’établit pas d’exploitation active.",
+        "checks": [
+          "Inventorier les versions et toutes les interfaces d’administration HTTPS, y compris les hôtes de confiance et les membres HA.",
+          "Installer la version corrigée, restreindre l’administration aux réseaux de confiance et préparer une sauvegarde et un retour arrière.",
+          "Confirmer les versions corrigées, la stabilité de l’interface et du cluster HA, ainsi que les accès autorisés et bloqués."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut examiner l’exposition de l’administration, coordonner une mise à jour HA maîtrisée et fournir des preuves de configuration et de validation après changement.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "fortios-https-management-dos-2026-106174",
+      "cves": [
+        "CVE-2026-106174"
+      ]
+    },
+    {
+      "id": "20261101-cisco-asaftd-vpn-dos",
+      "cat": 1,
+      "date": "2026-10-28",
+      "sources": [
+        [
+          "Cisco PSIRT",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75"
+        ]
+      ],
+      "en": {
+        "title": "Actively exploited Cisco ASA/FTD SSL VPN denial of service: CVE-2026-76418",
+        "desc": "Cisco reports active exploitation of a flaw that can reload ASA/FTD devices when reachable remote-access SSL VPN uses secondary authentication in the affected tunnel group. It is a service-availability risk, not evidence of data theft.",
+        "status": "Vendor fix available · reported exploitation",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Upgrade to the fixed ASA/FTD release shown by Cisco; the advisory lists no workaround. Schedule HA-aware maintenance and communicate remote-access impact.",
+        "facts": "Official vendor / TAC guidance: Cisco PSIRT confirms active exploitation and recommends fixed ASA/FTD versions. The advisory reports no complete workaround but lists temporary mitigations involving disabling secondary authentication; these can reduce the VPN security posture.",
+        "context": "Cisco reports active exploitation of a flaw that can reload ASA/FTD devices when reachable remote-access SSL VPN uses secondary authentication in the affected tunnel group. It is a service-availability risk, not evidence of data theft.",
+        "checks": [
+          "Identify vulnerable firmware, reachable SSL VPN interfaces, secondary-authentication-server-group and DefaultWEBVPNGroup settings; review unexpected reloads.",
+          "Upgrade to Cisco's fixed ASA/FTD software. Cisco also lists a temporary mitigation by disabling secondary authentication, which must be risk-assessed because it lowers the remote-access security posture.",
+          "Verify fixed releases on both HA nodes, VPN connectivity for authorized users, HA failover state and the absence of anomalous restarts."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: audit SSL VPN exposure and secondary-authentication-server-group, including DefaultWEBVPNGroup; plan a coordinated HA upgrade, test authorized VPN logins and failover, and preserve pre/post monitoring evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "Cisco ASA/FTD SSL VPN: DoS exploatat activ — CVE-2026-76418",
+        "desc": "Cisco confirmă exploatare activă a unei vulnerabilități care poate reporni ASA/FTD când serviciul SSL VPN accesibil folosește autentificare secundară în tunnel group-ul afectat. Este un risc de disponibilitate, nu dovadă de furt de date.",
+        "status": "Remediere disponibilă · exploatare raportată",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Actualizează la versiunea corectată indicată de Cisco; nu este documentat un workaround. Planifică intervenția ținând cont de HA și utilizatorii la distanță.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Cisco PSIRT confirmă exploatarea activă și recomandă versiuni ASA/FTD corectate. Nu există workaround complet, dar Cisco prezintă mitigări temporare prin eliminarea autentificării secundare, cu impact asupra securității VPN.",
+        "context": "Cisco confirmă exploatare activă a unei vulnerabilități care poate reporni ASA/FTD când serviciul SSL VPN accesibil folosește autentificare secundară în tunnel group-ul afectat. Este un risc de disponibilitate, nu dovadă de furt de date.",
+        "checks": [
+          "Verifică firmware-ul, interfețele SSL VPN accesibile, secondary-authentication-server-group, DefaultWEBVPNGroup și istoricul repornirilor neașteptate.",
+          "Actualizează la versiunea ASA/FTD corectată. Cisco documentează și mitigarea temporară prin dezactivarea autentificării secundare, cu evaluarea riscului deoarece reduce nivelul de securitate.",
+          "Confirmă versiunile ambelor noduri, conectarea VPN, starea HA și stabilitatea după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: auditarea expunerii SSL VPN și a secondary-authentication-server-group, inclusiv DefaultWEBVPNGroup, urmată de upgrade coordonat HA, testarea conectării VPN și failover și păstrarea dovezilor înainte/după.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "Cisco ASA/FTD : déni de service SSL VPN exploité activement (CVE-2026-76418)",
+        "desc": "Cisco a confirmé l’exploitation active d’un défaut susceptible de redémarrer un pare-feu ASA/FTD lorsque le SSL VPN accessible utilise l’authentification secondaire dans le tunnel group concerné.",
+        "status": "Correctif disponible · exploitation signalée",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Mettre à jour selon la matrice Cisco. Évaluer l’impact des mesures temporaires sur la double authentification avant toute modification.",
+        "facts": "Recommandation officielle du fournisseur / TAC : Cisco recommande une version corrigée. Aucun contournement complet n’est disponible, mais des mesures temporaires désactivant l’authentification secondaire existent et réduisent la posture de sécurité.",
+        "context": "Cisco a confirmé l’exploitation active d’un défaut susceptible de redémarrer un pare-feu ASA/FTD lorsque le SSL VPN accessible utilise l’authentification secondaire dans le tunnel group concerné.",
+        "checks": [
+          "Inventorier les versions ASA/FTD, l’accès SSL VPN, les tunnel groups et DefaultWEBVPNGroup ; vérifier secondary-authentication-server-group.",
+          "Mettre à jour selon la matrice Cisco. Évaluer l’impact des mesures temporaires sur la double authentification avant toute modification.",
+          "Tester les connexions VPN autorisées, les membres HA, le basculement et l’absence de redémarrages anormaux."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut auditer les configurations SSL VPN, organiser la mise à jour HA et collecter des preuves de disponibilité et de fonctionnement des connexions après changement.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "cisco-asa-ftd-ssl-vpn-dos-2026-76418",
+      "cves": [
+        "CVE-2026-76418"
+      ]
+    },
+    {
+      "id": "20261101-checkpoint-quantum-mgmt",
+      "cat": 1,
+      "date": "2026-09-22",
+      "sources": [
+        [
+          "Check Point Research",
+          "https://blog.checkpoint.com/security/security-advisory-action-required-active-exploitation-of-cve-2026-85102-and-a-management-pre-authentication-vulnerability-cve-2026-93616/"
+        ]
+      ],
+      "en": {
+        "title": "Check Point Quantum Security Management pre-auth compromise: CVE-2026-93616",
+        "desc": "Check Point reported limited exploitation of a pre-authentication path-traversal flaw in Quantum Security Management that can lead to arbitrary script execution. This is an older but high-priority carry-forward item, not a new November discovery.",
+        "status": "Vendor fix available · previous advisory",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Apply official fixes according to Check Point sk1000171; do not assume LivePatch Take 28/29 covers this issue. Restrict exposed management access and investigate possible compromise.",
+        "facts": "Official vendor / TAC guidance: Check Point's advisory directs affected Quantum Security Management deployments to sk1000171 and the corrected Jumbo Hotfix levels. Check Point reports limited exploitation and warns that LivePatch Takes 28/29 do not address CVE-2026-93616.",
+        "context": "Check Point reported limited exploitation of a pre-authentication path-traversal flaw in Quantum Security Management that can lead to arbitrary script execution. This is an older but high-priority carry-forward item, not a new November discovery.",
+        "checks": [
+          "Identify management servers and their R81/R82 Jumbo Hotfix Takes, exposed management web services, LivePatch levels and evidence of unexpected script execution.",
+          "Apply official fixes according to Check Point sk1000171; do not assume LivePatch Take 28/29 covers this issue. Restrict exposed management access and investigate possible compromise.",
+          "Compare exact installed hotfix Take with the corrected matrix, review management-server logs and integrity indicators, and verify SmartConsole/policy installation after patching."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: build a management-server version/Take matrix, restrict administrative exposure, preserve management logs, review compromise indicators and validate SmartConsole/policy installation after patching. Treat this as a carry-forward advisory, not a new November CVE.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "Check Point Quantum Management: execuție de cod înainte de autentificare — CVE-2026-93616",
+        "desc": "Check Point a raportat exploatare limitată a unui defect de traversare a căilor pe serverul Quantum Security Management care poate permite executarea de scripturi. Este un subiect mai vechi, păstrat din cauza riscului, nu o descoperire din noiembrie.",
+        "status": "Remediere disponibilă · advisory anterior",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Aplică remedierea oficială din sk1000171; nu presupune că LivePatch Take 28/29 este suficient. Restricționează administrarea și investighează eventualele indicii de compromitere.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Advisory-ul Check Point indică sk1000171 și nivelurile corectate Jumbo Hotfix pentru Quantum Security Management. Check Point raportează exploatare limitată și precizează că LivePatch Take 28/29 nu remediază CVE-2026-93616.",
+        "context": "Check Point a raportat exploatare limitată a unui defect de traversare a căilor pe serverul Quantum Security Management care poate permite executarea de scripturi. Este un subiect mai vechi, păstrat din cauza riscului, nu o descoperire din noiembrie.",
+        "checks": [
+          "Inventariază serverele și Jumbo Hotfix Take pentru R81/R82, expunerea interfeței web, nivelul LivePatch și semnele de execuție neobișnuită.",
+          "Aplică remedierea oficială din sk1000171; nu presupune că LivePatch Take 28/29 este suficient. Restricționează administrarea și investighează eventualele indicii de compromitere.",
+          "Compară Take-ul instalat cu matricea de remediere, investighează logurile și verifică SmartConsole și instalarea politicilor după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: matrice de versiuni/Take pentru serverele de management, restricționarea administrării, conservarea logurilor și verificarea IOC, apoi validarea SmartConsole și a instalării politicilor. Este un follow-up, nu un CVE nou din noiembrie.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "Check Point Quantum Management : vulnérabilité pré-authentification (CVE-2026-93616)",
+        "desc": "Check Point a signalé une exploitation limitée d’une traversée de chemin dans Security Management pouvant conduire à l’exécution de scripts. Cet avis de septembre reste à traiter en priorité.",
+        "status": "Avis antérieur · exploitation limitée",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Appliquer le correctif officiel approprié, limiter l’accès administratif et rechercher des traces d’activité suspecte.",
+        "facts": "Recommandation officielle du fournisseur / TAC : Check Point renvoie au correctif sk1000171 et avertit que LivePatch Takes 28/29 ne remédient pas à CVE-2026-93616.",
+        "context": "Check Point a signalé une exploitation limitée d’une traversée de chemin dans Security Management pouvant conduire à l’exécution de scripts. Cet avis de septembre reste à traiter en priorité.",
+        "checks": [
+          "Inventorier les serveurs de management, versions et Jumbo Hotfix Takes, et contrôler l’exposition des services web.",
+          "Appliquer le correctif officiel approprié, limiter l’accès administratif et rechercher des traces d’activité suspecte.",
+          "Vérifier le Jumbo Hotfix Take corrigé, les journaux, SmartConsole et l’installation des politiques."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut établir une matrice de versions et hotfixes, examiner les journaux pertinents et valider la continuité de la gestion après correction.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "checkpoint-quantum-management-2026-93616",
+      "cves": [
+        "CVE-2026-93616"
+      ]
+    },
+    {
+      "id": "20261101-beyondtrust-auth-bypass",
+      "cat": 1,
+      "date": "2026-10-15",
+      "sources": [
+        [
+          "BeyondTrust PSIRT",
+          "https://www.beyondtrust.com/trust-center/security-advisories/bt26-05"
+        ],
+        [
+          "BeyondTrust incident analysis",
+          "https://www.beyondtrust.com/blog/entry/bt26-05"
+        ]
+      ],
+      "en": {
+        "title": "BeyondTrust Remote Support: exploited origin-validation flaw (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 allowed unauthorized file operations against affected Remote Support appliances. BeyondTrust and investigators report attacks before disclosure; patching alone cannot exclude a prior compromise.",
+        "status": "Vendor fix available · reported exploitation",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Apply BeyondTrust BT26-05 fixes urgently and follow vendor/Mandiant incident-triage guidance; isolate systems with credible compromise indicators and rotate exposed secrets after investigation.",
+        "facts": "Official vendor / TAC guidance: BeyondTrust BT26-05 identifies improper origin validation in internal messaging, which may permit unauthorized appliance file operations. It is not described by the vendor as an authentication bypass. Remote Support SaaS was patched; self-hosted installations require patch verification or an upgrade.",
+        "context": "CVE-2026-102764 allowed unauthorized file operations against affected Remote Support appliances. BeyondTrust and investigators report attacks before disclosure; patching alone cannot exclude a prior compromise.",
+        "checks": [
+          "Locate Remote Support deployments, affected appliance builds, exposure, outbound connections and the access/system/security logs recommended by the vendor.",
+          "Apply BeyondTrust BT26-05 fixes urgently and follow vendor/Mandiant incident-triage guidance; isolate systems with credible compromise indicators and rotate exposed secrets after investigation.",
+          "Confirm patched builds and authorized connectivity, document reviewed logs/IOCs and forensic limitations, and verify no unexpected persistence or outbound tunnels remain."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: perform a scoped remote-access incident triage, correlate appliance and upstream SIEM logs, document evidence gaps, hunt for unauthorized file operations or tunneling, and coordinate safe recovery and credential rotation with BeyondTrust support.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "BeyondTrust Remote Support: defect de validare a originii exploatat (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 a permis operațiuni neautorizate asupra fișierelor din anumite appliance-uri Remote Support. BeyondTrust și investigatorii raportează atacuri înainte de divulgare; patch-ul nu exclude compromiterea anterioară.",
+        "status": "Remediere disponibilă · exploatare raportată",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Aplică rapid remedierea BT26-05 și procedurile de investigație BeyondTrust/Mandiant; izolează sistemele cu indicii credibile și rotește secretele compromise după analiză.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: BeyondTrust BT26-05 descrie validarea incorectă a originii mesajelor interne și posibile operațiuni neautorizate asupra fișierelor, nu un bypass de autentificare. Instanțele SaaS au fost actualizate; cele self-hosted necesită patch sau upgrade.",
+        "context": "CVE-2026-102764 a permis operațiuni neautorizate asupra fișierelor din anumite appliance-uri Remote Support. BeyondTrust și investigatorii raportează atacuri înainte de divulgare; patch-ul nu exclude compromiterea anterioară.",
+        "checks": [
+          "Identifică instalările Remote Support, buildurile afectate, expunerea, conexiunile externe și logurile recomandate de furnizor.",
+          "Aplică rapid remedierea BT26-05 și procedurile de investigație BeyondTrust/Mandiant; izolează sistemele cu indicii credibile și rotește secretele compromise după analiză.",
+          "Confirmă buildul corectat, logurile și indicatorii investigați, limitele evidenței și absența persistenței sau a tunelurilor neautorizate."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: triaj incident pe acces remote, corelare de loguri appliance/SIEM, documentarea lacunelor, căutarea operațiunilor neautorizate și a tunelurilor, apoi recuperare și rotația credențialelor coordonate cu suportul BeyondTrust.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "BeyondTrust Remote Support : défaut de validation d’origine exploité (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 concerne la validation insuffisante de l’origine de messages internes et peut permettre des opérations non autorisées sur des fichiers. BeyondTrust a confirmé une exploitation ciblée avant divulgation.",
+        "status": "Correctif disponible · exploitation signalée",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Appliquer le correctif ou la mise à niveau nécessaire et préserver les journaux pour examiner une compromission antérieure.",
+        "facts": "Recommandation officielle du fournisseur / TAC : L’avis BT26-05 décrit un défaut de validation d’origine, et non un contournement d’authentification ; le fournisseur a corrigé les instances SaaS et fournit un correctif pour les installations auto-hébergées.",
+        "context": "CVE-2026-102764 concerne la validation insuffisante de l’origine de messages internes et peut permettre des opérations non autorisées sur des fichiers. BeyondTrust a confirmé une exploitation ciblée avant divulgation.",
+        "checks": [
+          "Identifier les appliances Remote Support, leurs versions, leur exposition et l’état du correctif BT26-05.",
+          "Appliquer le correctif ou la mise à niveau nécessaire et préserver les journaux pour examiner une compromission antérieure.",
+          "Contrôler les opérations sur fichiers, les connexions sortantes et la persistance éventuelle ; coordonner la réponse avec le support BeyondTrust si nécessaire."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut effectuer un triage d’incident, corréler les journaux de l’appliance et du SIEM, identifier les lacunes de preuves et préparer une reprise maîtrisée.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "beyondtrust-remote-support-2026-102764",
+      "cves": [
+        "CVE-2026-102764"
+      ]
+    },
     {
       "id": "php",
       "cat": 1,
