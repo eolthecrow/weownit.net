@@ -100,6 +100,22 @@ class BriefingTests(unittest.TestCase):
         self.assertIn(self.data['ui']['en']['archiveTitle'],generated['briefing.html'])
         self.assertNotIn('briefing/'+self.data['articles'][0]['slug']+'.html?lang=en',generated['index.html'])
 
+    def test_briefing_data_cache_key_changes_with_editorial_content(self):
+        def cache_key(page):
+            self.assertIn('assets/security-briefing-data.js?v=', page)
+            return page.split('assets/security-briefing-data.js?v=', 1)[1].split('"', 1)[0]
+
+        original = builder.outputs(self.data, self.today)
+        first = cache_key(original['briefing.html'])
+        self.assertEqual(len(first), 12)
+        self.assertTrue(all(char in '0123456789abcdef' for char in first))
+        changed = copy.deepcopy(self.data)
+        changed['ui']['en']['archiveTitle'] += ' (test)'
+        revised = builder.outputs(changed, self.today)
+        second = cache_key(revised['briefing.html'])
+        self.assertNotEqual(first, second)
+        self.assertIn('assets/security-briefing-data.js?v=' + second, revised['briefing/' + changed['articles'][0]['slug'] + '.html'])
+
     def test_archive_is_disclosed_on_the_same_briefing_page(self):
         generated=builder.outputs(self.data,self.today)
         html=generated['briefing.html']

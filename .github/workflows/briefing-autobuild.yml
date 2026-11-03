@@ -6,6 +6,7 @@ on:
       - 'briefing/auto-*'
     paths:
       - 'content/security-briefing.json'
+      - 'tools/build_security_briefing.py'
 
 permissions:
   contents: write

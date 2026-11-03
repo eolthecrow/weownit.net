@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build source-attributed static briefings, RSS and the homepage excerpt. No network."""
 import argparse
+import hashlib
 from datetime import date, datetime, timedelta, timezone
 from email.utils import format_datetime
 from html import escape as e
@@ -11,6 +12,14 @@ from urllib.parse import urlsplit
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+def data_cache_key():
+    """Content-address the generated client data so caches cannot serve a stale edition."""
+    canonical = json.dumps(DATA, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
+    return hashlib.sha256(canonical.encode('utf-8')).hexdigest()[:12]
+
+
 LANGUAGES = ('en', 'ro', 'fr')
 PUBLIC = 'https://weownit.net/'
 
@@ -138,7 +147,7 @@ def shell(path, content, title, description, article=None):
     structured_json = json.dumps(schema,ensure_ascii=False).replace('<','\\u003c')
     return f'''<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=3"><link rel="stylesheet" href="{prefix}assets/site.css?v=23"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
-<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v=3" defer></script><script src="{prefix}assets/security-briefing.js?v=4" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
+<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v={data_cache_key()}" defer></script><script src="{prefix}assets/security-briefing.js?v=4" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
 '''
 
 
