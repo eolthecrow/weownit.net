@@ -28,7 +28,7 @@ export async function handleRequest(request, env, dependencies = {}) {
   if (request.method === "GET") {
     const asset = adminAsset(pathname); if (asset) return asset;
     if (sandboxDeliveryConfigured(env)) {
-      const customer = customerAsset(pathname); if (customer) return customer;
+      const customer = customerAsset(pathname, env); if (customer) return customer;
     }
   }
   if (pathname.startsWith("/customer/")) return handleSandboxCustomer(request, env, dependencies);

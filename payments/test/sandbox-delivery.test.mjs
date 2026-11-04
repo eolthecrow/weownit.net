@@ -72,6 +72,17 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       assert.equal(options.success_url, ctx.origin + "/complete?session_id={CHECKOUT_SESSION_ID}&lang=ro");
       assert.equal(options.client_reference_id, attempt.id);
     });
+    await t.test("an unpaid completed checkout cannot authorize a ZIP download", async () => {
+      const unpaid = await ctx.start();
+      const result = await ctx.pay(unpaid, { payment_status: "unpaid" });
+      assert.equal(result.status, 200);
+      assert.equal((await result.json()).reason, "payment-not-paid");
+      assert.equal((await ctx.receipt(unpaid)).status, 202);
+      const row = await db.prepare("SELECT COUNT(*) AS n FROM stripe_test_purchases WHERE session_id = ?").bind(unpaid.sessionId).first();
+      assert.equal(row.n, 0);
+      const grant = await db.prepare("SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?").bind(unpaid.sessionId).first();
+      assert.equal(grant.n, 0);
+    });
     await t.test("success-page visit cannot grant access before a signed webhook records payment", async () => {
       const pending = await ctx.receipt(flow);
       assert.equal(pending.status, 202); assert.deepEqual(await pending.json(), { status: "pending" });
@@ -95,6 +106,7 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       const ready = await ctx.receipt(flow); assert.equal(ready.status, 200);
       const receipt = await ready.json(); ticket = receipt.ticket;
       assert.equal(receipt.quantity, 3); assert.equal(receipt.amount_total, 3000); assert.equal(receipt.remaining_downloads, 3);
+      assert.ok(receipt.access_expires_at > receipt.expires_at);
       const grant = await db.prepare("SELECT * FROM sandbox_download_grants WHERE session_id = ?").bind(flow.sessionId).first();
       assert.notEqual(grant.ticket_hash, ticket); assert.equal(grant.ticket_hash, await hashSecret(ticket));
       assert.equal((await ctx.download(flow, ticket, { cookie: undefined })).status, 401);

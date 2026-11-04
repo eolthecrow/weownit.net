@@ -1,3 +1,4 @@
+import { recoveryAsset } from "./recovery-page.js";
 const HTML = String.raw`<!doctype html><html lang="ro"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>weownit.net · sandbox</title><link rel="stylesheet" href="/customer/style.css"><script src="/customer/app.js" defer></script></head>
 <body><main><header><span class="brand">weownit.net</span><span class="badge">sandbox</span><nav aria-label="Language"><button type="button" data-lang="ro">RO</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="fr">FR</button></nav></header>
@@ -8,19 +9,20 @@ const HTML = String.raw`<!doctype html><html lang="ro"><head><meta charset="utf-
 <form id="downloadForm" action="/customer/download" method="post" target="downloadFrame" hidden><input id="ticket" name="ticket" type="hidden"><button id="downloadButton" type="submit" data-i18n="download"></button><p id="expiry" class="hint"></p></form>
 <iframe id="downloadFrame" name="downloadFrame" title="Download" sandbox="allow-downloads allow-same-origin" hidden></iframe>
 <button id="checkButton" class="quiet" type="button" data-i18n="check" hidden></button>
+<!-- RECOVERY_LINK -->
 <p id="privacy" class="hint" data-i18n="privacy"></p></section></main></body></html>`;
 const CSS = String.raw`
-:root{color-scheme:light;--ink:#192b2b;--accent:#165e50;--muted:#596b6a;--line:#dce6e2}*{box-sizing:border-box}body{margin:0;background:#f4f7f4;color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:740px;margin:auto;padding:32px 24px}header{display:flex;align-items:center;gap:12px;margin-bottom:36px}.brand{font-size:22px;font-weight:750;letter-spacing:-1px}.badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;background:#e1eee7;border:1px solid #c4dbcd;border-radius:20px}nav{display:flex;gap:12px;margin-left:auto}nav button{padding:0;min-height:44px;min-width:28px;border:0;background:transparent;color:var(--muted);font-size:12px}nav button[aria-pressed=true]{color:var(--accent);font-weight:750;text-decoration:underline;text-underline-offset:5px}.notice{font-size:13px;border-left:3px solid #79a18b;background:#eaf1eb;padding:12px 15px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px}h1{font-size:clamp(28px,5vw,38px);letter-spacing:-1px;line-height:1.2;margin:0 0 20px}h2{font-size:18px;line-height:1.4;margin:16px 0 5px;overflow-wrap:anywhere}p{margin:12px 0;overflow-wrap:anywhere}.hint{color:var(--muted);font-size:12px;margin-top:16px}label{display:block;font-weight:650;font-size:13px;margin:22px 0 6px}select,button{font:inherit}select{width:100%;padding:10px;border:1px solid #b9cbc2;border-radius:6px;background:white;color:var(--ink);min-height:44px}button{cursor:pointer;border:1px solid var(--accent);border-radius:6px;background:var(--accent);color:white;font-weight:650;padding:11px 17px;min-height:44px}button:disabled{opacity:.6;cursor:wait}.quiet{background:white;color:var(--accent);margin-top:12px}.error{color:#8c332c}.success{color:var(--accent)}:focus-visible{outline:3px solid #8db5a8;outline-offset:3px}[hidden]{display:none!important}@media(max-width:480px){main{padding:20px 16px}header{gap:8px;margin-bottom:24px}.brand{font-size:20px}nav{gap:7px}.panel{padding:22px 18px}form button{width:100%}}
+:root{color-scheme:light;--ink:#192b2b;--accent:#165e50;--muted:#596b6a;--line:#dce6e2}*{box-sizing:border-box}body{margin:0;background:#f4f7f4;color:var(--ink);font:15px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}main{max-width:740px;margin:auto;padding:32px 24px}header{display:flex;align-items:center;gap:12px;margin-bottom:36px}.brand{font-size:22px;font-weight:750;letter-spacing:-1px}.badge{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;background:#e1eee7;border:1px solid #c4dbcd;border-radius:20px}nav{display:flex;gap:12px;margin-left:auto}nav button{padding:0;min-height:44px;min-width:28px;border:0;background:transparent;color:var(--muted);font-size:12px}nav button[aria-pressed=true]{color:var(--accent);font-weight:750;text-decoration:underline;text-underline-offset:5px}.notice{font-size:13px;border-left:3px solid #79a18b;background:#eaf1eb;padding:12px 15px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:28px}h1{font-size:clamp(28px,5vw,38px);letter-spacing:-1px;line-height:1.2;margin:0 0 20px}h2{font-size:18px;line-height:1.4;margin:16px 0 5px;overflow-wrap:anywhere}p{margin:12px 0;overflow-wrap:anywhere}.hint{color:var(--muted);font-size:12px;margin-top:16px}label{display:block;font-weight:650;font-size:13px;margin:22px 0 6px}select,button,input{font:inherit}input{width:100%;min-height:44px;padding:10px;border:1px solid #b9cbc2;border-radius:6px;color:var(--ink)}a{color:var(--accent)}select{width:100%;padding:10px;border:1px solid #b9cbc2;border-radius:6px;background:white;color:var(--ink);min-height:44px}button{cursor:pointer;border:1px solid var(--accent);border-radius:6px;background:var(--accent);color:white;font-weight:650;padding:11px 17px;min-height:44px}button:disabled{opacity:.6;cursor:wait}.quiet{background:white;color:var(--accent);margin-top:12px}.error{color:#8c332c}.success{color:var(--accent)}:focus-visible{outline:3px solid #8db5a8;outline-offset:3px}[hidden]{display:none!important}@media(max-width:480px){main{padding:20px 16px}header{gap:8px;margin-bottom:24px}.brand{font-size:20px}nav{gap:7px}.panel{padding:22px 18px}form button{width:100%}}
 `;
 export const CUSTOMER_TRANSLATIONS = {
   ro: {
     sandbox: "Mediu de test. Plățile sandbox nu transferă bani reali.", buy: "Cumpără produsul.", complete: "Plata ta.",
     quantity: "Cantitate", total: "Total", pay: "Continuă la plata de test", download: "Descarcă produsul", check: "Verifică / reînnoiește accesul",
     browser: "Revino după plată în acest browser. Cookie-ul securizat leagă descărcarea de cumpărarea ta.",
-    privacy: "Nu păstrăm date de card sau emailuri în această aplicație. Nu emitem licențe pentru utilizatori multipli.",
+    privacy: "Nu păstrăm date de card sau adrese de email în această aplicație. Stripe procesează plata, iar Resend poate trimite emailul de recuperare. Nu emitem licențe pentru utilizatori multipli.", recovery: "Recuperează accesul", reference: "Păstrează această referință pentru recuperarea accesului",
     loading: "Se încarcă…", pending: "Așteptăm confirmarea plății. Verificăm automat pentru scurt timp; apoi poți apăsa din nou Verifică.",
     ready: "Plată verificată. Produsul poate fi descărcat.", cancelled: "Plata a fost anulată. Poți începe din nou.",
-    access: "Acces valabil până la", attempts: "Încercări de descărcare rămase", units: "unități",
+    access: "Butonul de descărcare este valabil până la", access_window: "Accesul la achiziție expiră la", renew_hint: "După expirarea butonului, apasă Verifică / reînnoiește accesul. Fiecare descărcare începută consumă o încercare, chiar dacă este întreruptă.", attempts: "Încercări de descărcare rămase", units: "unități",
     invalid_input: "Datele cererii sunt invalide.", product_unavailable: "Produsul nu este disponibil.",
     service_unavailable: "Serviciul nu este disponibil acum. Încearcă din nou mai târziu.",
     browser_required: "Deschide confirmarea în browserul în care ai început cumpărarea, cu cookie-urile activate.",
@@ -33,10 +35,10 @@ export const CUSTOMER_TRANSLATIONS = {
     sandbox: "Test environment. Sandbox payments do not transfer real money.", buy: "Buy the product.", complete: "Your payment.",
     quantity: "Quantity", total: "Total", pay: "Continue to test payment", download: "Download product", check: "Check / renew access",
     browser: "Return after payment in this browser. A secure cookie links the download to your purchase.",
-    privacy: "This application stores no card details or email addresses. It does not issue multi-user licenses.",
+    privacy: "This application stores no card details or email addresses. Stripe processes payments and Resend may send recovery emails. It does not issue multi-user licenses.", recovery: "Recover access", reference: "Save this reference to recover access",
     loading: "Loading…", pending: "Waiting for payment confirmation. We check automatically for a short time; then you can select Check again.",
     ready: "Payment verified. Your product is ready to download.", cancelled: "Payment cancelled. You can start again.",
-    access: "Access valid until", attempts: "Remaining download attempts", units: "units",
+    access: "Download button valid until", access_window: "Purchase access expires at", renew_hint: "After the button expires, select Check / renew access. Each started download uses one attempt, even if interrupted.", attempts: "Remaining download attempts", units: "units",
     invalid_input: "The request contains invalid data.", product_unavailable: "This product is unavailable.",
     service_unavailable: "The service is unavailable. Please try again later.",
     browser_required: "Open the confirmation in the browser where you started the purchase, with cookies enabled.",
@@ -49,10 +51,10 @@ export const CUSTOMER_TRANSLATIONS = {
     sandbox: "Environnement de test. Les paiements sandbox ne transfèrent pas d’argent réel.", buy: "Acheter le produit.", complete: "Votre paiement.",
     quantity: "Quantité", total: "Total", pay: "Continuer vers le paiement de test", download: "Télécharger le produit", check: "Vérifier / renouveler l’accès",
     browser: "Revenez après le paiement dans ce navigateur. Un cookie sécurisé associe le téléchargement à votre achat.",
-    privacy: "Cette application ne conserve ni coordonnées de carte ni adresses email. Elle ne délivre pas de licences multi-utilisateurs.",
+    privacy: "Cette application ne conserve ni coordonnées de carte ni adresses email. Stripe traite le paiement et Resend peut envoyer un email de récupération. Elle ne délivre pas de licences multi-utilisateurs.", recovery: "Récupérer l’accès", reference: "Conservez cette référence pour récupérer l’accès",
     loading: "Chargement…", pending: "En attente de la confirmation du paiement. La vérification est automatique pendant un court instant ; ensuite, vous pouvez vérifier à nouveau.",
     ready: "Paiement vérifié. Votre produit est prêt à être téléchargé.", cancelled: "Paiement annulé. Vous pouvez recommencer.",
-    access: "Accès valable jusqu’à", attempts: "Tentatives de téléchargement restantes", units: "unités",
+    access: "Bouton de téléchargement valide jusqu’à", access_window: "L’accès à l’achat expire le", renew_hint: "Lorsque le bouton expire, sélectionnez Vérifier / renouveler l’accès. Chaque téléchargement commencé utilise une tentative, même s’il est interrompu.", attempts: "Tentatives de téléchargement restantes", units: "unités",
     invalid_input: "La demande contient des données invalides.", product_unavailable: "Ce produit n’est pas disponible.",
     service_unavailable: "Le service est indisponible. Réessayez plus tard.",
     browser_required: "Ouvrez la confirmation dans le navigateur utilisé pour commencer l’achat, avec les cookies activés.",
@@ -78,11 +80,13 @@ export const CUSTOMER_JS = "'use strict';\nconst translations = " + JSON.stringi
     }
     if (receipt) {
       $('price').textContent = translations[language].quantity + ': ' + receipt.quantity + ' · ' + money(receipt.amount_total, receipt.currency, receipt.minor_units);
-      $('expiry').textContent = translations[language].access + ' ' + new Date(receipt.expires_at * 1000).toLocaleTimeString(language) + '. ' + translations[language].attempts + ': ' + receipt.remaining_downloads + '.';
+      $('expiry').textContent = translations[language].access + ' ' + new Date(receipt.expires_at * 1000).toLocaleTimeString(language) + '. ' + translations[language].access_window + ' ' + new Date(receipt.access_expires_at * 1000).toLocaleString(language) + '. ' + translations[language].attempts + ': ' + receipt.remaining_downloads + '. ' + translations[language].renew_hint;
     }
   }
   function render() {
     document.documentElement.lang = language;
+    if ($('recoveryReference') && sessionId) $('recoveryReference').textContent = translations[language].reference + ': ' + sessionId;
+    if ($('recoveryLink')) $('recoveryLink').href = '/recover?lang=' + language;
     document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = translations[language][el.dataset.i18n]; });
     document.querySelectorAll('[data-lang]').forEach(el => el.setAttribute('aria-pressed', String(el.dataset.lang === language)));
     $('heading').textContent = translations[language][productId ? 'buy' : 'complete'];
@@ -147,19 +151,22 @@ export const CUSTOMER_JS = "'use strict';\nconst translations = " + JSON.stringi
     }).catch(e => setStatus(e.message, true));
   } else {
     $('checkButton').hidden = false;
+    if ($('recoveryReference') && /^cs_test_[A-Za-z0-9]+$/.test(sessionId || '')) { $('recoveryReference').textContent = translations[language].reference + ': ' + sessionId; $('recoveryDetails').hidden = false; }
     if (/^cs_test_[A-Za-z0-9]+$/.test(sessionId || '') && sessionId.length <= 255) check();
     else setStatus('receipt_unavailable', true);
   }
 })();`;
 
-export function customerAsset(path) {
+export function customerAsset(path, env = {}) {
   let asset;
-  if (path === "/complete" || /^\/buy\/[a-z0-9][a-z0-9-]{1,79}$/.test(path)) asset = [HTML, "text/html; charset=utf-8"];
+  const enabled = env.SANDBOX_RECOVERY_ENABLED === "true";
+  if (enabled && (path === '/recover' || path === '/customer/recovery.js')) asset = recoveryAsset(path);
+  else if (path === "/complete" || /^\/buy\/[a-z0-9][a-z0-9-]{1,79}$/.test(path)) asset = [HTML.replace('<!-- RECOVERY_LINK -->', enabled ? '<div id="recoveryDetails" hidden><p id="recoveryReference" class="hint"></p><a id="recoveryLink" href="/recover" data-i18n="recovery"></a></div>' : ''), "text/html; charset=utf-8"];
   else if (path === "/customer/app.js") asset = [CUSTOMER_JS, "text/javascript; charset=utf-8"];
   else if (path === "/customer/style.css") asset = [CSS, "text/css; charset=utf-8"];
   if (!asset) return null;
   return new Response(asset[0], { headers: {
-    "Content-Type": asset[1], "Cache-Control": "private, no-store", "Referrer-Policy": "same-origin",
+    "Content-Type": asset[1], "Cache-Control": "private, no-store", "Referrer-Policy": path === '/recover' || path === '/customer/recovery.js' ? "no-referrer" : "same-origin",
     "X-Content-Type-Options": "nosniff", "X-Frame-Options": "DENY", "X-Robots-Tag": "noindex, nofollow",
     "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
   } });
