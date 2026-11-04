@@ -6,7 +6,9 @@
   "workers_dev": true,
   "vars": {
     "STRIPE_WEBHOOK_ENABLED": "false",
-    "SANDBOX_FULFILLMENT_ENABLED": "false"
+    "SANDBOX_FULFILLMENT_ENABLED": "false",
+    "SANDBOX_RECOVERY_ENABLED": "false",
+    "SANDBOX_RECOVERY_ORIGIN": "https://weownit-payments.vlad-network-security.workers.dev"
   },
   "r2_buckets": [
     {

@@ -79,7 +79,7 @@ async function currentPaymentAllowed(stripe, purchase) {
 }
 
 // Test dependencies are supplied directly by the caller, never request input or env.
-export async function handleSandboxCustomer(request, env, { stripeClient, clock = Date.now } = {}) {
+export async function handleSandboxCustomer(request, env, { stripeClient, clock = Date.now, recoverySend } = {}) {
   if (!sandboxDeliveryConfigured(env)) return respond({ error: "sandbox_delivery_disabled" }, 404);
   const db = env.R2_BUDGET_DB;
   const url = new URL(request.url); const now = Math.floor(clock() / 1000);
@@ -101,11 +101,89 @@ export async function handleSandboxCustomer(request, env, { stripeClient, clock 
       if (!product) throw new Denied("product_unavailable", 404);
       return finish(respond({ product: { ...product, minor_units: currencyMinorUnits(product.currency), display_price: displayPrice(product.unit_amount, product.currency) } }));
     }
-    if (request.method !== "POST" || !["/customer/checkout", "/customer/receipt", "/customer/download"].includes(url.pathname)) {
+    if (request.method !== "POST" || !["/customer/checkout", "/customer/receipt", "/customer/download", "/customer/recovery/request", "/customer/recovery/claim"].includes(url.pathname)) {
       throw new Denied("not_found", 404);
     }
     sameOrigin(request);
     const stripe = stripeClient || createStripeClient(env.STRIPE_SECRET_KEY);
+    if (url.pathname.startsWith("/customer/recovery/")) {
+      // Explicit configuration prevents accidental mail delivery or host-header link injection.
+      let publicOrigin;
+      try { publicOrigin = new URL(env.SANDBOX_RECOVERY_ORIGIN); } catch { throw new Denied("service_unavailable", 503); }
+      if (env.SANDBOX_RECOVERY_ENABLED !== "true" || !env.RESEND_RECOVERY_API_KEY ||
+          publicOrigin.protocol !== "https:" || publicOrigin.origin !== url.origin ||
+          publicOrigin.pathname !== "/" || publicOrigin.search || publicOrigin.hash || publicOrigin.username || publicOrigin.password) {
+        throw new Denied("service_unavailable", 503);
+      }
+      if (url.pathname === "/customer/recovery/request") {
+        const data = await jsonBody(request, ["session_id", "email", "language"]);
+        if (typeof data.session_id !== "string" || data.session_id.length > 255 ||
+            typeof data.email !== "string" || data.email.length > 254 || !["ro", "en", "fr"].includes(data.language)) throw new Denied("invalid_input");
+        const generic = () => finish(respond({ status: "requested" }));
+        if (!SESSION.test(data.session_id) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return generic();
+        const token = randomSecret();
+        const id = crypto.randomUUID();
+        await db.prepare("DELETE FROM sandbox_recovery_requests WHERE created_at < ?").bind(now - 86400).run();
+        // Counts all syntactically valid requests, including unknown sessions, before external API calls.
+        const reserved = await db.prepare(`INSERT INTO sandbox_recovery_requests (id,session_id,token_hash,created_at,expires_at)
+          SELECT ?,?,?,?,? WHERE (SELECT COUNT(*) FROM sandbox_recovery_requests WHERE created_at > ?) < 100
+          AND (SELECT COUNT(*) FROM sandbox_recovery_requests WHERE session_id = ? AND created_at > ?) < 3 RETURNING id`)
+          .bind(id, data.session_id, await hashSecret(token), now, now + 900, now - 3600, data.session_id, now - 3600).first();
+        if (!reserved) return generic();
+        try {
+          const attempt = await db.prepare("SELECT * FROM sandbox_checkout_attempts WHERE session_id = ? AND access_expires_at > ?").bind(data.session_id, now).first();
+          const purchase = attempt && await db.prepare("SELECT * FROM stripe_test_purchases WHERE session_id = ?").bind(data.session_id).first();
+          const blocked = attempt && await db.prepare("SELECT session_id FROM sandbox_download_grants WHERE session_id = ? AND (revoked = 1 OR uses >= 3)").bind(data.session_id).first();
+          if (!attempt || blocked || !purchaseMatches(attempt, purchase) || !(await currentPaymentAllowed(stripe, purchase))) return generic();
+          const session = await stripe.checkout.sessions.retrieve(data.session_id);
+          const email = session?.customer_details?.email;
+          if (session?.object !== "checkout.session" || session.id !== data.session_id || session.livemode !== false ||
+              session.status !== "complete" || session.payment_status !== "paid" || session.payment_intent !== purchase.payment_intent_id ||
+              session.amount_total !== purchase.amount_total || session.currency !== purchase.currency ||
+              typeof email !== "string" || email.length > 254 || email.trim().toLowerCase() !== data.email.trim().toLowerCase()) return generic();
+          const link = publicOrigin.origin + "/recover?lang=" + data.language + "#token=" + token;
+          const subject = { ro: "Recuperare acces weownit.net — test", en: "weownit.net access recovery — test", fr: "Récupération d’accès weownit.net — test" }[data.language];
+          const message = { ro: "Deschide linkul și confirmă recuperarea. Linkul expiră în 15 minute. Accesul rămâne limitat la 24 de ore de la cumpărare.", en: "Open the link and confirm recovery. The link expires in 15 minutes. Access remains limited to 24 hours from checkout.", fr: "Ouvrez le lien et confirmez la récupération. Le lien expire dans 15 minutes. L’accès reste limité à 24 heures après l’achat." }[data.language];
+          const payload = { from: "weownit.net <updates@weownit.net>", to: [email], subject, text: message + "\n\n" + link };
+          if (recoverySend) await recoverySend(payload);
+          else {
+            const response = await fetch("https://api.resend.com/emails", { method: "POST", headers: { Authorization: "Bearer " + env.RESEND_RECOVERY_API_KEY, "Content-Type": "application/json" }, body: JSON.stringify(payload), signal: AbortSignal.timeout(5000) });
+            if (!response.ok) throw Error("delivery failed");
+          }
+        } catch { /* Generic response does not expose account, payment, or mail status. */ }
+        return generic();
+      }
+      const data = await jsonBody(request, ["token"]);
+      if (!HEX.test(data.token || "")) throw new Denied("recovery_unavailable", 403);
+      const tokenHash = await hashSecret(data.token);
+      const record = await db.prepare(`SELECT r.session_id FROM sandbox_recovery_requests r JOIN sandbox_checkout_attempts a ON a.session_id = r.session_id
+        WHERE r.token_hash = ? AND r.used_at IS NULL AND r.expires_at > ? AND a.access_expires_at > ?`).bind(tokenHash, now, now).first();
+      const attempt = record && await db.prepare("SELECT * FROM sandbox_checkout_attempts WHERE session_id = ?").bind(record.session_id).first();
+      const purchase = attempt && await db.prepare("SELECT * FROM stripe_test_purchases WHERE session_id = ?").bind(record.session_id).first();
+      if (!attempt || !purchaseMatches(attempt, purchase) || !(await currentPaymentAllowed(stripe, purchase))) throw new Denied("recovery_unavailable", 403);
+      const owner = buyerSecret(request) || randomSecret(); const ownerHash = await hashSecret(owner);
+      const claim = crypto.randomUUID(); const replacementTicket = await hashSecret(randomSecret());
+      const claimNow = Math.floor(clock() / 1000);
+      // D1 serializes each batch; only the request that consumes this token can change ownership.
+      const results = await db.batch([
+        db.prepare(`UPDATE sandbox_recovery_requests SET used_at = ?, claim_id = ? WHERE token_hash = ? AND used_at IS NULL AND expires_at > ?
+          AND EXISTS (SELECT 1 FROM sandbox_checkout_attempts a WHERE a.session_id = sandbox_recovery_requests.session_id AND a.access_expires_at > ?)
+          AND NOT EXISTS (SELECT 1 FROM sandbox_download_grants g WHERE g.session_id = sandbox_recovery_requests.session_id AND (g.revoked = 1 OR g.uses >= 3)) RETURNING session_id`)
+          .bind(claimNow, claim, tokenHash, claimNow, claimNow),
+        db.prepare(`UPDATE sandbox_checkout_attempts SET owner_hash = ? WHERE session_id = ? AND EXISTS
+          (SELECT 1 FROM sandbox_recovery_requests WHERE token_hash = ? AND claim_id = ?)`)
+          .bind(ownerHash, record.session_id, tokenHash, claim),
+        db.prepare(`UPDATE sandbox_download_grants SET owner_hash = ?, ticket_hash = ?, expires_at = 0 WHERE session_id = ? AND EXISTS
+          (SELECT 1 FROM sandbox_recovery_requests WHERE token_hash = ? AND claim_id = ?)`)
+          .bind(ownerHash, replacementTicket, record.session_id, tokenHash, claim),
+        db.prepare(`UPDATE sandbox_recovery_requests SET used_at = ? WHERE session_id = ? AND used_at IS NULL AND EXISTS
+          (SELECT 1 FROM sandbox_recovery_requests WHERE token_hash = ? AND claim_id = ?)`)
+          .bind(claimNow, record.session_id, tokenHash, claim),
+      ]);
+      if (!results[0]?.results?.length) throw new Denied("recovery_unavailable", 403);
+      cookieToSet = owner;
+      return finish(respond({ status: "recovered", session_id: record.session_id }));
+    }
     if (url.pathname === "/customer/checkout") {
       const data = await jsonBody(request, ["product_id", "quantity", "language"]);
       if (!PRODUCT.test(data.product_id || "") || !Number.isSafeInteger(data.quantity) || data.quantity < 1 || data.quantity > 3 ||
@@ -163,9 +241,10 @@ export async function handleSandboxCustomer(request, env, { stripeClient, clock 
       }
       const ticket = randomSecret(); const expires = Math.min(now + DELIVERY_LIMITS.ticketSeconds, attempt.access_expires_at);
       const grant = await db.prepare(`INSERT INTO sandbox_download_grants (session_id,owner_hash,ticket_hash,expires_at)
-        VALUES (?,?,?,?) ON CONFLICT(session_id) DO UPDATE SET ticket_hash = excluded.ticket_hash, expires_at = excluded.expires_at
+        SELECT ?,?,?,? WHERE EXISTS (SELECT 1 FROM sandbox_checkout_attempts WHERE session_id = ? AND owner_hash = ? AND access_expires_at > ?)
+        ON CONFLICT(session_id) DO UPDATE SET ticket_hash = excluded.ticket_hash, expires_at = excluded.expires_at
         WHERE sandbox_download_grants.owner_hash = excluded.owner_hash AND sandbox_download_grants.uses < 3 AND sandbox_download_grants.revoked = 0
-        RETURNING uses`).bind(purchase.session_id, ownerHash, await hashSecret(ticket), expires).first();
+        RETURNING uses`).bind(purchase.session_id, ownerHash, await hashSecret(ticket), expires, purchase.session_id, ownerHash, Math.floor(clock() / 1000)).first();
       if (!grant) throw new Denied("download_limit", 403);
       return finish(respond({ status: "ready", title: attempt.title, quantity: purchase.quantity,
         amount_total: purchase.amount_total, currency: purchase.currency, minor_units: currencyMinorUnits(purchase.currency), ticket, expires_at: expires,
