@@ -106,6 +106,7 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       const ready = await ctx.receipt(flow); assert.equal(ready.status, 200);
       const receipt = await ready.json(); ticket = receipt.ticket;
       assert.equal(receipt.quantity, 3); assert.equal(receipt.amount_total, 3000); assert.equal(receipt.remaining_downloads, 3);
+      assert.ok(receipt.access_expires_at > receipt.expires_at);
       const grant = await db.prepare("SELECT * FROM sandbox_download_grants WHERE session_id = ?").bind(flow.sessionId).first();
       assert.notEqual(grant.ticket_hash, ticket); assert.equal(grant.ticket_hash, await hashSecret(ticket));
       assert.equal((await ctx.download(flow, ticket, { cookie: undefined })).status, 401);

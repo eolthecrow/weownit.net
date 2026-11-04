@@ -20,5 +20,7 @@ test('recovery pages are opt-in, restrict referrers and parse as JavaScript', as
   assert.match(js, /addEventListener\('submit'/);
   assert.doesNotMatch(js, /localStorage|sessionStorage|innerHTML/);
   assert.doesNotMatch(await customerAsset('/complete', {}).text(), /id="recoveryDetails"/);
-  assert.match(await customerAsset('/complete', enabled).text(), /id="recoveryDetails"/);
+  const complete = customerAsset('/complete', enabled);
+  assert.equal(complete.headers.get('referrer-policy'), 'same-origin');
+  assert.match(await complete.text(), /id="recoveryDetails"/);
 });

@@ -247,7 +247,7 @@ export async function handleSandboxCustomer(request, env, { stripeClient, clock 
         RETURNING uses`).bind(purchase.session_id, ownerHash, await hashSecret(ticket), expires, purchase.session_id, ownerHash, Math.floor(clock() / 1000)).first();
       if (!grant) throw new Denied("download_limit", 403);
       return finish(respond({ status: "ready", title: attempt.title, quantity: purchase.quantity,
-        amount_total: purchase.amount_total, currency: purchase.currency, minor_units: currencyMinorUnits(purchase.currency), ticket, expires_at: expires,
+        amount_total: purchase.amount_total, currency: purchase.currency, minor_units: currencyMinorUnits(purchase.currency), ticket, expires_at: expires, access_expires_at: attempt.access_expires_at,
         remaining_downloads: DELIVERY_LIMITS.downloads - grant.uses }));
     }
     if (!(request.headers.get("Content-Type") || "").toLowerCase().startsWith("application/x-www-form-urlencoded") || request.headers.has("Range")) throw new Denied("invalid_input");

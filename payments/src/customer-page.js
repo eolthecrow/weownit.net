@@ -22,7 +22,7 @@ export const CUSTOMER_TRANSLATIONS = {
     privacy: "Nu păstrăm date de card sau adrese de email în această aplicație. Stripe procesează plata, iar Resend poate trimite emailul de recuperare. Nu emitem licențe pentru utilizatori multipli.", recovery: "Recuperează accesul", reference: "Păstrează această referință pentru recuperarea accesului",
     loading: "Se încarcă…", pending: "Așteptăm confirmarea plății. Verificăm automat pentru scurt timp; apoi poți apăsa din nou Verifică.",
     ready: "Plată verificată. Produsul poate fi descărcat.", cancelled: "Plata a fost anulată. Poți începe din nou.",
-    access: "Acces valabil până la", attempts: "Încercări de descărcare rămase", units: "unități",
+    access: "Butonul de descărcare este valabil până la", access_window: "Accesul la achiziție expiră la", renew_hint: "După expirarea butonului, apasă Verifică / reînnoiește accesul. Fiecare descărcare începută consumă o încercare, chiar dacă este întreruptă.", attempts: "Încercări de descărcare rămase", units: "unități",
     invalid_input: "Datele cererii sunt invalide.", product_unavailable: "Produsul nu este disponibil.",
     service_unavailable: "Serviciul nu este disponibil acum. Încearcă din nou mai târziu.",
     browser_required: "Deschide confirmarea în browserul în care ai început cumpărarea, cu cookie-urile activate.",
@@ -38,7 +38,7 @@ export const CUSTOMER_TRANSLATIONS = {
     privacy: "This application stores no card details or email addresses. Stripe processes payments and Resend may send recovery emails. It does not issue multi-user licenses.", recovery: "Recover access", reference: "Save this reference to recover access",
     loading: "Loading…", pending: "Waiting for payment confirmation. We check automatically for a short time; then you can select Check again.",
     ready: "Payment verified. Your product is ready to download.", cancelled: "Payment cancelled. You can start again.",
-    access: "Access valid until", attempts: "Remaining download attempts", units: "units",
+    access: "Download button valid until", access_window: "Purchase access expires at", renew_hint: "After the button expires, select Check / renew access. Each started download uses one attempt, even if interrupted.", attempts: "Remaining download attempts", units: "units",
     invalid_input: "The request contains invalid data.", product_unavailable: "This product is unavailable.",
     service_unavailable: "The service is unavailable. Please try again later.",
     browser_required: "Open the confirmation in the browser where you started the purchase, with cookies enabled.",
@@ -54,7 +54,7 @@ export const CUSTOMER_TRANSLATIONS = {
     privacy: "Cette application ne conserve ni coordonnées de carte ni adresses email. Stripe traite le paiement et Resend peut envoyer un email de récupération. Elle ne délivre pas de licences multi-utilisateurs.", recovery: "Récupérer l’accès", reference: "Conservez cette référence pour récupérer l’accès",
     loading: "Chargement…", pending: "En attente de la confirmation du paiement. La vérification est automatique pendant un court instant ; ensuite, vous pouvez vérifier à nouveau.",
     ready: "Paiement vérifié. Votre produit est prêt à être téléchargé.", cancelled: "Paiement annulé. Vous pouvez recommencer.",
-    access: "Accès valable jusqu’à", attempts: "Tentatives de téléchargement restantes", units: "unités",
+    access: "Bouton de téléchargement valide jusqu’à", access_window: "L’accès à l’achat expire le", renew_hint: "Lorsque le bouton expire, sélectionnez Vérifier / renouveler l’accès. Chaque téléchargement commencé utilise une tentative, même s’il est interrompu.", attempts: "Tentatives de téléchargement restantes", units: "unités",
     invalid_input: "La demande contient des données invalides.", product_unavailable: "Ce produit n’est pas disponible.",
     service_unavailable: "Le service est indisponible. Réessayez plus tard.",
     browser_required: "Ouvrez la confirmation dans le navigateur utilisé pour commencer l’achat, avec les cookies activés.",
@@ -80,7 +80,7 @@ export const CUSTOMER_JS = "'use strict';\nconst translations = " + JSON.stringi
     }
     if (receipt) {
       $('price').textContent = translations[language].quantity + ': ' + receipt.quantity + ' · ' + money(receipt.amount_total, receipt.currency, receipt.minor_units);
-      $('expiry').textContent = translations[language].access + ' ' + new Date(receipt.expires_at * 1000).toLocaleTimeString(language) + '. ' + translations[language].attempts + ': ' + receipt.remaining_downloads + '.';
+      $('expiry').textContent = translations[language].access + ' ' + new Date(receipt.expires_at * 1000).toLocaleTimeString(language) + '. ' + translations[language].access_window + ' ' + new Date(receipt.access_expires_at * 1000).toLocaleString(language) + '. ' + translations[language].attempts + ': ' + receipt.remaining_downloads + '. ' + translations[language].renew_hint;
     }
   }
   function render() {
@@ -166,7 +166,7 @@ export function customerAsset(path, env = {}) {
   else if (path === "/customer/style.css") asset = [CSS, "text/css; charset=utf-8"];
   if (!asset) return null;
   return new Response(asset[0], { headers: {
-    "Content-Type": asset[1], "Cache-Control": "private, no-store", "Referrer-Policy": "no-referrer",
+    "Content-Type": asset[1], "Cache-Control": "private, no-store", "Referrer-Policy": path === '/recover' || path === '/customer/recovery.js' ? "no-referrer" : "same-origin",
     "X-Content-Type-Options": "nosniff", "X-Frame-Options": "DENY", "X-Robots-Tag": "noindex, nofollow",
     "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'self'; frame-src 'self'; form-action 'self'; base-uri 'none'; frame-ancestors 'none'",
   } });
