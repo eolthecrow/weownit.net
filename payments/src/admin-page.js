@@ -207,7 +207,7 @@ export const ADMIN_JS = String.raw`'use strict';
   $('uploadZip').addEventListener('click', function () {
     run($('uploadZip'), async function () {
       var file = $('zipFile').files && $('zipFile').files[0];
-      if (!file || !/\\.zip$/i.test(file.name)) throw new Error('Alege o arhivă .zip.');
+      if (!file || !/\.zip$/i.test(file.name)) throw new Error('Alege o arhivă .zip.');
       if (file.size > 20000000) throw new Error('ZIP prea mare. Limita este de 20 MB.');
       var currentEpoch = epoch;
       var response = await fetch('/admin/api/uploads', {
