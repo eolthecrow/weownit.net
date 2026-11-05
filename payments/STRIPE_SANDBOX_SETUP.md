@@ -1,0 +1,228 @@
+# Stripe sandbox — webhook and payment ledger
+
+This guide covers webhook verification and the test observation ledger.
+Browser-bound sandbox Checkout creation and temporary downloads are a separate,
+explicitly enabled flow: see [SANDBOX_DELIVERY_SETUP.md](SANDBOX_DELIVERY_SETUP.md).
+No public Store change, emails or live payments. The 799-byte ZIP remains a test object.
+
+## Deployment status
+
+The user deployed the webhook, reported `sandbox-configured`, and provided a
+remote D1 receipt for quantity 2 / 20 RON. They report testing quantity 3 too.
+The newer browser-bound delivery revision remains source-only. Local tests and
+GitHub CI do not replace an actual Checkout/download test against the deployment.
+
+The user reports the Cloudflare budget alert is created. Its threshold,
+recipients and delivery have not been independently inspected.
+
+## 1. Update the existing WSL worktree
+
+Run from the user's existing `weownit-payments-sandbox/payments` directory:
+
+```bash
+git status --short
+git fetch origin feature/r2-preventive-limits-20261021
+git merge --ff-only origin/feature/r2-preventive-limits-20261021
+npm ci
+npm test
+npm run test:integration
+```
+
+`git merge --ff-only` also advances a detached worktree. If Git reports local
+changes/conflicts, stop and inspect; do not reset or overwrite them. The ignored
+local `wrangler.jsonc` with the actual D1 UUID is preserved. Do not copy the
+example over that file during an update.
+
+## 2. Install the catalog and identify sandbox products
+
+Follow [ADMIN_CATALOG_SETUP.md](ADMIN_CATALOG_SETUP.md) for the one-time catalog
+installation. `/admin` lists Stripe prices and R2 ZIPs and saves their mappings
+in D1. No per-product environment variables or redeploy are needed afterward.
+The migration preserves the user's existing assessment mapping at 10 RON.
+
+The catalog supports multiple fixed, one-time, positive-value prices. Each
+Checkout Session must contain one product, integer quantity 1–3 and no shipping
+charges. Subscriptions, variable prices, multi-product carts and zero-total
+orders remain unsupported. Snapshot receipts preserve the original catalog
+mapping and the quantity returned by the Stripe API.
+
+For an existing deployment, run `npm run deploy:catalog` after pulling this
+revision. It checks the remote ledger schema and adds `quantity` only when
+missing. Older receipts become quantity 1, matching the previous one-unit rule.
+Do not deploy the new webhook over an old ledger without this migration.
+
+The only required webhook variable in the existing local `wrangler.jsonc` is:
+
+```json
+"vars": {
+  "STRIPE_WEBHOOK_ENABLED": "true"
+},
+```
+
+Keep the existing Worker name, R2/D1 bindings, D1 UUID and jurisdiction settings.
+The example file defaults to disabled. Never put API keys or webhook secrets
+in `vars`, source code, Git, screenshots, chat or command-line arguments.
+Legacy `STRIPE_TEST_PRICE_ID` and `STRIPE_TEST_CURRENCY` values are ignored.
+
+## 3. Apply the additive ledger schema
+
+```bash
+npx wrangler d1 execute weownit_r2_budget --remote --file ./stripe-test-schema.sql
+npx wrangler d1 execute weownit_r2_budget --remote --file ./product-catalog-schema.sql
+```
+
+This creates `stripe_test_purchases` and `stripe_test_events`; it does not reset
+the R2 quota table. It is safe to rerun this CREATE TABLE IF NOT EXISTS migration.
+
+## 4. Store a sandbox API key and deploy
+
+Get an API key for the same sandbox as the price and checkout. Use a test key
+beginning `sk_test_`, or a restricted test key `rk_test_` with sufficient read
+permissions for Checkout Sessions/line items and Prices/Products for the admin
+catalog. The Worker rejects
+live API-key prefixes. Enter the value at Wrangler's hidden prompt:
+
+```bash
+npx wrangler secret put STRIPE_SECRET_KEY
+npx wrangler deploy --dry-run --config ./wrangler.jsonc
+npx wrangler deploy --config ./wrangler.jsonc
+```
+
+Wrangler secret changes also update the deployed Worker. The webhook returns
+503 until the signing secret is also configured; this is expected at this stage.
+The existing administrative secret is retained. Never reuse it as a Stripe key
+or a webhook signing secret.
+
+## 5. Register the endpoint in the same Stripe sandbox
+
+Open **Workbench > Webhooks** and create an event destination:
+
+- Events from: **Your account** (not connected accounts).
+- Payload format: **Snapshot**. The implementation expects `data.object`.
+- API version: prefer **2026-09-30.endive**, matching pinned Stripe SDK 23.0.0.
+- Events:
+  - `checkout.session.completed`
+  - `checkout.session.async_payment_succeeded`
+- Endpoint URL:
+  `https://weownit-payments.vlad-network-security.workers.dev/stripe/webhook`
+
+Get this destination's signing secret (`whsec_...`) and enter it at the prompt:
+
+```bash
+npx wrangler secret put STRIPE_WEBHOOK_SECRET
+```
+
+Use the deployed destination secret, not a Stripe CLI listener's different
+signing secret. No keys are needed in the website or public GitHub repository.
+
+## 6. Check deployment and make a real sandbox checkout
+
+```bash
+curl -i https://weownit-payments.vlad-network-security.workers.dev/health
+curl -i -X POST https://weownit-payments.vlad-network-security.workers.dev/stripe/webhook
+```
+
+Expected: health 200 with `stripe_webhook: sandbox-configured`; unsigned webhook
+400. Health indicates configuration is present, not a successful Stripe/D1 test.
+
+Open a **sandbox** Payment Link/Checkout for an active catalog price.
+Make one test payment using Stripe test card `4242 4242 4242 4242`, any future
+expiry and any three-digit CVC. Do not change the public Store's checkout.
+
+### Allow customers to choose two or three units
+
+After deploying this revision, create/edit the **sandbox Payment Link**, go to
+**Payment page → Product**, and enable **Let customers adjust quantity** on the
+product. Set default quantity **1**, minimum **1** and maximum **3**, then save.
+The admin catalog still contains one product entry. Its price is per unit.
+
+At 10 RON per unit, run separate checkouts with quantity 1, 2 and 3, expecting
+10, 20 and 30 RON respectively when no tax/discount is configured. Check each
+actual webhook delivery and D1 row. Quantity 4, zero, fractions, mismatched
+subtotals and multiple different products are rejected by the Worker.
+
+The Worker validates `unit_amount × quantity` against the line/session subtotal
+and checks the session total against the same Stripe line item's total. It
+reads all quantities/money from Stripe, never from customer input or webhook
+metadata. Quantity is a payment observation, not a license or download grant.
+Temporary browser-bound delivery is available through the separately enabled
+flow described in `SANDBOX_DELIVERY_SETUP.md`. Multi-seat licensing is not implemented.
+
+In Stripe, inspect that payment's actual webhook delivery. Expected response:
+
+```json
+{"received":true,"outcome":"recorded","delivery":"disabled"}
+```
+
+A successful test checkout in Stripe by itself does not prove Worker recording.
+A generic `stripe trigger` fixture often uses a different price and is purposely
+ignored by the catalog allowlist. Use an actual Checkout for an active catalog price.
+
+## 7. Verify D1 and duplicate-event behavior
+
+```bash
+npx wrangler d1 execute weownit_r2_budget --remote \
+  --command "SELECT session_id, price_id, quantity, amount_total, currency, payment_status, delivery_status FROM stripe_test_purchases ORDER BY observed_at DESC LIMIT 5;"
+
+npx wrangler d1 execute weownit_r2_budget --remote \
+  --command "SELECT event_id, event_type, outcome, reason FROM stripe_test_events ORDER BY received_at DESC LIMIT 10;"
+```
+
+Expected: one purchase with the correct price, currency and total in the
+currency's minor units, `payment_status=paid` and `delivery_status=disabled`.
+For the 10 RON price, quantities 1, 2 and 3 have totals 1000, 2000 and 3000
+minor units respectively (without tax/discount).
+The ledger stores no email addresses, card details or secret values.
+
+Resend the same event using Stripe's delivery controls. Expected: HTTP 200 with
+`outcome: duplicate`, and still one purchase for that Checkout Session. Two
+different success events for the same session also produce only one purchase.
+
+## Responses and recovery
+
+| Response | Meaning / next action |
+|---|---|
+| 200 `recorded` | Verified test payment is in D1. Delivery is still disabled. |
+| 200 `duplicate` | This event was already processed; no repeated purchase. |
+| 200 `ignored` | Unsupported event, unpaid checkout, or product/money mismatch. Inspect D1 `reason`. |
+| 400 | Invalid/missing/stale signature, malformed event, live event or connected account. |
+| 413 | Payload exceeds the 64 KiB limit. |
+| 503 | Disabled/missing config, missing schema, unavailable Stripe API, or D1 error. Correct it, then retry. |
+
+An ignored supported event is saved. If you correct its catalog mapping
+afterward, make a new test checkout; resending the old ignored event remains a
+duplicate. A 503 is not saved, so that same event can be retried safely.
+
+## Boundaries of the observation ledger
+
+- Payment Link receipts alone do not grant download access. The separate
+  browser-bound flow validates ownership, emits temporary access and streams the
+  private ZIP. It must be explicitly enabled and deployed using its setup guide.
+- Email and cross-device recovery are not implemented. `stripe_test_purchases`
+  remains an observation ledger, not an access grant; its legacy delivery status
+  remains disabled. The new flow has separate grants and a delivery-status view.
+- Full refund/dispute reconciliation is not implemented. The new download flow
+  checks current PaymentIntent/Charge state before access and denies refunds or
+  disputes. It does not change the payment itself. `paid`
+  describes the API state when the event was processed, not a permanent right.
+- No live keys, purchases, product sales or real customer fulfillment.
+- No account-wide cost cap or R2 analytics reconciliation. Webhook verification
+  reads Stripe and writes D1; it does not read R2 or consume its guard counters.
+
+Do not connect the Store or enable live fulfillment until these remaining
+controls are implemented and tested. Keep PR #22 Draft and unmerged.
+
+## Disable or revert
+
+Set `STRIPE_WEBHOOK_ENABLED` to `false` in the local Wrangler vars and deploy;
+then disable this sandbox event destination in Stripe. Probe/health stay usable.
+The additive ledger can remain for diagnosis. The pre-webhook source revert
+point is commit `69e793da28c7d96e6029c2a64c3e3cc04e96258f`.
+
+## Primary references
+
+- https://docs.stripe.com/webhooks
+- https://docs.stripe.com/payment-links/customize#allow-adjustable-quantities
+- https://docs.stripe.com/checkout/fulfillment
+- https://docs.stripe.com/api/checkout/sessions/line_items
+- https://github.com/stripe/stripe-node
