@@ -10,8 +10,8 @@ Din directorul existent `weownit-payments-sandbox/payments`:
 
 ```bash
 git status --short
-git fetch origin feature/r2-preventive-limits-20261021
-git merge --ff-only origin/feature/r2-preventive-limits-20261021
+git fetch origin feature/sandbox-admin-zip-20261105
+git merge --ff-only origin/feature/sandbox-admin-zip-20261105
 npm ci
 npm run deploy:catalog
 ```
@@ -20,8 +20,7 @@ Dacă există modificări locale și Git refuză actualizarea, nu le suprascrie.
 Fișierul local ignorat `wrangler.jsonc` cu UUID-ul D1 este păstrat.
 
 `deploy:catalog` validează că ținta este exclusiv `weownit-payments`, rulează
-testele unitare și de integrare, verifică construirea, aplică cele trei scheme
-D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți, creează tabelul aditiv `sandbox_admin_upload_budget` și
+testele unitare și de integrare, verifică construirea, aplică schemele D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți, creează tabelul aditiv `sandbox_admin_upload_budget` și
 publică Worker-ul. Verificarea coloanei permite repetarea instalării fără a
 reseta plățile. Nu face merge sau modificări la site-ul public.
 Are nevoie de autentificarea Wrangler deja configurată; dacă aceasta a expirat,
