@@ -2,7 +2,7 @@
 
 Catalogul se administrează în browser, la `/admin` pe Worker-ul separat.
 Nu mai modifici codul, Price ID-ul sau moneda în Wrangler pentru fiecare produs.
-Versiunea este pregătită în PR #22; trebuie instalată prin pașii de mai jos.
+Versiunea de bază este în PR #22. Încărcarea ZIP direct din admin este pregătită separat, pe ramura `feature/sandbox-admin-zip-20261105`; nu este încă instalată pe Cloudflare.
 
 ## Instalare inițială în WSL
 
@@ -21,7 +21,7 @@ Fișierul local ignorat `wrangler.jsonc` cu UUID-ul D1 este păstrat.
 
 `deploy:catalog` validează că ținta este exclusiv `weownit-payments`, rulează
 testele unitare și de integrare, verifică construirea, aplică cele trei scheme
-D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți și
+D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți, creează tabelul aditiv `sandbox_admin_upload_budget` și
 publică Worker-ul. Verificarea coloanei permite repetarea instalării fără a
 reseta plățile. Nu face merge sau modificări la site-ul public.
 Are nevoie de autentificarea Wrangler deja configurată; dacă aceasta a expirat,
@@ -36,7 +36,8 @@ plățile sau editările anterioare. Rularea repetată nu reactivează intrăril
 
 ```json
 "vars": {
-  "STRIPE_WEBHOOK_ENABLED": "true"
+  "STRIPE_WEBHOOK_ENABLED": "true",
+  "SANDBOX_ADMIN_UPLOAD_ENABLED": "true"
 },
 ```
 
@@ -85,14 +86,10 @@ Reîncărcarea paginii necesită din nou conectarea; Deconectare elimină datele
 
 1. În **Stripe sandbox**, creează produsul și un preț fix, pentru o plată unică.
    Dacă vrei să testezi cumpărarea, creează și Payment Link-ul în sandbox.
-2. În **Cloudflare R2**, încarcă ZIP-ul în bucket-ul privat `weownit-toolkits`,
-   sub `products/`. Folosește nume cu litere, cifre, cratimă, underscore sau punct,
-   de exemplu `products/firewall-hardening-v1.zip`.
-3. În `/admin`, apasă **Actualizează prețurile** și **Actualizează arhivele**.
-4. Alege produsul/prețul și ZIP-ul din liste. Numele, suma și moneda sunt preluate
-   automat. Poți ajusta numele afișat.
-5. Apasă **Adaugă produs**. Intrarea este salvată imediat în D1 și webhook-ul o
-   folosește fără redeploy sau modificarea destinației Stripe.
+2. În `/admin`, la **Încarcă un ZIP nou**, selectează arhiva și apasă **Încarcă ZIP în R2**. Limita este de **20 MB**. Fișierul este scris într-un nume nou, unic, în bucket-ul privat `weownit-toolkits/products/`. Nu șterge și nu suprascrie arhive existente.
+3. Apasă **Actualizează prețurile**, dacă prețul creat în Stripe nu este încă vizibil. ZIP-ul tocmai încărcat este selectat automat. Pentru arhive mai mari de 20 MB, încarcă-le în Cloudflare Dashboard, apoi apasă **Actualizează arhivele**.
+4. Alege prețul și arhiva din liste. Numele, suma și moneda sunt preluate automat din Stripe sandbox; poți ajusta numele afișat.
+5. Apasă **Adaugă produs**. Asocierea este salvată imediat în D1, fără redeploy. Produsele rămân doar în catalogul Worker-ului sandbox, nu în Store-ul public.
 
 Prețurile live, recurente, variabile și gratuite nu apar în listă. Listele au
 paginare, cu butoane pentru încărcarea următoarelor rezultate. Un preț deja activ
@@ -121,9 +118,7 @@ istoricul; nu trebuie să deschizi lista produselor șterse.
 
 ## Ce rămâne separat
 
-Catalogul nu creează automat produse/prețuri în Stripe, nu încarcă sau șterge
-fișiere în R2 și nu publică produse în Store. Aceste operațiuni rămân în
-dashboard-urile lor; pagina elimină copierea identificatorilor și editarea codului.
+Catalogul nu creează încă produse/prețuri Stripe și nu publică produse în Store. Poate încărca ZIP-uri private de cel mult 20 MB, dar nu șterge fișierele deja existente. Prețurile se creează în Stripe sandbox, apoi se aleg în /admin. Stripe Live și Store-ul public rămân neatinse.
 
 Worker-ul și interfața acceptă exclusiv sandbox. Rămâne un produs și un preț fix
 per Checkout Session, cu 1–3 unități; catalogul poate avea mai multe produse/monede.
@@ -145,3 +140,14 @@ HEAD la adăugare/editare/restaurare consumă rezervări Class B. Sunt refuzate
 
 Nu face merge sau activare live. Punctul de revenire înaintea catalogului este
 `aa5feb53ee5d0351036632faa160565d20ac6feb`; tabelele adăugate pot rămâne la revert.
+
+
+## Încărcare sigură: limite și revenire
+
+- Funcția rămâne **dezactivată implicit**. Doar `SANDBOX_ADMIN_UPLOAD_ENABLED: "true"` o activează în Worker-ul izolat de sandbox; nu folosește chei Stripe Live.
+- Același token administrativ este obligatoriu pentru fiecare upload; sunt refuzate cererile cross-origin. Tokenul nu este stocat în browser.
+- Sunt acceptate doar arhive cu extensia .zip, marcaj ZIP și structură finală de arhivă detectabilă. Este o verificare minimală, **nu scanare antivirus**; verifică separat conținutul înainte de distribuție.
+- Limita unui upload este de 20 MB, iar noile uploaduri efectuate prin această rută au împreună un buget preventiv de 1 GB, contabilizat în D1. Obiectele preexistente și uploadurile Cloudflare Dashboard/S3 nu intră în acest total; **nu este o limită de facturare pentru cont**.
+- O încărcare întreruptă sau eșuată poate păstra rezervarea preventivă; nu șterge automat nimic. Rutele de descărcare publică rămân dezactivate.
+- Pentru a opri uploadurile, setează flagul la `false` și redeploy `weownit-payments`; schema aditivă și obiectele deja încărcate pot rămâne în R2.
+- CI trebuie să confirme testele, iar o încărcare reală de ZIP în Cloudflare rămâne necesară înainte de activare comercială.
