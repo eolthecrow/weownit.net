@@ -111,7 +111,8 @@ export async function handleCatalog(request, env, { stripeClient } = {}) {
         .bind(cursor || "").all();
       const products = rows.results.slice(0, 100);
       return respond({ products: products.map(view), cursor: rows.results.length > 100 ? products.at(-1).id : null,
-        checkout_enabled: sandboxDeliveryConfigured(env) });
+        checkout_enabled: sandboxDeliveryConfigured(env),
+        uploads_enabled: env.SANDBOX_ADMIN_UPLOAD_ENABLED === "true" });
     }
     if (route === "prices" && request.method === "GET") {
       if (cursor && !PRICE.test(cursor)) throw new InputError("Pagină Stripe invalidă.");

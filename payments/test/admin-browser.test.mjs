@@ -11,17 +11,33 @@ import { catalogContext } from "./catalog-fixtures.mjs";
 const { chromium } = await import(process.env.WIT_PLAYWRIGHT_MODULE
   ? pathToFileURL(process.env.WIT_PLAYWRIGHT_MODULE + "/index.mjs").href : "playwright");
 
+function tinyZip() {
+  const local = new Uint8Array(31); local.set([80, 75, 3, 4, 20, 0]);
+  new DataView(local.buffer).setUint16(26, 1, true); local[30] = 120;
+  const central = new Uint8Array(47); central.set([80, 75, 1, 2, 20, 0]);
+  new DataView(central.buffer).setUint16(28, 1, true); central[46] = 120;
+  const end = new Uint8Array(22); end.set([80, 75, 5, 6]);
+  const v = new DataView(end.buffer);
+  v.setUint16(8, 1, true); v.setUint16(10, 1, true);
+  v.setUint32(12, central.length, true); v.setUint32(16, local.length, true);
+  return Buffer.from([...local, ...central, ...end]);
+}
+
 test("admin works on desktop and phone with real local catalog mutations", { timeout: 90_000 }, async () => {
   const ctx = await catalogContext();
+  await ctx.migrate("sandbox-admin-upload-schema.sql");
+  ctx.env.SANDBOX_ADMIN_UPLOAD_ENABLED = "true";
   const server = createServer(async (req, res) => {
     try {
       const url = "http://" + req.headers.host + req.url;
       const chunks = []; for await (const chunk of req) chunks.push(chunk);
       const body = Buffer.concat(chunks);
       const request = new Request(url, { method: req.method, headers: req.headers, ...(body.length ? { body } : {}) });
-      const response = req.url.startsWith("/admin/api/")
-        ? await handleCatalog(request, ctx.env, { stripeClient: ctx.stripe })
-        : await handleRequest(request, ctx.env);
+      const response = req.url === "/admin/api/uploads"
+        ? await handleRequest(request, ctx.env)
+        : req.url.startsWith("/admin/api/")
+          ? await handleCatalog(request, ctx.env, { stripeClient: ctx.stripe })
+          : await handleRequest(request, ctx.env);
       res.writeHead(response.status, Object.fromEntries(response.headers)); res.end(Buffer.from(await response.arrayBuffer()));
     } catch { res.writeHead(500); res.end("Test server error"); }
   });
@@ -51,8 +67,17 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
       if (name === "desktop") {
         await page.getByLabel("Preț Stripe", { exact: true }).selectOption("price_unitfixture");
         assert.equal(await page.getByLabel("Nume afișat").inputValue(), "Incident Response Guide");
-        await page.getByLabel("Arhivă ZIP", { exact: true }).selectOption("products/incident-response.zip");
+        await page.getByLabel("Încarcă un ZIP nou").setInputFiles({
+          name: "Browser Toolkit.zip", mimeType: "application/zip", buffer: tinyZip(),
+        });
+        await page.getByRole("button", { name: "Încarcă ZIP în R2" }).click();
+        await page.getByRole("status").filter({ hasText: "ZIP încărcat în R2 privat" }).waitFor();
+        const uploadedKey = await page.getByLabel("Arhivă ZIP", { exact: true }).inputValue();
+        assert.match(uploadedKey, /^products\/browser-toolkit-[0-9a-f-]+\.zip$/);
         await page.getByRole("button", { name: "Adaugă produs", exact: true }).click();
+        await card.getByRole("heading", { name: "Incident Response Guide", exact: true }).waitFor();
+        const stored = await ctx.db.prepare("SELECT object_key FROM sandbox_products WHERE price_id = 'price_unitfixture'").first();
+        assert.equal(stored.object_key, uploadedKey);
         await card.getByRole("heading", { name: "Incident Response Guide", exact: true }).waitFor();
       }
       await card.getByRole("button", { name: "Editează", exact: true }).click();
