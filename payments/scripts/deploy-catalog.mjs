@@ -44,7 +44,7 @@ function main() {
   run("npm", ["test"]);
   run("npm", ["run", "test:integration"]);
   run("npx", ["wrangler", "deploy", "--dry-run", "--config", "./wrangler.jsonc"]);
-  for (const file of ["r2-guard-schema.sql", "stripe-test-schema.sql", "product-catalog-schema.sql"]) {
+  for (const file of ["r2-guard-schema.sql", "stripe-test-schema.sql", "product-catalog-schema.sql", "sandbox-admin-upload-schema.sql"]) {
     run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./" + file, "--config", "./wrangler.jsonc"]);
   }
   const columns = JSON.parse(run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote",
