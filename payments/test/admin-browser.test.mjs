@@ -75,6 +75,7 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
         const uploadedKey = await page.getByLabel("Arhivă ZIP", { exact: true }).inputValue();
         assert.match(uploadedKey, /^products\/browser-toolkit-[0-9a-f-]+\.zip$/);
         await page.getByRole("button", { name: "Adaugă produs", exact: true }).click();
+        await card.getByRole("heading", { name: "Incident Response Guide", exact: true }).waitFor();
         const stored = await ctx.db.prepare("SELECT object_key FROM sandbox_products WHERE price_id = 'price_unitfixture'").first();
         assert.equal(stored.object_key, uploadedKey);
         await card.getByRole("heading", { name: "Incident Response Guide", exact: true }).waitFor();
