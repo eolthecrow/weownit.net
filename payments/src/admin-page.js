@@ -22,7 +22,7 @@ export const ADMIN_HTML = String.raw`<!doctype html>
 <label for="zipFile">Încarcă un ZIP nou</label><input id="zipFile" type="file" accept=".zip,application/zip" disabled>
 <div class="inline"><button id="uploadZip" type="button" class="text-button" disabled>Încarcă ZIP în R2</button></div>
 <p id="uploadHelp" class="hint">Încărcarea directă necesită activarea funcției în Worker. Maximum 20 MB per ZIP.</p>
-<label for="fileSelect">Arhivă ZIP disponibilă</label><select id="fileSelect" required><option value="">Alege o arhivă</option></select>
+<label for="fileSelect">Arhivă ZIP</label><select id="fileSelect" required><option value="">Alege o arhivă</option></select>
 <div class="inline"><button id="refreshFiles" type="button" class="text-button">Actualizează arhivele</button><button id="moreFiles" type="button" class="text-button" hidden>Mai multe arhive</button></div>
 <p class="hint">Fișierele rămân private în R2. Pentru arhive mai mari de 20 MB folosește Cloudflare Dashboard și actualizează lista.</p>
 <div class="actions"><button id="saveProduct" type="submit">Adaugă produs</button><button id="cancelEdit" type="button" class="quiet" hidden>Anulează editarea</button></div>
