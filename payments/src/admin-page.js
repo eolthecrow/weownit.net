@@ -13,15 +13,18 @@ export const ADMIN_HTML = String.raw`<!doctype html>
 <p class="notice">Mediu de test. Catalogul nu modifică Store-ul public. Descărcările pentru clienți sunt încă dezactivate.</p>
 <p id="message" role="status" aria-live="polite"></p>
 <div class="workspace"><section class="panel editor"><h2 id="formTitle">Adaugă produs</h2>
-<p class="hint">Creează produsul și prețul în Stripe, încarcă ZIP-ul în R2, apoi alege-le aici.</p>
+<p class="hint">Alege un preț Stripe sandbox și încarcă ZIP-ul direct aici. Apoi salvează asocierea în catalog.</p>
 <form id="productForm">
 <label for="priceSelect">Preț Stripe</label><select id="priceSelect" required><option value="">Alege un preț</option></select>
 <div class="inline"><button id="refreshPrices" type="button" class="text-button">Actualizează prețurile</button><button id="morePrices" type="button" class="text-button" hidden>Mai multe prețuri</button></div>
 <p id="priceHelp" class="hint">Numele, suma și moneda sunt preluate automat din Stripe sandbox.</p>
 <label for="titleInput">Nume afișat</label><input id="titleInput" maxlength="160" required>
-<label for="fileSelect">Arhivă ZIP</label><select id="fileSelect" required><option value="">Alege o arhivă</option></select>
+<label for="zipFile">Încarcă un ZIP nou</label><input id="zipFile" type="file" accept=".zip,application/zip" disabled>
+<div class="inline"><button id="uploadZip" type="button" class="text-button" disabled>Încarcă ZIP în R2</button></div>
+<p id="uploadHelp" class="hint">Încărcarea directă necesită activarea funcției în Worker. Maximum 20 MB per ZIP.</p>
+<label for="fileSelect">Arhivă ZIP disponibilă</label><select id="fileSelect" required><option value="">Alege o arhivă</option></select>
 <div class="inline"><button id="refreshFiles" type="button" class="text-button">Actualizează arhivele</button><button id="moreFiles" type="button" class="text-button" hidden>Mai multe arhive</button></div>
-<p class="hint">Pentru un ZIP nou: încarcă-l în bucket-ul weownit-toolkits, în folderul products/, apoi actualizează lista.</p>
+<p class="hint">Fișierele rămân private în R2. Pentru arhive mai mari de 20 MB folosește Cloudflare Dashboard și actualizează lista.</p>
 <div class="actions"><button id="saveProduct" type="submit">Adaugă produs</button><button id="cancelEdit" type="button" class="quiet" hidden>Anulează editarea</button></div>
 </form></section>
 <section class="panel products"><div class="list-heading"><h2>Catalog</h2><button id="refreshCatalog" type="button" class="text-button">Actualizează</button></div>
@@ -42,16 +45,17 @@ h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1.5px;margin:
 
 export const ADMIN_JS = String.raw`'use strict';
 (function () {
-  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false;
+  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false, uploadsEnabled = false;
   var productCursor = null, priceCursor = null, fileCursor = null;
   var $ = function (id) { return document.getElementById(id); };
   function message(text, error) { $('message').textContent = text || ''; $('message').className = error ? 'error' : ''; }
   function node(tag, text, className) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (className) e.className = className; return e; }
   function option(value, text) { var e = node('option', text); e.value = value; return e; }
   function logout() {
-    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false;
+    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false;
     $('adminToken').value = ''; $('productList').replaceChildren(); $('productForm').reset();
     $('priceSelect').replaceChildren(option('', 'Alege un preț')); $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
+    $('zipFile').value = ''; $('zipFile').disabled = true; $('uploadZip').disabled = true;
     $('catalogView').hidden = true; $('loginView').hidden = false; message('');
   }
   async function api(path, options) {
@@ -151,6 +155,11 @@ export const ADMIN_JS = String.raw`'use strict';
   async function loadProducts(append) {
     var data = await api('products' + (append && productCursor ? '?cursor=' + encodeURIComponent(productCursor) : ''));
     checkoutEnabled = data.checkout_enabled === true;
+    uploadsEnabled = data.uploads_enabled === true;
+    $('zipFile').disabled = !uploadsEnabled; $('uploadZip').disabled = !uploadsEnabled;
+    $('uploadHelp').textContent = uploadsEnabled
+      ? 'Maximum 20 MB. ZIP-ul este verificat sumar și încărcat în bucket-ul privat; verifică separat conținutul înainte de vânzare.'
+      : 'Încărcarea directă este dezactivată. Activează SANDBOX_ADMIN_UPLOAD_ENABLED în Worker (doar sandbox).';
     products = append ? products.concat(data.products) : data.products; productCursor = data.cursor;
     renderProducts(); renderOptions();
   }
@@ -194,6 +203,29 @@ export const ADMIN_JS = String.raw`'use strict';
       if (existing && files.some(function (f) { return f.key === existing.object_key; })) $('fileSelect').value = existing.object_key;
     }
     renderOptions();
+  });
+  $('uploadZip').addEventListener('click', function () {
+    run($('uploadZip'), async function () {
+      var file = $('zipFile').files && $('zipFile').files[0];
+      if (!file || !/\\.zip$/i.test(file.name)) throw new Error('Alege o arhivă .zip.');
+      if (file.size > 20000000) throw new Error('ZIP prea mare. Limita este de 20 MB.');
+      var currentEpoch = epoch;
+      var response = await fetch('/admin/api/uploads', {
+        method: 'POST', headers: {
+          Authorization: 'Bearer ' + token, 'Content-Type': 'application/zip',
+          'X-Upload-Filename': encodeURIComponent(file.name)
+        }, body: file, credentials: 'omit', redirect: 'error', cache: 'no-store'
+      });
+      var data = await response.json();
+      if (currentEpoch !== epoch) throw new Error('Sesiunea a fost închisă.');
+      if (!response.ok) {
+        if (response.status === 401) logout();
+        throw new Error(data.error || 'Nu s-a putut încărca ZIP-ul.');
+      }
+      files.unshift(data.file); renderOptions(); $('fileSelect').value = data.file.key;
+      $('zipFile').value = '';
+      message('ZIP încărcat în R2 privat. Selectat pentru noul produs; apasă Adaugă produs pentru a-l asocia cu prețul Stripe.');
+    });
   });
   $('showArchived').addEventListener('change', renderProducts);
   $('cancelEdit').addEventListener('click', resetForm); $('logout').addEventListener('click', logout);
