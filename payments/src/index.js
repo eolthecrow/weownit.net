@@ -2,6 +2,7 @@ import { reserveR2Operation, R2LimitReached } from "../r2-guard.mjs";
 import { respond } from "./http.js";
 import { handleStripeWebhook, stripeWebhookConfigured } from "./stripe-webhook.js";
 import { handleCatalog } from "./product-catalog.js";
+import { handleAdminUpload } from "./admin-upload.js";
 import { adminAsset } from "./admin-page.js";
 import { customerAsset } from "./customer-page.js";
 import { handleSandboxCustomer, sandboxDeliveryConfigured } from "./sandbox-delivery.js";
@@ -32,6 +33,7 @@ export async function handleRequest(request, env, dependencies = {}) {
     }
   }
   if (pathname.startsWith("/customer/")) return handleSandboxCustomer(request, env, dependencies);
+  if (pathname === "/admin/api/uploads") return handleAdminUpload(request, env);
   if (pathname.startsWith("/admin/api/")) return handleCatalog(request, env, dependencies);
 
   if (pathname === "/health" && request.method === "GET") {
