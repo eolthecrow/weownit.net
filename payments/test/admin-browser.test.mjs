@@ -27,6 +27,7 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
   const ctx = await catalogContext();
   await ctx.migrate("sandbox-admin-upload-schema.sql");
   ctx.env.SANDBOX_ADMIN_UPLOAD_ENABLED = "true";
+  ctx.env.SANDBOX_ADMIN_PRICE_CREATE_ENABLED = "true";
   const server = createServer(async (req, res) => {
     try {
       const url = "http://" + req.headers.host + req.url;
@@ -65,6 +66,14 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
       // test item, then exercise edit/remove/restore at the second viewport.
       let card = page.locator("article.product").filter({ hasText: name === "desktop" ? "Incident Response Guide" : "Edited desktop" });
       if (name === "desktop") {
+        await page.locator('#stripeCreator summary').click();
+        await page.getByLabel('Nume produs Stripe').fill('Admin-created Toolkit');
+        await page.getByLabel('Descriere', { exact: true }).fill('Sandbox only');
+        await page.getByLabel('Preț în RON').fill('12,50');
+        await page.getByRole('button', { name: 'Creează prețul de test' }).click();
+        await page.getByRole('status').filter({ hasText: 'au fost create în Stripe' }).waitFor();
+        assert.match(await page.getByLabel('Preț Stripe', { exact: true }).inputValue(), /^price_generatedfixture/);
+        assert.equal(ctx.calls.some(call => call[0] === 'create' && call[1].unit_amount === 1250), true);
         await page.getByLabel("Preț Stripe", { exact: true }).selectOption("price_unitfixture");
         assert.equal(await page.getByLabel("Nume afișat").inputValue(), "Incident Response Guide");
         await page.getByLabel("Încarcă un ZIP nou").setInputFiles({
@@ -108,6 +117,14 @@ test("admin works on desktop and phone with real local catalog mutations", { tim
       assert.equal(restored.object_key, "products/firewall-hardening.zip"); assert.equal(restored.state, "active");
       card = page.locator("article.product").filter({ hasText: restored.title });
       assert.equal(await card.count(), 1);
+      await card.getByRole('button', { name: 'Previzualizează' }).click();
+      await card.locator('.preview').getByText('Livrare digitală ZIP', { exact: false }).waitFor();
+      assert.equal(await card.locator('.preview a').count(), 0);
+      page.once('dialog', dialog => dialog.accept());
+      await card.getByRole('button', { name: 'Publish · staging' }).click();
+      await card.getByText('Published · staging').waitFor();
+      await card.getByRole('button', { name: 'Unpublish' }).click();
+      await card.getByText('Draft', { exact: true }).waitFor();
       assert.equal(await priceOption.isDisabled(), true);
       assert.match(await priceOption.textContent(), /deja activ/);
       // Keep covering the separate restore action as well.

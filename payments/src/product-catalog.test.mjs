@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { handleCatalog, validProductKey, displayPrice } from "./product-catalog.js";
 import { handleRequest } from "./index.js";
 import { ADMIN_JS } from "./admin-page.js";
+import { Script } from "node:vm";
 
 test("catalog requires a valid bearer token before DB, R2 or Stripe access", async () => {
   let touches = 0;
@@ -38,6 +39,7 @@ test("catalog files stay in the private products ZIP namespace and money respect
 });
 
 test("admin shell contains no product data or credentials and uses same-origin static assets", async () => {
+  assert.doesNotThrow(() => new Script(ADMIN_JS));
   for (const path of ["/admin", "/admin/", "/admin/app.js", "/admin/style.css"]) {
     const response = await handleRequest(new Request("https://catalog.invalid" + path), {});
     assert.equal(response.status, 200);

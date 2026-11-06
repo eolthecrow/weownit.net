@@ -7,7 +7,9 @@
   "vars": {
     "STRIPE_WEBHOOK_ENABLED": "false",
     "SANDBOX_FULFILLMENT_ENABLED": "false",
-    "SANDBOX_ADMIN_UPLOAD_ENABLED": "false"
+    "SANDBOX_ADMIN_UPLOAD_ENABLED": "false",
+    "SANDBOX_ADMIN_PRICE_CREATE_ENABLED": "false",
+    "SANDBOX_PUBLIC_CATALOG_ENABLED": "false"
   },
   "r2_buckets": [
     {

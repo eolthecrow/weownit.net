@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { handleCatalog } from "../src/product-catalog.js";
+import { handleCatalog, publicSandboxCatalog } from "../src/product-catalog.js";
 import { handleStripeWebhook } from "../src/stripe-webhook.js";
 import { catalogContext, catalogPrice } from "./catalog-fixtures.mjs";
 import { eventFor, signedRequest, paidSession, lineItems, fakeStripe } from "./stripe-fixtures.mjs";
@@ -132,5 +132,110 @@ test("catalog add/edit/remove/restore with real local D1 and R2", async (t) => {
         { ...env, TOOLKITS_R2: { list() { touches++; throw Error("Must not run"); } } });
       assert.equal(result.status, 429); assert.equal(touches, 0);
     });
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("owner can create a fixed RON sandbox Stripe price in /admin and attach it to a ZIP", async () => {
+  const ctx = await catalogContext();
+  try {
+    const auth = { Authorization: "Bearer " + ctx.env.ADMIN_PROBE_TOKEN, "Content-Type": "application/json" };
+    const env = { ...ctx.env, SANDBOX_ADMIN_PRICE_CREATE_ENABLED: "true" };
+    const requestId = "e23773f0-50d8-4b1f-a32b-5c0ba7a95c91";
+    const create = (data, e = env) => handleCatalog(new Request("https://catalog.invalid/admin/api/stripe-products", {
+      method: "POST", headers: auth, body: JSON.stringify(data),
+    }), e, { stripeClient: ctx.stripe });
+    const body = { name: "New Network Toolkit", description: "Digital download", unit_amount: 1200, request_id: requestId };
+    assert.equal((await create(body, ctx.env)).status, 403);
+    assert.equal((await create({ ...body, unit_amount: 100 })).status, 400);
+    assert.equal((await create({ ...body, description: 123 })).status, 400);
+    assert.equal((await create({ ...body, request_id: "bad" })).status, 400);
+    assert.equal((await create(body, { ...env, STRIPE_SECRET_KEY: "sk_live_not_allowed" })).status, 400);
+    const response = await create(body);
+    assert.equal(response.status, 201);
+    const { price } = await response.json();
+    assert.equal(price.currency, "ron"); assert.equal(price.unit_amount, 1200);
+    assert.match(price.price_id, /^price_/);
+    const stripeCall = ctx.calls.find(call => call[0] === "create");
+    assert.deepEqual(stripeCall[1], { currency: "ron", unit_amount: 1200,
+      product_data: { name: body.name, description: body.description } });
+    assert.equal(stripeCall[2].idempotencyKey, "wit-sandbox-admin-price-" + requestId);
+    const catalog = await handleCatalog(new Request("https://catalog.invalid/admin/api/products", {
+      method: "POST", headers: auth,
+      body: JSON.stringify({ price_id: price.price_id, object_key: "products/incident-response.zip" }),
+    }), env, { stripeClient: ctx.stripe });
+    assert.equal(catalog.status, 201);
+    assert.equal((await catalog.json()).product.price_id, price.price_id);
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("sandbox publication is draft by default, revision-bound, reversible and public-list gated", async () => {
+  const ctx = await catalogContext();
+  try {
+    const { env, db, stripe } = ctx;
+    const id = "network-security-assessment-test";
+    const call = (route, method = "GET", data) => handleCatalog(new Request("https://catalog.invalid/admin/api/" + route, {
+      method, headers: { Authorization: "Bearer " + env.ADMIN_PROBE_TOKEN,
+        ...(data ? { "Content-Type": "application/json" } : {}) },
+      body: data ? JSON.stringify(data) : undefined,
+    }), env, { stripeClient: stripe });
+    const publicCall = (e) => publicSandboxCatalog(new Request("https://catalog.invalid/sandbox/catalog"), e);
+    assert.equal((await publicCall(env)).status, 404);
+    assert.deepEqual((await (await publicCall({ ...env, SANDBOX_PUBLIC_CATALOG_ENABLED: "true" })).json()).products, []);
+    const initial = (await (await call("products")).json()).products[0];
+    assert.equal(initial.publication_state, "draft");
+    const prev = await call("products/" + id + "/preview");
+    assert.equal(prev.status, 200); assert.deepEqual((await prev.json()).languages, ["ro", "en", "fr"]);
+    assert.equal((await call("products/" + id + "/publish", "POST", { revision: 999 })).status, 409);
+    const published = (await (await call("products/" + id + "/publish", "POST", { revision: initial.revision })).json()).product;
+    assert.equal(published.publication_state, "published");
+    const visible = (await (await publicCall({ ...env, SANDBOX_PUBLIC_CATALOG_ENABLED: "true" })).json()).products;
+    assert.equal(visible.length, 1); assert.equal(visible[0].title, initial.title);
+    assert.equal("object_key" in visible[0], false); assert.equal("price_id" in visible[0], false);
+    const unpub = (await (await call("products/" + id + "/unpublish", "POST", { revision: initial.revision })).json()).product;
+    assert.equal(unpub.publication_state, "draft");
+    await call("products/" + id + "/publish", "POST", { revision: initial.revision });
+    const edited = (await (await call("products/" + id, "PATCH", {
+      revision: initial.revision, title: "Updated test", object_key: initial.object_key,
+    })).json()).product;
+    assert.equal(edited.publication_state, "draft");
+    assert.deepEqual((await (await publicCall({ ...env, SANDBOX_PUBLIC_CATALOG_ENABLED: "true" })).json()).products, []);
+    await call("products/" + id + "/publish", "POST", { revision: edited.revision });
+    const archived = (await (await call("products/" + id + "/archive", "POST", { revision: edited.revision })).json()).product;
+    assert.equal(archived.publication_state, "draft");
+    assert.equal((await call("products/" + id + "/publish", "POST", { revision: archived.revision })).status, 409);
+    const restored = (await (await call("products/" + id + "/restore", "POST", { revision: archived.revision })).json()).product;
+    assert.equal(restored.publication_state, "draft");
+    await ctx.migrate("sandbox-admin-management-schema.sql");
+    assert.equal((await db.prepare("SELECT COUNT(*) AS n FROM sandbox_product_publication").first()).n, 1);
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("owner can view sandbox deliveries and block future download grants", async () => {
+  const ctx = await catalogContext();
+  try {
+    const env = ctx.env;
+    const request = (route, method = "GET", body) => handleCatalog(new Request("https://catalog.invalid/admin/api/" + route, {
+      method, headers: { Authorization: "Bearer " + env.ADMIN_PROBE_TOKEN,
+        ...(body ? { "Content-Type": "application/json" } : {}) },
+      body: body ? JSON.stringify(body) : undefined,
+    }), env, { stripeClient: ctx.stripe });
+    assert.equal((await request("deliveries")).status, 200);
+    assert.equal((await request("products", "POST", {
+      price_id: "price_unitfixture", object_key: "products/incident-response.zip",
+    })).status, 201);
+    const webhook = await handleStripeWebhook(signedRequest(eventFor("adminrevoke")), env, { stripeClient: fakeStripe() });
+    assert.equal(webhook.status, 200);
+    assert.equal((await webhook.json()).outcome, "recorded");
+    const response = await request("deliveries");
+    assert.equal(response.status, 200);
+    const payments = (await response.json()).deliveries;
+    assert.equal(payments.length, 1); assert.equal(payments[0].fulfillment_status, "legacy-no-browser");
+    assert.equal(payments[0].blocked, 0);
+    const target = "deliveries/cs_test_unitfixture/revoke";
+    assert.equal((await request(target, "POST", {})).status, 200);
+    assert.equal((await request(target, "POST", {})).status, 200);
+    assert.equal((await request("deliveries/cs_test_nonexistent/revoke", "POST", {})).status, 404);
+    assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM sandbox_delivery_blocks").first()).n, 1);
+    assert.equal((await (await request("deliveries")).json()).deliveries[0].blocked, 1);
   } finally { await ctx.platform.dispose(); }
 });
