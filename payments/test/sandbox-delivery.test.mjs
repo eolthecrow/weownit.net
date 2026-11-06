@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { deliveryContext, ASSESSMENT } from "./delivery-fixtures.mjs";
 import { hashSecret, DELIVERY_LIMITS } from "../src/sandbox-delivery.js";
 import { handleRequest } from "../src/index.js";
+import { handleCatalog } from "../src/product-catalog.js";
 import { CUSTOMER_TRANSLATIONS, CUSTOMER_JS } from "../src/customer-page.js";
 import Stripe from "stripe";
 
@@ -203,5 +204,54 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       assert.equal((await ctx.call("/customer/checkout", { body: { product_id: ASSESSMENT, quantity: 1, language: "ro" } })).status, 429);
       assert.equal(ctx.calls.length, before);
     });
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("admin revocation blocks tickets already issued and those not yet requested", async () => {
+  const ctx = await deliveryContext();
+  try {
+    const revoke = session => handleCatalog(new Request(ctx.origin + "/admin/api/deliveries/" + session + "/revoke", {
+      method: "POST", headers: { Authorization: "Bearer " + ctx.env.ADMIN_PROBE_TOKEN,
+        "Content-Type": "application/json" }, body: "{}",
+    }), ctx.env);
+    const prior = await ctx.start(); await ctx.pay(prior);
+    const receipt = await (await ctx.receipt(prior)).json();
+    assert.ok(receipt.ticket);
+    assert.equal((await revoke(prior.sessionId)).status, 200);
+    assert.equal((await ctx.db.prepare("SELECT revoked FROM sandbox_download_grants WHERE session_id = ?")
+      .bind(prior.sessionId).first()).revoked, 1);
+    let reads = 0;
+    assert.equal((await ctx.download(prior, receipt.ticket, {}, { ...ctx.env, TOOLKITS_R2: {
+      get() { reads++; throw Error("R2 must be untouched"); },
+    } })).status, 403);
+    assert.equal(reads, 0);
+    ctx.tick(); assert.equal((await ctx.receipt(prior)).status, 403);
+
+    const unissued = await ctx.start(); await ctx.pay(unissued);
+    assert.equal((await revoke(unissued.sessionId)).status, 200);
+    assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?")
+      .bind(unissued.sessionId).first()).n, 0);
+    assert.equal((await ctx.receipt(unissued)).status, 403);
+    assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?")
+      .bind(unissued.sessionId).first()).n, 0);
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("publishing a sandbox product gates new checkouts when public staging catalog is enabled", async () => {
+  const ctx = await deliveryContext();
+  try {
+    ctx.env.SANDBOX_PUBLIC_CATALOG_ENABLED = "true";
+    const request = path => ctx.call(path);
+    assert.equal((await request("/customer/product/" + ASSESSMENT)).status, 404);
+    assert.equal((await ctx.call("/customer/checkout", { body: {
+      product_id: ASSESSMENT, quantity: 1, language: "ro",
+    } })).status, 404);
+    const current = await ctx.db.prepare("SELECT * FROM sandbox_products WHERE id = ?").bind(ASSESSMENT).first();
+    await ctx.db.prepare(`INSERT INTO sandbox_product_publication(product_id,visibility,product_revision)
+      VALUES (?,'published',?)`).bind(ASSESSMENT, current.revision).run();
+    assert.equal((await request("/customer/product/" + ASSESSMENT)).status, 200);
+    assert.equal((await ctx.start()).response.status, 201);
+    await ctx.db.prepare("UPDATE sandbox_products SET revision = revision + 1 WHERE id = ?").bind(ASSESSMENT).run();
+    assert.equal((await request("/customer/product/" + ASSESSMENT)).status, 404);
   } finally { await ctx.platform.dispose(); }
 });

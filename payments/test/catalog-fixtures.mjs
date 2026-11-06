@@ -24,6 +24,7 @@ export async function catalogContext() {
   const migrate = async (name) => db.batch((await readFile(new URL("../" + name, import.meta.url), "utf8"))
     .split(";").map(sql => sql.trim()).filter(Boolean).map(sql => db.prepare(sql)));
   await migrate("r2-guard-schema.sql"); await migrate("stripe-test-schema.sql"); await migrate("product-catalog-schema.sql");
+  await migrate("sandbox-delivery-schema.sql"); await migrate("sandbox-admin-management-schema.sql");
   await env.TOOLKITS_R2.put("products/incident-response.zip", "incident response fixture");
   await env.TOOLKITS_R2.put("products/firewall-hardening.zip", "hardening fixture");
   await env.TOOLKITS_R2.put("products/network-security-assessment-test.zip", "assessment fixture");
@@ -37,6 +38,15 @@ export async function catalogContext() {
   ]);
   const calls = [];
   const stripe = { prices: {
+    async create(input, options) {
+      calls.push(["create", input, options]);
+      const id = "price_generatedfixture" + (prices.size + 1);
+      const price = catalogPrice(id, { currency: input.currency, unit_amount: input.unit_amount,
+        product: { object: "product", id: "prod_generatedfixture" + prices.size,
+          name: input.product_data.name, active: true, livemode: false } });
+      prices.set(id, price);
+      return { ...structuredClone(price), product: price.product.id };
+    },
     async list(options) { calls.push(["list", options]); return { object: "list", data: [...prices.values()].map(p => structuredClone(p)), has_more: false }; },
     async retrieve(id, options) {
       calls.push(["retrieve", id, options]);

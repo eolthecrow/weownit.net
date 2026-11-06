@@ -56,6 +56,7 @@ function main() {
     if (quantityMigrationRequired(migrated)) throw Error("Migrarea cantității nu a fost aplicată; deployment oprit.");
   }
   run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./sandbox-delivery-schema.sql", "--config", "./wrangler.jsonc"]);
+  run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./sandbox-admin-management-schema.sql", "--config", "./wrangler.jsonc"]);
   run("npx", ["wrangler", "deploy", "--config", "./wrangler.jsonc"]);
   console.log("După deployment, deschide URL-ul Worker-ului urmat de /admin. Autentificarea necesită tokenul administrativ.");
 }
