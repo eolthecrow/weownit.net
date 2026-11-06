@@ -137,10 +137,10 @@ export const ADMIN_JS = String.raw`'use strict';
     visible.sort(function (a, b) { return a.title.localeCompare(b.title, 'ro'); }).forEach(function (product) {
       var article = node('article', null, 'product' + (product.state === 'archived' ? ' archived' : ''));
       var heading = node('h3', product.title);
-      if (product.state === 'archived') heading.append(node('span', 'Șters din catalog', 'status-tag'));
-      else heading.append(node('span', product.publication_state === 'published' ? 'Published · staging' : 'Draft',
-        'status-tag' + (product.publication_state === 'published' ? ' published' : '')));
-      article.append(heading, node('p', product.display_price), node('p', product.object_key, 'file'));
+      var status = product.state === 'archived' ? node('span', 'Șters din catalog', 'status-tag') :
+        node('span', product.publication_state === 'published' ? 'Published · staging' : 'Draft',
+          'status-tag' + (product.publication_state === 'published' ? ' published' : ''));
+      article.append(heading, status, node('p', product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
       if (checkoutEnabled && product.state === 'active') {
         var buyLink = node('a', 'Testează cumpărarea', 'text-button');
