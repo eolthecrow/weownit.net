@@ -9,7 +9,9 @@
     "SANDBOX_FULFILLMENT_ENABLED": "false",
     "SANDBOX_ADMIN_UPLOAD_ENABLED": "false",
     "SANDBOX_ADMIN_PRICE_CREATE_ENABLED": "false",
-    "SANDBOX_PUBLIC_CATALOG_ENABLED": "false"
+    "SANDBOX_PUBLIC_CATALOG_ENABLED": "false",
+    "SANDBOX_RECOVERY_ENABLED": "false",
+    "SANDBOX_RECOVERY_ORIGIN": "https://weownit-payments.vlad-network-security.workers.dev"
   },
   "r2_buckets": [
     {

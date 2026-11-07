@@ -12,6 +12,8 @@ const { chromium } = await import(process.env.WIT_PLAYWRIGHT_MODULE
 
 test("customer checkout and actual streamed attachment work in RO/EN/FR on desktop and phones", { timeout: 120_000 }, async () => {
   const ctx = await deliveryContext();
+  // Exercise the exact policy used when recovery is enabled, including the form POST to the download iframe.
+  ctx.env.SANDBOX_RECOVERY_ENABLED = 'true';
   const downloadOrigins = [];
   const server = createServer(async (req, res) => {
     try {

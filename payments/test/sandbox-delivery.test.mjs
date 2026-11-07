@@ -73,6 +73,17 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       assert.equal(options.success_url, ctx.origin + "/complete?session_id={CHECKOUT_SESSION_ID}&lang=ro");
       assert.equal(options.client_reference_id, attempt.id);
     });
+    await t.test("an unpaid completed checkout cannot authorize a ZIP download", async () => {
+      const unpaid = await ctx.start();
+      const result = await ctx.pay(unpaid, { payment_status: "unpaid" });
+      assert.equal(result.status, 200);
+      assert.equal((await result.json()).reason, "payment-not-paid");
+      assert.equal((await ctx.receipt(unpaid)).status, 202);
+      const row = await db.prepare("SELECT COUNT(*) AS n FROM stripe_test_purchases WHERE session_id = ?").bind(unpaid.sessionId).first();
+      assert.equal(row.n, 0);
+      const grant = await db.prepare("SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?").bind(unpaid.sessionId).first();
+      assert.equal(grant.n, 0);
+    });
     await t.test("success-page visit cannot grant access before a signed webhook records payment", async () => {
       const pending = await ctx.receipt(flow);
       assert.equal(pending.status, 202); assert.deepEqual(await pending.json(), { status: "pending" });
@@ -96,6 +107,7 @@ test("browser-bound sandbox purchase and private streamed delivery", async t => 
       const ready = await ctx.receipt(flow); assert.equal(ready.status, 200);
       const receipt = await ready.json(); ticket = receipt.ticket;
       assert.equal(receipt.quantity, 3); assert.equal(receipt.amount_total, 3000); assert.equal(receipt.remaining_downloads, 3);
+      assert.ok(receipt.access_expires_at > receipt.expires_at);
       const grant = await db.prepare("SELECT * FROM sandbox_download_grants WHERE session_id = ?").bind(flow.sessionId).first();
       assert.notEqual(grant.ticket_hash, ticket); assert.equal(grant.ticket_hash, await hashSecret(ticket));
       assert.equal((await ctx.download(flow, ticket, { cookie: undefined })).status, 401);
@@ -234,6 +246,23 @@ test("admin revocation blocks tickets already issued and those not yet requested
     assert.equal((await ctx.receipt(unissued)).status, 403);
     assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?")
       .bind(unissued.sessionId).first()).n, 0);
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("download rechecks the purchase access window after Stripe verification", async () => {
+  const ctx = await deliveryContext();
+  try {
+    const flow = await ctx.start(); await ctx.pay(flow);
+    const ticket = (await (await ctx.receipt(flow)).json()).ticket;
+    const now = Math.floor(ctx.dependencies.clock() / 1000);
+    await ctx.db.prepare("UPDATE sandbox_checkout_attempts SET access_expires_at = ? WHERE session_id = ?")
+      .bind(now + 1, flow.sessionId).run();
+    const retrieve = ctx.stripe.paymentIntents.retrieve;
+    ctx.stripe.paymentIntents.retrieve = async (...args) => { const payment = await retrieve(...args); ctx.tick(2); return payment; };
+    let reads = 0;
+    const env = { ...ctx.env, TOOLKITS_R2: { get() { reads++; throw Error("R2 must not be read"); } } };
+    assert.equal((await ctx.download(flow, ticket, {}, env)).status, 403);
+    assert.equal(reads, 0);
   } finally { await ctx.platform.dispose(); }
 });
 
