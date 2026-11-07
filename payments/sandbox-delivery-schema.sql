@@ -21,6 +21,19 @@ CREATE TABLE IF NOT EXISTS sandbox_checkout_attempts (
 CREATE INDEX IF NOT EXISTS sandbox_checkout_created ON sandbox_checkout_attempts(created_at);
 CREATE INDEX IF NOT EXISTS sandbox_checkout_owner_created ON sandbox_checkout_attempts(owner_hash, created_at);
 
+-- Recovery tokens are opaque, stored only as hashes, and consumed on an explicit POST.
+CREATE TABLE IF NOT EXISTS sandbox_recovery_requests (
+  id TEXT PRIMARY KEY NOT NULL,
+  session_id TEXT NOT NULL,
+  token_hash TEXT NOT NULL UNIQUE CHECK (length(token_hash) = 64),
+  created_at INTEGER NOT NULL,
+  expires_at INTEGER NOT NULL,
+  used_at INTEGER,
+  claim_id TEXT
+);
+CREATE INDEX IF NOT EXISTS sandbox_recovery_created ON sandbox_recovery_requests(created_at);
+CREATE INDEX IF NOT EXISTS sandbox_recovery_session ON sandbox_recovery_requests(session_id, created_at);
+
 CREATE TABLE IF NOT EXISTS sandbox_download_grants (
   session_id TEXT PRIMARY KEY NOT NULL REFERENCES stripe_test_purchases(session_id),
   owner_hash TEXT NOT NULL CHECK (length(owner_hash) = 64),
