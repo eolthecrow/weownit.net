@@ -1,0 +1,8 @@
+{
+  "name": "weownit-emergency-local-tests",
+  "main": "../src/emergency.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "d1_databases": [{ "binding": "R2_BUDGET_DB", "database_name": "disposable_local", "database_id": "00000000-0000-0000-0000-000000000003" }],
+  "r2_buckets": [{ "binding": "TOOLKITS_R2", "bucket_name": "disposable-local-only" }]
+}
