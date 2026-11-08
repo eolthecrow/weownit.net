@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { deliveryContext } from './delivery-fixtures.mjs';
 import { handleRequest } from '../src/index.js';
+import { handleCatalog } from '../src/product-catalog.js';
 
 test('sandbox recovery transfers only paid access after email possession is confirmed', async t => {
   const ctx = await deliveryContext();
@@ -94,5 +95,42 @@ test('sandbox recovery transfers only paid access after email possession is conf
       await ctx.call('/customer/recovery/request', { body: { session_id: flow.sessionId, email: 'buyer@example.test', language: 'en' } }, ctx.env, deps);
       assert.equal(sent.length, previous);
     });
+  } finally { await ctx.platform.dispose(); }
+});
+
+test('admin revocation prevents recovery with and without an issued ticket', async () => {
+  const ctx = await deliveryContext();
+  try {
+    Object.assign(ctx.env, { SANDBOX_RECOVERY_ENABLED: 'true', SANDBOX_RECOVERY_ORIGIN: ctx.origin, RESEND_RECOVERY_API_KEY: 'test-only' });
+    const sent = [];
+    const deps = { ...ctx.dependencies, recoverySend: async data => sent.push(data) };
+    for (const issued of [false, true]) {
+      const flow = await ctx.start();
+      ctx.sessions.get(flow.sessionId).customer_details = { email: 'buyer@example.test' };
+      await ctx.pay(flow);
+      const ticket = issued ? (await (await ctx.receipt(flow)).json()).ticket : null;
+      const send = () => ctx.call('/customer/recovery/request', { body: { session_id: flow.sessionId, email: 'buyer@example.test', language: 'en' } }, ctx.env, deps);
+      const before = sent.length;
+      assert.equal((await send()).status, 200);
+      assert.equal(sent.length, before + 1);
+      const token = new URL(sent.at(-1).text.split('\n\n')[1]).hash.slice('#token='.length);
+      const revoke = new Request(ctx.origin + '/admin/api/deliveries/' + flow.sessionId + '/revoke', {
+        method: 'POST', headers: { Authorization: 'Bearer ' + ctx.env.ADMIN_PROBE_TOKEN, 'Content-Type': 'application/json' }, body: '{}',
+      });
+      assert.equal((await handleCatalog(revoke, ctx.env)).status, 200);
+      assert.equal((await ctx.call('/customer/recovery/claim', { body: { token } }, ctx.env, deps)).status, 403);
+      await send();
+      assert.equal(sent.length, before + 1);
+      ctx.tick();
+      assert.equal((await ctx.receipt(flow)).status, 403);
+      if (ticket) assert.equal((await ctx.download(flow, ticket)).status, 403);
+      else assert.equal((await ctx.db.prepare('SELECT COUNT(*) AS n FROM sandbox_download_grants WHERE session_id = ?').bind(flow.sessionId).first()).n, 0);
+    }
+    // A known block-aware version with fulfillment disabled is an emergency
+    // stop: it denies every customer operation before D1, Stripe or R2 access.
+    const disabled = { ...ctx.env, SANDBOX_FULFILLMENT_ENABLED: 'false', R2_BUDGET_DB: null, TOOLKITS_R2: null };
+    for (const path of ['/customer/receipt', '/customer/download', '/customer/recovery/request', '/customer/recovery/claim']) {
+      assert.equal((await ctx.call(path, { method: 'POST', body: {} }, disabled, deps)).status, 404);
+    }
   } finally { await ctx.platform.dispose(); }
 });
