@@ -53,10 +53,12 @@ never use a dirty tree for a release.
   is prepared but cannot be run on that Worker without changing its code.
   Replaying a genuine existing event is a remote delivery and requires explicit
   approval; inspect the event and endpoint again immediately before replay.
-- **UNKNOWN:** inactive emergency version upload, activation and restoration
-  sequence in isolation on this branch. Prior isolated Stage 1 tested a direct
-  emergency deployment and version rollback; Stage 2 tested D1, R2 and
-  synthetic-secret restoration. Neither tested inactive upload first.
+- **PASS, isolated Stage 3:** inactive emergency upload left the block-aware
+  baseline serving, emergency activation denied the required paths, and
+  restoration returned the exact block-aware baseline and synthetic bindings.
+  Version-specific module hashes match the local builds. See
+  [PR45_STAGE3_EVIDENCE.md](PR45_STAGE3_EVIDENCE.md). This does not verify an
+  emergency version on the existing payments Worker.
 - **UNKNOWN:** genuine Stripe-backed isolated admin acceptance and remaining
   customer E2E cases. Prior admin acceptance used a synthetic Stripe client;
   local E2E and the user's eight paid sessions do not establish all requested
@@ -70,7 +72,7 @@ never use a dirty tree for a release.
   R2 analytics on 2026-11-09 showed 44 account operations this month, but are
   not authoritative billing. Check current allowances before resource writes.
 
-## Prepared isolated inactive-version rehearsal — approval required
+## Historical isolated inactive-version rehearsal
 
 The locally prepared config `/tmp/weownit-pr45-guards/baseline.json` uses the
 new Worker `weownit-pr45-guards-1407002641`, retained synthetic D1
@@ -78,11 +80,11 @@ new Worker `weownit-pr45-guards-1407002641`, retained synthetic D1
 `weownit-r2-check-05cd290c04`. It declares no routes, `workers_dev: false`,
 `preview_urls: false`, and disables public catalog and recovery. It uses a
 synthetic Stripe client and synthetic secrets, not the real sandbox key. The
-baseline and emergency upload both passed **local dry-runs**; no isolated
-Worker has been deployed in this turn. Confirm names, private status, account,
-free allowances and freshness of synthetic resources before any approved run.
+baseline and emergency upload passed local dry-runs and the isolated rehearsal
+subsequently passed. The following commands are historical evidence only;
+do not repeat them without renewed explicit approval.
 
-After explicit operator approval for these isolated writes, in `payments/`:
+The previously approved sequence, run from `payments/`, was:
 
 ```sh
 npx --no-install wrangler deploy --config /tmp/weownit-pr45-guards/baseline.json
