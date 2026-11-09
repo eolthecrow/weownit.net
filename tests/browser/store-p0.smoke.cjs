@@ -44,13 +44,13 @@ async function main(){
       assert.equal(await page.locator('#network-security-assessment-sample').evaluate(el=>el.open),false);
       assert.equal(await page.locator('[data-buy-key]').count(),9);
       for(const link of await page.locator('[data-buy-key]').all()){
-        assert.ok((await link.getAttribute('href')).startsWith('contact.html'));
+        assert.ok((await link.getAttribute('href')).endsWith('/contact.html?lang='+lang));
         assert.equal(await link.getAttribute('target'),null);
       }
       const notes=await page.locator('.catalog-archive .checkout-note').allTextContents();
       assert.equal(notes.length,9);
       assert.ok(notes.every(note=>note.includes(labels[lang].note)));
-      assert.equal(await page.locator('#exposure-snapshot a[href="tools.html?lang='+lang+'"]').count(),1);
+      assert.equal(await page.locator('#exposure-snapshot a[href$="tools.html?lang='+lang+'"]').count(),1);
       const dims=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));
       assert.ok(dims.scroll<=dims.width+1,JSON.stringify({width,lang,dims}));
       await page.locator('#planned-catalog > summary').click();
