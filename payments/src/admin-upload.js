@@ -56,15 +56,15 @@ export function looksLikeZip(bytes) {
   return false;
 }
 
-export async function handleAdminUpload(request, env) {
+export async function handleAdminUpload(request, env, { live = false } = {}) {
   const denied = await adminAuthError(request, env);
   if (denied) return denied;
   if (request.method !== "POST") return respond({ error: "Metodă nepermisă." }, 405);
   if (!env?.R2_BUDGET_DB?.prepare || !env?.TOOLKITS_R2?.put) {
     return respond({ error: "Stocarea privată nu este configurată." }, 503);
   }
-  if (env.SANDBOX_ADMIN_UPLOAD_ENABLED !== "true") {
-    return respond({ error: "Încărcarea ZIP din admin nu este activată pentru sandbox." }, 403);
+  if (env[live ? "LIVE_ADMIN_UPLOAD_ENABLED" : "SANDBOX_ADMIN_UPLOAD_ENABLED"] !== "true") {
+    return respond({ error: "Încărcarea ZIP din admin nu este activată." }, 403);
   }
   try {
     const filename = safeFilename(request);
@@ -79,8 +79,9 @@ export async function handleAdminUpload(request, env) {
     const bytes = await limitedBytes(request);
     if (!looksLikeZip(bytes)) throw new UploadInputError("Fișierul nu pare o arhivă ZIP completă.");
     const db = env.R2_BUDGET_DB;
-    await db.prepare("INSERT OR IGNORE INTO sandbox_admin_upload_budget (id, reserved_bytes) VALUES (1, 0)").run();
-    const quota = await db.prepare(`UPDATE sandbox_admin_upload_budget SET reserved_bytes = reserved_bytes + ?
+    const table = live ? "live_admin_upload_budget" : "sandbox_admin_upload_budget";
+    await db.prepare(`INSERT OR IGNORE INTO ${table} (id, reserved_bytes) VALUES (1, 0)`).run();
+    const quota = await db.prepare(`UPDATE ${table} SET reserved_bytes = reserved_bytes + ?
       WHERE id = 1 AND reserved_bytes + ? <= ? RETURNING reserved_bytes`)
       .bind(bytes.length, bytes.length, MAX_ADMIN_UPLOAD_POOL_BYTES).first();
     if (!quota) throw new UploadInputError("Bugetul preventiv pentru ZIP-uri din /admin a fost atins.", 429);

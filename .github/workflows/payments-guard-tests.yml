@@ -5,6 +5,7 @@ on:
     branches:
       - feature/r2-preventive-limits-20261021
       - feature/pr45-release-guards
+      - feature/store-live-admin-20261109
     paths:
       - "payments/**"
       - ".github/workflows/payments-guard-tests.yml"
@@ -42,6 +43,10 @@ jobs:
         run: npm run test:integration
         env:
           WRANGLER_SEND_METRICS: "false"
+      - name: Test isolated LIVE admin with mocked Stripe (no real writes)
+        run: npm run test:live-admin
+        env:
+          WRANGLER_SEND_METRICS: "false"
   release-safety:
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -65,6 +70,10 @@ jobs:
           WRANGLER_SEND_METRICS: "false"
       - name: Dry-run emergency Worker bundle (local-only config)
         run: npx wrangler deploy --dry-run --config test/wrangler.emergency.local.jsonc
+        env:
+          WRANGLER_SEND_METRICS: "false"
+      - name: Dry-run isolated LIVE admin Worker (local-only config)
+        run: npx wrangler deploy --dry-run --config test/wrangler.live.local.jsonc
         env:
           WRANGLER_SEND_METRICS: "false"
 

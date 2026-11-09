@@ -57,14 +57,14 @@ h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1.5px;margin:
 
 export const ADMIN_JS = String.raw`'use strict';
 (function () {
-  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false, uploadsEnabled = false, priceCreateEnabled = false, stripeCreateKey = '';
+  var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false, uploadsEnabled = false, priceCreateEnabled = false, stripeCreateKey = '', liveMode = false, liveStoreConnected = false;
   var productCursor = null, priceCursor = null, fileCursor = null;
   var $ = function (id) { return document.getElementById(id); };
   function message(text, error) { $('message').textContent = text || ''; $('message').className = error ? 'error' : ''; }
   function node(tag, text, className) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (className) e.className = className; return e; }
   function option(value, text) { var e = node('option', text); e.value = value; return e; }
   function logout() {
-    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false; priceCreateEnabled = false; stripeCreateKey = '';
+    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false; priceCreateEnabled = false; stripeCreateKey = ''; liveMode = false; liveStoreConnected = false;
     $('adminToken').value = ''; $('productList').replaceChildren(); $('productForm').reset();
     $('deliveryList').replaceChildren();
     $('priceSelect').replaceChildren(option('', 'Alege un preț')); $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
@@ -106,7 +106,7 @@ export const ADMIN_JS = String.raw`'use strict';
       var selectedProduct = products.find(function (p) { return p.price_id === $('priceSelect').value; });
       $('priceHelp').textContent = selectedProduct && selectedProduct.state === 'archived'
         ? 'La Adaugă produs, produsul retras revine în catalog cu numele și arhiva alese.'
-        : 'Numele, suma și moneda sunt preluate automat din Stripe sandbox.';
+        : 'Numele, suma și moneda sunt preluate automat din Stripe ' + (liveMode ? 'LIVE.' : 'sandbox.');
     }
     $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
     files.forEach(function (file) { $('fileSelect').append(option(file.key, file.key.slice(9) + ' · ' + Math.max(1, Math.round(file.size / 1024)) + ' KB')); });
@@ -119,7 +119,7 @@ export const ADMIN_JS = String.raw`'use strict';
   function resetForm() {
     editing = null; $('productForm').reset(); $('formTitle').textContent = 'Adaugă produs';
     $('saveProduct').textContent = 'Adaugă produs'; $('cancelEdit').hidden = true;
-    $('priceHelp').textContent = 'Numele, suma și moneda sunt preluate automat din Stripe sandbox.';
+    $('priceHelp').textContent = 'Numele, suma și moneda sunt preluate automat din Stripe ' + (liveMode ? 'LIVE.' : 'sandbox.');
     renderOptions();
   }
   function edit(product) {
@@ -138,7 +138,7 @@ export const ADMIN_JS = String.raw`'use strict';
       var article = node('article', null, 'product' + (product.state === 'archived' ? ' archived' : ''));
       var heading = node('h3', product.title);
       var status = product.state === 'archived' ? node('span', 'Șters din catalog', 'status-tag') :
-        node('span', product.publication_state === 'published' ? 'Published · staging' : 'Draft',
+        node('span', product.publication_state === 'published' ? (liveMode ? 'Published · LIVE' : 'Published · staging') : 'Draft',
           'status-tag' + (product.publication_state === 'published' ? ' published' : ''));
       article.append(heading, status, node('p', product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
@@ -149,6 +149,41 @@ export const ADMIN_JS = String.raw`'use strict';
       }
       var editButton = node('button', 'Editează', 'text-button'); editButton.type = 'button';
       editButton.addEventListener('click', function () { edit(product); }); actions.append(editButton);
+      if (liveMode && product.state === 'active') {
+        var priceButton = node('button', 'Schimbă prețul', 'text-button'); priceButton.type = 'button';
+        priceButton.addEventListener('click', function () {
+          var entered = window.prompt('Prețul nou în RON (de ex. 49.00). Stripe va crea un Price nou; cel vechi rămâne în istoric.');
+          if (entered === null) return;
+          var parsed = entered.trim();
+          if (!/^[0-9]{1,6}(?:\.[0-9]{1,2})?$/.test(parsed)) { message('Preț invalid. Exemplu: 49.00 RON.', true); return; }
+          var cents = Math.round(Number(parsed) * 100);
+          if (cents < 200 || cents > 99999999) { message('Prețul trebuie să fie între 2,00 și 999.999,99 RON.', true); return; }
+          if (!window.confirm('Creezi un preț LIVE de ' + parsed + ' RON? Aceasta modifică Stripe LIVE.')) return;
+          run(priceButton, async function () {
+            var data = await api('products/' + encodeURIComponent(product.id) + '/price',
+              { method: 'POST', body: { revision: product.revision, unit_amount: cents, request_id: crypto.randomUUID() } });
+            products = products.map(function (p) { return p.id === product.id ? data.product : p; });
+            await loadPrices(false); renderProducts(); renderOptions();
+            message('Prețul LIVE a fost actualizat. Produsul a revenit la Draft; istoricul prețurilor este păstrat.');
+          });
+        });
+        actions.append(priceButton);
+      }
+      if (liveMode) {
+        var historyButton = node('button', 'Istoric prețuri', 'text-button'); historyButton.type = 'button';
+        historyButton.addEventListener('click', function () {
+          run(historyButton, async function () {
+            var existing = article.querySelector('.price-history');
+            if (existing) { existing.remove(); return; }
+            var data = await api('products/' + encodeURIComponent(product.id) + '/prices');
+            var historyPanel = node('div', null, 'preview price-history');
+            historyPanel.append(node('p', 'Istoric prețuri Stripe LIVE', 'preview-heading'));
+            data.prices.forEach(function (item) { historyPanel.append(node('p', item.display_price + ' · ' + item.price_id)); });
+            article.append(historyPanel);
+          });
+        });
+        actions.append(historyButton);
+      }
       var previewButton = node('button', 'Previzualizează', 'text-button'); previewButton.type = 'button';
       previewButton.setAttribute('aria-expanded', 'false');
       previewButton.addEventListener('click', function () {
@@ -159,7 +194,7 @@ export const ADMIN_JS = String.raw`'use strict';
           var panel = node('section', null, 'preview');
           panel.append(node('p', data.product.title + ' · ' + data.product.display_price, 'preview-heading'));
           panel.append(node('p', 'Livrare digitală ZIP · ' + Math.max(1, Math.round(data.product.object_size_bytes / 1024)) + ' KB'));
-          panel.append(node('p', 'Vizibilitate: ' + (data.product.publication_state === 'published' ? 'Published · staging' : 'Draft')));
+          panel.append(node('p', 'Vizibilitate: ' + (data.product.publication_state === 'published' ? (liveMode ? 'Published · LIVE' : 'Published · staging') : 'Draft')));
           if (data.checkout_available) {
             var links = node('div', null, 'lang-links');
             data.languages.forEach(function (lang) {
@@ -168,22 +203,24 @@ export const ADMIN_JS = String.raw`'use strict';
               link.target = '_blank'; link.rel = 'noopener noreferrer'; links.append(link);
             });
             panel.append(links);
-          } else panel.append(node('p', 'Checkout sandbox indisponibil.'));
+          } else panel.append(node('p', liveMode ? 'Checkout LIVE nu este conectat încă.' : 'Checkout sandbox indisponibil.'));
           article.append(panel); previewButton.setAttribute('aria-expanded', 'true');
         });
       });
       actions.append(previewButton);
       if (product.state === 'active') {
         var publish = product.publication_state !== 'published';
-        var publicationButton = node('button', publish ? 'Publish · staging' : 'Unpublish', 'text-button');
+        var publicationButton = node('button', publish ? (liveMode ? 'Publish în Store' : 'Publish · staging') : 'Unpublish', 'text-button');
         publicationButton.type = 'button';
+        publicationButton.disabled = liveMode && publish && !liveStoreConnected;
+        if (publicationButton.disabled) publicationButton.title = 'Necesită conectarea Store LIVE și a livrării după plată.';
         publicationButton.addEventListener('click', function () {
-          if (publish && !window.confirm('Publici doar în catalogul de staging? Store-ul public rămâne nemodificat. Orice editare ulterioară va reveni la Draft.')) return;
+          if (publish && !window.confirm(liveMode ? 'Publici acest produs în Store-ul LIVE?' : 'Publici doar în catalogul de staging? Store-ul public rămâne nemodificat. Orice editare ulterioară va reveni la Draft.')) return;
           run(publicationButton, async function () {
             var data = await api('products/' + encodeURIComponent(product.id) + (publish ? '/publish' : '/unpublish'),
               { method: 'POST', body: { revision: product.revision } });
             products = products.map(function (p) { return p.id === data.product.id ? data.product : p; });
-            renderProducts(); message(publish ? 'Produs marcat Published în staging. Store-ul public nu se schimbă.' : 'Produs retras în Draft.');
+            renderProducts(); message(publish ? (liveMode ? 'Produs publicat în catalogul LIVE.' : 'Produs marcat Published în staging. Store-ul public nu se schimbă.') : 'Produs retras în Draft.');
           });
         });
         actions.append(publicationButton);
@@ -209,13 +246,14 @@ export const ADMIN_JS = String.raw`'use strict';
   async function loadProducts(append) {
     var data = await api('products' + (append && productCursor ? '?cursor=' + encodeURIComponent(productCursor) : ''));
     checkoutEnabled = data.checkout_enabled === true;
+    liveMode = data.live_mode === true; liveStoreConnected = data.store_connected === true;
     uploadsEnabled = data.uploads_enabled === true;
     priceCreateEnabled = data.price_create_enabled === true;
     $('stripeCreator').hidden = !priceCreateEnabled;
     $('zipFile').disabled = !uploadsEnabled; $('uploadZip').disabled = !uploadsEnabled;
     $('uploadHelp').textContent = uploadsEnabled
       ? 'Maximum 20 MB. ZIP-ul este verificat sumar și încărcat în bucket-ul privat; verifică separat conținutul înainte de vânzare.'
-      : 'Încărcarea directă este dezactivată. Activează SANDBOX_ADMIN_UPLOAD_ENABLED în Worker (doar sandbox).';
+      : (liveMode ? 'Încărcarea LIVE este dezactivată în acest Worker.' : 'Încărcarea directă este dezactivată. Activează SANDBOX_ADMIN_UPLOAD_ENABLED în Worker (doar sandbox).');
     products = append ? products.concat(data.products) : data.products; productCursor = data.cursor;
     renderProducts(); renderOptions();
   }
@@ -274,7 +312,7 @@ export const ADMIN_JS = String.raw`'use strict';
       var path = editId ? 'products/' + encodeURIComponent(editId) + (existing ? '/restore' : '') : 'products';
       var data = await api(path, { method: editing ? 'PATCH' : 'POST', body: body });
       products = editId ? products.map(function (p) { return p.id === editId ? data.product : p; }) : products.concat([data.product]);
-      resetForm(); renderProducts(); message(existing ? 'Produs readăugat în catalogul sandbox.' : editId ? 'Modificările au fost salvate.' : 'Produs adăugat în catalogul sandbox.');
+      resetForm(); renderProducts(); message(existing ? 'Produs readăugat în catalog.' : editId ? 'Modificările au fost salvate.' : 'Produs adăugat în catalog.');
     });
   });
   $('priceSelect').addEventListener('change', function () {
@@ -329,7 +367,7 @@ export const ADMIN_JS = String.raw`'use strict';
       prices.unshift(data.price); renderOptions(); $('priceSelect').value = data.price.price_id;
       $('titleInput').value = data.price.title;
       $('stripeCreator').open = false;
-      message('Produsul și prețul de test au fost create în Stripe. Selectează ZIP-ul și apasă Adaugă produs.');
+      message('Produsul și prețul au fost create în Stripe ' + (liveMode ? 'LIVE' : 'Test') + '. Selectează ZIP-ul și apasă Adaugă produs.');
     });
   });
   $('showArchived').addEventListener('change', renderProducts);
@@ -342,10 +380,21 @@ export const ADMIN_JS = String.raw`'use strict';
    });
 })();`;
 
-export function adminAsset(path) {
+const LIVE_ADMIN_HTML = ADMIN_HTML
+  .replace('<span class="badge">sandbox</span>', '<span class="badge">LIVE · administrare</span>')
+  .replace('Mediu de test. Publicarea pregătește doar catalogul de staging; nu modifică Store-ul public și nu activează Stripe Live.',
+    'Catalog Stripe LIVE. Crearea de produse și prețuri modifică Stripe LIVE când este activată. Publicarea în Store rămâne blocată până la conectarea plății și livrării.')
+  .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
+  .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
+  .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
+    'Preț LIVE fix, plată unică, în RON. Impozitarea și dreptul de comercializare trebuie confirmate înainte de vânzări.')
+  .replace('Creează prețul de test', 'Creează produs și preț LIVE')
+  .replace('<details class="panel delivery-panel">', '<details class="panel delivery-panel" hidden>');
+
+export function adminAsset(path, { live = false } = {}) {
   const assets = {
-    "/admin": [ADMIN_HTML, "text/html; charset=utf-8"],
-    "/admin/": [ADMIN_HTML, "text/html; charset=utf-8"],
+    "/admin": [live ? LIVE_ADMIN_HTML : ADMIN_HTML, "text/html; charset=utf-8"],
+    "/admin/": [live ? LIVE_ADMIN_HTML : ADMIN_HTML, "text/html; charset=utf-8"],
     "/admin/app.js": [ADMIN_JS, "text/javascript; charset=utf-8"],
     "/admin/style.css": [ADMIN_CSS, "text/css; charset=utf-8"],
   };
