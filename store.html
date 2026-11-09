@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a151c">
-  <meta name="description" content="Four core network and cybersecurity products, with optional vendor editions, add-ons and a free assessment sample.">
+  <meta name="description" content="Explore public security checks, the ServiceWatch pilot, scoped validation and practical network security toolkits from weownit.net.">
   <title>Products — Network & Security Consultant</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a151c'/%3E%3Cpath d='M13 17h38v30H13z' fill='none' stroke='%236ce2c7' stroke-width='4'/%3E%3Cpath d='m22 27 10 12 10-12' fill='none' stroke='%23f2f1e8' stroke-width='4'/%3E%3C/svg%3E">
   <link rel="canonical" href="https://weownit.net/store.html?lang=en">
@@ -14,7 +14,7 @@
   <link rel="alternate" hreflang="x-default" href="https://weownit.net/store.html?lang=en">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Store — Network &amp; Security Consultant">
-  <meta property="og:description" content="Four core network and cybersecurity products, with optional vendor editions, add-ons and a free assessment sample.">
+  <meta property="og:description" content="Public security checks, the ServiceWatch pilot, scoped validation and practical network security toolkits.">
   <meta property="og:url" content="https://weownit.net/store.html?lang=en">
   <meta property="og:locale" content="en_GB">
   <meta property="og:site_name" content="Network &amp; Security Consultant">
@@ -30,7 +30,7 @@
   "@type": "CollectionPage",
   "name": "weownit.net Store",
   "url": "https://weownit.net/store.html?lang=en",
-  "description": "Four core network and cybersecurity products with optional vendor editions, add-ons and an assessment sample.",
+  "description": "Public security checks, a controlled monitoring pilot, scoped validation and network security toolkits with a free sample.",
   "isPartOf": {
     "@type": "WebSite",
     "name": "weownit.net",
@@ -152,6 +152,17 @@
     @media(max-width:600px){.catalog-overview{grid-template-columns:1fr}.family-options{padding:.85rem}.product-option summary{flex-wrap:wrap;gap:.4rem .6rem}.option-name{flex:1 1 calc(100% - 2rem)}.option-chevron{order:2}.option-badge{order:3;margin-left:0}.nested-product .product-main,.nested-product .product-side{padding:1.1rem}}
 
     .featured-sample{margin-bottom:1rem}.resource-guide-link{margin:1rem 0 2.5rem;color:var(--accent)}.resource-guide-link a{display:inline-block;padding:.4rem 0;text-decoration:underline;text-underline-offset:4px}
+    .offer-intro{margin:0 0 .35rem}.offer-intro h2{font-size:clamp(1.9rem,3.5vw,2.8rem);margin:.35rem 0}.offer-intro p{max-width:750px;color:var(--muted);margin:0}
+    .offer-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-bottom:1.2rem}
+    .offer-card{display:flex;flex-direction:column;gap:.8rem;min-width:0;border:1px solid var(--line);background:var(--bg2);padding:clamp(1.25rem,2.6vw,2rem)}
+    .offer-status{align-self:start;color:var(--accent);font-family:var(--mono);font-size:.67rem;letter-spacing:.04em;text-transform:uppercase}
+    .offer-card h3{font-size:clamp(1.45rem,2.5vw,2rem);letter-spacing:-.04em;line-height:1.12;margin:0}
+    .offer-card p{margin:0;color:var(--muted);font-size:.9rem}.offer-outcome{font-size:.78rem;color:#d6e0de;margin-top:auto;padding-top:.4rem}
+    .offer-card .buy{margin-top:.4rem;font-size:.86rem}.offer-card .buy:focus-visible,.catalog-archive>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    .catalog-archive{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:1.2rem}.catalog-archive>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;color:var(--accent);font-weight:700}
+    .catalog-archive>summary::-webkit-details-marker{display:none}.catalog-archive>summary::after{content:"+";font-size:1.4rem;line-height:1}.catalog-archive[open]>summary::after{content:"−"}
+    .catalog-archive .catalog-intro{margin-top:1.3rem}.catalog-archive .catalog-disclaimer{margin-bottom:1rem}
+    @media(max-width:700px){.offer-grid{grid-template-columns:1fr}.offer-card{padding:1.25rem}.offer-card .buy{width:100%}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=23">
@@ -198,7 +209,42 @@
 
   <section class="store">
     <div class="wrap">
-<details class="product-option featured-sample" open id="network-security-assessment-sample">
+      <div class="offer-intro">
+        <div class="eyebrow" data-offer-intro="eyebrow">Start with the outcome</div>
+        <h2 data-offer-intro="title">Security, with a clear next step.</h2>
+        <p data-offer-intro="description">Choose a public check, explore a controlled pilot, discuss a scoped assessment or preview a practical toolkit.</p>
+      </div>
+      <div class="offer-grid" aria-label="Security product options" data-offer-grid>
+        <article class="offer-card" data-offer-card="0" id="exposure-snapshot">
+          <span class="offer-status">Available · Public sources</span>
+          <h3>Exposure Snapshot</h3>
+          <p>Review public information about a domain and identify what deserves a closer look. This is not a vulnerability scan.</p>
+          <div class="offer-outcome">Outcome: initial checks and source references</div>
+          <a class="buy" href="tools.html">Open free checks →</a>
+        </article>
+        <article class="offer-card" data-offer-card="1" id="servicewatch-product">
+          <span class="offer-status">Controlled pilot</span>
+          <h3>ServiceWatch</h3>
+          <p>Track external exposure, findings and remediation evidence. The current pilot uses a restricted test environment.</p>
+          <div class="offer-outcome">Outcome: evidence-led exposure review, under validation</div>
+          <a class="buy is-contact" href="contact.html">Ask about the pilot →</a>
+        </article>
+        <article class="offer-card" data-offer-card="2" id="advanced-validation-product">
+          <span class="offer-status">Scoped enquiry</span>
+          <h3>Advanced Validation</h3>
+          <p>Discuss an authorized security assessment with defined targets, engineer review and practical next steps.</p>
+          <div class="offer-outcome">Outcome: agreed scope before any active testing</div>
+          <a class="buy is-contact" href="contact.html">Discuss an assessment →</a>
+        </article>
+        <article class="offer-card" data-offer-card="3" id="security-toolkits-product">
+          <span class="offer-status">Free sample · Toolkits in preparation</span>
+          <h3>Security Toolkits</h3>
+          <p>Preview an evidence-based assessment report. Firewall and network security workbooks are being reviewed before release.</p>
+          <div class="offer-outcome">Outcome: downloadable example with remediation and validation</div>
+          <a class="buy" href="#network-security-assessment-sample">View free report sample →</a>
+        </article>
+      </div>
+<details class="product-option featured-sample" id="network-security-assessment-sample">
         <summary><span class="option-name" data-catalog-text="sampleOption">Free sample report</span><span class="option-badge" data-catalog-text="sampleBadge">Free sample</span><span class="option-chevron" aria-hidden="true">+</span></summary>
         <article class="product nested-product free-product">
         <div class="product-main">
@@ -229,6 +275,8 @@
       </article>
       </details>
 <p class="resource-guide-link"><a href="index.html#resources" data-catalog-text="guidesLink">Explore practical guides and references →</a></p>
+<details class="catalog-archive" id="planned-catalog">
+<summary data-catalog-text="plannedCatalogSummary">Browse planned toolkits and vendor editions</summary>
 <div class="catalog-intro">
         <div class="eyebrow" data-catalog-text="catalogLabel">Four product families</div>
         <h2 data-catalog-text="catalogTitle">Choose the outcome you need.</h2>
@@ -257,7 +305,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="networkAssessment" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article><div class="family-options"><p class="family-options-heading" data-catalog-text="resourceOptions">Optional add-ons</p>
@@ -285,7 +333,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="networkAutomation" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article>
@@ -313,7 +361,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="firewallHardening" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article><div class="family-options"><p class="family-options-heading" data-catalog-text="vendorOptions">Vendor editions</p><span class="catalog-anchor" id="firewall-hardening-series" aria-hidden="true"></span><details class="product-option" id="fortinet-hardening-toolkit">
@@ -340,7 +388,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="fortinetHardening" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article>
@@ -369,7 +417,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="paloAltoHardening" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article>
@@ -398,7 +446,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="checkPointHardening" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article>
@@ -426,7 +474,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="networkArchitecture" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article></section>
@@ -442,7 +490,7 @@
             <li>Incident Response Plan and practical response guidance</li>
             <li>Operational checklists and incident-specific playbooks</li>
             <li>Communication, evidence, tracking, and review templates</li>
-            <li>Digital delivery after successful checkout</li>
+            <li>Downloadable templates being reviewed before release</li>
           </ul>
           <div class="notice framework-box"><strong>Frameworks, standards &amp; guidance.</strong><div class="framework-tags"><span class="framework-chip">NIST SP 800-61 Rev. 3</span><span class="framework-chip">NIST CSF 2.0</span><span class="framework-chip">SANS DAIR</span><span class="framework-chip">MITRE ATT&amp;CK</span><span class="framework-chip">ISO/IEC 27035</span><span class="framework-chip">CISA guidance</span></div></div>
         </div>
@@ -453,7 +501,7 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="incidentResponse" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article><div class="family-options"><p class="family-options-heading" data-catalog-text="resourceOptions">Optional add-ons</p><details class="product-option" id="troubleshooting-diagnostics-toolkit">
@@ -480,12 +528,13 @@
           </div>
           <div>
             <a class="buy is-contact" data-buy-key="incidentDiagnostics" href="contact.html">Request early access →</a>
-            <p class="checkout-note">Secure checkout will be provided by <a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.</p>
+            <p class="checkout-note">Online checkout is not active. No payment is taken on this page.</p>
           </div>
         </aside>
       </article>
       </details></div></section>
 <p class="catalog-disclaimer" data-catalog-text="optionsNote">Vendor editions and add-ons are optional and offered separately. Check availability for each item.</p>
+</details>
     </div>
   </section>
 </main>
@@ -494,17 +543,6 @@
 
 <script>
 (() => {
-  const LEMON_CHECKOUT_URLS={
-    networkAssessment:"",
-    incidentResponse:"",
-    firewallHardening:"",
-    fortinetHardening:"",
-    paloAltoHardening:"",
-    checkPointHardening:"",
-    networkArchitecture:"",
-    incidentDiagnostics:"",
-    networkAutomation:""
-  };
   const SAMPLE_PDF_URLS={
     en:"downloads/WeOwnIT_Network_Security_Assessment_Sample_EN_2026.pdf",
     ro:"downloads/WeOwnIT_Network_Security_Assessment_Sample_RO_2026.pdf",
@@ -525,8 +563,17 @@
   
   const translations = {
     en:{
+      offerIntro:{eyebrow:"Start with the outcome",title:"Security, with a clear next step.",description:"Choose a public check, explore a controlled pilot, discuss a scoped assessment or preview a practical toolkit."},
+      offerGridLabel:"Security product options",
+      offerCards:[
+        {status:"Available · Public sources",title:"Exposure Snapshot",description:"Review public information about a domain and identify what deserves a closer look. This is not a vulnerability scan.",outcome:"Outcome: initial checks and source references",action:"Open free checks →"},
+        {status:"Controlled pilot",title:"ServiceWatch",description:"Track external exposure, findings and remediation evidence. The current pilot uses a restricted test environment.",outcome:"Outcome: evidence-led exposure review, under validation",action:"Ask about the pilot →"},
+        {status:"Scoped enquiry",title:"Advanced Validation",description:"Discuss an authorized security assessment with defined targets, engineer review and practical next steps.",outcome:"Outcome: agreed scope before any active testing",action:"Discuss an assessment →"},
+        {status:"Free sample · Toolkits in preparation",title:"Security Toolkits",description:"Preview an evidence-based assessment report. Firewall and network security workbooks are being reviewed before release.",outcome:"Outcome: downloadable example with remediation and validation",action:"View free report sample →"}
+      ],
+      plannedCatalogSummary:"Browse planned toolkits and vendor editions",
+      availabilityNote:"Online checkout is not active. No payment is taken on this page.",
       guidesLink:"Explore practical guides and references →",catalogLabel:"Four product families",catalogTitle:"Choose the outcome you need.",catalogText:"These toolkits are in preparation. Explore the scope of each family and request early access.",catalogNavLabel:"Product families",assessmentFamily:"Network Security Assessment",firewallFamily:"Firewall Security & Hardening",architectureFamily:"Network Architecture & Segmentation",incidentFamily:"Cybersecurity Incident Response",vendorOptions:"Vendor editions",resourceOptions:"Optional add-ons",sampleOption:"Network Security Assessment · Sample report",automationOption:"Network Automation & Compliance",diagnosticsOption:"Troubleshooting & Incident Diagnostics",fortinetOption:"Fortinet · FortiGate & FortiManager",paloOption:"Palo Alto Networks · PAN-OS & Panorama",checkpointOption:"Check Point · Gateway & Management",sampleBadge:"Free sample",addonBadge:"Optional add-on",editionBadge:"Vendor edition",optionsNote:"Vendor editions and add-ons are optional and offered separately. Check availability for each item.",
-      buy:"Buy securely",
       pageTitle:"Products — Network & Security Consultant",brand:"Network & Security Consultant",back:"← Back to products",eyebrow:"Products",
       title:"Network &amp; Security<br>Guides &amp; Playbooks.",lead:"Assessment templates, firewall hardening guides and incident response playbooks for network and security professionals.",
       sampleTags:["FREE SAMPLE","2026 EDITION"],sampleProduct:"Network Security Assessment — Executive & Technical Sample Report",
@@ -562,13 +609,12 @@
       automationFrameworkLabel:"Frameworks, standards & guidance.",automationFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · COBIT · Ansible guidance · ISO/IEC 27001:2022 alignment.",
       tags:["INCIDENT RESPONSE","2026 EDITION"],product:"Cybersecurity Incident Response Toolkit 2026",
       desc:"A structured incident-response package designed around practical preparation, response, evidence handling, communication, and post-incident review.",
-      features:["Incident Response Plan and practical response guidance","Operational checklists and incident-specific playbooks","Communication, evidence, tracking, and review templates","Digital delivery after successful checkout"],
+      features:["Incident Response Plan and practical response guidance","Operational checklists and incident-specific playbooks","Communication, evidence, tracking, and review templates","Downloadable templates being reviewed before release"],
       type:"Digital product",price:"Coming soon",pending:"Request early access →",
       incidentFrameworkLabel:"Frameworks, standards & guidance.",incidentFrameworkText:"NIST SP 800-61 Rev. 3 · NIST CSF 2.0 · SANS DAIR · MITRE ATT&CK · ISO/IEC 27035 · CISA guidance.",
       fortinetFrameworkLabel:"Frameworks, standards & guidance.",fortinetFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Fortinet security best practices.",
       paloFrameworkLabel:"Frameworks, standards & guidance.",paloFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Palo Alto Networks security best practices.",
       checkpointFrameworkLabel:"Frameworks, standards & guidance.",checkpointFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Check Point security guidance.",
-      checkout:"Secure checkout will be provided by ",
       fortinetTags:["FORTINET","2026 PROFESSIONAL EDITION"],fortinetProduct:"FortiGate & FortiManager Security Review & Hardening 2026",
       fortinetDesc:"A Fortinet-focused security review covering FortiGate and FortiManager administration, policy hygiene, management exposure, logging, lifecycle, backup, and recovery controls.",
       fortinetFeatures:["FortiGate and FortiManager security review and hardening checklist","Management access, administrator security, and trusted access controls","Policy, object, logging, firmware, backup, and recovery review","Practical remediation guidance and repeatable verification"],
@@ -583,8 +629,17 @@
       checkpointType:"Digital product",checkpointPrice:"Coming soon",checkpointPending:"Request early access →"
     },
     ro:{
+      offerIntro:{eyebrow:"Începe cu rezultatul",title:"Securitate, cu un pas următor clar.",description:"Alege verificări publice, explorează un pilot controlat, discută o evaluare autorizată sau consultă un toolkit practic."},
+      offerGridLabel:"Opțiuni de produse de securitate",
+      offerCards:[
+        {status:"Disponibil · Surse publice",title:"Exposure Snapshot",description:"Verifică informațiile publice despre un domeniu și identifică aspectele care merită analizate. Nu este o scanare de vulnerabilități.",outcome:"Rezultat: verificări inițiale și referințe la surse",action:"Deschide verificările gratuite →"},
+        {status:"Pilot controlat",title:"ServiceWatch",description:"Urmărește expunerea externă, constatările și dovezile de remediere. Pilotul actual folosește un mediu de test restricționat.",outcome:"Rezultat: evaluare a expunerii bazată pe dovezi, în validare",action:"Întreabă despre pilot →"},
+        {status:"Discuție pentru definirea scopului",title:"Advanced Validation",description:"Discută o evaluare de securitate autorizată, cu ținte definite, revizuire de către inginer și pași practici.",outcome:"Rezultat: scop convenit înaintea testării active",action:"Discută o evaluare →"},
+        {status:"Exemplu gratuit · Toolkit-uri în pregătire",title:"Security Toolkits",description:"Consultă un raport de evaluare bazat pe dovezi. Workbook-urile de firewall și securitate de rețea sunt revizuite înainte de lansare.",outcome:"Rezultat: exemplu descărcabil cu remediere și validare",action:"Vezi raportul exemplu →"}
+      ],
+      plannedCatalogSummary:"Explorează toolkit-urile și edițiile de vendor planificate",
+      availabilityNote:"Checkout-ul online nu este activ. Nu se încasează plăți pe această pagină.",
       guidesLink:"Explorează ghiduri practice și referințe →",catalogLabel:"Patru familii de produse",catalogTitle:"Alege rezultatul de care ai nevoie.",catalogText:"Aceste pachete sunt în pregătire. Explorează acoperirea fiecărei familii și solicită acces anticipat.",catalogNavLabel:"Familii de produse",assessmentFamily:"Evaluarea securității rețelei",firewallFamily:"Securitate și hardening firewall",architectureFamily:"Arhitectură și segmentare de rețea",incidentFamily:"Răspuns la incidente de securitate",vendorOptions:"Ediții de vendor",resourceOptions:"Exemple și module opționale",sampleOption:"Evaluarea securității rețelei · Raport exemplu",automationOption:"Automatizare de rețea și conformitate",diagnosticsOption:"Depanare și diagnostic al incidentelor",fortinetOption:"Fortinet · FortiGate și FortiManager",paloOption:"Palo Alto Networks · PAN-OS și Panorama",checkpointOption:"Check Point · Gateway și Management",sampleBadge:"Exemplu gratuit",addonBadge:"Modul opțional",editionBadge:"Ediție de vendor",optionsNote:"Edițiile de vendor și modulele opționale sunt oferite separat. Verifică disponibilitatea fiecărui element.",
-      buy:"Cumpără în siguranță",
       pageTitle:"Produse — Network & Security Consultant",brand:"Network & Security Consultant",back:"← Înapoi la produse",eyebrow:"Produse",
       title:"Rețele și securitate<br>Ghiduri și proceduri.",lead:"Șabloane de evaluare, ghiduri de hardening pentru firewall-uri și proceduri de răspuns la incidente pentru profesioniști în rețele și securitate.",
       sampleTags:["SAMPLE GRATUIT","EDIȚIA 2026"],sampleProduct:"Network Security Assessment — Raport executiv & tehnic — exemplu",
@@ -620,13 +675,12 @@
       automationFrameworkLabel:"Framework-uri, standarde și ghidare.",automationFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · COBIT · Ghidare Ansible · Aliniere ISO/IEC 27001:2022.",
       tags:["RĂSPUNS LA INCIDENTE","EDIȚIA 2026"],product:"Cybersecurity Incident Response Toolkit 2026",
       desc:"Un pachet structurat pentru răspuns la incidente, orientat spre pregătire practică, răspuns, gestionarea dovezilor, comunicare și analiza post-incident.",
-      features:["Plan de răspuns la incidente și ghidare practică","Checklist-uri operaționale și playbook-uri specifice incidentelor","Template-uri pentru comunicare, dovezi, tracking și review","Livrare digitală după finalizarea plății"],
+      features:["Plan de răspuns la incidente și ghidare practică","Checklist-uri operaționale și playbook-uri specifice incidentelor","Template-uri pentru comunicare, dovezi, tracking și review","Template-uri descărcabile, în revizuire înainte de lansare"],
       type:"Produs digital",price:"În curând",pending:"Solicită acces anticipat →",
       incidentFrameworkLabel:"Framework-uri, standarde și ghidare.",incidentFrameworkText:"NIST SP 800-61 Rev. 3 · NIST CSF 2.0 · SANS DAIR · MITRE ATT&CK · ISO/IEC 27035 · Ghidare CISA.",
       fortinetFrameworkLabel:"Framework-uri, standarde și ghidare.",fortinetFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Bune practici de securitate Fortinet.",
       paloFrameworkLabel:"Framework-uri, standarde și ghidare.",paloFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Bune practici de securitate Palo Alto Networks.",
       checkpointFrameworkLabel:"Framework-uri, standarde și ghidare.",checkpointFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Ghidare de securitate Check Point.",
-      checkout:"Checkout-ul securizat va fi furnizat de ",
       fortinetTags:["FORTINET","EDIȚIE PROFESIONALĂ 2026"],fortinetProduct:"FortiGate & FortiManager — Review de Securitate & Hardening 2026",
       fortinetDesc:"Un review de securitate orientat pe Fortinet, care acoperă administrarea FortiGate și FortiManager, igiena politicilor, expunerea managementului, logarea, lifecycle-ul, backup-ul și recovery-ul.",
       fortinetFeatures:["Checklist de review de securitate și hardening pentru FortiGate și FortiManager","Acces de management, securitatea administratorilor și trusted access","Review pentru politici, obiecte, logare, firmware, backup și recovery","Ghidare practică pentru remediere și verificare repetabilă"],
@@ -641,8 +695,17 @@
       checkpointType:"Produs digital",checkpointPrice:"În curând",checkpointPending:"Solicită acces anticipat →"
     },
     fr:{
+      offerIntro:{eyebrow:"Commencez par le résultat",title:"Une sécurité aux prochaines étapes claires.",description:"Choisissez des vérifications publiques, explorez un pilote contrôlé, discutez une évaluation cadrée ou consultez un kit pratique."},
+      offerGridLabel:"Options de produits de sécurité",
+      offerCards:[
+        {status:"Disponible · Sources publiques",title:"Exposure Snapshot",description:"Examinez les informations publiques d'un domaine et repérez les points à approfondir. Il ne s'agit pas d'un scan de vulnérabilités.",outcome:"Résultat : premiers contrôles et références aux sources",action:"Ouvrir les vérifications gratuites →"},
+        {status:"Pilote contrôlé",title:"ServiceWatch",description:"Suivez l'exposition externe, les constats et les preuves de remédiation. Le pilote actuel utilise un environnement de test restreint.",outcome:"Résultat : revue de l'exposition fondée sur des preuves, en validation",action:"Demander des informations sur le pilote →"},
+        {status:"Demande de cadrage",title:"Advanced Validation",description:"Discutez une évaluation de sécurité autorisée, avec des cibles définies, une revue par un ingénieur et des actions concrètes.",outcome:"Résultat : périmètre convenu avant tout test actif",action:"Discuter d'une évaluation →"},
+        {status:"Exemple gratuit · Kits en préparation",title:"Security Toolkits",description:"Découvrez un rapport d'évaluation fondé sur des preuves. Les cahiers de travail réseau et pare-feu sont revus avant leur sortie.",outcome:"Résultat : exemple téléchargeable avec remédiation et validation",action:"Voir l'exemple de rapport →"}
+      ],
+      plannedCatalogSummary:"Parcourir les kits et éditions éditeur prévus",
+      availabilityNote:"Le paiement en ligne n'est pas actif. Aucun paiement n'est accepté sur cette page.",
       guidesLink:"Explorer les guides pratiques et références →",catalogLabel:"Quatre familles de produits",catalogTitle:"Choisissez le résultat dont vous avez besoin.",catalogText:"Ces kits sont en préparation. Explorez le périmètre de chaque famille et demandez un accès anticipé.",catalogNavLabel:"Familles de produits",assessmentFamily:"Évaluation de la sécurité réseau",firewallFamily:"Sécurité et durcissement des pare-feu",architectureFamily:"Architecture et segmentation réseau",incidentFamily:"Réponse aux incidents de cybersécurité",vendorOptions:"Éditions par éditeur",resourceOptions:"Modules optionnels",sampleOption:"Évaluation de la sécurité réseau · Exemple de rapport",automationOption:"Automatisation réseau et conformité",diagnosticsOption:"Dépannage et diagnostic des incidents",fortinetOption:"Fortinet · FortiGate et FortiManager",paloOption:"Palo Alto Networks · PAN-OS et Panorama",checkpointOption:"Check Point · Gateway et Management",sampleBadge:"Exemple gratuit",addonBadge:"Module optionnel",editionBadge:"Édition par éditeur",optionsNote:"Les éditions par éditeur et les modules optionnels sont proposés séparément. Consultez la disponibilité de chaque élément.",
-      buy:"Acheter en toute sécurité",
       pageTitle:"Produits — Network & Security Consultant",brand:"Network & Security Consultant",back:"← Retour aux produits",eyebrow:"Produits",
       title:"Réseaux &amp; cybersécurité<br>Guides &amp; procédures.",lead:"Modèles d’évaluation, guides de durcissement des pare-feu et procédures de réponse aux incidents pour les professionnels des réseaux et de la cybersécurité.",
       sampleTags:["EXEMPLE GRATUIT","ÉDITION 2026"],sampleProduct:"Évaluation de la sécurité réseau — Exemple de rapport exécutif & technique",
@@ -678,13 +741,12 @@
       automationFrameworkLabel:"Référentiels, normes et recommandations.",automationFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · COBIT · Recommandations Ansible · Alignement ISO/IEC 27001:2022.",
       tags:["RÉPONSE AUX INCIDENTS","ÉDITION 2026"],product:"Cybersecurity Incident Response Toolkit 2026",
       desc:"Un package structuré de réponse aux incidents, conçu autour de la préparation pratique, de la réponse, de la gestion des preuves, de la communication et de la revue post-incident.",
-      features:["Plan de réponse aux incidents et guide pratique","Checklists opérationnelles et playbooks spécifiques","Modèles de communication, preuves, suivi et revue","Livraison numérique après paiement"],
+      features:["Plan de réponse aux incidents et guide pratique","Checklists opérationnelles et playbooks spécifiques","Modèles de communication, preuves, suivi et revue","Modèles téléchargeables en cours de révision avant publication"],
       type:"Produit numérique",price:"Bientôt disponible",pending:"Demander un accès anticipé →",
       incidentFrameworkLabel:"Référentiels, normes et recommandations.",incidentFrameworkText:"NIST SP 800-61 Rev. 3 · NIST CSF 2.0 · SANS DAIR · MITRE ATT&CK · ISO/IEC 27035 · Recommandations CISA.",
       fortinetFrameworkLabel:"Référentiels, normes et recommandations.",fortinetFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Bonnes pratiques de sécurité Fortinet.",
       paloFrameworkLabel:"Référentiels, normes et recommandations.",paloFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Bonnes pratiques de sécurité Palo Alto Networks.",
       checkpointFrameworkLabel:"Référentiels, normes et recommandations.",checkpointFrameworkText:"NIST CSF 2.0 · CIS Controls v8.1 · MITRE ATT&CK · Recommandations de sécurité Check Point.",
-      checkout:"Le paiement sécurisé sera fourni par ",
       fortinetTags:["FORTINET","ÉDITION PROFESSIONNELLE 2026"],fortinetProduct:"FortiGate & FortiManager — Revue de Sécurité & Durcissement 2026",
       fortinetDesc:"Une revue de sécurité axée sur Fortinet couvrant l’administration FortiGate et FortiManager, l’hygiène des politiques, l’exposition de la gestion, la journalisation, le cycle de vie, les sauvegardes et la récupération.",
       fortinetFeatures:["Checklist de revue de sécurité et de durcissement pour FortiGate et FortiManager","Accès de gestion, sécurité des administrateurs et accès de confiance","Revue des politiques, objets, journaux, firmware, sauvegardes et récupération","Recommandations pratiques de remédiation et vérification répétable"],
@@ -717,7 +779,7 @@
     });
     box.append(heading,tags);
   }
-  function applyBundle(selector,key,prefix,t){
+  function applyBundle(selector,prefix,t){
     const product=q(selector);
     if(!product)return;
     product.querySelector(".tag:nth-child(1)").textContent=t[prefix+"Tags"][0];
@@ -728,19 +790,26 @@
     product.querySelector(".status").textContent=t[prefix+"Type"];
     product.querySelector(".price").textContent=t[prefix+"Price"];
     renderFrameworkBox(product.querySelector(".notice"),t[prefix+"FrameworkLabel"],t[prefix+"FrameworkText"]);
-    if(!LEMON_CHECKOUT_URLS[key])product.querySelector("[data-buy-key='"+key+"']").textContent=t[prefix+"Pending"];
-    product.querySelector(".checkout-note").innerHTML=t.checkout+'<a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.';
+    product.querySelector("[data-buy-key]").textContent=t[prefix+"Pending"];
+    product.querySelector(".checkout-note").textContent=t.availabilityNote;
   }
   function apply(lang){
     const t=translations[lang]||translations.en;
     SiteI18n.setLanguage(lang);document.title=t.pageTitle;
     q("[data-brand]").textContent=t.brand;q("[data-footer-brand]").textContent=t.brand;
     q(".hero .eyebrow").textContent=t.eyebrow;q(".hero h1").innerHTML=t.title;q(".hero .lead").textContent=t.lead;
+    document.querySelectorAll("[data-offer-intro]").forEach(el=>el.textContent=t.offerIntro[el.dataset.offerIntro]);
+    q("[data-offer-grid]").setAttribute("aria-label",t.offerGridLabel);
+    document.querySelectorAll("[data-offer-card]").forEach((card,i)=>{
+      const offer=t.offerCards[i];
+      card.querySelector(".offer-status").textContent=offer.status;
+      card.querySelector("h3").textContent=offer.title;
+      card.querySelector("p").textContent=offer.description;
+      card.querySelector(".offer-outcome").textContent=offer.outcome;
+      card.querySelector(".buy").textContent=offer.action;
+    });
     document.querySelectorAll("[data-catalog-text]").forEach(el=>el.textContent=t[el.dataset.catalogText]);
     document.querySelectorAll("[data-catalog-aria]").forEach(el=>el.setAttribute("aria-label",t[el.dataset.catalogAria]));
-    document.querySelectorAll("[data-buy-key]").forEach(buy=>{
-      if(LEMON_CHECKOUT_URLS[buy.dataset.buyKey]) buy.textContent=t.buy;
-    });
 
     const sample=q("#network-security-assessment-sample");
     sample.querySelector(".tag:nth-child(1)").textContent=t.sampleTags[0];sample.querySelector(".tag:nth-child(2)").textContent=t.sampleTags[1];
@@ -753,11 +822,11 @@
     sample.querySelector("[data-sample-note]").textContent=t.sampleNote;
     sample.querySelector("[data-sample-service-link]").textContent=t.sampleService;
 
-    applyBundle("#network-security-assessment-toolkit","networkAssessment","assessment",t);
-    applyBundle("#firewall-security-hardening-toolkit","firewallHardening","firewallGeneric",t);
-    applyBundle("#network-architecture-segmentation-toolkit","networkArchitecture","architecture",t);
-    applyBundle("#troubleshooting-diagnostics-toolkit","incidentDiagnostics","diagnostics",t);
-    applyBundle("#network-automation-compliance-toolkit","networkAutomation","automation",t);
+    applyBundle("#network-security-assessment-toolkit","assessment",t);
+    applyBundle("#firewall-security-hardening-toolkit","firewallGeneric",t);
+    applyBundle("#network-architecture-segmentation-toolkit","architecture",t);
+    applyBundle("#troubleshooting-diagnostics-toolkit","diagnostics",t);
+    applyBundle("#network-automation-compliance-toolkit","automation",t);
 
     const incident=q("#incident-response-toolkit");
     incident.querySelector(".tag:nth-child(1)").textContent=t.tags[0];incident.querySelector(".tag:nth-child(2)").textContent=t.tags[1];
@@ -765,8 +834,8 @@
     incident.querySelectorAll(".features li").forEach((el,i)=>el.textContent=t.features[i]);
     incident.querySelector(".status").textContent=t.type;incident.querySelector(".price").textContent=t.price;
     renderFrameworkBox(incident.querySelector(".notice"),t.incidentFrameworkLabel,t.incidentFrameworkText);
-    if(!LEMON_CHECKOUT_URLS.incidentResponse)incident.querySelector("[data-buy-key='incidentResponse']").textContent=t.pending;
-    incident.querySelector(".checkout-note").innerHTML=t.checkout+'<a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.';
+    incident.querySelector("[data-buy-key='incidentResponse']").textContent=t.pending;
+    incident.querySelector(".checkout-note").textContent=t.availabilityNote;
 
     const fortinet=q("#fortinet-hardening-toolkit");
     fortinet.querySelector(".tag:nth-child(1)").textContent=t.fortinetTags[0];fortinet.querySelector(".tag:nth-child(2)").textContent=t.fortinetTags[1];
@@ -774,8 +843,8 @@
     fortinet.querySelectorAll(".features li").forEach((el,i)=>el.textContent=t.fortinetFeatures[i]);
     fortinet.querySelector(".status").textContent=t.fortinetType;fortinet.querySelector(".price").textContent=t.fortinetPrice;
     renderFrameworkBox(fortinet.querySelector(".notice"),t.fortinetFrameworkLabel,t.fortinetFrameworkText);
-    if(!LEMON_CHECKOUT_URLS.fortinetHardening)fortinet.querySelector("[data-buy-key='fortinetHardening']").textContent=t.fortinetPending;
-    fortinet.querySelector(".checkout-note").innerHTML=t.checkout+'<a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.';
+    fortinet.querySelector("[data-buy-key='fortinetHardening']").textContent=t.fortinetPending;
+    fortinet.querySelector(".checkout-note").textContent=t.availabilityNote;
 
     const palo=q("#palo-alto-hardening-toolkit");
     palo.querySelector(".tag:nth-child(1)").textContent=t.paloTags[0];palo.querySelector(".tag:nth-child(2)").textContent=t.paloTags[1];
@@ -783,8 +852,8 @@
     palo.querySelectorAll(".features li").forEach((el,i)=>el.textContent=t.paloFeatures[i]);
     palo.querySelector(".status").textContent=t.paloType;palo.querySelector(".price").textContent=t.paloPrice;
     renderFrameworkBox(palo.querySelector(".notice"),t.paloFrameworkLabel,t.paloFrameworkText);
-    if(!LEMON_CHECKOUT_URLS.paloAltoHardening)palo.querySelector("[data-buy-key='paloAltoHardening']").textContent=t.paloPending;
-    palo.querySelector(".checkout-note").innerHTML=t.checkout+'<a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.';
+    palo.querySelector("[data-buy-key='paloAltoHardening']").textContent=t.paloPending;
+    palo.querySelector(".checkout-note").textContent=t.availabilityNote;
 
     const checkpoint=q("#check-point-hardening-toolkit");
     checkpoint.querySelector(".tag:nth-child(1)").textContent=t.checkpointTags[0];checkpoint.querySelector(".tag:nth-child(2)").textContent=t.checkpointTags[1];
@@ -792,39 +861,13 @@
     checkpoint.querySelectorAll(".features li").forEach((el,i)=>el.textContent=t.checkpointFeatures[i]);
     checkpoint.querySelector(".status").textContent=t.checkpointType;checkpoint.querySelector(".price").textContent=t.checkpointPrice;
     renderFrameworkBox(checkpoint.querySelector(".notice"),t.checkpointFrameworkLabel,t.checkpointFrameworkText);
-    if(!LEMON_CHECKOUT_URLS.checkPointHardening)checkpoint.querySelector("[data-buy-key='checkPointHardening']").textContent=t.checkpointPending;
-    checkpoint.querySelector(".checkout-note").innerHTML=t.checkout+'<a href="https://www.lemonsqueezy.com/" target="_blank" rel="noopener noreferrer">Lemon Squeezy</a>.';
+    checkpoint.querySelector("[data-buy-key='checkPointHardening']").textContent=t.checkpointPending;
+    checkpoint.querySelector(".checkout-note").textContent=t.availabilityNote;
 
     document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
     syncInternalLanguageLinks(lang);
   }
 
-  document.querySelectorAll("[data-buy-key]").forEach(buy=>{
-    const key=buy.dataset.buyKey;
-    const url=LEMON_CHECKOUT_URLS[key];
-    if(url){
-      buy.href=url;
-      buy.classList.remove("is-disabled","is-contact");
-      buy.classList.add("lemonsqueezy-button");
-      buy.removeAttribute("aria-disabled");
-      buy.target="_blank";
-      buy.rel="noopener noreferrer";
-    }else{
-      buy.href="contact.html";
-      buy.classList.remove("is-disabled","lemonsqueezy-button");
-      buy.classList.add("is-contact");
-      buy.removeAttribute("aria-disabled");
-      buy.removeAttribute("target");
-      buy.removeAttribute("rel");
-    }
-  });
-  // Do not contact the checkout provider until a product is available.
-  if(Object.values(LEMON_CHECKOUT_URLS).some(Boolean)){
-    const checkoutScript=document.createElement("script");
-    checkoutScript.src="https://app.lemonsqueezy.com/js/lemon.js";
-    checkoutScript.onload=()=>window.createLemonSqueezy?.();
-    document.head.append(checkoutScript);
-  }
   document.querySelectorAll(".lang-switch button").forEach(b=>b.addEventListener("click",()=>{
           apply(b.dataset.lang);
   }));
@@ -836,9 +879,9 @@
     if(!id)return;
     const target=document.getElementById(id);
     if(!target)return;
-    let option=target.closest("details.product-option");
-    while(option){option.open=true;option=option.parentElement?.closest("details.product-option");}
-    if(target.closest(".product-family"))requestAnimationFrame(()=>target.scrollIntoView({block:"start"}));
+    let option=target.closest("details");
+    while(option){option.open=true;option=option.parentElement?.closest("details");}
+    if(target.closest(".product-family")||target.id==="network-security-assessment-sample")requestAnimationFrame(()=>target.scrollIntoView({block:"start"}));
   }
   window.addEventListener("hashchange",revealCatalogAnchor);
   revealCatalogAnchor();
