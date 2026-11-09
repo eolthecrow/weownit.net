@@ -21,7 +21,7 @@ npx wrangler secret put RESEND_RECOVERY_API_KEY --config ./wrangler.jsonc
 
 Introdu cheia la prompt. Secretul este separat de configurația newsletterului; accesul acelui Worker nu îl partajează automat.
 
-3. Nu rula deploymentul până la verificarea identității resurselor, restaurării și aprobarea explicită. `npm run deploy:catalog` aplică migrări D1 remote înainte de a publica Worker-ul; consultă [planul și manifestul de rollback](PR45_SANDBOX_E2E_PLAN.md). Păstrează D1 și R2 private și nu șterge tabelele sau datele de plată. Dezactivarea recuperării necesită o schimbare de configurație și deployment autorizate; poate afecta clienții sandbox existenți.
+3. Nu rula deploymentul până la verificarea identității resurselor, restaurării și aprobarea explicită. `npm run deploy:catalog` face doar verificări locale; consultă [planul și manifestul de rollback](PR45_SANDBOX_E2E_PLAN.md). Păstrează D1 și R2 private și nu șterge tabelele sau datele de plată. Dezactivarea recuperării necesită o schimbare de configurație și deployment autorizate; poate afecta clienții sandbox existenți.
 
 ## Test manual cu o adresă de email pe care o controlezi
 

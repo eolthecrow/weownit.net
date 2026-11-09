@@ -1,5 +1,8 @@
 # Work-mode handoff — weownit-payments sandbox deployment
 
+> Current release guard: `npm run deploy:catalog` performs only local tests and
+> a dry-run. It does not run migrations or deploy. See [RELEASE_GO_NO_GO.md](RELEASE_GO_NO_GO.md).
+
 Date: 2026-10-21. Repo: `eolthecrow/weownit.net`.
 Draft PR: https://github.com/eolthecrow/weownit.net/pull/22
 Branch: `feature/r2-preventive-limits-20261021`

@@ -135,9 +135,23 @@ export async function publicSandboxCatalog(request, env) {
 // Explicit client injection is for tests; no request input controls SDK clients.
 export async function handleCatalog(request, env, { stripeClient } = {}) {
   const denied = await adminAuthError(request, env); if (denied) return denied;
+  const url = new URL(request.url);
+  if (url.pathname === "/admin/api/stripe-identity") {
+    if (request.method !== "GET") return respond({ error: "Method not allowed" }, 405);
+    if (!/^(sk|rk)_test_[A-Za-z0-9]+$/.test(env?.STRIPE_SECRET_KEY || "")) {
+      return respond({ error: "Test Stripe key unavailable" }, 503);
+    }
+    try {
+      const stripe = stripeClient || createStripeClient(env.STRIPE_SECRET_KEY);
+      const account = await stripe.accounts.retrieveCurrent();
+      if (account?.object !== "account" || !/^acct_[A-Za-z0-9]+$/.test(account.id || "")) throw Error("Invalid account response");
+      return respond({ account_id: account.id, key_mode: "test", matches: account.id === "acct_1UPSRSGt8pl3xCih" });
+    } catch {
+      return respond({ error: "Stripe identity unavailable" }, 503);
+    }
+  }
   if (!env?.R2_BUDGET_DB?.prepare) return respond({ error: "Baza catalogului nu este configurată." }, 503);
   const db = env.R2_BUDGET_DB;
-  const url = new URL(request.url);
   const root = "/admin/api/";
   const route = url.pathname.slice(root.length);
   const cursor = url.searchParams.get("cursor");

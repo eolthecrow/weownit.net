@@ -10,7 +10,7 @@ export function validateTarget(config) {
   if (config?.name !== "weownit-payments" || config.main !== "src/index.js" ||
       config.route || config.routes?.length || config.assets || config.site ||
       database?.database_name !== "weownit_r2_budget" ||
-      !/^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(database.database_id || "") ||
+      database.database_id !== "40ee9ad6-6f48-40bc-94a3-530c8d1260f1" ||
       bucket?.bucket_name !== "weownit-toolkits") {
     throw Error("Configurația trebuie să vizeze exclusiv Worker-ul weownit-payments, fără rute către site, cu binding-urile și UUID-ul D1 configurate.");
   }
@@ -40,25 +40,11 @@ function main() {
     if (result.error || result.status !== 0) throw Error("Pas oprit: " + command + " " + args.join(" ") + ". Rezolvă eroarea de mai sus înainte să reîncerci.");
     return result.stdout;
   }
-  console.log("Instalare catalog sandbox: teste, verificare build, migrări D1 și deployment separat.");
+  console.log("Verificare locală catalog sandbox: teste și build. Nu se aplică migrări și nu se publică Worker-ul.");
   run("npm", ["test"]);
   run("npm", ["run", "test:integration"]);
   run("npx", ["wrangler", "deploy", "--dry-run", "--config", "./wrangler.jsonc"]);
-  for (const file of ["r2-guard-schema.sql", "stripe-test-schema.sql", "product-catalog-schema.sql", "sandbox-admin-upload-schema.sql"]) {
-    run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./" + file, "--config", "./wrangler.jsonc"]);
-  }
-  const columns = JSON.parse(run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote",
-    "--command", "PRAGMA table_info(stripe_test_purchases)", "--json", "--config", "./wrangler.jsonc"], true));
-  if (quantityMigrationRequired(columns)) {
-    run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./stripe-quantity-schema.sql", "--config", "./wrangler.jsonc"]);
-    const migrated = JSON.parse(run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote",
-      "--command", "PRAGMA table_info(stripe_test_purchases)", "--json", "--config", "./wrangler.jsonc"], true));
-    if (quantityMigrationRequired(migrated)) throw Error("Migrarea cantității nu a fost aplicată; deployment oprit.");
-  }
-  run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./sandbox-delivery-schema.sql", "--config", "./wrangler.jsonc"]);
-  run("npx", ["wrangler", "d1", "execute", "weownit_r2_budget", "--remote", "--file", "./sandbox-admin-management-schema.sql", "--config", "./wrangler.jsonc"]);
-  run("npx", ["wrangler", "deploy", "--config", "./wrangler.jsonc"]);
-  console.log("După deployment, deschide URL-ul Worker-ului urmat de /admin. Autentificarea necesită tokenul administrativ.");
+  console.log("Pentru migrări și activare separate consultă RELEASE_GO_NO_GO.md; fiecare necesită aprobare explicită.");
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

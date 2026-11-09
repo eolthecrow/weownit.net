@@ -4,7 +4,7 @@ Catalogul se administrează în browser, la `/admin` pe Worker-ul separat.
 Nu mai modifici codul, Price ID-ul sau moneda în Wrangler pentru fiecare produs.
 Versiunea de bază este în PR #22; încărcarea ZIP este în Draft PR #44. Funcțiile suplimentare Stripe Product/Price, Draft/Published, preview și revocări sunt în branch-ul de dezvoltare `feature/admin-full-catalog-20261106`. **Nu sunt instalate pe Cloudflare.**
 
-**Stop înainte de producție:** Nu rula `deploy:catalog`, nu face merge în `main`, nu activa Stripe Live și nu modifica Store-ul public până după validarea CI, verificări sandbox și o aprobare de lansare separată. Comenzile de mai jos sunt documentate pentru acel moment, nu pentru executare acum.
+**Stop înainte de producție:** Nu face merge în `main`, nu activa Stripe Live și nu modifica Store-ul public. Migrările și activarea necesită aprobări separate după validarea CI și verificările sandbox.
 
 ## Instalare inițială în WSL
 
@@ -12,21 +12,15 @@ Din directorul existent `weownit-payments-sandbox/payments`:
 
 ```bash
 git status --short
-git fetch origin feature/admin-full-catalog-20261106
-git merge --ff-only origin/feature/admin-full-catalog-20261106
-npm ci
 npm run deploy:catalog
 ```
 
 Dacă există modificări locale și Git refuză actualizarea, nu le suprascrie.
 Fișierul local ignorat `wrangler.jsonc` cu UUID-ul D1 este păstrat.
 
-`deploy:catalog` validează că ținta este exclusiv `weownit-payments`, rulează
-testele unitare și de integrare, verifică construirea, aplică schemele D1 additive, adaugă coloana `quantity` dacă lipsește din registrul de plăți, creează tabelul aditiv `sandbox_admin_upload_budget` și
-publică Worker-ul. Verificarea coloanei permite repetarea instalării fără a
-reseta plățile. Nu face merge sau modificări la site-ul public.
-Are nevoie de autentificarea Wrangler deja configurată; dacă aceasta a expirat,
-rulează `npx wrangler login` înainte. Scriptul se oprește la primul pas eșuat.
+`deploy:catalog` validează ținta și rulează doar teste locale și un build dry-run.
+Nu aplică migrări și nu publică Worker-ul. Migrările și activarea sunt operațiuni
+separate care necesită aprobare explicită; consultă [RELEASE_GO_NO_GO.md](RELEASE_GO_NO_GO.md).
 
 Schema păstrează produsul existent de test, la prețul de 10 RON:
 `price_1UPpuVGt8pl3xCihZrxwZEnZ` →

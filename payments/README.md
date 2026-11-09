@@ -9,7 +9,7 @@ Acest director conține Worker-ul separat `weownit-payments`. Nu modifică site-
 - `GET /health`: confirmă că Worker-ul răspunde; nu citește R2.
 - `POST /admin/probe`: necesită token secret și verifică prin R2 HEAD existența `products/network-security-assessment-test.zip`. Returnează doar metadate, niciodată conținutul ZIP.
 - `POST /stripe/webhook`: cod pregătit pentru notificări Stripe semnate, exclusiv sandbox, și registru de plăți D1. Dezactivat până la configurare. Vezi [STRIPE_SANDBOX_SETUP.md](STRIPE_SANDBOX_SETUP.md).
-- Checkout cu un singur produs și 1–3 unități: verifică subtotalul din Stripe și salvează cantitatea în D1. La actualizarea unui deployment existent, folosește `npm run deploy:catalog` pentru migrarea condiționată a coloanei `quantity`.
+- Checkout cu un singur produs și 1–3 unități: verifică subtotalul din Stripe și salvează cantitatea în D1. `npm run deploy:catalog` face doar verificări locale; migrarea condiționată `quantity` necesită aprobare separată.
 - Nu există acces neautorizat la ZIP sau plăți live. Registrul remote a fost confirmat prin rezultatul D1 furnizat de utilizator pentru 2 unități / 20 RON; utilizatorul raportează și verificarea cantității 3. Noua livrare legată de browser este pregătită în sursă și încă necesită deployment și verificări manuale.
 - Operațiunile R2 efectuate de acest Worker sunt refuzate dacă D1 nu poate confirma rezerva.
 

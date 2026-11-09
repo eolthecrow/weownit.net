@@ -64,10 +64,9 @@ permite aceste operațiuni, dacă este încă validă.
 npm run deploy:catalog
 ```
 
-Scriptul verifică ținta `weownit-payments`, rulează testele backend și build-ul,
-aplică schemele existente, migrarea condiționată `quantity` și noua schemă
-`sandbox-delivery-schema.sql`, apoi publică Worker-ul. Migrarea este aditivă și
-repetabilă: nu resetează achizițiile, catalogul, tokenurile sau contoarele R2.
+Scriptul verifică ținta `weownit-payments`, rulează testele backend și build-ul
+dry-run; nu aplică migrări și nu publică Worker-ul. Migrările și activarea
+necesită aprobări separate; vezi [RELEASE_GO_NO_GO.md](RELEASE_GO_NO_GO.md).
 
 În `/health` trebuie să apară:
 

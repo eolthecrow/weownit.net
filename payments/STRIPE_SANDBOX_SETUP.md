@@ -46,10 +46,10 @@ charges. Subscriptions, variable prices, multi-product carts and zero-total
 orders remain unsupported. Snapshot receipts preserve the original catalog
 mapping and the quantity returned by the Stripe API.
 
-For an existing deployment, run `npm run deploy:catalog` after pulling this
-revision. It checks the remote ledger schema and adds `quantity` only when
-missing. Older receipts become quantity 1, matching the previous one-unit rule.
-Do not deploy the new webhook over an old ledger without this migration.
+`npm run deploy:catalog` performs local tests and a dry-run only. Before a
+separately approved migration, inspect the remote schema and add `quantity`
+only if missing. Older receipts become quantity 1. Do not deploy the new webhook
+over an old ledger without the required migration; see [RELEASE_GO_NO_GO.md](RELEASE_GO_NO_GO.md).
 
 The only required webhook variable in the existing local `wrangler.jsonc` is:
 
