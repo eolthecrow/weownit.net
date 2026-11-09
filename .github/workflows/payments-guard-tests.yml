@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - feature/r2-preventive-limits-20261021
+      - feature/pr45-release-guards
     paths:
       - "payments/**"
       - ".github/workflows/payments-guard-tests.yml"
@@ -41,6 +42,32 @@ jobs:
         run: npm run test:integration
         env:
           WRANGLER_SEND_METRICS: "false"
+  release-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    defaults:
+      run:
+        working-directory: payments
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install locked local test runtime
+        run: npm ci
+      - name: Verify emergency Worker behavior
+        run: npm run test:emergency
+      - name: Rehearse D1 migrations with synthetic SQLite data
+        run: python3 test/migration-rehearsal.py
+      - name: Dry-run candidate Worker bundle (local-only config)
+        run: npx wrangler deploy --dry-run --config test/wrangler.local.jsonc
+        env:
+          WRANGLER_SEND_METRICS: "false"
+      - name: Dry-run emergency Worker bundle (local-only config)
+        run: npx wrangler deploy --dry-run --config test/wrangler.emergency.local.jsonc
+        env:
+          WRANGLER_SEND_METRICS: "false"
+
   admin-browser:
     runs-on: ubuntu-latest
     timeout-minutes: 10
