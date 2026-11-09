@@ -66,7 +66,9 @@ never use a dirty tree for a release.
 - **FAIL, old rollback target:** version
   `43ed0ce7-53b7-46d4-a06b-b3facc711002` ignores
   `sandbox_delivery_blocks`; never activate it after candidate revocations.
-  A block-aware target or the verified emergency deny version must be used.
+  The local guard in [SAFE_RECOVERY.md](SAFE_RECOVERY.md) denies it and uses an
+  empty-by-default manifest allowlist; no real recovery target has been enrolled
+  or remotely rehearsed. A privileged operator can bypass the guard directly.
 - **UNKNOWN:** final billable usage. Owner previously reported Workers Free and
   R2 Paid active with $0 displayed; Cloudflare billing endpoints returned 403.
   R2 analytics on 2026-11-09 showed 44 account operations this month, but are
@@ -94,18 +96,11 @@ npx --no-install wrangler versions upload --config /tmp/weownit-pr45-guards/emer
 npx --no-install wrangler deployments status --config /tmp/weownit-pr45-guards/baseline.json
 ```
 
-Record the current baseline and uploaded emergency version IDs; confirm the
-inactive upload did not change the serving version and preview remains off.
-Use the private service-binding probe `/tmp/weownit-pr45-guards/probe.mjs`
-in baseline mode. After verification, activate the recorded emergency ID with
-`wrangler versions deploy <EMERGENCY_VERSION_ID>@100% --config
-/tmp/weownit-pr45-guards/emergency.json`, run the probe in emergency mode,
-and roll back to the recorded **block-aware baseline** with `wrangler rollback
-<BASELINE_VERSION_ID> --config /tmp/weownit-pr45-guards/baseline.json`.
-Run the baseline probe again and verify revoked-session denial, D1 identity,
-synthetic secret and data. Do not use the old serving version as a target.
-Preserve synthetic records and R2 objects; clean up only resources explicitly
-approved for cleanup.
+The precise activation, restoration and private-probe evidence is recorded in
+[PR45_STAGE3_EVIDENCE.md](PR45_STAGE3_EVIDENCE.md); it applies only to that
+synthetic Worker and is not an authorization or procedure for the existing
+payments Worker. Use [SAFE_RECOVERY.md](SAFE_RECOVERY.md) for any separately
+approved actual-Worker recovery. Preserve synthetic records and R2 objects.
 
 ## Existing Worker and incident procedure
 
@@ -125,6 +120,6 @@ review each additive migration including the conditional quantity ALTER; and
 obtain separate approval for migrations and activation. A rollback leaves
 schema and event records intact. During an incident, stop testing, activate a
 previously rehearsed emergency fail-closed version only with explicit approval,
-reconcile webhook retries and revocations, then restore a verified block-aware
-version. Do not restore D1 or delete purchases, grants, blocks, recovery records
+reconcile webhook retries and revocations, then use the guarded procedure to
+restore a verified block-aware version. Do not restore D1 or delete purchases, grants, blocks, recovery records
 or R2 objects. Existing response streams cannot be recalled.

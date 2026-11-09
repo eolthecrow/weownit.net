@@ -36,19 +36,40 @@ Record the resulting version, URL, bindings and routes. Verify `GET /health` and
 
 This is a future incident procedure, requiring explicit approval for the exact target and version. Before activation, record the current serving version, routes, workers.dev setting, bindings, secret **names only**, Stripe endpoint, flags, D1 bookmark and R2 recovery operator. Confirm that the isolated rehearsal succeeded and that the deployment will not create routes or alter public Store routing. This minimal config declares no bindings; confirm the platform's treatment of existing secrets, bindings and triggers, and the restoration procedure before relying on it. Do not display or copy secret values. Establish how to restore all required configuration and secrets, and pause if that is uncertain.
 
-After approval and after verifying the account, reviewed commit and build hash, the following command targets the existing Worker, **not** the rehearsal Worker:
+After approval, use the guarded recovery procedure below. The emergency version
+must already be uploaded and independently verified; the guard never uploads a
+version or changes D1. The shipped allowlist is empty, so it refuses all real
+targets until an operator has reviewed and enrolled an exact manifest.
 
 ```sh
-npx --no-install wrangler deploy --config wrangler.emergency.jsonc --name weownit-payments
+node scripts/safe-recovery.mjs EMERGENCY --manifest /secure/path/emergency.json
+node scripts/safe-recovery.mjs EMERGENCY --manifest /secure/path/emergency.json --execute
 ```
 
-Record the deployed version and recheck health and denial on every route, including webhook. This is an outage: Stripe receives 503 and may retry only within its retry window. Monitor and reconcile pending or expired test events from Stripe against the preserved D1 ledger before resuming. Do not restore D1, delete data, or acknowledge unprocessed events as successful.
+The first command checks without activation; the second performs the separately
+approved 100% activation. Both need the approved manifest, fixed allowlist,
+current expected deployment ID and Cloudflare API token. See
+[SAFE_RECOVERY.md](SAFE_RECOVERY.md) before enrollment or execution. Record the
+deployed version and recheck health and denial on every route, including webhook.
+This is an outage: Stripe receives 503 and may retry only within its retry
+window. Reconcile pending or expired test events before resuming.
 
 ## Recovery from emergency mode
 
 Keep the emergency version active until a reviewed block-aware version, its exact configuration and secret availability are proven. The historical serving version `43ed0ce7-53b7-46d4-a06b-b3facc711002` is **not** a safe delivery-enabled target: it lacks the block-table check. Verify that the chosen version exists, can be redeployed, checks blocks before and after ticket issuance and through recovery, and is compatible with the retained schema. Reconcile Stripe test events and revocations first.
 
-After explicit approval for the verified target, use `npx --no-install wrangler rollback <VERIFIED_BLOCK_AWARE_VERSION_ID> --name weownit-payments`, then verify the actual serving version, all bindings and flags, access denial for revoked sessions and webhook reconciliation. Do not substitute the historical version above. If any prerequisite is uncertain, remain in emergency mode.
+After explicit approval for the verified target, use the guarded procedure:
+
+```sh
+node scripts/safe-recovery.mjs RESTORE --manifest /secure/path/restore.json --evidence /secure/path/review-record
+node scripts/safe-recovery.mjs RESTORE --manifest /secure/path/restore.json --evidence /secure/path/review-record --execute
+```
+
+Verify actual serving version, bindings, flags, revoked-session denial and
+webhook reconciliation. If any prerequisite is uncertain, remain in emergency
+mode. A privileged operator can bypass this script with direct Cloudflare or
+Wrangler access: restrict deployment permissions and use an audited break-glass
+procedure with independent review.
 
 ## Future Stripe test verification
 

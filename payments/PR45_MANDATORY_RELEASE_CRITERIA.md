@@ -101,11 +101,11 @@ from Sandbox tests or technical readiness.
 
 ## Security control gap identified during this review
 
-The incident runbook instructs the operator to select a verified block-aware
-version, but its generic `wrangler rollback <VERIFIED_BLOCK_AWARE_VERSION_ID>`
-command does not itself reject the known unsafe old version. Version-specific
-read-only inspection of `43ed0ce7-53b7-46d4-a06b-b3facc711002` found zero
-`sandbox_delivery_blocks` references. If an operator chooses that old version
-after a pre-ticket block exists, the rollback can remove enforcement. There is
-no evidence that this unsafe rollback occurred; an enforceable target guard or
-equivalent verified procedure remains required by criterion 6 above.
+The original runbook's generic rollback command did not technically reject the
+known unsafe old version. The local guarded procedure now denies that version
+and all targets not enrolled by exact approved-manifest digest; see
+[SAFE_RECOVERY.md](SAFE_RECOVERY.md). Its policy is intentionally empty and no
+real recovery target is yet approved. A privileged operator can still bypass
+the guard directly, and the procedure has not been remotely rehearsed; verified
+target enrollment, restricted permissions and an audited break-glass procedure
+remain required by criterion 6 above. No unsafe rollback was observed.

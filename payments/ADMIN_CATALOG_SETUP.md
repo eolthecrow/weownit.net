@@ -118,7 +118,7 @@ istoricul; nu trebuie să deschizi lista produselor șterse.
 - **Publish · staging** marchează produsul ca pregătit pentru catalogul sandbox. Se verifică din nou Price-ul Stripe și existența ZIP-ului. **Unpublish** îl readuce în Draft. Orice modificare, arhivare ori restaurare reface Draft-ul automat.
 - `GET /sandbox/catalog` este o interfață de citire cu date publice minime (ID, titlu, monedă, sumă). **Returnează 404 implicit**: trebuie activat explicit `SANDBOX_PUBLIC_CATALOG_ENABLED=true` în Worker-ul sandbox. Când e activ, doar produsele Published pot iniția checkout-uri sandbox noi; Store-ul real nu folosește încă această rută.
 - Panoul **Livrări de test și descărcări** afișează până la 50 de plăți sandbox recente. **Revocă descărcarea** blochează ireversibil sesiunea de test, inclusiv când tichetul nu a fost generat încă; nu emite refund în Stripe. Registrul și datele din R2 se păstrează.
-- Migrarea aditivă `sandbox-admin-management-schema.sql` păstrează catalogul, plățile și contoarele existente. În caz de rollback, dezactivează mai întâi `SANDBOX_PUBLIC_CATALOG_ENABLED`, apoi revino la versiunea Worker anterioară; nu șterge tabelele sau fișierele R2.
+- Migrarea aditivă `sandbox-admin-management-schema.sql` păstrează catalogul, plățile și contoarele existente. În caz de incident, folosește numai procedura aprobată din [SAFE_RECOVERY.md](SAFE_RECOVERY.md); nu reveni automat la versiunea anterioară și nu șterge tabelele sau fișierele R2.
 
 ## Ce rămâne separat
 

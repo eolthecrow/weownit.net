@@ -66,8 +66,7 @@ are sent in POST bodies and hashed in D1. Card/email data is not written to D1.
 
 ## Next action and revert
 
-Follow `SANDBOX_DELIVERY_SETUP.md`: enable the sandbox flag, apply additive
-schemas with the guarded deploy helper and use the new test-purchase page.
-Manual verification can follow installation as requested. Keep PR Draft/unmerged.
-For immediate shutdown, disable `SANDBOX_FULFILLMENT_ENABLED` and deploy. For a
-source rollback, restore the baseline commit above; additive tables/view may remain.
+Follow `RELEASE_GO_NO_GO.md` and `SAFE_RECOVERY.md` for separately approved
+changes. The deployment helper no longer applies schema or activates code.
+Never restore the historic baseline merely because it predates the candidate:
+it may fail to enforce revocations. Preserve all purchase and R2 history.
