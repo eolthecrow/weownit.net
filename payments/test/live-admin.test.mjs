@@ -100,6 +100,48 @@ test("LIVE dashboard explains missing Stripe account-read permission without lea
   } finally { await platform.dispose(); }
 });
 
+test("LIVE admin suggests fresh official EUR/USD rates without Stripe access or any writes", async () => {
+  const { platform, env, stripe, calls } = await context();
+  let fetchCount = 0;
+  const date = new Date().toISOString().slice(0, 10);
+  const xml = `<?xml version="1.0"?><gesmes:Envelope><Cube><Cube time='${date}'>
+    <Cube currency='USD' rate='1.1214'/><Cube currency='RON' rate='5.3442'/></Cube></Cube></gesmes:Envelope>`;
+  const fxFetch = async (url, opts) => {
+    fetchCount++;
+    assert.equal(url, "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml");
+    assert.equal(opts.method, "GET");
+    return new Response(xml, { status: 200 });
+  };
+  try {
+    // FX suggestions remain read-only and usable even while the LIVE Stripe key is not valid.
+    const noKey = { ...env, STRIPE_LIVE_SECRET_KEY: "sk_test_invalid" };
+    const result = await handleLiveRequest(request("/admin/api/fx-reference"), noKey, { stripeClient: stripe, fxFetch });
+    assert.equal(result.status, 200);
+    assert.deepEqual(await result.json(), { source: "Banca Centrală Europeană (BCE)", date,
+      eur_ron: 5.3442, eur_usd: 1.1214, indicative_only: true });
+    assert.equal(fetchCount, 1);
+    assert.deepEqual(calls, [], "exchange rate lookup never calls Stripe");
+    assert.equal((await handleLiveRequest(request("/admin/api/fx-reference", "POST", {}), env,
+      { fxFetch })).status, 405);
+    assert.equal(fetchCount, 1);
+    assert.equal((await handleLiveRequest(request("/admin/api/fx-reference"),
+      { ...env, LIVE_ADMIN_ENABLED: "false" }, { fxFetch })).status, 503);
+    assert.equal(fetchCount, 1);
+    assert.equal((await handleLiveRequest(new Request(base + "/admin/api/fx-reference"), env,
+      { fxFetch })).status, 401);
+    assert.equal(fetchCount, 1);
+    const staleXml = xml.replace(date, "2020-01-01");
+    const stale = await handleLiveRequest(request("/admin/api/fx-reference"), env,
+      { fxFetch: async () => new Response(staleXml) });
+    assert.equal(stale.status, 503);
+    assert.match((await stale.json()).error, /completa manual/);
+    const unavailable = await handleLiveRequest(request("/admin/api/fx-reference"), env,
+      { fxFetch: async () => { throw Error("do not leak internal response"); } });
+    assert.equal(unavailable.status, 503);
+    assert.doesNotMatch(await unavailable.text(), /internal response/);
+  } finally { await platform.dispose(); }
+});
+
 test("LIVE admin can review paid orders and permanently revoke delivery without refunding a Stripe payment", async () => {
   const { platform, env, db, stripe } = await context();
   const session = "cs_live_adminfixture1";
@@ -243,6 +285,10 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     const liveScript = await (await handleLiveRequest(request("/admin/app.js"), env)).text();
     assert.match(html, /id="newStripeEur"/);
     assert.match(html, /id="newStripeUsd"/);
+    assert.match(html, /id="suggestFx"/);
+    assert.match(html, /id="fxRateInfo"/);
+    assert.match(liveScript, /fx-reference/);
+    assert.match(liveScript, /Am propus prețurile EUR și USD/);
     assert.match(html, /<select id="priceSelect">/);
     assert.match(html, /<select id="fileSelect">/);
     assert.doesNotMatch(html, /<select id="priceSelect" required>/);
@@ -254,6 +300,7 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(liveScript, /checkout\.weownit\.net/);
     const sandboxHtml = await adminAsset("/admin").text();
     assert.doesNotMatch(sandboxHtml, /id="newStripeEur"/);
+    assert.doesNotMatch(sandboxHtml, /id="suggestFx"/);
     assert.match(sandboxHtml, /<select id="priceSelect" required>/);
     assert.match(sandboxHtml, /<select id="fileSelect" required>/);
     const sandboxScript = await adminAsset("/admin/app.js").text();
