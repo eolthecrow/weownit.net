@@ -142,6 +142,21 @@ test("LIVE admin suggests fresh official EUR/USD rates without Stripe access or 
   } finally { await platform.dispose(); }
 });
 
+test("LIVE admin converts each source currency into the other two with cent rounding and bounds", async () => {
+  const script = await (await adminAsset("/admin/app.js", { live: true })).text();
+  const start = script.indexOf("  function convertPrice(source, minor, rates) {");
+  const end = script.indexOf("  function wireCurrencyInputs(", start);
+  assert.ok(start > 0 && end > start, "currency function is included in the served LIVE script");
+  // Evaluate only the pure calculator from the actual browser script, not a copy of its formula.
+  const calculate = new Function(script.slice(start, end) + "\nreturn convertPrice;")();
+  const rate = { eur_ron: 5, eur_usd: 1.2 };
+  assert.deepEqual(calculate("ron", 10000, rate), { ron: 10000, eur: 2000, usd: 2400 });
+  assert.deepEqual(calculate("eur", 2000, rate), { ron: 10000, eur: 2000, usd: 2400 });
+  assert.deepEqual(calculate("usd", 2400, rate), { ron: 10000, eur: 2000, usd: 2400 });
+  assert.deepEqual(calculate("usd", 7300, rate), { ron: 30417, eur: 6083, usd: 7300 });
+  assert.throws(() => calculate("usd", 200, rate), /limitele/);
+});
+
 test("LIVE admin can review paid orders and permanently revoke delivery without refunding a Stripe payment", async () => {
   const { platform, env, db, stripe } = await context();
   const session = "cs_live_adminfixture1";
@@ -283,12 +298,16 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(html, /Creează produs și preț LIVE/);
     assert.doesNotMatch(html, /Mediu de test/);
     const liveScript = await (await handleLiveRequest(request("/admin/app.js"), env)).text();
+    assert.doesNotThrow(() => new Function(liveScript), "LIVE browser script parses");
     assert.match(html, /id="newStripeEur"/);
     assert.match(html, /id="newStripeUsd"/);
+    assert.match(html, /id="autoFxCreate" type="checkbox" checked/);
     assert.match(html, /id="suggestFx"/);
     assert.match(html, /id="fxRateInfo"/);
     assert.match(liveScript, /fx-reference/);
-    assert.match(liveScript, /Am propus prețurile EUR și USD/);
+    assert.match(liveScript, /Conversie automată RON \/ EUR \/ USD/);
+    assert.match(liveScript, /Se verifică ultimul curs disponibil al BCE/);
+    assert.match(liveScript, /price-change-editor/);
     assert.match(html, /<select id="priceSelect">/);
     assert.match(html, /<select id="fileSelect">/);
     assert.doesNotMatch(html, /<select id="priceSelect" required>/);
@@ -301,6 +320,7 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     const sandboxHtml = await adminAsset("/admin").text();
     assert.doesNotMatch(sandboxHtml, /id="newStripeEur"/);
     assert.doesNotMatch(sandboxHtml, /id="suggestFx"/);
+    assert.doesNotMatch(sandboxHtml, /id="autoFxCreate"/);
     assert.match(sandboxHtml, /<select id="priceSelect" required>/);
     assert.match(sandboxHtml, /<select id="fileSelect" required>/);
     const sandboxScript = await adminAsset("/admin/app.js").text();
