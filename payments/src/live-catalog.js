@@ -12,6 +12,7 @@ const ROW_ID = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
 const LIVE_KEY = /^(sk|rk)_live_[A-Za-z0-9]+$/;
 const REQUEST_ID = ROW_ID;
 const MAX_PRICE = 99_999_999;
+const ECB_DAILY_RATES = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-daily.xml";
 class Invalid extends Error {
   constructor(message, status = 400) { super(message); this.status = status; }
 }
@@ -148,6 +149,33 @@ function canWrite(env) {
   if (env.LIVE_ADMIN_WRITES_ENABLED !== "true") throw new Invalid("Modificările LIVE sunt dezactivate.", 403);
 }
 
+// ECB quotes both RON and USD against EUR. This is a read-only, indicative
+// suggestion for the owner; the admin confirms fixed Stripe amounts separately.
+async function fxReference(fetchRates) {
+  try {
+    const response = await fetchRates(ECB_DAILY_RATES, {
+      method: "GET", headers: { Accept: "application/xml, text/xml" },
+      signal: AbortSignal.timeout(5_000),
+    });
+    if (!response.ok) throw Error("ECB unavailable");
+    const xml = await response.text();
+    if (xml.length > 40_000) throw Error("ECB response too large");
+    const date = xml.match(/<Cube\s+time=['"](\d{4}-\d{2}-\d{2})['"]\s*>/i)?.[1];
+    const rates = {};
+    for (const [, currency, rate] of xml.matchAll(/<Cube\s+currency=['"](RON|USD)['"]\s+rate=['"]([0-9]+(?:\.[0-9]+)?)['"]\s*\/?\s*>/gi)) {
+      rates[currency.toUpperCase()] = Number(rate);
+    }
+    const age = Date.now() - Date.parse(date + "T00:00:00Z");
+    if (!date || !Number.isFinite(age) || age < -86_400_000 || age > 7 * 86_400_000 ||
+        !Number.isFinite(rates.RON) || rates.RON <= 0 ||
+        !Number.isFinite(rates.USD) || rates.USD <= 0) throw Error("ECB rates invalid or stale");
+    return respond({ source: "Banca Centrală Europeană (BCE)", date,
+      eur_ron: rates.RON, eur_usd: rates.USD, indicative_only: true });
+  } catch {
+    return respond({ error: "Cursul BCE nu este disponibil sau este prea vechi. Poți completa manual EUR și USD." }, 503);
+  }
+}
+
 // Public display metadata only; off by default until Store and paid fulfillment
 // are separately implemented and verified. Never returns R2 keys or credentials.
 export async function publicLiveCatalog(request, env) {
@@ -162,8 +190,15 @@ export async function publicLiveCatalog(request, env) {
   } catch { return respond({ error: "Unavailable" }, 503); }
 }
 
-export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
+export async function handleLiveCatalog(request, env, { stripeClient, fxFetch = fetch } = {}) {
   const denied = await adminAuthError(request, env); if (denied) return denied;
+  const route = new URL(request.url).pathname.slice("/admin/api/".length);
+  if (route === "fx-reference") {
+    if (request.method !== "GET") return respond({ error: "Metodă nepermisă." }, 405);
+    if (env?.LIVE_ADMIN_ENABLED !== "true") return respond({ error: "Administrarea LIVE este dezactivată." }, 503);
+    // An invalid Stripe key must not prevent the owner viewing exchange rates.
+    return fxReference(fxFetch);
+  }
   if (env?.LIVE_ADMIN_ENABLED !== "true" || !env?.LIVE_CATALOG_DB?.prepare ||
       !env?.LIVE_TOOLKITS_R2?.head || !env?.LIVE_EXPECTED_ACCOUNT_ID?.match(/^acct_[A-Za-z0-9]+$/) ||
       !LIVE_KEY.test(env?.STRIPE_LIVE_SECRET_KEY || "")) {
@@ -171,7 +206,6 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
   }
   const db = env.LIVE_CATALOG_DB;
   const path = new URL(request.url).pathname;
-  const route = path.slice("/admin/api/".length);
   const cursor = new URL(request.url).searchParams.get("cursor");
   const stripe = stripeClient || createStripeClient(env.STRIPE_LIVE_SECRET_KEY);
   async function identity() {
