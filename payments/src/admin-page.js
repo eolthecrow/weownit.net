@@ -51,7 +51,7 @@ export const ADMIN_CSS = String.raw`
 main{max-width:1160px;margin:auto;padding:28px 28px 12px}header{display:flex;align-items:center;gap:14px;padding:0 0 36px}.brand{font-size:22px;font-weight:750;letter-spacing:-1px;color:var(--ink);text-decoration:none}.badge{font-size:11px;letter-spacing:.09em;text-transform:uppercase;background:#e1eee7;border:1px solid #c4dbcd;border-radius:20px;padding:3px 9px}
 h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1.5px;margin:4px 0 14px}h2{font-size:19px;letter-spacing:-.4px;margin:0 0 16px}p{margin:0 0 16px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--muted);margin-bottom:8px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:25px}.login{max-width:520px;margin:20px auto 70px}.heading{display:flex;align-items:center;justify-content:space-between;gap:18px}.heading button{flex-shrink:0}.notice{padding:12px 15px;border-left:3px solid #79a18b;background:#eaf1eb;color:#354e44;font-size:13px}.workspace{display:grid;grid-template-columns:minmax(290px, .85fr) minmax(0,1.15fr);align-items:start;gap:22px}label{display:block;font-size:13px;font-weight:650;margin:18px 0 7px}input,select,button{font:inherit}input:not([type=checkbox]),select{width:100%;border:1px solid #b9cbc2;border-radius:6px;background:#fff;color:var(--ink);padding:10px 11px;min-height:44px}select{font-size:14px;text-overflow:ellipsis}button{min-height:42px;border:1px solid var(--accent);border-radius:6px;padding:9px 15px;background:var(--accent);color:#fff;font-weight:650;cursor:pointer}button:hover{filter:brightness(.94)}button:disabled{opacity:.5;cursor:wait}.quiet{background:transparent;color:var(--ink);border-color:#bdcdc6}.text-button{font-size:12px;min-height:36px;background:transparent;border:0;padding:7px 0;color:var(--accent);text-align:left}.inline{display:flex;justify-content:space-between;gap:15px}.hint{font-size:12px;color:var(--muted);margin-top:8px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.check{display:flex;align-items:center;gap:8px;font-weight:400;margin:0 0 8px}.check input{width:17px;height:17px;accent-color:var(--accent)}.list-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.product{border-top:1px solid var(--line);padding:17px 0}.product h3{font-size:15px;line-height:1.4;margin:0 0 5px;overflow-wrap:anywhere}.product p{font-size:13px;margin:0 0 5px;overflow-wrap:anywhere}.product .file{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}.product .row-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}.product.archived{opacity:.72}.delete{color:#974232}.status-tag{font-size:10px;background:#f0e9df;border-radius:4px;padding:3px 6px;margin-left:7px;display:inline-block}.empty{padding:24px 0;color:var(--muted);font-size:14px}#message{font-size:13px;overflow-wrap:anywhere;min-height:0}#message:not(:empty){padding:11px 14px;border:1px solid #b9d6c7;background:#f0faf3;border-radius:6px}#message.error{color:#8c332c;border-color:#e3beb7;background:#fff5f1}#loginError{font-size:13px;color:#8c332c;margin:12px 0 0}footer{text-align:center;padding:34px 0 12px;color:var(--muted);font-size:11px}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #8db5a8;outline-offset:3px}[hidden]{display:none!important}
 .inline-editor{margin:12px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#f8faf8}.inline-editor summary{font-size:13px;font-weight:650;color:var(--accent);cursor:pointer}.inline-editor textarea{width:100%;border:1px solid #b9cbc2;border-radius:6px;padding:10px;font:inherit;resize:vertical}.inline-editor button{margin-top:13px}
-.currency-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.currency-grid label{margin-top:12px}.currency-grid input{min-width:0}
+.currency-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.currency-grid label{margin-top:12px}.currency-grid input{min-width:0}.auto-fx-label{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:500;margin:14px 0 4px}.auto-fx-label input{width:17px;height:17px;flex:none;accent-color:var(--accent)}.price-change-editor{margin-top:16px}.price-change-editor .actions{margin-top:8px}
 .delivery-panel{margin-top:20px}.delivery-panel summary{font-weight:700;cursor:pointer;font-size:17px}.delivery-panel #refreshDeliveries{margin:6px 0}.delivery{border-top:1px solid var(--line);padding:14px 0}.delivery p{margin:0 0 5px;font-size:12px;overflow-wrap:anywhere}.delivery .session{font:11px ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere}.preview{padding:14px;margin:12px 0 3px;background:#f4f7f4;border:1px solid var(--line);border-radius:8px}.preview p{margin-bottom:7px}.preview .lang-links{display:flex;flex-wrap:wrap;gap:15px}.preview a{color:var(--accent);font-size:12px}.product .preview-heading{font-weight:700}.status-tag.published{background:#e3f0e8;color:#1a5841}.delivery .blocked{color:#974232;font-weight:650}
 @media(max-width:720px){main{padding:20px 16px 10px}header{padding-bottom:24px}.workspace{grid-template-columns:minmax(0,1fr)}.panel{padding:20px}.heading{align-items:flex-start}h1{letter-spacing:-.8px}.heading .quiet{padding:7px 9px;font-size:12px}.login{margin:10px auto 40px}.actions button{flex:1}.notice{font-size:12px}.currency-grid{grid-template-columns:minmax(0,1fr)}}
 `;
@@ -60,6 +60,7 @@ export const ADMIN_JS = String.raw`'use strict';
 (function () {
   var token = '', epoch = 0, products = [], prices = [], files = [], editing = null, checkoutEnabled = false, uploadsEnabled = false, priceCreateEnabled = false, stripeCreateKey = '', liveMode = false, liveStoreConnected = false;
   var productCursor = null, priceCursor = null, fileCursor = null;
+  var fxCache = null, fxCacheAt = 0, fxInFlight = null;
   var $ = function (id) { return document.getElementById(id); };
   function message(text, error) { $('message').textContent = text || ''; $('message').className = error ? 'error' : ''; }
   function node(tag, text, className) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (className) e.className = className; return e; }
@@ -72,8 +73,68 @@ export const ADMIN_JS = String.raw`'use strict';
     if (minor < 200 || minor > 99999999) throw new Error('Prețul ' + currency + ' trebuie să fie între 2,00 și 999.999,99.');
     return minor;
   }
+  async function currentFx(force) {
+    if (force) { fxCache = null; fxCacheAt = 0; }
+    if (fxCache && Date.now() - fxCacheAt < 5 * 60 * 1000) return fxCache;
+    if (!fxInFlight) fxInFlight = api('fx-reference').then(function (rates) {
+      if (!Number.isFinite(rates.eur_ron) || rates.eur_ron <= 0 ||
+          !Number.isFinite(rates.eur_usd) || rates.eur_usd <= 0) throw new Error('Curs BCE invalid.');
+      fxCache = rates; fxCacheAt = Date.now(); return rates;
+    }).finally(function () { fxInFlight = null; });
+    return fxInFlight;
+  }
+  function convertPrice(source, minor, rates) {
+    var eur = source === 'eur' ? minor : source === 'ron'
+      ? minor / rates.eur_ron : minor / rates.eur_usd;
+    var values = { ron: Math.round(eur * rates.eur_ron), eur: Math.round(eur),
+      usd: Math.round(eur * rates.eur_usd) };
+    values[source] = minor;
+    Object.keys(values).forEach(function (currency) {
+      if (!Number.isSafeInteger(values[currency]) || values[currency] < 200 || values[currency] > 99999999) {
+        throw new Error('Conversia ' + currency.toUpperCase() + ' depășește limitele 2,00–999.999,99. Debifează conversia automată pentru a introduce prețurile manual.');
+      }
+    });
+    return values;
+  }
+  function wireCurrencyInputs(inputs, auto, info, refresh, changed) {
+    var last = 'ron', serial = 0, ready = false, pending = false;
+    function setInfo(value) { info.textContent = value; }
+    async function recalculate(source, force) {
+      last = source; var attempt = ++serial;
+      if (!auto.checked) { ready = true; pending = false; setInfo('Conversia automată este oprită. Introdu manual toate cele trei prețuri.'); return; }
+      var original = inputs[source].value.trim(), minor;
+      try { minor = priceMinor(original, source.toUpperCase()); }
+      catch (error) {
+        ready = false; pending = false;
+        Object.keys(inputs).filter(function (c) { return c !== source; }).forEach(function (c) { inputs[c].value = ''; });
+        setInfo(original ? error.message : 'Introdu un preț în RON, EUR sau USD pentru conversie.'); return;
+      }
+      ready = false; pending = true;
+      Object.keys(inputs).filter(function (c) { return c !== source; }).forEach(function (c) { inputs[c].value = ''; });
+      setInfo('Se verifică ultimul curs disponibil al BCE…');
+      try {
+        var rates = await currentFx(force);
+        if (attempt !== serial || !auto.checked || inputs[source].value.trim() !== original) return;
+        var converted = convertPrice(source, minor, rates);
+        Object.keys(inputs).filter(function (c) { return c !== source; }).forEach(function (c) {
+          inputs[c].value = (converted[c] / 100).toFixed(2);
+        });
+        ready = true;
+        setInfo('BCE ' + rates.date + ': 1 EUR = ' + rates.eur_ron + ' RON / ' + rates.eur_usd +
+          ' USD. Conversie orientativă, rotunjită la 2 zecimale. Stripe nu este modificat până la salvare.');
+      } catch (error) {
+        if (attempt === serial) setInfo(error.message + ' Debifează conversia automată pentru completare manuală.');
+      } finally { if (attempt === serial) pending = false; }
+    }
+    Object.keys(inputs).forEach(function (currency) {
+      inputs[currency].addEventListener('input', function () { if (changed) changed(); void recalculate(currency, false); });
+    });
+    auto.addEventListener('change', function () { if (changed) changed(); void recalculate(last, false); });
+    if (refresh) refresh.addEventListener('click', function () { void recalculate(last, true); });
+    return { ready: function () { return !auto.checked || (ready && !pending); } };
+  }
   function logout() {
-    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false; priceCreateEnabled = false; stripeCreateKey = ''; liveMode = false; liveStoreConnected = false;
+    token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false; priceCreateEnabled = false; stripeCreateKey = ''; liveMode = false; liveStoreConnected = false; fxCache = null; fxCacheAt = 0;
     $('adminToken').value = ''; $('productList').replaceChildren(); $('productForm').reset();
     $('deliveryList').replaceChildren();
     $('priceSelect').replaceChildren(option('', 'Alege un preț')); $('fileSelect').replaceChildren(option('', 'Alege o arhivă'));
@@ -171,28 +232,63 @@ export const ADMIN_JS = String.raw`'use strict';
       if (liveMode && product.state === 'active') {
         var priceButton = node('button', 'Schimbă prețul', 'text-button'); priceButton.type = 'button';
         priceButton.addEventListener('click', function () {
-          var entered = window.prompt('Prețul nou în RON (de ex. 49.00). Stripe va crea un Price nou; cel vechi rămâne în istoric.', (product.unit_amount / 100).toFixed(2));
-          if (entered === null) return;
-          var body;
-          try {
-            body = { revision: product.revision, unit_amount: priceMinor(entered, 'RON'), request_id: crypto.randomUUID() };
-            var options = currentPrice && currentPrice.currency_options;
-            var eur = window.prompt('Preț EUR (gol = fără EUR).', options ? (options.eur / 100).toFixed(2) : '');
-            if (eur === null) return;
-            var usd = window.prompt('Preț USD (gol = fără USD).', options ? (options.usd / 100).toFixed(2) : '');
-            if (usd === null) return;
-            if (!!eur.trim() !== !!usd.trim()) throw new Error('Completează ambele prețuri EUR și USD sau lasă-le pe amândouă goale.');
-            body.currency_options = eur.trim() ? { eur: priceMinor(eur, 'EUR'), usd: priceMinor(usd, 'USD') } : null;
-          } catch (err) { message(err.message, true); return; }
-          if (!window.confirm('Creezi un nou preț LIVE: ' + (body.unit_amount / 100).toFixed(2) + ' RON' +
-              (body.currency_options ? ', ' + (body.currency_options.eur / 100).toFixed(2) + ' EUR, ' + (body.currency_options.usd / 100).toFixed(2) + ' USD' : '') + '?')) return;
-          run(priceButton, async function () {
-            var data = await api('products/' + encodeURIComponent(product.id) + '/price',
-              { method: 'POST', body: body });
-            products = products.map(function (p) { return p.id === product.id ? data.product : p; });
-            await loadPrices(false); renderProducts(); renderOptions();
-            message('Prețul LIVE a fost actualizat. Produsul a revenit la Draft; istoricul prețurilor este păstrat.');
+          var previous = article.querySelector('.price-change-editor');
+          if (previous) { previous.remove(); return; }
+          document.querySelectorAll('.price-change-editor').forEach(function (panel) { panel.remove(); });
+          var form = node('form', null, 'preview price-change-editor');
+          form.noValidate = true;
+          form.append(node('p', 'Preț nou în Stripe LIVE', 'preview-heading'));
+          var grid = node('div', null, 'currency-grid'), inputs = {}, fields = [
+            ['ron', 'RON', (product.unit_amount / 100).toFixed(2)],
+            ['eur', 'EUR', currentPrice && currentPrice.currency_options?.eur != null
+              ? (currentPrice.currency_options.eur / 100).toFixed(2) : ''],
+            ['usd', 'USD', currentPrice && currentPrice.currency_options?.usd != null
+              ? (currentPrice.currency_options.usd / 100).toFixed(2) : '']
+          ];
+          fields.forEach(function (item) {
+            var wrapper = node('div'), label = node('label', 'Preț ' + item[1]);
+            var input = node('input'); input.type = 'text'; input.inputMode = 'decimal';
+            input.maxLength = 10; input.autocomplete = 'off'; input.value = item[2];
+            var inputId = 'price-' + item[0] + '-' + product.id;
+            input.id = inputId; label.htmlFor = inputId;
+            wrapper.append(label, input); grid.append(wrapper); inputs[item[0]] = input;
           });
+          form.append(grid);
+          var autoLabel = node('label', null, 'auto-fx-label'), auto = node('input');
+          auto.type = 'checkbox'; auto.checked = true; autoLabel.append(auto,
+            document.createTextNode(' Conversie automată RON / EUR / USD'));
+          form.append(autoLabel);
+          var info = node('p', 'Modifică orice monedă pentru recalcularea celorlalte două.', 'hint');
+          info.setAttribute('role', 'status'); form.append(info);
+          var refreshFx = node('button', 'Actualizează cursul BCE', 'text-button');
+          refreshFx.type = 'button'; form.append(refreshFx);
+          var actionsEdit = node('div', null, 'actions');
+          var save = node('button', 'Salvează noul preț LIVE'); save.type = 'submit';
+          var cancel = node('button', 'Anulează', 'quiet'); cancel.type = 'button';
+          cancel.addEventListener('click', function () { form.remove(); });
+          actionsEdit.append(save, cancel); form.append(actionsEdit);
+          var fx = wireCurrencyInputs(inputs, auto, info, refreshFx);
+          form.addEventListener('submit', function (event) {
+            event.preventDefault();
+            if (!fx.ready()) { message('Așteaptă conversia BCE sau debifează conversia automată și introdu manual toate prețurile.', true); return; }
+            var body;
+            try {
+              body = { revision: product.revision, unit_amount: priceMinor(inputs.ron.value, 'RON'),
+                currency_options: { eur: priceMinor(inputs.eur.value, 'EUR'),
+                  usd: priceMinor(inputs.usd.value, 'USD') }, request_id: crypto.randomUUID() };
+            } catch (error) { message(error.message, true); return; }
+            if (!window.confirm('Creezi un preț nou Stripe LIVE: ' + (body.unit_amount / 100).toFixed(2) +
+                ' RON, ' + (body.currency_options.eur / 100).toFixed(2) + ' EUR, ' +
+                (body.currency_options.usd / 100).toFixed(2) + ' USD? Prețul vechi rămâne în istoric.')) return;
+            run(save, async function () {
+              var data = await api('products/' + encodeURIComponent(product.id) + '/price',
+                { method: 'POST', body: body });
+              products = products.map(function (p) { return p.id === product.id ? data.product : p; });
+              await loadPrices(false); renderProducts(); renderOptions();
+              message('Prețul LIVE a fost actualizat. Produsul a revenit la Draft; istoricul prețurilor este păstrat.');
+            });
+          });
+          article.append(form); inputs.ron.focus();
         });
         actions.append(priceButton);
       }
@@ -384,44 +480,23 @@ export const ADMIN_JS = String.raw`'use strict';
       message('ZIP încărcat în R2 privat. Selectat pentru noul produs; apasă Adaugă produs pentru a-l asocia cu prețul Stripe.');
     });
   });
-  ['newStripeName', 'newStripeDescription', 'newStripePrice', 'newStripeEur', 'newStripeUsd'].forEach(function (id) {
+  ['newStripeName', 'newStripeDescription'].forEach(function (id) {
     if ($(id)) $(id).addEventListener('input', function () {
       stripeCreateKey = '';
-      if ($('fxRateInfo')) $('fxRateInfo').textContent = '';
       if ($('message').classList.contains('error')) message('');
     });
   });
-  if ($('suggestFx')) $('suggestFx').addEventListener('click', function () {
-    var ronValue = $('newStripePrice').value.trim();
-    var ronMinor;
-    try { ronMinor = priceMinor(ronValue, 'RON'); }
-    catch (error) { message(error.message, true); $('newStripePrice').focus(); return; }
-    if (($('newStripeEur').value.trim() || $('newStripeUsd').value.trim()) &&
-        !window.confirm('Înlocuiești prețurile EUR/USD introduse cu sugestiile calculate din RON? Le poți modifica după conversie.')) return;
-    run($('suggestFx'), async function () {
-      var currentEpoch = epoch;
-      var rates = await api('fx-reference');
-      if (currentEpoch !== epoch || $('newStripePrice').value.trim() !== ronValue) {
-        throw new Error('Prețul RON a fost modificat. Solicită din nou conversia.');
-      }
-      var eurMinor = Math.round(ronMinor / rates.eur_ron);
-      var usdMinor = Math.round(ronMinor / rates.eur_ron * rates.eur_usd);
-      if (!Number.isSafeInteger(eurMinor) || !Number.isSafeInteger(usdMinor) ||
-          eurMinor < 200 || usdMinor < 200 || eurMinor > 99999999 || usdMinor > 99999999) {
-        throw new Error('Conversia este în afara limitelor Stripe (minimum 2 EUR/USD). Introdu manual prețurile.');
-      }
-      $('newStripeEur').value = (eurMinor / 100).toFixed(2);
-      $('newStripeUsd').value = (usdMinor / 100).toFixed(2);
+  var createFx = $('autoFxCreate') ? wireCurrencyInputs({ ron: $('newStripePrice'),
+    eur: $('newStripeEur'), usd: $('newStripeUsd') }, $('autoFxCreate'), $('fxRateInfo'),
+    $('suggestFx'), function () {
       stripeCreateKey = '';
-      $('fxRateInfo').textContent = 'Referință BCE ' + rates.date + ': 1 EUR = ' + rates.eur_ron +
-        ' RON și ' + rates.eur_usd + ' USD. Sume orientative; editează-le înainte de creare.';
-      message('Am propus prețurile EUR și USD. Nu s-a creat nimic în Stripe LIVE.');
-    });
-  });
+      if ($('message').classList.contains('error')) message('');
+    }) : null;
   $('createStripePrice').addEventListener('click', function () {
     run($('createStripePrice'), async function () {
       var name = $('newStripeName').value.trim();
       if (!name) throw new Error('Introdu numele produsului Stripe.');
+      if (createFx && !createFx.ready()) throw new Error('Așteaptă conversia BCE sau debifează conversia automată și introdu manual prețurile.');
       var bani = priceMinor($('newStripePrice').value, 'RON');
       var options = null;
       if (liveMode && $('newStripeEur') && $('newStripeUsd')) {
@@ -465,9 +540,9 @@ const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
   .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
   .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
-    'Introdu prețul în RON, propune conversia EUR/USD sau stabilește manual toate cele trei sume. Stripe salvează prețuri fixe; checkout-ul public rămâne blocat până la validare.')
+    'Schimbă oricare dintre cele trei prețuri: celelalte două se recalculează la cursul BCE. Pentru sume independente, dezactivează conversia automată. Stripe salvează prețuri fixe numai la confirmare.')
   .replace('<label for="newStripePrice">Preț în RON</label><input id="newStripePrice" inputmode="decimal" placeholder="10.00" maxlength="10">',
-    '<div class="currency-grid"><div><label for="newStripePrice">Preț RON</label><input id="newStripePrice" inputmode="decimal" placeholder="150.00" maxlength="10"></div><div><label for="newStripeEur">Preț EUR</label><input id="newStripeEur" inputmode="decimal" placeholder="30.00" maxlength="10"></div><div><label for="newStripeUsd">Preț USD</label><input id="newStripeUsd" inputmode="decimal" placeholder="35.00" maxlength="10"></div></div><button id="suggestFx" type="button" class="text-button">Propune EUR/USD la cursul BCE</button><p id="fxRateInfo" class="hint" role="status">Curs orientativ, la ultima zi publicată de BCE; poți modifica sumele.</p>')
+    '<div class="currency-grid"><div><label for="newStripePrice">Preț RON</label><input id="newStripePrice" inputmode="decimal" placeholder="150.00" maxlength="10"></div><div><label for="newStripeEur">Preț EUR</label><input id="newStripeEur" inputmode="decimal" placeholder="30.00" maxlength="10"></div><div><label for="newStripeUsd">Preț USD</label><input id="newStripeUsd" inputmode="decimal" placeholder="35.00" maxlength="10"></div></div><label class="auto-fx-label" for="autoFxCreate"><input id="autoFxCreate" type="checkbox" checked> Conversie automată RON / EUR / USD</label><button id="suggestFx" type="button" class="text-button">Actualizează cursul BCE</button><p id="fxRateInfo" class="hint" role="status">Modifică un preț pentru recalcularea celorlalte două; nu se salvează automat în Stripe.</p>')
   .replace('Creează prețul de test', 'Creează produs și preț LIVE')
   .replace('Livrări de test și descărcări', 'Plăți LIVE și descărcări')
   .replace('Ultimele 50 de plăți sandbox. Poți revoca definitiv accesul de descărcare pentru o sesiune; această acțiune nu rambursează plata în Stripe.',
