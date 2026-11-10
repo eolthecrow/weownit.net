@@ -10,6 +10,7 @@
     "test:emergency": "node --test test/emergency.test.mjs",
     "test:browser": "node --test test/admin-browser.test.mjs test/customer-browser.test.mjs",
     "test:live-admin": "node --test test/live-admin.test.mjs",
+    "test:live-checkout": "node --test test/live-checkout.test.mjs",
     "deploy:catalog": "node scripts/deploy-catalog.mjs"
   },
   "devDependencies": {

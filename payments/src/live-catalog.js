@@ -284,12 +284,46 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
       return respond({ product: view(row) });
     }
     if (route === "deliveries" && request.method === "GET") {
-      return respond({ deliveries: [], note: "Comenzile LIVE nu sunt conectate încă." });
+      const orders = await db.prepare(`SELECT p.session_id,a.title,p.quantity,p.currency,p.amount_total,p.payment_status,
+        p.observed_at,COALESCE(g.uses,0) AS download_attempts,
+        CASE WHEN b.session_id IS NOT NULL OR COALESCE(g.revoked,0) = 1 THEN 1 ELSE 0 END AS blocked
+        FROM live_purchases p JOIN live_checkout_attempts a ON a.session_id = p.session_id
+        LEFT JOIN live_download_grants g ON g.session_id = p.session_id
+        LEFT JOIN live_delivery_blocks b ON b.session_id = p.session_id
+        ORDER BY p.observed_at DESC,p.session_id DESC LIMIT 50`).all();
+      return respond({ deliveries: orders.results.map(p => ({ session_id: p.session_id,
+        title: p.title, quantity: p.quantity, display_total: displayPrice(p.amount_total, p.currency),
+        payment_status: p.payment_status, blocked: Boolean(p.blocked),
+        fulfillment_status: p.payment_status === "paid" ? "Plătit · livrare eligibilă" : "Acces indisponibil",
+        download_attempts: p.download_attempts,
+        observed_at: new Date(p.observed_at * 1000).toISOString() })) });
+    }
+    if (route.startsWith("deliveries/") && route.endsWith("/revoke") && request.method === "POST") {
+      canWrite(env);
+      const id = route.slice("deliveries/".length, -"/revoke".length);
+      if (!/^cs_live_[A-Za-z0-9]+$/.test(id)) throw new Invalid("Sesiune invalidă.");
+      const data = await json(request, []);
+      if (Object.keys(data).length) throw new Invalid("Date invalide.");
+      const exists = await db.prepare("SELECT session_id FROM live_purchases WHERE session_id = ?").bind(id).first();
+      if (!exists) return respond({ error: "Sesiune negăsită." }, 404);
+      await db.batch([
+        db.prepare("INSERT OR IGNORE INTO live_delivery_blocks (session_id,reason,blocked_at) VALUES (?,'admin-revoked',?)")
+          .bind(id, Math.floor(Date.now() / 1000)),
+        db.prepare("UPDATE live_download_grants SET revoked = 1 WHERE session_id = ?").bind(id),
+      ]);
+      return respond({ status: "revoked" });
     }
     return respond({ error: "Rută inexistentă." }, 404);
   } catch (error) {
     if (error instanceof Invalid) return respond({ error: error.message }, error.status);
     if (error instanceof R2LimitReached) return respond({ error: "Limita preventivă R2 a fost atinsă." }, 429);
+    // Stripe restricted keys commonly have Products/Prices write access but
+    // lack permission for GET /v1/account. Keep errors actionable without
+    // leaking API keys, internal account data or Stripe response bodies.
+    if (error?.statusCode === 403) return respond({ error:
+      "Stripe a respins accesul. Verifică permisiunile cheii LIVE: citirea contului (Account), Products și Prices." }, 503);
+    if (error?.statusCode === 401) return respond({ error:
+      "Cheia Stripe LIVE este invalidă, revocată sau aparține altui mediu. Verifică secretul Worker-ului." }, 503);
     return respond({ error: "Operațiunea LIVE nu poate fi finalizată. Verifică resursele și Stripe." }, 503);
   }
 }

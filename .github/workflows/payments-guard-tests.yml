@@ -47,6 +47,10 @@ jobs:
         run: npm run test:live-admin
         env:
           WRANGLER_SEND_METRICS: "false"
+      - name: Test independent LIVE checkout, webhook, recovery, and private delivery with synthetic Stripe
+        run: npm run test:live-checkout
+        env:
+          WRANGLER_SEND_METRICS: "false"
   release-safety:
     runs-on: ubuntu-latest
     timeout-minutes: 12
@@ -74,6 +78,10 @@ jobs:
           WRANGLER_SEND_METRICS: "false"
       - name: Dry-run isolated LIVE admin Worker (local-only config)
         run: npx wrangler deploy --dry-run --config test/wrangler.live.local.jsonc
+        env:
+          WRANGLER_SEND_METRICS: "false"
+      - name: Dry-run isolated LIVE buyer Worker (all launch gates closed)
+        run: npx wrangler deploy --dry-run --config test/wrangler.live-checkout.local.jsonc
         env:
           WRANGLER_SEND_METRICS: "false"
 

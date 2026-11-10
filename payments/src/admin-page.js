@@ -142,9 +142,9 @@ export const ADMIN_JS = String.raw`'use strict';
           'status-tag' + (product.publication_state === 'published' ? ' published' : ''));
       article.append(heading, status, node('p', product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
-      if (checkoutEnabled && product.state === 'active') {
-        var buyLink = node('a', 'Testează cumpărarea', 'text-button');
-        buyLink.href = '/buy/' + encodeURIComponent(product.id) + '?lang=ro';
+      if ((checkoutEnabled || (liveMode && liveStoreConnected && product.publication_state === 'published')) && product.state === 'active') {
+        var buyLink = node('a', liveMode ? 'Vezi pagina LIVE (plată reală)' : 'Testează cumpărarea', 'text-button');
+        buyLink.href = (liveMode ? 'https://checkout.weownit.net' : '') + '/buy/' + encodeURIComponent(product.id) + '?lang=ro';
         buyLink.target = '_blank'; buyLink.rel = 'noopener noreferrer'; actions.append(buyLink);
       }
       var editButton = node('button', 'Editează', 'text-button'); editButton.type = 'button';
@@ -269,7 +269,7 @@ export const ADMIN_JS = String.raw`'use strict';
     var data = await api('deliveries');
     $('deliveryList').replaceChildren();
     if (!data.deliveries.length) {
-      $('deliveryList').append(node('p', 'Nu există plăți sandbox de afișat.', 'empty')); return;
+      $('deliveryList').append(node('p', 'Nu există plăți ' + (liveMode ? 'LIVE' : 'sandbox') + ' de afișat.', 'empty')); return;
     }
     data.deliveries.forEach(function (item) {
       var card = node('section', null, 'delivery');
@@ -281,10 +281,10 @@ export const ADMIN_JS = String.raw`'use strict';
       if (!item.blocked) {
         var revoke = node('button', 'Revocă descărcarea', 'text-button delete'); revoke.type = 'button';
         revoke.addEventListener('click', function () {
-          if (!window.confirm('Revoci definitiv accesul la descărcare pentru această sesiune sandbox? Plata nu va fi rambursată automat.')) return;
+          if (!window.confirm('Revoci definitiv accesul la descărcare pentru această sesiune ' + (liveMode ? 'LIVE' : 'sandbox') + '? Plata nu va fi rambursată automat.')) return;
           run(revoke, async function () {
             await api('deliveries/' + encodeURIComponent(item.session_id) + '/revoke', { method: 'POST', body: {} });
-            await loadDeliveries(); message('Accesul sandbox pentru această achiziție a fost revocat.');
+            await loadDeliveries(); message('Accesul ' + (liveMode ? 'LIVE' : 'sandbox') + ' pentru această achiziție a fost revocat.');
           });
         }); card.append(revoke);
       }
@@ -387,13 +387,15 @@ const LIVE_ADMIN_JS = ADMIN_JS.replaceAll("credentials: 'omit'", "credentials: '
 const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('<span class="badge">sandbox</span>', '<span class="badge">LIVE · administrare</span>')
   .replace('Mediu de test. Publicarea pregătește doar catalogul de staging; nu modifică Store-ul public și nu activează Stripe Live.',
-    'Catalog Stripe LIVE. Crearea de produse și prețuri modifică Stripe LIVE când este activată. Publicarea în Store rămâne blocată până la conectarea plății și livrării.')
+    'Catalog Stripe LIVE. Crearea de produse și prețuri modifică Stripe LIVE când este activată. Publicarea în Store este permisă numai după verificarea conexiunii de plată și livrare.')
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
   .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
   .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
     'Preț LIVE fix, plată unică, în RON. Impozitarea și dreptul de comercializare trebuie confirmate înainte de vânzări.')
   .replace('Creează prețul de test', 'Creează produs și preț LIVE')
-  .replace('<details class="panel delivery-panel">', '<details class="panel delivery-panel" hidden>');
+  .replace('Livrări de test și descărcări', 'Plăți LIVE și descărcări')
+  .replace('Ultimele 50 de plăți sandbox. Poți revoca definitiv accesul de descărcare pentru o sesiune; această acțiune nu rambursează plata în Stripe.',
+    'Ultimele 50 de plăți LIVE. Poți revoca definitiv accesul la descărcare; rambursarea se face separat în Stripe.');
 
 export function adminAsset(path, { live = false } = {}) {
   const assets = {

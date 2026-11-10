@@ -1,0 +1,23 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "weownit-store-live-checkout-local-only",
+  "main": "../src/live-public-index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "vars": {
+    "LIVE_CHECKOUT_ENABLED": "false",
+    "LIVE_WEBHOOK_ENABLED": "false",
+    "LIVE_DELIVERY_ENABLED": "false",
+    "LIVE_RECOVERY_ENABLED": "false",
+    "LIVE_PUBLIC_CATALOG_ENABLED": "false",
+    "LIVE_STORE_CONNECTED": "false",
+    "LIVE_EXPECTED_ACCOUNT_ID": "acct_localfixture",
+    "LIVE_CHECKOUT_ORIGIN": "https://checkout.weownit.net"
+  },
+  "d1_databases": [{
+    "binding": "LIVE_CATALOG_DB",
+    "database_name": "local_live_catalog_only",
+    "database_id": "0fb6d4e1-90d4-40bc-94a3-530c8d1260f1"
+  }],
+  "r2_buckets": [{ "binding": "LIVE_TOOLKITS_R2", "bucket_name": "local-live-fixture" }]
+}

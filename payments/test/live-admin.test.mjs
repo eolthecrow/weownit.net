@@ -32,7 +32,7 @@ async function context() {
     persist: false, remoteBindings: false, envFiles: [],
   });
   const db = platform.env.LIVE_CATALOG_DB;
-  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql"]) {
+  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql", "live-checkout-schema.sql"]) {
     const sql = await readFile(new URL("../" + name, import.meta.url), "utf8");
     await db.batch(sql.split(";").map(s => s.trim()).filter(Boolean).map(s => db.prepare(s)));
   }
@@ -84,6 +84,49 @@ test("LIVE admin identity and writes fail closed on auth, account mismatch and d
     assert.equal((await handleLiveRequest(request(p, "POST", body), { ...env, LIVE_EXPECTED_ACCOUNT_ID: "acct_other" }, { stripeClient: stripe })).status, 503);
     assert.equal((await handleLiveRequest(request(p, "POST", body), { ...env, LIVE_ADMIN_WRITES_ENABLED: "false" }, { stripeClient: stripe })).status, 403);
     assert.equal(calls.filter(x => typeof x === "object").length, 0);
+  } finally { await platform.dispose(); }
+});
+
+test("LIVE dashboard explains missing Stripe account-read permission without leaking credentials", async () => {
+  const { platform, env, stripe } = await context();
+  try {
+    stripe.accounts.retrieveCurrent = async () => { throw Object.assign(new Error("secret internal details"), { statusCode: 403 }); };
+    const response = await handleLiveRequest(request("/admin/api/prices"), env, { stripeClient: stripe });
+    assert.equal(response.status, 503);
+    const json = await response.json();
+    assert.match(json.error, /citirea contului/);
+    assert.doesNotMatch(JSON.stringify(json), /secret internal details|rk_live_/);
+  } finally { await platform.dispose(); }
+});
+
+test("LIVE admin can review paid orders and permanently revoke delivery without refunding a Stripe payment", async () => {
+  const { platform, env, db, stripe } = await context();
+  const session = "cs_live_adminfixture1";
+  try {
+    await db.prepare(`INSERT INTO live_checkout_attempts
+      (id,owner_hash,product_id,title,price_id,object_key,currency,unit_amount,quantity,session_id,created_at,expires_at,access_expires_at,language)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`).bind(crypto.randomUUID(), "f".repeat(64), crypto.randomUUID(),
+      "Network Security Toolkit", "price_liveexample", "products/example.zip", "ron", 15000, 1, session,
+      1000000, 1003600, 1086400, "ro").run();
+    await db.prepare(`INSERT INTO live_purchases
+      (session_id,payment_intent_id,product_id,price_id,object_key,currency,amount_total,quantity,payment_status,observed_at)
+      VALUES (?,?,?,?,?,?,?,?,?,?)`).bind(session, "pi_adminfixture1", crypto.randomUUID(),
+      "price_liveexample", "products/example.zip", "ron", 15000, 1, "paid", 1000002).run();
+    const orders = await handleLiveRequest(request("/admin/api/deliveries"), env, { stripeClient: stripe });
+    assert.equal(orders.status, 200);
+    assert.equal((await orders.json()).deliveries[0].session_id, session);
+    const blockedByPolicy = await handleLiveRequest(request("/admin/api/deliveries/" + session + "/revoke", "POST", {}),
+      { ...env, LIVE_ADMIN_WRITES_ENABLED: "false" }, { stripeClient: stripe });
+    assert.equal(blockedByPolicy.status, 403);
+    const revoked = await handleLiveRequest(request("/admin/api/deliveries/" + session + "/revoke", "POST", {}), env,
+      { stripeClient: stripe });
+    assert.equal(revoked.status, 200);
+    assert.equal((await db.prepare("SELECT reason FROM live_delivery_blocks WHERE session_id = ?").bind(session).first()).reason,
+      "admin-revoked");
+    assert.equal((await db.prepare("SELECT payment_status FROM live_purchases WHERE session_id = ?").bind(session).first()).payment_status,
+      "paid", "access revocation must not imply that a refund happened");
+    const after = await handleLiveRequest(request("/admin/api/deliveries"), env, { stripeClient: stripe });
+    assert.equal((await after.json()).deliveries[0].blocked, true);
   } finally { await platform.dispose(); }
 });
 
