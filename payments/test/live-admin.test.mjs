@@ -243,6 +243,9 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     const liveScript = await (await handleLiveRequest(request("/admin/app.js"), env)).text();
     assert.match(html, /id="newStripeEur"/);
     assert.match(html, /id="newStripeUsd"/);
+    assert.match(liveScript, /Testează plata LIVE/);
+    assert.match(liveScript, /Atenție: acesta este Stripe LIVE/);
+    assert.match(liveScript, /checkout\.weownit\.net/);
     assert.doesNotMatch((await adminAsset("/admin").text()), /id="newStripeEur"/);
     const sandboxScript = await adminAsset("/admin/app.js").text();
     assert.equal((liveScript.match(/credentials: 'same-origin'/g) || []).length, 2);

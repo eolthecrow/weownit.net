@@ -117,6 +117,43 @@ checkout flow are not replaced.
 
 ## Operator checks — read-only until rollout approval
 
+### Read-only evidence to collect on the authorized WSL machine
+
+Run from `payments/` with the Cloudflare account already authenticated.
+These commands **do not create a Stripe Checkout Session or charge a card**:
+
+```bash
+npx wrangler whoami
+npx wrangler secret list --config wrangler.live.jsonc
+npx wrangler deployments list --name weownit-store-live-admin
+npx wrangler d1 execute weownit_live_catalog --remote \
+  --command="SELECT name,sql FROM sqlite_master WHERE type='table' AND name IN ('live_products','live_checkout_attempts','live_purchases','live_product_currencies','live_delivery_blocks') ORDER BY name;"
+npx wrangler d1 execute weownit_live_catalog --remote \
+  --command="SELECT COUNT(*) AS products FROM live_products;"
+```
+
+Run the following only when the isolated buyer Worker has been deployed to
+the intended domain with its launch flags still off:
+
+```bash
+curl -sS https://checkout.weownit.net/health
+```
+
+Expected initial buyer health: `checkout`, `webhook`, and `delivery` all
+`disabled`. Save the D1 schema output and deployment version privately for
+release review; do not paste API keys, request tokens, customer data, or
+webhook signing secrets into chat. The admin Worker is protected by Access,
+so an unauthenticated HTTP redirect to an Access login is **not** evidence
+that the private admin API or Stripe permissions are healthy.
+
+The private admin product list includes **Testează plata LIVE** only for an
+active, published product after `LIVE_STORE_CONNECTED` has been explicitly
+enabled. It opens `checkout.weownit.net`, with a real-money warning, **not**
+Stripe inside `admin.weownit.net`. The public `store.html` launch gate may
+remain false during this single controlled end-to-end operator purchase.
+Do not enable even this controlled purchase until the exact Product,
+currency, price, refund policy and operator are approved separately.
+
 1. Confirm Stripe LIVE account ID, account verification/ability to
    accept payments, product ownership and the intended legal/tax setup.
 2. Use Stripe Workbench logs to diagnose a failing

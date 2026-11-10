@@ -153,9 +153,18 @@ export const ADMIN_JS = String.raw`'use strict';
       article.append(heading, status, node('p', currentPrice && currentPrice.display_prices || product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
       if ((checkoutEnabled || (liveMode && liveStoreConnected && product.publication_state === 'published')) && product.state === 'active') {
-        var buyLink = node('a', liveMode ? 'Vezi pagina LIVE (plată reală)' : 'Testează cumpărarea', 'text-button');
+        var buyLink = node('a', liveMode ? 'Testează plata LIVE' : 'Testează cumpărarea', 'text-button');
         buyLink.href = (liveMode ? 'https://checkout.weownit.net' : '') + '/buy/' + encodeURIComponent(product.id) + '?lang=ro';
-        buyLink.target = '_blank'; buyLink.rel = 'noopener noreferrer'; actions.append(buyLink);
+        buyLink.target = '_blank'; buyLink.rel = 'noopener noreferrer';
+        if (liveMode) {
+          buyLink.title = 'Deschide pagina publică de checkout pentru o cumpărare reală, fără activarea Store-ului public.';
+          buyLink.addEventListener('click', function (event) {
+            if (!window.confirm('Atenție: acesta este Stripe LIVE. Următoarea pagină poate iniția o plată cu bani reali. Verifică produsul, moneda și suma exactă înainte să confirmi plata în Stripe. Continui?')) {
+              event.preventDefault();
+            }
+          });
+        }
+        actions.append(buyLink);
       }
       var editButton = node('button', 'Editează', 'text-button'); editButton.type = 'button';
       editButton.addEventListener('click', function () { edit(product); }); actions.append(editButton);

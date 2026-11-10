@@ -1,5 +1,8 @@
--- Additive LIVE-only migration. Apply to weownit_live_catalog after reviewing
--- the exact remote database ID. Never run against the sandbox database.
+-- Initial LIVE-only checkout schema. Apply to a new checkout schema only after
+-- reviewing the exact remote D1 ID. CREATE TABLE IF NOT EXISTS does not
+-- upgrade an existing RON-only CHECK constraint to EUR/USD. Any such existing
+-- tables require a separately reviewed and backed-up data-preserving migration.
+-- Never run against the sandbox database.
 CREATE TABLE IF NOT EXISTS live_checkout_attempts (
   id TEXT PRIMARY KEY NOT NULL,
   owner_hash TEXT NOT NULL CHECK (length(owner_hash) = 64),
