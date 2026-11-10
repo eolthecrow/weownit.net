@@ -387,7 +387,35 @@ export const ADMIN_JS = String.raw`'use strict';
   ['newStripeName', 'newStripeDescription', 'newStripePrice', 'newStripeEur', 'newStripeUsd'].forEach(function (id) {
     if ($(id)) $(id).addEventListener('input', function () {
       stripeCreateKey = '';
+      if ($('fxRateInfo')) $('fxRateInfo').textContent = '';
       if ($('message').classList.contains('error')) message('');
+    });
+  });
+  if ($('suggestFx')) $('suggestFx').addEventListener('click', function () {
+    var ronValue = $('newStripePrice').value.trim();
+    var ronMinor;
+    try { ronMinor = priceMinor(ronValue, 'RON'); }
+    catch (error) { message(error.message, true); $('newStripePrice').focus(); return; }
+    if (($('newStripeEur').value.trim() || $('newStripeUsd').value.trim()) &&
+        !window.confirm('Înlocuiești prețurile EUR/USD introduse cu sugestiile calculate din RON? Le poți modifica după conversie.')) return;
+    run($('suggestFx'), async function () {
+      var currentEpoch = epoch;
+      var rates = await api('fx-reference');
+      if (currentEpoch !== epoch || $('newStripePrice').value.trim() !== ronValue) {
+        throw new Error('Prețul RON a fost modificat. Solicită din nou conversia.');
+      }
+      var eurMinor = Math.round(ronMinor / rates.eur_ron);
+      var usdMinor = Math.round(ronMinor / rates.eur_ron * rates.eur_usd);
+      if (!Number.isSafeInteger(eurMinor) || !Number.isSafeInteger(usdMinor) ||
+          eurMinor < 200 || usdMinor < 200 || eurMinor > 99999999 || usdMinor > 99999999) {
+        throw new Error('Conversia este în afara limitelor Stripe (minimum 2 EUR/USD). Introdu manual prețurile.');
+      }
+      $('newStripeEur').value = (eurMinor / 100).toFixed(2);
+      $('newStripeUsd').value = (usdMinor / 100).toFixed(2);
+      stripeCreateKey = '';
+      $('fxRateInfo').textContent = 'Referință BCE ' + rates.date + ': 1 EUR = ' + rates.eur_ron +
+        ' RON și ' + rates.eur_usd + ' USD. Sume orientative; editează-le înainte de creare.';
+      message('Am propus prețurile EUR și USD. Nu s-a creat nimic în Stripe LIVE.');
     });
   });
   $('createStripePrice').addEventListener('click', function () {
@@ -437,9 +465,9 @@ const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
   .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
   .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
-    'Prețuri LIVE fixe în RON, EUR și USD pentru același produs. EUR și USD se introduc împreună; nu sunt conversii automate. Checkout-ul public rămâne RON până la aprobarea implementării multivalută.')
+    'Introdu prețul în RON, propune conversia EUR/USD sau stabilește manual toate cele trei sume. Stripe salvează prețuri fixe; checkout-ul public rămâne blocat până la validare.')
   .replace('<label for="newStripePrice">Preț în RON</label><input id="newStripePrice" inputmode="decimal" placeholder="10.00" maxlength="10">',
-    '<div class="currency-grid"><div><label for="newStripePrice">Preț RON</label><input id="newStripePrice" inputmode="decimal" placeholder="150.00" maxlength="10"></div><div><label for="newStripeEur">Preț EUR</label><input id="newStripeEur" inputmode="decimal" placeholder="30.00" maxlength="10"></div><div><label for="newStripeUsd">Preț USD</label><input id="newStripeUsd" inputmode="decimal" placeholder="35.00" maxlength="10"></div></div>')
+    '<div class="currency-grid"><div><label for="newStripePrice">Preț RON</label><input id="newStripePrice" inputmode="decimal" placeholder="150.00" maxlength="10"></div><div><label for="newStripeEur">Preț EUR</label><input id="newStripeEur" inputmode="decimal" placeholder="30.00" maxlength="10"></div><div><label for="newStripeUsd">Preț USD</label><input id="newStripeUsd" inputmode="decimal" placeholder="35.00" maxlength="10"></div></div><button id="suggestFx" type="button" class="text-button">Propune EUR/USD la cursul BCE</button><p id="fxRateInfo" class="hint" role="status">Curs orientativ, la ultima zi publicată de BCE; poți modifica sumele.</p>')
   .replace('Creează prețul de test', 'Creează produs și preț LIVE')
   .replace('Livrări de test și descărcări', 'Plăți LIVE și descărcări')
   .replace('Ultimele 50 de plăți sandbox. Poți revoca definitiv accesul de descărcare pentru o sesiune; această acțiune nu rambursează plata în Stripe.',
