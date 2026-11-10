@@ -4,6 +4,7 @@ import { getPlatformProxy } from "wrangler";
 import { readFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { handleLiveRequest } from "../src/live-index.js";
+import { adminAsset } from "../src/admin-page.js";
 
 const token = "l".repeat(64);
 const base = "https://live-admin.invalid";
@@ -151,7 +152,12 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(html, /LIVE · administrare/);
     assert.match(html, /Creează produs și preț LIVE/);
     assert.doesNotMatch(html, /Mediu de test/);
-    assert.equal((await handleLiveRequest(request("/admin/app.js"), env)).status, 200);
+    const liveScript = await (await handleLiveRequest(request("/admin/app.js"), env)).text();
+    const sandboxScript = await adminAsset("/admin/app.js").text();
+    assert.equal((liveScript.match(/credentials: 'same-origin'/g) || []).length, 2);
+    assert.doesNotMatch(liveScript, /credentials: 'omit'/);
+    assert.equal((sandboxScript.match(/credentials: 'omit'/g) || []).length, 2);
+    assert.doesNotMatch(sandboxScript, /credentials: 'same-origin'/);
   } finally { await platform.dispose(); }
 });
 

@@ -380,6 +380,10 @@ export const ADMIN_JS = String.raw`'use strict';
    });
 })();`;
 
+// Cloudflare Access requires its same-origin cookie on LIVE admin fetches.
+// Keep sandbox's cookie-free API behavior unchanged.
+const LIVE_ADMIN_JS = ADMIN_JS.replaceAll("credentials: 'omit'", "credentials: 'same-origin'");
+
 const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('<span class="badge">sandbox</span>', '<span class="badge">LIVE · administrare</span>')
   .replace('Mediu de test. Publicarea pregătește doar catalogul de staging; nu modifică Store-ul public și nu activează Stripe Live.',
@@ -395,7 +399,7 @@ export function adminAsset(path, { live = false } = {}) {
   const assets = {
     "/admin": [live ? LIVE_ADMIN_HTML : ADMIN_HTML, "text/html; charset=utf-8"],
     "/admin/": [live ? LIVE_ADMIN_HTML : ADMIN_HTML, "text/html; charset=utf-8"],
-    "/admin/app.js": [ADMIN_JS, "text/javascript; charset=utf-8"],
+    "/admin/app.js": [live ? LIVE_ADMIN_JS : ADMIN_JS, "text/javascript; charset=utf-8"],
     "/admin/style.css": [ADMIN_CSS, "text/css; charset=utf-8"],
   };
   const asset = assets[path]; if (!asset) return null;
