@@ -49,6 +49,7 @@ async function context() {
         const p = { object: "price", id: "price_livefixture" + (prices.size + 1), livemode: true, active: true,
           type: "one_time", unit_amount: input.unit_amount, currency: input.currency, recurring: null,
           custom_unit_amount: null, transform_quantity: null, billing_scheme: "per_unit",
+          currency_options: input.currency_options || null,
           product: { object: "product", id: pId, name: input.product_data?.name || "Toolkit", active: true, livemode: true } };
         prices.set(p.id, p); return { ...p, product: pId };
       },
@@ -187,6 +188,44 @@ test("LIVE admin creates Stripe price, uploads ZIP, maintains catalog, price his
   } finally { await platform.dispose(); }
 });
 
+test("LIVE admin creates and changes manually specified RON/EUR/USD prices without activating checkout", async () => {
+  const { platform, env, stripe, calls } = await context();
+  const call = (path, method = "GET", body) => handleLiveRequest(request(path, method, body), env, { stripeClient: stripe });
+  try {
+    const bad = await call("/admin/api/stripe-products", "POST", {
+      name: "Three currencies", unit_amount: 15000, currency_options: { eur: 3000 }, request_id: crypto.randomUUID() });
+    assert.equal(bad.status, 400);
+    assert.equal(calls.filter(c => typeof c === "object").length, 0, "invalid options never modify Stripe");
+    const created = await call("/admin/api/stripe-products", "POST", {
+      name: "Three currencies", unit_amount: 15000,
+      currency_options: { eur: 3000, usd: 3500 }, request_id: crypto.randomUUID() });
+    assert.equal(created.status, 201, await created.clone().text());
+    const price = (await created.json()).price;
+    assert.deepEqual(price.currency_options, { eur: 3000, usd: 3500 });
+    assert.match(price.display_prices, /RON.*EUR.*USD/);
+    assert.deepEqual(calls.find(c => typeof c === "object").create.currency_options,
+      { eur: { unit_amount: 3000 }, usd: { unit_amount: 3500 } });
+    const listed = await call("/admin/api/prices");
+    assert.equal(listed.status, 200);
+    assert.deepEqual((await listed.json()).prices[0].currency_options, { eur: 3000, usd: 3500 });
+    await env.LIVE_TOOLKITS_R2.put("products/three.zip", new Uint8Array(12));
+    const linked = await call("/admin/api/products", "POST", { title: "Three currencies", price_id: price.price_id,
+      object_key: "products/three.zip" });
+    assert.equal(linked.status, 201, await linked.clone().text());
+    const product = (await linked.json()).product;
+    const changed = await call("/admin/api/products/" + product.id + "/price", "POST", {
+      revision: product.revision, unit_amount: 16000, currency_options: { eur: 3200, usd: 3700 },
+      request_id: crypto.randomUUID() });
+    assert.equal(changed.status, 200, await changed.clone().text());
+    const latest = calls.filter(c => typeof c === "object").at(-1).create;
+    assert.deepEqual(latest.currency_options, { eur: { unit_amount: 3200 }, usd: { unit_amount: 3700 } });
+    const view = (await changed.json()).product;
+    assert.equal(view.currency, "ron", "existing catalog and buyer checkout remain RON-only by default");
+    assert.equal(view.publication_state, "draft");
+    assert.equal((await call("/admin/api/products/" + product.id + "/publish", "POST", { revision: view.revision })).status, 409);
+  } finally { await platform.dispose(); }
+});
+
 test("LIVE routes keep the existing sandbox UI untouched", async () => {
   const { platform, env } = await context();
   try {
@@ -196,6 +235,9 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(html, /Creează produs și preț LIVE/);
     assert.doesNotMatch(html, /Mediu de test/);
     const liveScript = await (await handleLiveRequest(request("/admin/app.js"), env)).text();
+    assert.match(html, /id="newStripeEur"/);
+    assert.match(html, /id="newStripeUsd"/);
+    assert.doesNotMatch((await adminAsset("/admin").text()), /id="newStripeEur"/);
     const sandboxScript = await adminAsset("/admin/app.js").text();
     assert.equal((liveScript.match(/credentials: 'same-origin'/g) || []).length, 2);
     assert.doesNotMatch(liveScript, /credentials: 'omit'/);

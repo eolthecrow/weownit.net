@@ -41,6 +41,36 @@ function amount(value) {
   return value;
 }
 
+// A Stripe Price keeps RON as its default currency. Additional manually set
+// EUR/USD amounts belong to the same immutable Price, never to a calculated
+// exchange-rate conversion. They do not enable foreign-currency checkout yet.
+function secondaryAmounts(value) {
+  if (value == null) return null;
+  if (!value || Array.isArray(value) || typeof value !== "object" ||
+      Object.keys(value).sort().join(",") !== "eur,usd") {
+    throw new Invalid("Introdu prețurile EUR și USD împreună.");
+  }
+  return { eur: amount(value.eur), usd: amount(value.usd) };
+}
+
+const secondaryFromStripe = price => {
+  const options = price?.currency_options;
+  if (!options || typeof options !== "object" ||
+      !Number.isSafeInteger(options.eur?.unit_amount) ||
+      !Number.isSafeInteger(options.usd?.unit_amount)) return null;
+  return { eur: options.eur.unit_amount, usd: options.usd.unit_amount };
+};
+
+const stripeSecondaryOptions = options => options ? {
+  eur: { unit_amount: options.eur }, usd: { unit_amount: options.usd },
+} : undefined;
+
+function displayCurrencies(price) {
+  const options = secondaryFromStripe(price);
+  return [displayPrice(price.unit_amount, "ron"),
+    ...(options ? [displayPrice(options.eur, "eur"), displayPrice(options.usd, "usd")] : [])].join(" · ");
+}
+
 function revision(value) {
   if (!Number.isSafeInteger(value) || value < 1) throw new Invalid("Versiune invalidă; actualizează lista.");
   return value;
@@ -86,7 +116,7 @@ async function file(env, key) {
 
 async function priceById(stripe, id) {
   if (!PRICE_ID.test(id || "")) throw new Invalid("Preț Stripe invalid.");
-  const item = await stripe.prices.retrieve(id, { expand: ["product"] });
+  const item = await stripe.prices.retrieve(id, { expand: ["product", "currency_options"] });
   if (!livePrice(item) || item.product?.object !== "product" ||
       item.product.livemode !== true || item.product.active !== true ||
       item.product.deleted || !PRODUCT_ID.test(item.product.id || "")) {
@@ -149,28 +179,34 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
     }
     if (route === "stripe-products" && request.method === "POST") {
       canWrite(env);
-      const data = await json(request, ["name", "description", "unit_amount", "request_id"]);
+      const data = await json(request, ["name", "description", "unit_amount", "currency_options", "request_id"]);
       const itemName = name(data.name), unitAmount = amount(data.unit_amount), requestId = requiredRequestId(data.request_id);
+      const options = secondaryAmounts(data.currency_options);
       if (data.description != null && (typeof data.description !== "string" || data.description.trim().length > 500)) {
         throw new Invalid("Descriere prea lungă.");
       }
       await identity();
       const created = await stripe.prices.create({ currency: "ron", unit_amount: unitAmount,
+        ...(options ? { currency_options: stripeSecondaryOptions(options) } : {}),
         product_data: { name: itemName, ...(data.description?.trim() ? { description: data.description.trim() } : {}) } },
       { idempotencyKey: "weownit-live-admin-create-" + requestId });
       if (!livePrice(created)) throw Error("Unexpected Stripe live price");
       return respond({ price: { price_id: created.id, title: itemName, unit_amount: created.unit_amount,
-        currency: created.currency, display_price: displayPrice(created.unit_amount, created.currency) } }, 201);
+        currency: created.currency, display_price: displayPrice(created.unit_amount, created.currency),
+        display_prices: options ? [displayPrice(unitAmount, "ron"), displayPrice(options.eur, "eur"),
+          displayPrice(options.usd, "usd")].join(" · ") : displayPrice(unitAmount, "ron"),
+        currency_options: options } }, 201);
     }
     if (route === "prices" && request.method === "GET") {
       if (cursor && !PRICE_ID.test(cursor)) throw new Invalid("Cursor Stripe invalid.");
       await identity();
       const result = await stripe.prices.list({ active: true, type: "one_time", limit: 100,
-        expand: ["data.product"], ...(cursor ? { starting_after: cursor } : {}) });
+        expand: ["data.product", "data.currency_options"], ...(cursor ? { starting_after: cursor } : {}) });
       return respond({ prices: result.data.filter(p => livePrice(p) && p.product?.livemode === true &&
         p.product?.active === true && !p.product.deleted).map(p => ({ price_id: p.id,
         title: p.product.name, currency: p.currency, unit_amount: p.unit_amount,
-        display_price: displayPrice(p.unit_amount, p.currency) })),
+        display_price: displayPrice(p.unit_amount, p.currency), display_prices: displayCurrencies(p),
+        currency_options: secondaryFromStripe(p) })),
       cursor: result.has_more ? result.data.at(-1)?.id : null });
     }
     if (route === "files" && request.method === "GET") {
@@ -215,17 +251,23 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
     const priceChange = route.match(/^products\/([0-9a-f-]+)\/price$/);
     if (priceChange && ROW_ID.test(priceChange[1]) && request.method === "POST") {
       canWrite(env);
-      const data = await json(request, ["revision", "unit_amount", "request_id"]);
+      const data = await json(request, ["revision", "unit_amount", "currency_options", "request_id"]);
       revision(data.revision); amount(data.unit_amount); requiredRequestId(data.request_id);
       const old = await db.prepare("SELECT * FROM live_products WHERE id = ?").bind(priceChange[1]).first();
       if (!old) return respond({ error: "Produs inexistent." }, 404);
       if (old.revision !== data.revision || old.state !== "active") return respond({ error: "Actualizează produsul." }, 409);
-      if (old.unit_amount === data.unit_amount) throw new Invalid("Prețul este deja activ.");
       await identity();
       const oldPrice = await priceById(stripe, old.price_id);
       if (oldPrice.product.id !== old.stripe_product_id) throw new Invalid("Identitate Stripe diferită.", 409);
+      const options = data.currency_options === undefined
+        ? secondaryFromStripe(oldPrice) : secondaryAmounts(data.currency_options);
+      const oldOptions = secondaryFromStripe(oldPrice);
+      if (old.unit_amount === data.unit_amount && JSON.stringify(options) === JSON.stringify(oldOptions)) {
+        throw new Invalid("Prețul este deja activ.");
+      }
       const next = await stripe.prices.create({ product: old.stripe_product_id, currency: "ron",
-        unit_amount: data.unit_amount }, { idempotencyKey: "weownit-live-admin-price-" + data.request_id });
+        unit_amount: data.unit_amount, ...(options ? { currency_options: stripeSecondaryOptions(options) } : {}) },
+      { idempotencyKey: "weownit-live-admin-price-" + data.request_id });
       if (!livePrice(next)) throw Error("Unexpected Stripe live price");
       const [switched] = await db.batch([
         db.prepare(`UPDATE live_products SET price_id = ?,unit_amount = ?,

@@ -18,7 +18,10 @@ checkout flow are not replaced.
 1. Owner authenticates to `https://admin.weownit.net/admin` through
    Cloudflare Access and the existing admin token.
 2. Owner creates a Stripe LIVE one-time RON Product+Price (or selects an
-   existing Price), uploads an original ZIP to private R2, saves a Draft,
+   existing Price). The private admin may also record **manually chosen EUR
+   and USD amounts** on the same Stripe Price using `currency_options`;
+   these are not automatic FX conversions. Owner uploads an original ZIP
+   to private R2, saves a Draft,
    and **publishes only after the independent buyer Worker is accepted**.
 3. Once its separate launch gate is turned on, `store.html` fetches only
    published items from `https://checkout.weownit.net/catalog`. Each
@@ -76,6 +79,16 @@ checkout flow are not replaced.
   to Products and Prices write **plus the ability to read account
   identity**, if Stripe permits that with a restricted key. Without
   `GET /v1/account`, the Price dropdown and Product creation fail closed.
+- The admin form and Price list support RON (default) plus optional paired
+  EUR/USD fixed amounts. **The buyer Worker, D1 purchase ledger and public
+  Store are still RON-only**. Do not advertise EUR/USD checkout or accept
+  non-RON payments until a separate currency-aware purchase/fulfillment
+  change validates each exact selected amount end to end, with its own
+  tests and reviewed D1 migration. Stripe's multi-currency Price object
+  alone does not authorize foreign-currency fulfillment. The buyer Worker
+  explicitly sends `currency: 'ron'` to Stripe Checkout and rejects a
+  Session that returns any other currency/total, even when the Price also
+  defines EUR/USD currency options.
 - Recovery requires `RESEND_RECOVERY_API_KEY`; validate the verified sender
   address and email-delivery limits separately before enabling it.
 - Enable `LIVE_CHECKOUT_ENABLED`, `LIVE_WEBHOOK_ENABLED`,
@@ -149,9 +162,11 @@ once payments or revocations exist.
 
 ## Evidence from this branch (local only)
 
-- `npm run test:live-checkout`: 6/6 passed (synthetic Stripe LIVE objects,
+- `npm run test:live-checkout`: 7/7 passed (synthetic Stripe LIVE objects,
   signed SDK-generated webhook, local D1/R2).
-- `npm run test:live-admin`: 7/7 passed.
+- `npm run test:live-admin`: 8/8 passed (including strict RON/EUR/USD
+  synthetic Price creation and amendment). Neither suite creates LIVE
+  products or charges, nor calls any hosted Stripe Sandbox endpoint.
 - `npm test`: 33/33 passed.
 - `npm run test:integration`: 68/68 sandbox regression tests passed.
 - These are historical LOCAL results; do not repeat the hosted Stripe

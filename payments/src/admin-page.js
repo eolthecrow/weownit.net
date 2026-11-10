@@ -51,8 +51,9 @@ export const ADMIN_CSS = String.raw`
 main{max-width:1160px;margin:auto;padding:28px 28px 12px}header{display:flex;align-items:center;gap:14px;padding:0 0 36px}.brand{font-size:22px;font-weight:750;letter-spacing:-1px;color:var(--ink);text-decoration:none}.badge{font-size:11px;letter-spacing:.09em;text-transform:uppercase;background:#e1eee7;border:1px solid #c4dbcd;border-radius:20px;padding:3px 9px}
 h1{font-size:clamp(28px,4vw,40px);line-height:1.15;letter-spacing:-1.5px;margin:4px 0 14px}h2{font-size:19px;letter-spacing:-.4px;margin:0 0 16px}p{margin:0 0 16px}.eyebrow{text-transform:uppercase;letter-spacing:.14em;font-size:11px;color:var(--muted);margin-bottom:8px}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;padding:25px}.login{max-width:520px;margin:20px auto 70px}.heading{display:flex;align-items:center;justify-content:space-between;gap:18px}.heading button{flex-shrink:0}.notice{padding:12px 15px;border-left:3px solid #79a18b;background:#eaf1eb;color:#354e44;font-size:13px}.workspace{display:grid;grid-template-columns:minmax(290px, .85fr) minmax(0,1.15fr);align-items:start;gap:22px}label{display:block;font-size:13px;font-weight:650;margin:18px 0 7px}input,select,button{font:inherit}input:not([type=checkbox]),select{width:100%;border:1px solid #b9cbc2;border-radius:6px;background:#fff;color:var(--ink);padding:10px 11px;min-height:44px}select{font-size:14px;text-overflow:ellipsis}button{min-height:42px;border:1px solid var(--accent);border-radius:6px;padding:9px 15px;background:var(--accent);color:#fff;font-weight:650;cursor:pointer}button:hover{filter:brightness(.94)}button:disabled{opacity:.5;cursor:wait}.quiet{background:transparent;color:var(--ink);border-color:#bdcdc6}.text-button{font-size:12px;min-height:36px;background:transparent;border:0;padding:7px 0;color:var(--accent);text-align:left}.inline{display:flex;justify-content:space-between;gap:15px}.hint{font-size:12px;color:var(--muted);margin-top:8px}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}.check{display:flex;align-items:center;gap:8px;font-weight:400;margin:0 0 8px}.check input{width:17px;height:17px;accent-color:var(--accent)}.list-heading{display:flex;align-items:baseline;justify-content:space-between;gap:10px}.product{border-top:1px solid var(--line);padding:17px 0}.product h3{font-size:15px;line-height:1.4;margin:0 0 5px;overflow-wrap:anywhere}.product p{font-size:13px;margin:0 0 5px;overflow-wrap:anywhere}.product .file{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace}.product .row-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px}.product.archived{opacity:.72}.delete{color:#974232}.status-tag{font-size:10px;background:#f0e9df;border-radius:4px;padding:3px 6px;margin-left:7px;display:inline-block}.empty{padding:24px 0;color:var(--muted);font-size:14px}#message{font-size:13px;overflow-wrap:anywhere;min-height:0}#message:not(:empty){padding:11px 14px;border:1px solid #b9d6c7;background:#f0faf3;border-radius:6px}#message.error{color:#8c332c;border-color:#e3beb7;background:#fff5f1}#loginError{font-size:13px;color:#8c332c;margin:12px 0 0}footer{text-align:center;padding:34px 0 12px;color:var(--muted);font-size:11px}button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid #8db5a8;outline-offset:3px}[hidden]{display:none!important}
 .inline-editor{margin:12px 0;padding:12px 14px;border:1px solid var(--line);border-radius:8px;background:#f8faf8}.inline-editor summary{font-size:13px;font-weight:650;color:var(--accent);cursor:pointer}.inline-editor textarea{width:100%;border:1px solid #b9cbc2;border-radius:6px;padding:10px;font:inherit;resize:vertical}.inline-editor button{margin-top:13px}
+.currency-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.currency-grid label{margin-top:12px}.currency-grid input{min-width:0}
 .delivery-panel{margin-top:20px}.delivery-panel summary{font-weight:700;cursor:pointer;font-size:17px}.delivery-panel #refreshDeliveries{margin:6px 0}.delivery{border-top:1px solid var(--line);padding:14px 0}.delivery p{margin:0 0 5px;font-size:12px;overflow-wrap:anywhere}.delivery .session{font:11px ui-monospace,monospace;color:var(--muted);overflow-wrap:anywhere}.preview{padding:14px;margin:12px 0 3px;background:#f4f7f4;border:1px solid var(--line);border-radius:8px}.preview p{margin-bottom:7px}.preview .lang-links{display:flex;flex-wrap:wrap;gap:15px}.preview a{color:var(--accent);font-size:12px}.product .preview-heading{font-weight:700}.status-tag.published{background:#e3f0e8;color:#1a5841}.delivery .blocked{color:#974232;font-weight:650}
-@media(max-width:720px){main{padding:20px 16px 10px}header{padding-bottom:24px}.workspace{grid-template-columns:minmax(0,1fr)}.panel{padding:20px}.heading{align-items:flex-start}h1{letter-spacing:-.8px}.heading .quiet{padding:7px 9px;font-size:12px}.login{margin:10px auto 40px}.actions button{flex:1}.notice{font-size:12px}}
+@media(max-width:720px){main{padding:20px 16px 10px}header{padding-bottom:24px}.workspace{grid-template-columns:minmax(0,1fr)}.panel{padding:20px}.heading{align-items:flex-start}h1{letter-spacing:-.8px}.heading .quiet{padding:7px 9px;font-size:12px}.login{margin:10px auto 40px}.actions button{flex:1}.notice{font-size:12px}.currency-grid{grid-template-columns:minmax(0,1fr)}}
 `;
 
 export const ADMIN_JS = String.raw`'use strict';
@@ -63,6 +64,14 @@ export const ADMIN_JS = String.raw`'use strict';
   function message(text, error) { $('message').textContent = text || ''; $('message').className = error ? 'error' : ''; }
   function node(tag, text, className) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (className) e.className = className; return e; }
   function option(value, text) { var e = node('option', text); e.value = value; return e; }
+  function priceMinor(value, currency) {
+    var amount = value.trim().replace(',', '.');
+    if (!/^[0-9]{1,6}(?:\.[0-9]{1,2})?$/.test(amount)) throw new Error('Preț invalid pentru ' + currency + '. Exemplu: 49.00.');
+    var pieces = amount.split('.');
+    var minor = Number(pieces[0]) * 100 + Number((pieces[1] || '').padEnd(2, '0'));
+    if (minor < 200 || minor > 99999999) throw new Error('Prețul ' + currency + ' trebuie să fie între 2,00 și 999.999,99.');
+    return minor;
+  }
   function logout() {
     token = ''; epoch++; products = []; prices = []; files = []; editing = null; checkoutEnabled = false; uploadsEnabled = false; priceCreateEnabled = false; stripeCreateKey = ''; liveMode = false; liveStoreConnected = false;
     $('adminToken').value = ''; $('productList').replaceChildren(); $('productForm').reset();
@@ -94,7 +103,7 @@ export const ADMIN_JS = String.raw`'use strict';
     prices.forEach(function (price) {
       var existing = products.find(function (p) { return p.price_id === price.price_id; });
       var suffix = existing ? (existing.state === 'archived' ? ' — poate fi readăugat' : ' — deja activ în catalog') : '';
-      var e = option(price.price_id, price.title + ' · ' + price.display_price + suffix);
+      var e = option(price.price_id, price.title + ' · ' + (price.display_prices || price.display_price) + suffix);
       e.disabled = !!existing && existing.state === 'active' && (!editing || editing.price_id !== price.price_id); $('priceSelect').append(e);
     });
     if (editing && !prices.some(function (p) { return p.price_id === editing.price_id; })) {
@@ -140,7 +149,8 @@ export const ADMIN_JS = String.raw`'use strict';
       var status = product.state === 'archived' ? node('span', 'Șters din catalog', 'status-tag') :
         node('span', product.publication_state === 'published' ? (liveMode ? 'Published · LIVE' : 'Published · staging') : 'Draft',
           'status-tag' + (product.publication_state === 'published' ? ' published' : ''));
-      article.append(heading, status, node('p', product.display_price), node('p', product.object_key, 'file'));
+      var currentPrice = prices.find(function (p) { return p.price_id === product.price_id; });
+      article.append(heading, status, node('p', currentPrice && currentPrice.display_prices || product.display_price), node('p', product.object_key, 'file'));
       var actions = node('div', null, 'row-actions');
       if ((checkoutEnabled || (liveMode && liveStoreConnected && product.publication_state === 'published')) && product.state === 'active') {
         var buyLink = node('a', liveMode ? 'Vezi pagina LIVE (plată reală)' : 'Testează cumpărarea', 'text-button');
@@ -152,16 +162,24 @@ export const ADMIN_JS = String.raw`'use strict';
       if (liveMode && product.state === 'active') {
         var priceButton = node('button', 'Schimbă prețul', 'text-button'); priceButton.type = 'button';
         priceButton.addEventListener('click', function () {
-          var entered = window.prompt('Prețul nou în RON (de ex. 49.00). Stripe va crea un Price nou; cel vechi rămâne în istoric.');
+          var entered = window.prompt('Prețul nou în RON (de ex. 49.00). Stripe va crea un Price nou; cel vechi rămâne în istoric.', (product.unit_amount / 100).toFixed(2));
           if (entered === null) return;
-          var parsed = entered.trim();
-          if (!/^[0-9]{1,6}(?:\.[0-9]{1,2})?$/.test(parsed)) { message('Preț invalid. Exemplu: 49.00 RON.', true); return; }
-          var cents = Math.round(Number(parsed) * 100);
-          if (cents < 200 || cents > 99999999) { message('Prețul trebuie să fie între 2,00 și 999.999,99 RON.', true); return; }
-          if (!window.confirm('Creezi un preț LIVE de ' + parsed + ' RON? Aceasta modifică Stripe LIVE.')) return;
+          var body;
+          try {
+            body = { revision: product.revision, unit_amount: priceMinor(entered, 'RON'), request_id: crypto.randomUUID() };
+            var options = currentPrice && currentPrice.currency_options;
+            var eur = window.prompt('Preț EUR (gol = fără EUR).', options ? (options.eur / 100).toFixed(2) : '');
+            if (eur === null) return;
+            var usd = window.prompt('Preț USD (gol = fără USD).', options ? (options.usd / 100).toFixed(2) : '');
+            if (usd === null) return;
+            if (!!eur.trim() !== !!usd.trim()) throw new Error('Completează ambele prețuri EUR și USD sau lasă-le pe amândouă goale.');
+            body.currency_options = eur.trim() ? { eur: priceMinor(eur, 'EUR'), usd: priceMinor(usd, 'USD') } : null;
+          } catch (err) { message(err.message, true); return; }
+          if (!window.confirm('Creezi un nou preț LIVE: ' + (body.unit_amount / 100).toFixed(2) + ' RON' +
+              (body.currency_options ? ', ' + (body.currency_options.eur / 100).toFixed(2) + ' EUR, ' + (body.currency_options.usd / 100).toFixed(2) + ' USD' : '') + '?')) return;
           run(priceButton, async function () {
             var data = await api('products/' + encodeURIComponent(product.id) + '/price',
-              { method: 'POST', body: { revision: product.revision, unit_amount: cents, request_id: crypto.randomUUID() } });
+              { method: 'POST', body: body });
             products = products.map(function (p) { return p.id === product.id ? data.product : p; });
             await loadPrices(false); renderProducts(); renderOptions();
             message('Prețul LIVE a fost actualizat. Produsul a revenit la Draft; istoricul prețurilor este păstrat.');
@@ -192,7 +210,8 @@ export const ADMIN_JS = String.raw`'use strict';
           if (existingPreview) { existingPreview.remove(); previewButton.setAttribute('aria-expanded', 'false'); return; }
           var data = await api('products/' + encodeURIComponent(product.id) + '/preview');
           var panel = node('section', null, 'preview');
-          panel.append(node('p', data.product.title + ' · ' + data.product.display_price, 'preview-heading'));
+          var currentPrice = prices.find(function (p) { return p.price_id === product.price_id; });
+          panel.append(node('p', data.product.title + ' · ' + (currentPrice && currentPrice.display_prices || data.product.display_price), 'preview-heading'));
           panel.append(node('p', 'Livrare digitală ZIP · ' + Math.max(1, Math.round(data.product.object_size_bytes / 1024)) + ' KB'));
           panel.append(node('p', 'Vizibilitate: ' + (data.product.publication_state === 'published' ? (liveMode ? 'Published · LIVE' : 'Published · staging') : 'Draft')));
           if (data.checkout_available) {
@@ -347,22 +366,24 @@ export const ADMIN_JS = String.raw`'use strict';
       message('ZIP încărcat în R2 privat. Selectat pentru noul produs; apasă Adaugă produs pentru a-l asocia cu prețul Stripe.');
     });
   });
-  ['newStripeName', 'newStripeDescription', 'newStripePrice'].forEach(function (id) {
-    $(id).addEventListener('input', function () { stripeCreateKey = ''; });
+  ['newStripeName', 'newStripeDescription', 'newStripePrice', 'newStripeEur', 'newStripeUsd'].forEach(function (id) {
+    if ($(id)) $(id).addEventListener('input', function () { stripeCreateKey = ''; });
   });
   $('createStripePrice').addEventListener('click', function () {
     run($('createStripePrice'), async function () {
       var name = $('newStripeName').value.trim();
-      var amount = $('newStripePrice').value.trim().replace(',', '.');
       if (!name) throw new Error('Introdu numele produsului Stripe.');
-      if (!/^[0-9]{1,6}(?:\.[0-9]{1,2})?$/.test(amount)) throw new Error('Preț invalid. Exemplu: 10.00 RON.');
-      var parts = amount.split('.');
-      var bani = Number(parts[0]) * 100 + Number((parts[1] || '').padEnd(2, '0'));
-      if (bani < 200 || bani > 99999999) throw new Error('Prețul trebuie să fie între 2 și 999.999,99 RON.');
+      var bani = priceMinor($('newStripePrice').value, 'RON');
+      var options = null;
+      if (liveMode && $('newStripeEur') && $('newStripeUsd')) {
+        var eur = $('newStripeEur').value.trim(), usd = $('newStripeUsd').value.trim();
+        if (!!eur !== !!usd) throw new Error('Completează ambele prețuri EUR și USD sau lasă-le necompletate.');
+        if (eur) options = { eur: priceMinor(eur, 'EUR'), usd: priceMinor(usd, 'USD') };
+      }
       if (!stripeCreateKey) stripeCreateKey = crypto.randomUUID();
-      var data = await api('stripe-products', { method: 'POST', body: {
-        name: name, description: $('newStripeDescription').value.trim(), unit_amount: bani, request_id: stripeCreateKey,
-      } });
+      var payload = { name: name, description: $('newStripeDescription').value.trim(), unit_amount: bani, request_id: stripeCreateKey };
+      if (options) payload.currency_options = options;
+      var data = await api('stripe-products', { method: 'POST', body: payload });
       stripeCreateKey = '';
       prices.unshift(data.price); renderOptions(); $('priceSelect').value = data.price.price_id;
       $('titleInput').value = data.price.title;
@@ -391,7 +412,9 @@ const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
   .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
   .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
-    'Preț LIVE fix, plată unică, în RON. Impozitarea și dreptul de comercializare trebuie confirmate înainte de vânzări.')
+    'Prețuri LIVE fixe în RON, EUR și USD pentru același produs. EUR și USD se introduc împreună; nu sunt conversii automate. Checkout-ul public rămâne RON până la aprobarea implementării multivalută.')
+  .replace('<label for="newStripePrice">Preț în RON</label><input id="newStripePrice" inputmode="decimal" placeholder="10.00" maxlength="10">',
+    '<div class="currency-grid"><div><label for="newStripePrice">Preț RON</label><input id="newStripePrice" inputmode="decimal" placeholder="150.00" maxlength="10"></div><div><label for="newStripeEur">Preț EUR</label><input id="newStripeEur" inputmode="decimal" placeholder="30.00" maxlength="10"></div><div><label for="newStripeUsd">Preț USD</label><input id="newStripeUsd" inputmode="decimal" placeholder="35.00" maxlength="10"></div></div>')
   .replace('Creează prețul de test', 'Creează produs și preț LIVE')
   .replace('Livrări de test și descărcări', 'Plăți LIVE și descărcări')
   .replace('Ultimele 50 de plăți sandbox. Poți revoca definitiv accesul de descărcare pentru o sesiune; această acțiune nu rambursează plata în Stripe.',

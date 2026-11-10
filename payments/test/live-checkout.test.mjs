@@ -48,9 +48,11 @@ async function fixture() {
     accounts: { retrieveCurrent: async () => ({ object: "account", id: "acct_livefixture" }) },
     prices: { retrieve: async () => ({ object: "price", id: priceId, livemode: true,
       active: true, type: "one_time", currency: "ron", unit_amount: 15000,
+      currency_options: { eur: { unit_amount: 3000 }, usd: { unit_amount: 3500 } },
       product: { object: "product", id: "prod_livefixture1", active: true, livemode: true } }) },
     checkout: { sessions: {
       create: async input => { sessionCalls.push(input); return { object: "checkout.session", id: sessionId, livemode: true,
+        currency: input.currency, amount_total: 15000 * input.line_items[0].quantity,
         url: "https://checkout.stripe.com/c/pay_fixture" }; },
       retrieve: async () => ({ object: "checkout.session", id: sessionId, livemode: true, mode: "payment",
         status: "complete", payment_status: "paid", currency: "ron", amount_total: 15000,
@@ -112,6 +114,7 @@ test("LIVE purchase requires signed paid webhook, same browser, and limits downl
     const checkout = await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "ro" }));
     assert.equal(checkout.status, 201);
     assert.match(ctx.sessionCalls[0].integration_identifier, /^weownit-live-[a-z]{8}$/);
+    assert.equal(ctx.sessionCalls[0].currency, "ron", "Stripe must not auto-present EUR/USD while the buyer ledger is RON-only");
     assert.equal(Object.hasOwn(ctx.sessionCalls[0], "payment_method_types"), false);
     assert.match((await checkout.json()).checkout_url, /^https:\/\/checkout\.stripe\.com\//);
     const buyerCookie = checkout.headers.get("Set-Cookie").split(";")[0];
@@ -142,6 +145,22 @@ test("LIVE purchase requires signed paid webhook, same browser, and limits downl
     }
     assert.equal((await ctx.call(post("/customer/download", { ticket: ready.ticket }, buyerCookie, true))).status, 403);
     assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM live_purchases").first()).n, 1);
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("LIVE buyer rejects a Stripe Session returned in a non-RON currency even when the Price supports EUR/USD", async () => {
+  const ctx = await fixture();
+  try {
+    ctx.stripe.checkout.sessions.create = async input => {
+      ctx.sessionCalls.push(input);
+      return { object: "checkout.session", id: sessionId, livemode: true,
+        currency: "eur", amount_total: 3000, url: "https://checkout.stripe.com/c/pay_fixture" };
+    };
+    const response = await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "en" }));
+    assert.equal(response.status, 503);
+    assert.equal(ctx.sessionCalls[0].currency, "ron");
+    const saved = await ctx.db.prepare("SELECT session_id FROM live_checkout_attempts WHERE session_id IS NOT NULL").first();
+    assert.equal(saved, null, "unexpected currency may never be granted a delivery entitlement");
   } finally { await ctx.platform.dispose(); }
 });
 

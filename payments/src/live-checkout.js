@@ -255,7 +255,10 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
         .bind(id, ownerHash, data.quantity, now, now + 3600, now + 86400, data.language,
           product.id, product.revision, now - 60, ownerHash, now - 3600).first();
       if (!attempt) throw new Denied("checkout_limited", 429);
-      const session = await stripe.checkout.sessions.create({ mode: "payment",
+      // A Stripe Price with EUR/USD currency_options would otherwise enable
+      // location-based presentment. Until D1 and fulfillment support exact
+      // multi-currency snapshots, force RON for every buyer Checkout Session.
+      const session = await stripe.checkout.sessions.create({ mode: "payment", currency: "ron",
         integration_identifier: integrationIdentifier(),
         line_items: [{ price: product.price_id, quantity: data.quantity }],
         client_reference_id: id, metadata: { weownit_flow: FLOW },
@@ -266,6 +269,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       }, { idempotencyKey: "weownit-live-" + id });
       let checkoutUrl; try { checkoutUrl = new URL(session.url); } catch { throw new Denied("service_unavailable", 503); }
       if (session.object !== "checkout.session" || !SESSION.test(session.id || "") || session.livemode !== true ||
+          session.currency !== "ron" || session.amount_total !== product.unit_amount * data.quantity ||
           checkoutUrl.origin !== "https://checkout.stripe.com" || checkoutUrl.username || checkoutUrl.password) {
         throw new Denied("service_unavailable", 503);
       }
