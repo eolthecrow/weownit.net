@@ -332,6 +332,15 @@ export const ADMIN_JS = String.raw`'use strict';
   });
   $('productForm').addEventListener('submit', function (event) {
     event.preventDefault(); var button = $('saveProduct');
+    if (!editing && !$('priceSelect').value) {
+      message('Creează mai întâi un produs și preț Stripe LIVE sau alege un preț din listă.', true);
+      if (liveMode && priceCreateEnabled) { $('stripeCreator').open = true; $('newStripeName').focus(); }
+      return;
+    }
+    if (!$('fileSelect').value) {
+      message('Încarcă un ZIP în R2 și selectează-l în câmpul Arhivă ZIP înainte de a salva produsul.', true);
+      return;
+    }
     run(button, async function () {
       var existing = !editing && products.find(function (p) { return p.price_id === $('priceSelect').value && p.state === 'archived'; });
       var editId = editing ? editing.id : existing && existing.id;
@@ -376,7 +385,10 @@ export const ADMIN_JS = String.raw`'use strict';
     });
   });
   ['newStripeName', 'newStripeDescription', 'newStripePrice', 'newStripeEur', 'newStripeUsd'].forEach(function (id) {
-    if ($(id)) $(id).addEventListener('input', function () { stripeCreateKey = ''; });
+    if ($(id)) $(id).addEventListener('input', function () {
+      stripeCreateKey = '';
+      if ($('message').classList.contains('error')) message('');
+    });
   });
   $('createStripePrice').addEventListener('click', function () {
     run($('createStripePrice'), async function () {
@@ -416,6 +428,10 @@ const LIVE_ADMIN_JS = ADMIN_JS.replaceAll("credentials: 'omit'", "credentials: '
 
 const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('<span class="badge">sandbox</span>', '<span class="badge">LIVE · administrare</span>')
+  // Let the LIVE form show its actionable empty-catalog messages instead of
+  // the browser's generic "Please select an item in the list" validation popup.
+  .replace('<select id="priceSelect" required>', '<select id="priceSelect">')
+  .replace('<select id="fileSelect" required>', '<select id="fileSelect">')
   .replace('Mediu de test. Publicarea pregătește doar catalogul de staging; nu modifică Store-ul public și nu activează Stripe Live.',
     'Catalog Stripe LIVE. Crearea de produse și prețuri modifică Stripe LIVE când este activată. Publicarea în Store este permisă numai după verificarea conexiunii de plată și livrare.')
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
