@@ -821,7 +821,8 @@
       "publishedAt": "2026-11-10",
       "reviewedAt": "2026-11-10",
       "archive": false,
-      "slug": "workos-ai-agent-sandbox-incident-2026"
+      "slug": "workos-ai-agent-sandbox-incident-2026",
+      "cves": []
     },
     {
       "id": "20261108-gtig-agentic-intrusions",
@@ -903,7 +904,8 @@
       "publishedAt": "2026-11-10",
       "reviewedAt": "2026-11-10",
       "archive": false,
-      "slug": "gtig-agentic-offensive-frameworks-2026"
+      "slug": "gtig-agentic-offensive-frameworks-2026",
+      "cves": []
     },
     {
       "id": "php",
