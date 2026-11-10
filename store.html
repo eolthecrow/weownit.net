@@ -723,7 +723,9 @@
       const card=document.createElement("article"); card.className="live-item";
       const title=document.createElement("h3"); title.textContent=item.title;
       const money=document.createElement("div"); money.className="price";
-      money.textContent=new Intl.NumberFormat(lang,{style:"currency",currency:"RON"}).format(item.unit_amount/100);
+      money.textContent=(item.prices||[{currency:"ron",unit_amount:item.unit_amount}])
+        .map(price=>new Intl.NumberFormat(lang,{style:"currency",currency:price.currency.toUpperCase()})
+          .format(price.unit_amount/100)).join(" · ");
       const link=document.createElement("a"); link.className="buy";link.textContent=t.buy;
       link.href=LIVE_CATALOG_ORIGIN+"/buy/"+item.id+"?lang="+lang;
       card.append(title,money,link);list.append(card);
@@ -738,7 +740,9 @@
       if(!Array.isArray(data.products))return;
       liveProducts=data.products.filter(item=>item&&/^[a-f0-9-]{36}$/i.test(item.id)&&
         typeof item.title==="string"&&item.title.length<=160&&item.title.length>0&&
-        item.currency==="ron"&&Number.isSafeInteger(item.unit_amount)&&item.unit_amount>0);
+        item.currency==="ron"&&Number.isSafeInteger(item.unit_amount)&&item.unit_amount>0&&
+        Array.isArray(item.prices)&&item.prices.some(p=>p.currency==="ron"&&p.unit_amount===item.unit_amount)&&
+        item.prices.every(p=>["ron","eur","usd"].includes(p.currency)&&Number.isSafeInteger(p.unit_amount)&&p.unit_amount>0));
       renderLiveCatalog(activeLanguage);
     }catch(_){ /* Checkout remains unavailable until the public Worker is ready. */ }
   }

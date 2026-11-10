@@ -18,16 +18,21 @@ checkout flow are not replaced.
 1. Owner authenticates to `https://admin.weownit.net/admin` through
    Cloudflare Access and the existing admin token.
 2. Owner creates a Stripe LIVE one-time RON Product+Price (or selects an
-   existing Price). The private admin may also record **manually chosen EUR
+   existing Price). The private admin can also set **manually chosen EUR
    and USD amounts** on the same Stripe Price using `currency_options`;
-   these are not automatic FX conversions. Owner uploads an original ZIP
+   these are not automatic FX conversions. The exact amounts for the
+   currently selected Price are captured in the private LIVE catalog D1.
+   Owner uploads an original ZIP
    to private R2, saves a Draft,
    and **publishes only after the independent buyer Worker is accepted**.
 3. Once its separate launch gate is turned on, `store.html` fetches only
    published items from `https://checkout.weownit.net/catalog`. Each
    product links to `/buy/{id}?lang=ro|en|fr`.
-4. The buyer sees name, current price and quantity (1–3), then goes to
-   Stripe-hosted, card-only Checkout. The card never touches our Worker.
+4. The buyer sees the exact available **RON/EUR/USD** price options and
+   quantity (1–3), selects one currency, then goes to Stripe-hosted
+   Checkout. The currency and unit amount are captured in the immutable
+   D1 attempt; Stripe must return the identical currency and amount before
+   the checkout URL is handed over. The card never touches our Worker.
 5. Stripe calls the *public* `/stripe/webhook`. The Worker checks the
    Stripe signature, LIVE mode, Checkout Session identity, exact line
    item, quantity, currency, paid status and matching catalog snapshot;
@@ -53,7 +58,8 @@ checkout flow are not replaced.
 | LIVE buyer Worker | `src/live-public-index.js` |
 | Checkout, webhooks, delivery, recovery | `src/live-checkout.js` |
 | Mobile-first buyer pages, EN/RO/FR | `src/live-customer-page.js` |
-| Additive LIVE D1 migration | `live-checkout-schema.sql` |
+| LIVE checkout D1 tables for a new deployment | `live-checkout-schema.sql` |
+| Additive selected-Price EUR/USD snapshots | `live-multicurrency-schema.sql` |
 | Safe config template | `wrangler.live-checkout.jsonc.example` |
 | Offline integration scenarios | `test/live-checkout.test.mjs` |
 | LIVE admin order views and explicit error messages | `src/live-catalog.js`, `src/admin-page.js` |
@@ -80,15 +86,24 @@ checkout flow are not replaced.
   identity**, if Stripe permits that with a restricted key. Without
   `GET /v1/account`, the Price dropdown and Product creation fail closed.
 - The admin form and Price list support RON (default) plus optional paired
-  EUR/USD fixed amounts. **The buyer Worker, D1 purchase ledger and public
-  Store are still RON-only**. Do not advertise EUR/USD checkout or accept
-  non-RON payments until a separate currency-aware purchase/fulfillment
-  change validates each exact selected amount end to end, with its own
-  tests and reviewed D1 migration. Stripe's multi-currency Price object
-  alone does not authorize foreign-currency fulfillment. The buyer Worker
-  explicitly sends `currency: 'ron'` to Stripe Checkout and rejects a
-  Session that returns any other currency/total, even when the Price also
-  defines EUR/USD currency options.
+  EUR/USD fixed amounts. The buyer Worker and Store candidate now display
+  the available fixed options, pin the buyer's selected currency to the
+  Stripe Checkout Session, and compare it against the selected-price D1
+  snapshot at checkout, webhook and fulfillment. This is **code-only
+  coverage, not a LIVE multi-currency acceptance**. No EUR/USD payment may
+  be accepted until the intended LIVE remote schema, effective Stripe
+  permissions, fees, checkout configuration, signed webhook and account
+  readiness have been separately approved and verified.
+- **Existing remote D1 schema is a deployment gate.** If the
+  `live_checkout_attempts.currency` or `live_purchases.currency` CHECK
+  constraints still allow only `ron`, the updated
+  `live-checkout-schema.sql` will **not** change them: its tables use
+  `CREATE TABLE IF NOT EXISTS`. Their existing definitions must first be
+  inspected with `sqlite_master`/`PRAGMA table_info` read-only. A data-
+  preserving, backed-up table-rebuild migration requires an independent
+  review and approval; running the schema file alone is not a migration
+  for preexisting RON-only tables. Keep all transaction gates OFF until
+  the remote schema really supports `ron`, `eur`, and `usd`.
 - Recovery requires `RESEND_RECOVERY_API_KEY`; validate the verified sender
   address and email-delivery limits separately before enabling it.
 - Enable `LIVE_CHECKOUT_ENABLED`, `LIVE_WEBHOOK_ENABLED`,
@@ -108,8 +123,14 @@ checkout flow are not replaced.
    `/admin/api/stripe-identity` or `/admin/api/prices` request; do not
    paste a secret key or a webhook signing secret in chat or source.
 3. Inspect the LIVE D1 remote table list/migrations, D1 ID and R2 name;
-   create a backup/export before executing the **additive**
-   `live-checkout-schema.sql` migration on that explicit database.
+   confirm the current constraints and row counts on
+   `live_checkout_attempts` and `live_purchases`, if they exist. Create a
+   backup/export before any separately approved migration. For a fresh
+   checkout database run `live-checkout-schema.sql`, followed by
+   `live-multicurrency-schema.sql`. For an already initialized checkout
+   database, `live-multicurrency-schema.sql` is additive, but an older
+   RON-only CHECK constraint needs a separate reviewed table-rebuild
+   migration and is **not** repaired by re-running either schema.
 4. Clone the example config to an ignored deployment config and replace
    placeholders with reviewed resources. First `wrangler deploy --dry-run`;
    record its binding inventory, hash and deployed version **if approved**.
@@ -132,8 +153,8 @@ checkout flow are not replaced.
    read-only checks or explicitly safe negative tests; do not call the
    Sandbox payment service.
 8. **LIVE website acceptance, with explicit separate authorization:** choose
-   one published product and approve its exact RON price, account, operator
-   and timing. Perform one real card payment from the actual Store, prove
+   one published product and approve its exact **selected currency** price,
+   account, operator and timing. Perform one real card payment from the actual Store, prove
    the signed LIVE webhook and paid purchase ledger, download the private
    ZIP, and verify that delivery cannot be repeated after revocation.
    A real payment can incur real money and fees; a refund is a separate
@@ -144,7 +165,7 @@ checkout flow are not replaced.
    email delivery, audit logging, invoice/tax treatment, mobile and
    EN/RO/FR. Use harmless negative tests or local synthetic evidence when
    a scenario cannot safely be induced against the LIVE account.
-9. Enable public storefront only after the paid-path verification passes,
+10. Enable public storefront only after the paid-path verification passes,
    Stripe permissions are narrowed, and rollback maintains all existing
    `live_delivery_blocks` across Worker versions.
 
@@ -162,7 +183,7 @@ once payments or revocations exist.
 
 ## Evidence from this branch (local only)
 
-- `npm run test:live-checkout`: 7/7 passed (synthetic Stripe LIVE objects,
+- `npm run test:live-checkout`: 9/9 passed (synthetic Stripe LIVE objects,
   signed SDK-generated webhook, local D1/R2).
 - `npm run test:live-admin`: 8/8 passed (including strict RON/EUR/USD
   synthetic Price creation and amendment). Neither suite creates LIVE

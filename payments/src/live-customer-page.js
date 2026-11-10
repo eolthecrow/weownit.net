@@ -4,12 +4,15 @@ import { customerAsset, CUSTOMER_JS, CUSTOMER_TRANSLATIONS } from "./customer-pa
 // sandbox assets or imply that a LIVE payment is a test payment.
 const replacements = {
   ro: { sandbox: "Plată securizată Stripe LIVE. Vei fi debitat doar după confirmarea plății în Stripe.",
+    currency: "Monedă",
     pay: "Continuă la plata securizată", checkout_limited: "Au fost inițiate prea multe plăți. Încearcă mai târziu.",
     privacy: "Datele cardului sunt procesate de Stripe. Pentru descărcare, revino în același browser. Recuperarea accesului pe alt dispozitiv nu este activă încă. Nu emitem automat licențe pentru utilizatori multipli." },
   en: { sandbox: "Secure Stripe LIVE payment. Your card is charged only when you confirm payment with Stripe.",
+    currency: "Currency",
     pay: "Continue to secure checkout", checkout_limited: "Too many checkouts have been started. Try again later.",
     privacy: "Stripe handles card details. Return in the same browser for the download. Cross-device recovery is not yet enabled. Multi-user licenses are not automatically issued." },
   fr: { sandbox: "Paiement sécurisé Stripe LIVE. Votre carte n'est débitée qu'après votre confirmation chez Stripe.",
+    currency: "Devise",
     pay: "Continuer vers le paiement sécurisé", checkout_limited: "Trop de paiements ont été démarrés. Réessayez plus tard.",
     privacy: "Stripe traite les données de carte. Revenez dans ce navigateur pour le téléchargement. La récupération sur un autre appareil n'est pas encore active. Aucune licence multi-utilisateur n'est délivrée automatiquement." },
 };
@@ -21,8 +24,53 @@ const recoveryPrivacy = {
 const translations = enabled => Object.fromEntries(Object.entries(CUSTOMER_TRANSLATIONS).map(([language, terms]) =>
   [language, { ...terms, ...replacements[language], ...(enabled ? { privacy: recoveryPrivacy[language] } : {}) }]));
 const marker = "(function () {";
-const liveJs = enabled => "'use strict';\nconst translations = " + JSON.stringify(translations(enabled)) + ";\n" +
-  CUSTOMER_JS.slice(CUSTOMER_JS.indexOf(marker)).replaceAll("cs_test_", "cs_live_");
+function replaceRequired(script, before, after) {
+  if (!script.includes(before)) throw Error("LIVE client change is incompatible with the checkout template");
+  return script.replace(before, after);
+}
+function liveJs(enabled) {
+  let script = CUSTOMER_JS.slice(CUSTOMER_JS.indexOf(marker)).replaceAll("cs_test_", "cs_live_");
+  script = replaceRequired(script, "  function price() {", `  function chosenPrice() {
+    const desired = $('currency').value || 'ron';
+    return product?.prices?.find(item => item.currency === desired) ||
+      (desired === 'ron' && product ? { currency: 'ron', unit_amount: product.unit_amount } : null);
+  }
+  function price() {`);
+  script = replaceRequired(script,
+    `      $('price').textContent = money(product.unit_amount, product.currency, product.minor_units);
+      $('total').textContent = translations[language].total + ': ' + money(product.unit_amount * Number($('quantity').value), product.currency, product.minor_units);`,
+    `      const selected = chosenPrice();
+      if (selected) {
+        $('price').textContent = money(selected.unit_amount, selected.currency, product.minor_units);
+        $('total').textContent = translations[language].total + ': ' + money(selected.unit_amount * Number($('quantity').value), selected.currency, product.minor_units);
+      }`);
+  script = replaceRequired(script, "  $('quantity').addEventListener('change', price);",
+    `  $('quantity').addEventListener('change', price);
+  $('currency').addEventListener('change', () => {
+    const url = new URL(location.href);
+    url.searchParams.set('currency', $('currency').value);
+    history.replaceState(null, '', url.href);
+    price();
+  });`);
+  script = replaceRequired(script,
+    "{ product_id: productId, quantity: Number($('quantity').value), language }",
+    "{ product_id: productId, quantity: Number($('quantity').value), language, currency: $('currency').value }");
+  script = replaceRequired(script,
+    "product = data.product; $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;",
+    `product = data.product;
+      const supported = Array.isArray(product.prices) ? product.prices : [{ currency: 'ron', unit_amount: product.unit_amount }];
+      const currencySelect = $('currency');
+      currencySelect.replaceChildren(...supported.map(item => {
+        const option = document.createElement('option');
+        option.value = item.currency;
+        option.textContent = item.currency.toUpperCase();
+        return option;
+      }));
+      const preferred = params.get('currency');
+      currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : 'ron';
+      $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;`);
+  return "'use strict';\nconst translations = " + JSON.stringify(translations(enabled)) + ";\n" + script;
+}
 
 export async function liveCustomerAsset(path, env = {}) {
   const enabled = env.LIVE_RECOVERY_ENABLED === "true";
@@ -43,6 +91,8 @@ export async function liveCustomerAsset(path, env = {}) {
   }
   const html = (await original.text())
     .replace("weownit.net · sandbox", "weownit.net · plată securizată")
-    .replace('<span class="badge">sandbox</span>', '<span class="badge">Stripe LIVE</span>');
+    .replace('<span class="badge">sandbox</span>', '<span class="badge">Stripe LIVE</span>')
+    .replace('<label for="quantity" data-i18n="quantity"></label>',
+      '<label for="currency" data-i18n="currency"></label><select id="currency"></select><label for="quantity" data-i18n="quantity"></label>');
   return new Response(html, { headers });
 }

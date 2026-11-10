@@ -13,6 +13,7 @@ const UUID = /^[a-f\d]{8}-(?:[a-f\d]{4}-){3}[a-f\d]{12}$/i;
 const HEX = /^[a-f0-9]{64}$/;
 const COOKIE = "__Host-weownit_live_buyer";
 const FLOW = "weownit-live-checkout-v1";
+const SUPPORTED_CURRENCIES = new Set(["ron", "eur", "usd"]);
 const SIGNATURE = /^whsec_[A-Za-z0-9]{24,}$/;
 const nowSeconds = () => Math.floor(Date.now() / 1000);
 class Denied extends Error {
@@ -108,6 +109,32 @@ async function paidNow(stripe, purchase) {
 }
 function lang(value) { return ["ro","en","fr"].includes(value) ? value : "ro"; }
 
+// RON is the canonical D1/Stripe Price currency; EUR and USD are exact
+// operator-supplied snapshots stored alongside its current Price ID. Never
+// infer these values from an exchange rate or from untrusted browser totals.
+function variants(row) {
+  const prices = [{ currency: "ron", unit_amount: row.unit_amount }];
+  let additional;
+  try { additional = JSON.parse(row.currency_prices || "{}"); }
+  catch { throw new Denied("product_unavailable", 503); }
+  if (!additional || typeof additional !== "object" || Array.isArray(additional) ||
+      Object.keys(additional).some(currency => !["eur","usd"].includes(currency))) {
+    throw new Denied("product_unavailable", 503);
+  }
+  for (const currency of ["eur", "usd"]) {
+    const value = additional[currency];
+    if (value !== undefined) {
+      if (!Number.isSafeInteger(value) || value < 200 || value > 99999999) throw new Denied("product_unavailable", 503);
+      prices.push({ currency, unit_amount: value });
+    }
+  }
+  if (prices.length === 2) throw new Denied("product_unavailable", 503);
+  return prices;
+}
+
+const currencyJoin = `COALESCE((SELECT json_group_object(c.currency,c.unit_amount)
+  FROM live_product_currencies c WHERE c.product_id = p.id AND c.price_id = p.price_id),'{}') AS currency_prices`;
+
 export async function handleLiveCustomer(request, env, { checkoutStripe, fulfillmentStripe, recoverySend, clock = nowSeconds } = {}) {
   const url = new URL(request.url), path = url.pathname, db = env?.LIVE_CATALOG_DB, now = clock();
   let newCookie;
@@ -119,18 +146,22 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       delivery: configured(env, "delivery") ? "configured" : "disabled" }));
     if (path === "/catalog" && request.method === "GET") {
       if (env?.LIVE_PUBLIC_CATALOG_ENABLED !== "true" || !configured(env, "checkout") || !configured(env, "webhook") || !configured(env, "delivery")) throw new Denied("not_found", 404);
-      const rows = await db.prepare("SELECT id,title,currency,unit_amount FROM live_products WHERE state = 'active' AND visibility = 'published' ORDER BY title LIMIT 100").all();
-      return finish(respond({ products: rows.results.map(p => ({ ...p, display_price: displayPrice(p.unit_amount, p.currency) })) }));
+      const rows = await db.prepare(`SELECT p.id,p.title,p.currency,p.unit_amount,${currencyJoin}
+        FROM live_products p WHERE p.state = 'active' AND p.visibility = 'published' ORDER BY p.title LIMIT 100`).all();
+      return finish(respond({ products: rows.results.map(p => ({ id: p.id, title: p.title,
+        currency: p.currency, unit_amount: p.unit_amount,
+        display_price: displayPrice(p.unit_amount, p.currency), prices: variants(p) })) }));
     }
     if (path.startsWith("/customer/product/") && request.method === "GET") {
       if (env?.LIVE_PUBLIC_CATALOG_ENABLED !== "true" || !configured(env, "checkout") ||
           !configured(env, "webhook") || !configured(env, "delivery")) throw new Denied("not_found", 404);
       const id = path.slice("/customer/product/".length);
       if (!UUID.test(id)) throw new Denied("not_found", 404);
-      const product = await db.prepare(`SELECT id,title,currency,unit_amount FROM live_products
-        WHERE id = ? AND state = 'active' AND visibility = 'published'`).bind(id).first();
+      const product = await db.prepare(`SELECT p.id,p.title,p.currency,p.unit_amount,${currencyJoin}
+        FROM live_products p WHERE p.id = ? AND p.state = 'active' AND p.visibility = 'published'`).bind(id).first();
       if (!product || product.currency !== "ron") throw new Denied("not_found", 404);
-      return finish(respond({ product: { ...product, minor_units: 2 } }));
+      return finish(respond({ product: { id: product.id, title: product.title,
+        currency: product.currency, unit_amount: product.unit_amount, minor_units: 2, prices: variants(product) } }));
     }
     if (path.startsWith("/customer/recovery/") && request.method === "POST") {
       if (env.LIVE_RECOVERY_ENABLED !== "true" || !configured(env, "delivery") ||
@@ -226,39 +257,45 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       if (!configured(env, "checkout") || !configured(env, "webhook") || !configured(env, "delivery") ||
           env.LIVE_PUBLIC_CATALOG_ENABLED !== "true") throw new Denied("service_unavailable", 503);
       originAllowed(url, env); sameOrigin(request);
-      const data = await body(request, ["product_id", "quantity", "language"]);
+      const data = await body(request, ["product_id", "quantity", "language", "currency"]);
       if (!UUID.test(data.product_id || "") || !Number.isSafeInteger(data.quantity) ||
-          data.quantity < 1 || data.quantity > 3 || !["ro","en","fr"].includes(data.language)) throw new Denied("invalid_input");
+          data.quantity < 1 || data.quantity > 3 || !["ro","en","fr"].includes(data.language) ||
+          (data.currency !== undefined && !SUPPORTED_CURRENCIES.has(data.currency))) throw new Denied("invalid_input");
       const owner = cookie(request) || randomSecret(); newCookie = owner;
       const ownerHash = await hash(owner);
-      const product = await db.prepare(`SELECT * FROM live_products WHERE id = ? AND state = 'active' AND visibility = 'published'`)
+      const product = await db.prepare(`SELECT p.*,${currencyJoin} FROM live_products p
+        WHERE p.id = ? AND p.state = 'active' AND p.visibility = 'published'`)
         .bind(data.product_id).first();
-      if (!product || product.currency !== "ron" || !validProductKey(product.object_key) ||
-          !Number.isSafeInteger(product.unit_amount * data.quantity)) throw new Denied("product_unavailable", 404);
+      if (!product || product.currency !== "ron" || !validProductKey(product.object_key)) throw new Denied("product_unavailable", 404);
+      const chosenCurrency = data.currency || "ron";
+      const chosenPrice = variants(product).find(option => option.currency === chosenCurrency);
+      if (!chosenPrice || !Number.isSafeInteger(chosenPrice.unit_amount * data.quantity)) throw new Denied("product_unavailable", 404);
       const found = await env.LIVE_TOOLKITS_R2.head(product.object_key);
       if (!found || found.size !== product.object_size_bytes) throw new Denied("product_unavailable", 404);
       const stripe = checkoutStripe || createStripeClient(env.STRIPE_LIVE_CHECKOUT_KEY);
       const account = await stripe.accounts.retrieveCurrent();
       if (account?.id !== env.LIVE_EXPECTED_ACCOUNT_ID) throw new Denied("service_unavailable", 503);
-      const price = await stripe.prices.retrieve(product.price_id, { expand: ["product"] });
+      const price = await stripe.prices.retrieve(product.price_id, { expand: ["product", "currency_options"] });
       if (price?.object !== "price" || price.livemode !== true || price.active !== true ||
           price.type !== "one_time" || price.currency !== "ron" || price.unit_amount !== product.unit_amount ||
           price.product?.id !== product.stripe_product_id || price.product?.livemode !== true ||
           price.product?.active !== true) throw new Denied("product_unavailable", 404);
+      if (chosenCurrency !== "ron" && price.currency_options?.[chosenCurrency]?.unit_amount !== chosenPrice.unit_amount) {
+        throw new Denied("product_unavailable", 404);
+      }
       const id = crypto.randomUUID();
       const attempt = await db.prepare(`INSERT INTO live_checkout_attempts
         (id,owner_hash,product_id,title,price_id,object_key,currency,unit_amount,quantity,created_at,expires_at,access_expires_at,language)
-        SELECT ?,?,id,title,price_id,object_key,currency,unit_amount,?,?,?,?,? FROM live_products
+        SELECT ?,?,id,title,price_id,object_key,?,?,?,?,?,?,? FROM live_products
         WHERE id = ? AND revision = ? AND state = 'active' AND visibility = 'published'
         AND (SELECT COUNT(*) FROM live_checkout_attempts WHERE created_at > ?) < 30
         AND (SELECT COUNT(*) FROM live_checkout_attempts WHERE owner_hash = ? AND created_at > ?) < 5 RETURNING id`)
-        .bind(id, ownerHash, data.quantity, now, now + 3600, now + 86400, data.language,
+        .bind(id, ownerHash, chosenCurrency, chosenPrice.unit_amount, data.quantity, now, now + 3600, now + 86400, data.language,
           product.id, product.revision, now - 60, ownerHash, now - 3600).first();
       if (!attempt) throw new Denied("checkout_limited", 429);
-      // A Stripe Price with EUR/USD currency_options would otherwise enable
-      // location-based presentment. Until D1 and fulfillment support exact
-      // multi-currency snapshots, force RON for every buyer Checkout Session.
-      const session = await stripe.checkout.sessions.create({ mode: "payment", currency: "ron",
+      // Pin the exact buyer-selected currency; never rely on Stripe IP-based
+      // auto-presentment, which may disagree with the immutable D1 attempt.
+      const session = await stripe.checkout.sessions.create({ mode: "payment", currency: chosenCurrency,
         integration_identifier: integrationIdentifier(),
         line_items: [{ price: product.price_id, quantity: data.quantity }],
         client_reference_id: id, metadata: { weownit_flow: FLOW },
@@ -269,7 +306,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       }, { idempotencyKey: "weownit-live-" + id });
       let checkoutUrl; try { checkoutUrl = new URL(session.url); } catch { throw new Denied("service_unavailable", 503); }
       if (session.object !== "checkout.session" || !SESSION.test(session.id || "") || session.livemode !== true ||
-          session.currency !== "ron" || session.amount_total !== product.unit_amount * data.quantity ||
+          session.currency !== chosenCurrency || session.amount_total !== chosenPrice.unit_amount * data.quantity ||
           checkoutUrl.origin !== "https://checkout.stripe.com" || checkoutUrl.username || checkoutUrl.password) {
         throw new Denied("service_unavailable", 503);
       }
@@ -419,7 +456,7 @@ export async function handleLiveWebhook(request, env, { stripeClient, clock = no
     const line = items?.data?.[0];
     if (items?.object !== "list" || items.has_more !== false || items.data.length !== 1 ||
         line?.quantity !== attempt.quantity || line?.price?.id !== attempt.price_id ||
-        line?.price?.livemode !== true || line?.price?.unit_amount !== attempt.unit_amount ||
+        line?.price?.livemode !== true || (attempt.currency === "ron" && line?.price?.unit_amount !== attempt.unit_amount) ||
         line?.currency !== attempt.currency || line?.amount_total !== attempt.quantity * attempt.unit_amount ||
         session.currency !== attempt.currency || session.amount_total !== line.amount_total ||
         session.amount_subtotal !== line.amount_total) return respond({ error: "unmatched_amount" }, 409);

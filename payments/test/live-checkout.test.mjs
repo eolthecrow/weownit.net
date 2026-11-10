@@ -27,7 +27,7 @@ async function fixture() {
     persist: false, remoteBindings: false, envFiles: [],
   });
   const db = platform.env.LIVE_CATALOG_DB;
-  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql", "live-checkout-schema.sql"]) {
+  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql", "live-checkout-schema.sql", "live-multicurrency-schema.sql"]) {
     const sql = await readFile(new URL("../" + name, import.meta.url), "utf8");
     await db.batch(sql.split(";").map(s => s.trim()).filter(Boolean).map(s => db.prepare(s)));
   }
@@ -35,6 +35,12 @@ async function fixture() {
     (id,title,stripe_product_id,price_id,object_key,currency,unit_amount,object_size_bytes,visibility)
     VALUES (?,?,?,?,?,?,?,?,?)`).bind(productId, "Firewall Assessment", "prod_livefixture1", priceId,
       "products/firewall.zip", "ron", 15000, 16, "published").run();
+  await db.batch([
+    db.prepare("INSERT INTO live_product_currencies(product_id,price_id,currency,unit_amount) VALUES (?,?,?,?)")
+      .bind(productId,priceId,"eur",3000),
+    db.prepare("INSERT INTO live_product_currencies(product_id,price_id,currency,unit_amount) VALUES (?,?,?,?)")
+      .bind(productId,priceId,"usd",3500),
+  ]);
   await platform.env.LIVE_TOOLKITS_R2.put("products/firewall.zip", "1234567890abcdef");
   const env = { ...platform.env, LIVE_EXPECTED_ACCOUNT_ID: "acct_livefixture",
     LIVE_CHECKOUT_ORIGIN: base, LIVE_CHECKOUT_ENABLED: "true", LIVE_STORE_CONNECTED: "true",
@@ -52,7 +58,7 @@ async function fixture() {
       product: { object: "product", id: "prod_livefixture1", active: true, livemode: true } }) },
     checkout: { sessions: {
       create: async input => { sessionCalls.push(input); return { object: "checkout.session", id: sessionId, livemode: true,
-        currency: input.currency, amount_total: 15000 * input.line_items[0].quantity,
+        currency: input.currency, amount_total: { ron: 15000, eur: 3000, usd: 3500 }[input.currency] * input.line_items[0].quantity,
         url: "https://checkout.stripe.com/c/pay_fixture" }; },
       retrieve: async () => ({ object: "checkout.session", id: sessionId, livemode: true, mode: "payment",
         status: "complete", payment_status: "paid", currency: "ron", amount_total: 15000,
@@ -89,6 +95,9 @@ test("LIVE buyer Worker is separated and fails closed until all gates are enable
     const product = await ctx.call(new Request(base + "/customer/product/" + productId));
     assert.equal(product.status, 200);
     assert.equal((await product.json()).product.minor_units, 2);
+    const publicProduct = (await (await ctx.call(new Request(base + "/customer/product/" + productId))).json()).product;
+    assert.deepEqual(publicProduct.prices.map(x => [x.currency,x.unit_amount]),
+      [["ron",15000],["eur",3000],["usd",3500]]);
     const cors = await ctx.call(new Request(base + "/catalog", { headers: { Origin: "https://weownit.net" } }));
     assert.equal(cors.headers.get("Access-Control-Allow-Origin"), "https://weownit.net");
     const badCors = await ctx.call(new Request(base + "/catalog", { headers: { Origin: "https://attacker.invalid" } }));
@@ -148,7 +157,7 @@ test("LIVE purchase requires signed paid webhook, same browser, and limits downl
   } finally { await ctx.platform.dispose(); }
 });
 
-test("LIVE buyer rejects a Stripe Session returned in a non-RON currency even when the Price supports EUR/USD", async () => {
+test("LIVE buyer rejects a Stripe Session returned in a different currency from that chosen by the customer", async () => {
   const ctx = await fixture();
   try {
     ctx.stripe.checkout.sessions.create = async input => {
@@ -161,6 +170,74 @@ test("LIVE buyer rejects a Stripe Session returned in a non-RON currency even wh
     assert.equal(ctx.sessionCalls[0].currency, "ron");
     const saved = await ctx.db.prepare("SELECT session_id FROM live_checkout_attempts WHERE session_id IS NOT NULL").first();
     assert.equal(saved, null, "unexpected currency may never be granted a delivery entitlement");
+  } finally { await ctx.platform.dispose(); }
+});
+
+test("EUR/USD LIVE checkout verifies exact Stripe currency and amount before granting a ZIP", async () => {
+  for (const [currency,unit] of [["eur",3000],["usd",3500]]) {
+    const ctx = await fixture();
+    try {
+      const purchase = await ctx.call(post("/customer/checkout", {
+        product_id: productId, quantity: 2, language: "en", currency }));
+      assert.equal(purchase.status, 201, await purchase.clone().text());
+      assert.equal(ctx.sessionCalls[0].currency, currency);
+      assert.equal(ctx.sessionCalls[0].line_items[0].quantity, 2);
+      const buyerCookie = purchase.headers.get("Set-Cookie").split(";")[0];
+      const attempt = await ctx.db.prepare("SELECT * FROM live_checkout_attempts WHERE session_id = ?")
+        .bind(sessionId).first();
+      assert.equal(attempt.currency, currency);
+      assert.equal(attempt.unit_amount, unit);
+      ctx.stripe.checkout.sessions.retrieve = async () => ({ object: "checkout.session", id: sessionId,
+        livemode: true, mode: "payment", status: "complete", payment_status: "paid", currency,
+        amount_total: unit * 2, amount_subtotal: unit * 2, payment_intent: "pi_livefixture1",
+        metadata: { weownit_flow: "weownit-live-checkout-v1" }, client_reference_id: attempt.id });
+      ctx.stripe.checkout.sessions.listLineItems = async () => ({ object: "list", has_more: false,
+        data: [{ quantity: 2, currency, amount_total: unit * 2,
+          price: { object: "price", id: priceId, livemode: true, unit_amount: 15000 } }] });
+      ctx.stripe.paymentIntents.retrieve = async () => ({ object: "payment_intent", id: "pi_livefixture1",
+        livemode: true, status: "succeeded", currency, amount: unit * 2, amount_received: unit * 2,
+        latest_charge: { object: "charge", livemode: true, paid: true, captured: true,
+          status: "succeeded", payment_intent: "pi_livefixture1", amount_captured: unit * 2,
+          currency, refunded: false, amount_refunded: 0, disputed: false } });
+      const event = { id: "evt_paid" + currency, object: "event", livemode: true,
+        type: "checkout.session.completed", data: { object: { object: "checkout.session", id: sessionId } } };
+      if (currency === "eur") {
+        const validLineItems = ctx.stripe.checkout.sessions.listLineItems;
+        ctx.stripe.checkout.sessions.listLineItems = async () => ({ object: "list", has_more: false,
+          data: [{ quantity: 2, currency: "eur", amount_total: unit * 2 - 100,
+            price: { object: "price", id: priceId, livemode: true, unit_amount: 15000 } }] });
+        const refused = await ctx.call(ctx.signed(event));
+        assert.equal(refused.status, 409, "EUR amount tampering must not grant an entitlement");
+        assert.equal((await ctx.db.prepare("SELECT COUNT(*) AS n FROM live_purchases").first()).n, 0);
+        ctx.stripe.checkout.sessions.listLineItems = validLineItems;
+      }
+      const webhook = await ctx.call(ctx.signed(event));
+      assert.equal(webhook.status, 200, await webhook.clone().text());
+      const dbPurchase = await ctx.db.prepare("SELECT currency,amount_total FROM live_purchases WHERE session_id = ?")
+        .bind(sessionId).first();
+      assert.deepEqual(dbPurchase, { currency, amount_total: unit * 2 });
+      const receipt = await ctx.call(post("/customer/receipt", { session_id: sessionId }, buyerCookie));
+      assert.equal(receipt.status, 200, await receipt.clone().text());
+      const data = await receipt.json();
+      assert.equal(data.currency, currency);
+      assert.equal(data.amount_total, unit * 2);
+    } finally { await ctx.platform.dispose(); }
+  }
+});
+
+test("LIVE rejects EUR purchase if Stripe price no longer matches the reviewed D1 EUR amount", async () => {
+  const ctx = await fixture();
+  try {
+    ctx.stripe.prices.retrieve = async () => ({ object: "price", id: priceId, livemode: true,
+      active: true, type: "one_time", currency: "ron", unit_amount: 15000,
+      currency_options: { eur: { unit_amount: 1 }, usd: { unit_amount: 3500 } },
+      product: { object: "product", id: "prod_livefixture1", active: true, livemode: true } });
+    const response = await ctx.call(post("/customer/checkout", {
+      product_id: productId, quantity: 1, language: "fr", currency: "eur" }));
+    assert.equal(response.status, 404);
+    assert.equal(ctx.sessionCalls.length, 0);
+    const attempts = await ctx.db.prepare("SELECT COUNT(*) AS n FROM live_checkout_attempts WHERE session_id IS NOT NULL").first();
+    assert.equal(attempts.n, 0);
   } finally { await ctx.platform.dispose(); }
 });
 

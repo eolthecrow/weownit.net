@@ -32,7 +32,7 @@ async function context() {
     persist: false, remoteBindings: false, envFiles: [],
   });
   const db = platform.env.LIVE_CATALOG_DB;
-  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql", "live-checkout-schema.sql"]) {
+  for (const name of ["r2-guard-schema.sql", "live-catalog-schema.sql", "live-checkout-schema.sql", "live-multicurrency-schema.sql"]) {
     const sql = await readFile(new URL("../" + name, import.meta.url), "utf8");
     await db.batch(sql.split(";").map(s => s.trim()).filter(Boolean).map(s => db.prepare(s)));
   }
@@ -189,7 +189,7 @@ test("LIVE admin creates Stripe price, uploads ZIP, maintains catalog, price his
 });
 
 test("LIVE admin creates and changes manually specified RON/EUR/USD prices without activating checkout", async () => {
-  const { platform, env, stripe, calls } = await context();
+  const { platform, env, db, stripe, calls } = await context();
   const call = (path, method = "GET", body) => handleLiveRequest(request(path, method, body), env, { stripeClient: stripe });
   try {
     const bad = await call("/admin/api/stripe-products", "POST", {
@@ -213,6 +213,9 @@ test("LIVE admin creates and changes manually specified RON/EUR/USD prices witho
       object_key: "products/three.zip" });
     assert.equal(linked.status, 201, await linked.clone().text());
     const product = (await linked.json()).product;
+    const recorded = await db.prepare("SELECT currency,unit_amount FROM live_product_currencies WHERE product_id = ? ORDER BY currency")
+      .bind(product.id).all();
+    assert.deepEqual(recorded.results.map(x => [x.currency,x.unit_amount]), [["eur",3000],["usd",3500]]);
     const changed = await call("/admin/api/products/" + product.id + "/price", "POST", {
       revision: product.revision, unit_amount: 16000, currency_options: { eur: 3200, usd: 3700 },
       request_id: crypto.randomUUID() });
@@ -220,7 +223,10 @@ test("LIVE admin creates and changes manually specified RON/EUR/USD prices witho
     const latest = calls.filter(c => typeof c === "object").at(-1).create;
     assert.deepEqual(latest.currency_options, { eur: { unit_amount: 3200 }, usd: { unit_amount: 3700 } });
     const view = (await changed.json()).product;
-    assert.equal(view.currency, "ron", "existing catalog and buyer checkout remain RON-only by default");
+    const changedAmounts = await db.prepare("SELECT currency,unit_amount FROM live_product_currencies WHERE product_id = ? ORDER BY currency")
+      .bind(product.id).all();
+    assert.deepEqual(changedAmounts.results.map(x => [x.currency,x.unit_amount]), [["eur",3200],["usd",3700]]);
+    assert.equal(view.currency, "ron", "RON remains the canonical Price currency");
     assert.equal(view.publication_state, "draft");
     assert.equal((await call("/admin/api/products/" + product.id + "/publish", "POST", { revision: view.revision })).status, 409);
   } finally { await platform.dispose(); }

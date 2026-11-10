@@ -43,7 +43,8 @@ function amount(value) {
 
 // A Stripe Price keeps RON as its default currency. Additional manually set
 // EUR/USD amounts belong to the same immutable Price, never to a calculated
-// exchange-rate conversion. They do not enable foreign-currency checkout yet.
+// exchange-rate conversion. The buyer Worker must validate the selected
+// currency against both this immutable Stripe Price and the D1 snapshot.
 function secondaryAmounts(value) {
   if (value == null) return null;
   if (!value || Array.isArray(value) || typeof value !== "object" ||
@@ -69,6 +70,24 @@ function displayCurrencies(price) {
   const options = secondaryFromStripe(price);
   return [displayPrice(price.unit_amount, "ron"),
     ...(options ? [displayPrice(options.eur, "eur"), displayPrice(options.usd, "usd")] : [])].join(" · ");
+}
+
+async function recordedSecondary(db, productId, priceId) {
+  const rows = await db.prepare(`SELECT currency,unit_amount FROM live_product_currencies
+    WHERE product_id = ? AND price_id = ? ORDER BY currency`).bind(productId, priceId).all();
+  if (!rows.results.length) return null;
+  if (rows.results.length !== 2 || rows.results[0].currency !== "eur" || rows.results[1].currency !== "usd") {
+    throw new Invalid("Opțiunile valutare din catalog sunt incomplete.", 503);
+  }
+  return { eur: rows.results[0].unit_amount, usd: rows.results[1].unit_amount };
+}
+
+function optionInserts(db, productId, priceId, options) {
+  if (!options) return [];
+  return ["eur", "usd"].map(currency => db.prepare(`INSERT INTO live_product_currencies
+    (product_id,price_id,currency,unit_amount)
+    SELECT id,price_id,?,? FROM live_products WHERE id = ? AND price_id = ?`)
+    .bind(currency, options[currency], productId, priceId));
 }
 
 function revision(value) {
@@ -224,6 +243,7 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
       const price = await priceById(stripe, data.price_id);
       const title = name(data.title || price.product.name), object = await file(env, data.object_key);
       const id = crypto.randomUUID();
+      const options = secondaryFromStripe(price);
       const [created] = await db.batch([
         db.prepare(`INSERT INTO live_products
           (id,title,stripe_product_id,price_id,object_key,currency,unit_amount,object_size_bytes)
@@ -231,6 +251,7 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
           .bind(id, title, price.product.id, price.id, data.object_key, price.currency, price.unit_amount, object.size),
         db.prepare(`INSERT OR IGNORE INTO live_price_history(product_id,price_id,unit_amount,currency)
           SELECT id,price_id,unit_amount,currency FROM live_products WHERE id = ?`).bind(id),
+        ...optionInserts(db,id,price.id,options),
       ]);
       const row = created.results?.[0];
       if (!row) return respond({ error: "Prețul este deja asociat unui produs." }, 409);
@@ -277,6 +298,10 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
         db.prepare(`INSERT OR IGNORE INTO live_price_history(product_id,price_id,unit_amount,currency)
           SELECT id,price_id,unit_amount,currency FROM live_products WHERE id = ? AND price_id = ?`)
           .bind(old.id, next.id),
+        db.prepare(`DELETE FROM live_product_currencies WHERE product_id = ?
+          AND EXISTS (SELECT 1 FROM live_products WHERE id = ? AND price_id = ?)`)
+          .bind(old.id,old.id,next.id),
+        ...optionInserts(db,old.id,next.id,options),
       ]);
       const updated = switched.results?.[0];
       if (!updated) return respond({ error: "Produsul a fost modificat; verifică Stripe și reîncarcă." }, 409);
@@ -298,6 +323,10 @@ export async function handleLiveCatalog(request, env, { stripeClient } = {}) {
         const price = await priceById(stripe, old.price_id);
         if (price.unit_amount !== old.unit_amount || price.product.id !== old.stripe_product_id) {
           throw new Invalid("Prețul Stripe nu corespunde produsului.");
+        }
+        const recorded = await recordedSecondary(db, old.id, old.price_id);
+        if (JSON.stringify(recorded) !== JSON.stringify(secondaryFromStripe(price))) {
+          throw new Invalid("Prețurile EUR/USD s-au modificat în Stripe. Revedeți catalogul înainte de publicare.", 409);
         }
         await file(env, old.object_key);
       }
