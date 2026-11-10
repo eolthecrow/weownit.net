@@ -40,6 +40,19 @@ class BriefingTests(unittest.TestCase):
         del self.data['articles'][0]['fr']['checks']
         with self.assertRaises(ValueError):builder.published_articles(self.data,self.today)
 
+    def test_published_articles_require_valid_cve_arrays(self):
+        for bad in (None, 'CVE-2026-12345', ['bad-id'], ['CVE-2026-106174', 'CVE-2026-106174']):
+            data=copy.deepcopy(self.data)
+            if bad is None:
+                del data['articles'][0]['cves']
+            else:
+                data['articles'][0]['cves']=bad
+            with self.assertRaises(ValueError):
+                builder.published_articles(data,self.today)
+        data=copy.deepcopy(self.data)
+        data['articles'][0]['cves']=[]
+        self.assertTrue(builder.published_articles(data,self.today))
+
     def test_editorial_text_cannot_inject_script_and_rss_is_valid(self):
         self.data['articles'][0]['en']['title']='</script><script>alert("test")</script>'
         generated=builder.outputs(self.data,self.today)

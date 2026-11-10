@@ -48,6 +48,10 @@ def published_articles(data, today=None):
             date.fromisoformat(article['date'])
         if article['cat'] not in range(1, 5):
             raise ValueError('Invalid category')
+        cves = article.get('cves')
+        if (not isinstance(cves, list) or len(cves) != len(set(str(cve) for cve in cves))
+                or any(not isinstance(cve, str) or not re.fullmatch(r'CVE-\d{4}-\d{4,}', cve) for cve in cves)):
+            raise ValueError('Invalid or missing CVE list in ' + slug)
         for lang in LANGUAGES:
             for key in ('title', 'desc', 'facts', 'context', 'checks', 'status', 'tech', 'step', 'take', 'help', 'support'):
                 if not article.get(lang, {}).get(key):

@@ -38,9 +38,9 @@
     "Kits, modèles et ressources numériques pour les réseaux et la cybersécurité, proposés par Vladimir Arjoca."
   ],
   "briefing": [
-    "Vulnerabilities, ransomware and attack campaigns: original sources, practical checks and remediation support from weownit.net.",
-    "Vulnerabilități, ransomware și campanii de atac: surse originale, verificări practice și sprijin pentru remediere de la weownit.net.",
-    "Vulnérabilités, rançongiciels et campagnes d’attaque : sources originales, vérifications pratiques et accompagnement par weownit.net."
+    "Cybersecurity news and research: vulnerabilities, ransomware, identity, cloud and software supply chains. Reported facts, practical checks and remediation you can validate.",
+    "Știri și cercetări de securitate cibernetică: vulnerabilități, ransomware, identitate, cloud și supply chain. Fapte documentate, verificări practice și remedieri care pot fi validate.",
+    "Actualités et recherches en cybersécurité : vulnérabilités, rançongiciels, identité, cloud et chaîne logicielle. Faits documentés, vérifications pratiques et remédiation vérifiable."
   ],
   "tools": [
     "Web-Check, CVE Risk Lens and local exposure comparisons with traceable sources, coverage limits and next actions.",

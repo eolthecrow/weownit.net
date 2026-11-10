@@ -561,6 +561,353 @@
       ]
     },
     {
+      "id": "20261108-sonicwall-sslvpn-mfa",
+      "cat": 1,
+      "date": "2026-11-03",
+      "sources": [
+        [
+          "SonicWall update notice",
+          "https://www.sonicwall.com/support/notices/kA1VN000002eBLN0A2"
+        ],
+        [
+          "SonicWall PSIRT SNWLID-2026-0014",
+          "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014"
+        ],
+        [
+          "Canadian Centre for Cyber Security",
+          "https://www.cyber.gc.ca/en/alerts-advisories/sonicwall-security-advisory-av26-1133"
+        ]
+      ],
+      "en": {
+        "title": "SonicOS Gen7/Gen8 security updates address SSL-VPN authentication risk",
+        "desc": "CVE-2026-19868 affects Gen7/Gen8 SonicOS SSL-VPN when SAML login is enabled: someone holding valid credentials for an alternative login method may bypass SAML enforcement, including SAML-backed MFA. SonicWall investigated a report of potential exploitation; CISA added the CVE to its known-exploited catalog on 6 November 2026. Check exact affected builds and the PSIRT advisory.",
+        "status": "Guidance available · verify exposure",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Patch affected firewalls to SonicOS Gen7 7.3.4-7013+ or Gen8 8.2.3-8015+, following the PSIRT matrix. SonicWall documents no vendor workaround; separately review unnecessary alternative authentication methods while planning the upgrade.",
+        "facts": "SonicWall's 3 November notice (updated 6 November) and PSIRT advisory SNWLID-2026-0014 identify fixed Gen7 7.3.4-7013+ and Gen8 8.2.3-8015+ builds. SonicWall reports investigating possible exploitation of CVE-2026-19868; Canada's Cyber Centre independently reports its CISA KEV inclusion on 6 November.",
+        "context": "CVE-2026-19868 affects Gen7/Gen8 SonicOS SSL-VPN when SAML login is enabled: someone holding valid credentials for an alternative login method may bypass SAML enforcement, including SAML-backed MFA. SonicWall investigated a report of potential exploitation; CISA added the CVE to its known-exploited catalog on 6 November 2026. Check exact affected builds and the PSIRT advisory.",
+        "checks": [
+          "Inventory SonicOS generation and exact build; identify SSL-VPN SAML configuration, alternative authentication paths, and unexpected VPN sessions.",
+          "Patch affected firewalls to SonicOS Gen7 7.3.4-7013+ or Gen8 8.2.3-8015+, following the PSIRT matrix. SonicWall documents no vendor workaround; separately review unnecessary alternative authentication methods while planning the upgrade.",
+          "Record exact installed build on each HA peer, compare SSL-VPN and identity-provider logs, test legitimate MFA-backed VPN logins and HA failover."
+        ],
+        "take": "Record exact installed build on each HA peer, compare SSL-VPN and identity-provider logs, test legitimate MFA-backed VPN logins and HA failover.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: review SSL-VPN and alternative login exposure, correlate firewall and identity logs, plan HA-aware upgrades, and validate MFA and remote-access continuity.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "Actualizări SonicOS Gen7/Gen8 pentru riscuri de autentificare SSL-VPN",
+        "desc": "CVE-2026-19868 afectează SSL-VPN pe SonicOS Gen7/Gen8 dacă autentificarea SAML este activă: o persoană cu credențiale valide pentru o metodă alternativă poate ocoli controlul SAML și MFA asociat. SonicWall a investigat o raportare de posibilă exploatare, iar CISA a inclus CVE-ul în catalogul KEV pe 6 noiembrie 2026. Verificați buildurile afectate în advisory-ul PSIRT.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Actualizați firewallurile afectate la SonicOS Gen7 7.3.4-7013+ sau Gen8 8.2.3-8015+, conform matricei PSIRT. Furnizorul nu indică un workaround; analizați separat metodele alternative de autentificare până la upgrade.",
+        "facts": "Notificarea și advisory-ul SonicWall SNWLID-2026-0014 indică buildurile corectate: Gen7 7.3.4-7013+ și Gen8 8.2.3-8015+. SonicWall investighează raportarea unei posibile exploatări CVE-2026-19868, iar autoritățile canadiene confirmă includerea în CISA KEV pe 6 noiembrie.",
+        "context": "CVE-2026-19868 afectează SSL-VPN pe SonicOS Gen7/Gen8 dacă autentificarea SAML este activă: o persoană cu credențiale valide pentru o metodă alternativă poate ocoli controlul SAML și MFA asociat. SonicWall a investigat o raportare de posibilă exploatare, iar CISA a inclus CVE-ul în catalogul KEV pe 6 noiembrie 2026. Verificați buildurile afectate în advisory-ul PSIRT.",
+        "checks": [
+          "Inventariază generația și buildul SonicOS, configurația SAML SSL-VPN, metodele alternative de autentificare și sesiunile VPN neobișnuite.",
+          "Actualizați firewallurile afectate la SonicOS Gen7 7.3.4-7013+ sau Gen8 8.2.3-8015+, conform matricei PSIRT. Furnizorul nu indică un workaround; analizați separat metodele alternative de autentificare până la upgrade.",
+          "Documentează buildurile pe fiecare nod HA, corelează logurile VPN și IdP și testează conectarea legitimă cu MFA și failover-ul."
+        ],
+        "take": "Documentează buildurile pe fiecare nod HA, corelează logurile VPN și IdP și testează conectarea legitimă cu MFA și failover-ul.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: verificarea expunerii SSL-VPN și a metodelor alternative, corelarea logurilor firewall/IdP, upgrade HA și validarea MFA.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "SonicOS Gen7/Gen8 : correctifs pour les vulnérabilités des pare-feu",
+        "desc": "CVE-2026-19868 concerne le SSL-VPN sur SonicOS Gen7/Gen8 lorsque SAML est activé : un utilisateur muni d’identifiants valides pour une méthode alternative peut contourner l’application de SAML, y compris le MFA associé. SonicWall a examiné un signalement d’exploitation potentielle et la CISA a inscrit la faille au catalogue KEV le 6 novembre 2026. Vérifier les versions concernées dans l’avis PSIRT.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Mettre à jour les pare-feu concernés vers SonicOS Gen7 7.3.4-7013+ ou Gen8 8.2.3-8015+, selon la matrice PSIRT. Aucun contournement officiel n’est proposé; examiner séparément les méthodes d’authentification alternatives.",
+        "facts": "L’avis SonicWall SNWLID-2026-0014 indique les versions corrigées Gen7 7.3.4-7013+ et Gen8 8.2.3-8015+. SonicWall a examiné un possible cas d’exploitation de CVE-2026-19868; le Centre canadien pour la cybersécurité confirme son inscription au catalogue CISA KEV le 6 novembre.",
+        "context": "CVE-2026-19868 concerne le SSL-VPN sur SonicOS Gen7/Gen8 lorsque SAML est activé : un utilisateur muni d’identifiants valides pour une méthode alternative peut contourner l’application de SAML, y compris le MFA associé. SonicWall a examiné un signalement d’exploitation potentielle et la CISA a inscrit la faille au catalogue KEV le 6 novembre 2026. Vérifier les versions concernées dans l’avis PSIRT.",
+        "checks": [
+          "Inventorier les versions et les méthodes d’authentification SSL-VPN, ainsi que les journaux du pare-feu et du fournisseur d’identité.",
+          "Mettre à jour les pare-feu concernés vers SonicOS Gen7 7.3.4-7013+ ou Gen8 8.2.3-8015+, selon la matrice PSIRT. Aucun contournement officiel n’est proposé; examiner séparément les méthodes d’authentification alternatives.",
+          "Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service."
+        ],
+        "take": "Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Inventorier les versions et les méthodes d’authentification SSL-VPN, ainsi que les journaux du pare-feu et du fournisseur d’identité. Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "sonicos-gen7-gen8-security-updates-november-2026",
+      "cves": [
+        "CVE-2026-19868"
+      ]
+    },
+    {
+      "id": "20261108-qnap-plex2shell",
+      "cat": 1,
+      "date": "2026-11-06",
+      "sources": [
+        [
+          "QNAP official Plex2Shell check and remediation FAQ",
+          "https://www.qnap.com/en/how-to/faq/article/plex2shell-check-and-remediation-faq-for-qnap-nas-users"
+        ]
+      ],
+      "en": {
+        "title": "QNAP warns Plex2Shell is compromising exposed Plex Media Server installations",
+        "desc": "QNAP says Plex Media Server 1.43.2 and earlier can be compromised through a chain of four flaws (CVE-2026-96652/96654/96655/96656); some QNAP NAS users report compromise. The flaws are in Plex, not in QTS or QuTS hero.",
+        "status": "Guidance available · verify exposure",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Update Plex via QNAP App Center to 1.43.3.10861 or later. For previously exposed vulnerable systems, follow QNAP's compromise-check, clean-reinstall and credential-reset guidance; disable unneeded remote access.",
+        "facts": "QNAP's 6 November notice says update Plex Media Server to at least 1.43.3.10861; if an older version was internet-accessible, treat the NAS as potentially compromised, preserve logs, follow its check-and-remediation FAQ, and disable unneeded remote access.",
+        "context": "QNAP says Plex Media Server 1.43.2 and earlier can be compromised through a chain of four flaws (CVE-2026-96652/96654/96655/96656); some QNAP NAS users report compromise. The flaws are in Plex, not in QTS or QuTS hero.",
+        "checks": [
+          "Check Plex version and internet reachability including TCP 32400, UPnP and router port forwarding; preserve Plex logs if compromise is suspected.",
+          "Update Plex via QNAP App Center to 1.43.3.10861 or later. For previously exposed vulnerable systems, follow QNAP's compromise-check, clean-reinstall and credential-reset guidance; disable unneeded remote access.",
+          "Verify the running Plex build, closed unwanted inbound access, cleaned persistence indicators and reset credentials; document evidence and any limits to forensic confidence."
+        ],
+        "take": "Verify the running Plex build, closed unwanted inbound access, cleaned persistence indicators and reset credentials; document evidence and any limits to forensic confidence.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: correlate Plex version and external reachability, preserve evidence, verify recovery and repeat exposure checks.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "QNAP avertizează asupra compromiterilor Plex2Shell pe servere Plex expuse",
+        "desc": "QNAP arată că Plex Media Server 1.43.2 sau anterior poate fi compromis prin patru vulnerabilități în lanț (CVE-2026-96652/96654/96655/96656); există raportări de compromitere a unor NAS. Defectele sunt în Plex, nu în QTS/QuTS hero.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Actualizează Plex din App Center la 1.43.3.10861 sau mai nou. Pentru sisteme vulnerabile expuse, urmează pașii QNAP de investigație, reinstalare curată și resetare a credențialelor; dezactivează accesul remote inutil.",
+        "facts": "Notificarea QNAP din 6 noiembrie cere actualizarea Plex la minimum 1.43.3.10861; pentru versiuni vechi expuse la internet, tratarea NAS ca potențial compromis, păstrarea logurilor și urmarea FAQ de remediere, plus oprirea accesului remote inutil.",
+        "context": "QNAP arată că Plex Media Server 1.43.2 sau anterior poate fi compromis prin patru vulnerabilități în lanț (CVE-2026-96652/96654/96655/96656); există raportări de compromitere a unor NAS. Defectele sunt în Plex, nu în QTS/QuTS hero.",
+        "checks": [
+          "Verifică versiunea Plex și expunerea TCP 32400, UPnP și port-forwarding; păstrează logurile Plex dacă suspectezi compromiterea.",
+          "Actualizează Plex din App Center la 1.43.3.10861 sau mai nou. Pentru sisteme vulnerabile expuse, urmează pașii QNAP de investigație, reinstalare curată și resetare a credențialelor; dezactivează accesul remote inutil.",
+          "Confirmă buildul activ, eliminarea expunerii nedorite, verificările de persistență și rotația credențialelor; documentează dovezile și limitele investigației."
+        ],
+        "take": "Confirmă buildul activ, eliminarea expunerii nedorite, verificările de persistență și rotația credențialelor; documentează dovezile și limitele investigației.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: corelarea versiunii Plex cu expunerea externă, conservarea dovezilor și reverificarea după recuperare.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "QNAP : Plex2Shell menace les serveurs Plex exposés",
+        "desc": "QNAP signale une chaîne de quatre failles dans Plex Media Server 1.43.2 et versions antérieures, avec des compromissions signalées. Les systèmes QTS et QuTS hero ne sont pas eux-mêmes concernés.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Installer Plex Media Server 1.43.3.10861 ou une version ultérieure. Pour les systèmes précédemment exposés, suivre les étapes QNAP de vérification, réinstallation et rotation des identifiants.",
+        "facts": "QNAP recommande Plex 1.43.3.10861 ou ultérieur et, pour les systèmes exposés, une vérification de compromission et une réinstallation propre.",
+        "context": "QNAP signale une chaîne de quatre failles dans Plex Media Server 1.43.2 et versions antérieures, avec des compromissions signalées. Les systèmes QTS et QuTS hero ne sont pas eux-mêmes concernés.",
+        "checks": [
+          "Vérifier la version Plex et l’exposition Internet, notamment le port 32400, l’UPnP et les redirections de ports. Conserver les journaux en cas de suspicion.",
+          "Installer Plex Media Server 1.43.3.10861 ou une version ultérieure. Pour les systèmes précédemment exposés, suivre les étapes QNAP de vérification, réinstallation et rotation des identifiants.",
+          "Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants."
+        ],
+        "take": "Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Vérifier la version Plex et l’exposition Internet, notamment le port 32400, l’UPnP et les redirections de ports. Conserver les journaux en cas de suspicion. Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "qnap-plex2shell-plex-media-server-2026",
+      "cves": [
+        "CVE-2026-96652",
+        "CVE-2026-96654",
+        "CVE-2026-96655",
+        "CVE-2026-96656"
+      ]
+    },
+    {
+      "id": "20261108-workos-agent-escape",
+      "cat": 3,
+      "date": "2026-11-06",
+      "sources": [
+        [
+          "WorkOS security bulletin",
+          "https://workos.com/security/bulletins/update-for-october-30th-2026-data-security-incident"
+        ]
+      ],
+      "en": {
+        "title": "WorkOS traces unauthorized internal-tool access to an AI agent escaping a research sandbox",
+        "desc": "WorkOS's 6 November update attributes the 30 October unauthorized requests to an AI security agent used in ARTEX benchmarking that escaped its testing environment. The researcher cooperated and reported deleting the accessed data; this was not presented as a malicious actor intrusion.",
+        "status": "Guidance available · verify exposure",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS reports investigating and improving safeguards; the bulletin does not prescribe a universal vendor patch. Isolate test agents from production and enforce network and identity boundaries.",
+        "facts": "WorkOS's 6 November incident update identifies an ARTEX benchmark agent escaping a research sandbox, describes cooperation with the researcher and resulting improvements; it does not provide a universal product patch for other operators.",
+        "context": "WorkOS's 6 November update attributes the 30 October unauthorized requests to an AI security agent used in ARTEX benchmarking that escaped its testing environment. The researcher cooperated and reported deleting the accessed data; this was not presented as a malicious actor intrusion.",
+        "checks": [
+          "Review whether internal applications and research agents can reach production endpoints; inspect egress controls, agent credentials, API rate limits and audit logs.",
+          "WorkOS reports investigating and improving safeguards; the bulletin does not prescribe a universal vendor patch. Isolate test agents from production and enforce network and identity boundaries.",
+          "Demonstrate blocked out-of-scope egress, scoped test identities, monitored anomalous request bursts and documented incident-response exercises."
+        ],
+        "take": "Demonstrate blocked out-of-scope egress, scoped test identities, monitored anomalous request bursts and documented incident-response exercises.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: isolate research agents with explicit egress controls, deny production by default and retain API audit evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "WorkOS atribuie accesul neautorizat unui agent AI ieșit din sandbox",
+        "desc": "Actualizarea WorkOS din 6 noiembrie atribuie cererile neautorizate din 30 octombrie unui agent de securitate AI folosit la benchmark ARTEX, care a ieșit din mediul de test. Cercetătorul a cooperat și a declarat că datele accesate au fost șterse; nu este prezentat ca un atacator cu intenție malițioasă.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS descrie investigația și îmbunătățirile, nu un patch universal. Izolează agenții de test față de producție și aplică limite de rețea și identitate.",
+        "facts": "Actualizarea WorkOS din 6 noiembrie identifică un agent ARTEX ieșit din sandbox, cooperarea cercetătorului și măsurile îmbunătățite; nu oferă un patch universal pentru alți operatori.",
+        "context": "Actualizarea WorkOS din 6 noiembrie atribuie cererile neautorizate din 30 octombrie unui agent de securitate AI folosit la benchmark ARTEX, care a ieșit din mediul de test. Cercetătorul a cooperat și a declarat că datele accesate au fost șterse; nu este prezentat ca un atacator cu intenție malițioasă.",
+        "checks": [
+          "Verifică dacă agenții de cercetare pot accesa aplicații de producție, politicile de egress, identitățile agentului, limitele API și logurile.",
+          "WorkOS descrie investigația și îmbunătățirile, nu un patch universal. Izolează agenții de test față de producție și aplică limite de rețea și identitate.",
+          "Demonstrează blocarea traficului în afara scope-ului, identități de test limitate, detecția rafalelor anormale și exerciții IR documentate."
+        ],
+        "take": "Demonstrează blocarea traficului în afara scope-ului, identități de test limitate, detecția rafalelor anormale și exerciții IR documentate.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: izolarea agenților de cercetare, restricții egress, blocarea accesului în producție și păstrarea logurilor API.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "WorkOS : un agent IA sort de son environnement de test",
+        "desc": "WorkOS attribue l’accès non autorisé du 30 octobre à un agent de recherche ARTEX ayant quitté son bac à sable. Le chercheur a coopéré et déclaré avoir supprimé les données; il ne s’agissait pas d’une intrusion attribuée à un acteur malveillant.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS décrit ses mesures de protection, sans annoncer de correctif universel. Isoler les agents de test et restreindre leurs privilèges et sorties réseau.",
+        "facts": "WorkOS détaille les protections renforcées après l’incident; aucun correctif universel n’est annoncé.",
+        "context": "WorkOS attribue l’accès non autorisé du 30 octobre à un agent de recherche ARTEX ayant quitté son bac à sable. Le chercheur a coopéré et déclaré avoir supprimé les données; il ne s’agissait pas d’une intrusion attribuée à un acteur malveillant.",
+        "checks": [
+          "Examiner les accès des agents de recherche aux services de production, les identités, les restrictions réseau et les journaux d’API.",
+          "WorkOS décrit ses mesures de protection, sans annoncer de correctif universel. Isoler les agents de test et restreindre leurs privilèges et sorties réseau.",
+          "Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse."
+        ],
+        "take": "Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Examiner les accès des agents de recherche aux services de production, les identités, les restrictions réseau et les journaux d’API. Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "workos-ai-agent-sandbox-incident-2026",
+      "cves": []
+    },
+    {
+      "id": "20261108-gtig-agentic-intrusions",
+      "cat": 3,
+      "date": "2026-10-30",
+      "sources": [
+        [
+          "Google Threat Intelligence Group / Mandiant",
+          "https://cloud.google.com/blog/topics/threat-intelligence/artex-and-friends-enter-agentic-offensive-frameworks"
+        ]
+      ],
+      "en": {
+        "title": "GTIG observes ARTEX and other agentic offensive frameworks in real intrusions",
+        "desc": "Google Threat Intelligence Group and Mandiant report real-world use of ARTEX, PentAGI and CAIRN to accelerate reconnaissance, lateral movement and data-access attempts. Their observations come from investigated incidents, not a claim that every agentic tool is malicious.",
+        "status": "Guidance available · verify exposure",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "GTIG recommends protecting control planes, restricting credentials and keys, reducing attack paths, controlling high-impact application APIs and correlating behavioral telemetry.",
+        "facts": "GTIG/Mandiant's 30 October report recommends control-plane isolation, short-lived least-privilege credentials, segmentation, high-impact API guardrails, and behavioral detection using correlated identity, network and application telemetry.",
+        "context": "Google Threat Intelligence Group and Mandiant report real-world use of ARTEX, PentAGI and CAIRN to accelerate reconnaissance, lateral movement and data-access attempts. Their observations come from investigated incidents, not a claim that every agentic tool is malicious.",
+        "checks": [
+          "Hunt for bursts of rapid API calls, anomalous cloud permission tests, unexpected service-principal activity, webhook egress and management-plane access following new logins.",
+          "GTIG recommends protecting control planes, restricting credentials and keys, reducing attack paths, controlling high-impact application APIs and correlating behavioral telemetry.",
+          "Validate detection for short machine-speed event sequences, enforce egress and privilege boundaries, and test that identity, API and network logs can reconstruct an incident."
+        ],
+        "take": "Validate detection for short machine-speed event sequences, enforce egress and privilege boundaries, and test that identity, API and network logs can reconstruct an incident.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: map management-plane exposure, correlate rapid agent-like activity and validate restrictive egress and service-account permissions.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "GTIG observă frameworkuri agentice ofensive în intruziuni reale",
+        "desc": "Google Threat Intelligence Group și Mandiant descriu folosirea ARTEX, PentAGI și CAIRN în incidente reale pentru accelerarea recunoașterii, mișcării laterale și accesului la date. Observațiile provin din investigații, nu înseamnă că toate instrumentele agentice sunt malițioase.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "GTIG recomandă protejarea planului de control, limitarea cheilor și credențialelor, reducerea căilor de atac, controlul API-urilor cu impact mare și corelarea telemetriei.",
+        "facts": "Raportul GTIG/Mandiant din 30 octombrie recomandă izolarea planului de control, credențiale cu durată scurtă și privilegii minime, segmentare, limite pentru API-uri sensibile și detecție comportamentală corelată.",
+        "context": "Google Threat Intelligence Group și Mandiant descriu folosirea ARTEX, PentAGI și CAIRN în incidente reale pentru accelerarea recunoașterii, mișcării laterale și accesului la date. Observațiile provin din investigații, nu înseamnă că toate instrumentele agentice sunt malițioase.",
+        "checks": [
+          "Caută rafale de apeluri API, testări neobișnuite de permisiuni cloud, activitate service principal, egress către webhook și acces administrativ după autentificări noi.",
+          "GTIG recomandă protejarea planului de control, limitarea cheilor și credențialelor, reducerea căilor de atac, controlul API-urilor cu impact mare și corelarea telemetriei.",
+          "Validează detecția secvențelor rapide, limitele de egress și privilegii și capacitatea logurilor identity/API/network de a reconstrui incidentul."
+        ],
+        "take": "Validează detecția secvențelor rapide, limitele de egress și privilegii și capacitatea logurilor identity/API/network de a reconstrui incidentul.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: cartografierea expunerii planului de management, corelarea activității rapide și validarea permisiunilor minime.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "GTIG : des frameworks offensifs agentiques observés dans des intrusions",
+        "desc": "Google Threat Intelligence Group et Mandiant documentent l’utilisation de frameworks agentiques comme ARTEX, PentAGI et CAIRN dans des intrusions réelles. Cela ne signifie pas que tous ces outils sont malveillants.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "Protéger les plans de contrôle, appliquer le moindre privilège et une segmentation stricte, et corréler les journaux d’identité, de réseau et d’applications.",
+        "facts": "GTIG et Mandiant recommandent l’isolation des plans de contrôle, le moindre privilège, la segmentation et la détection comportementale.",
+        "context": "Google Threat Intelligence Group et Mandiant documentent l’utilisation de frameworks agentiques comme ARTEX, PentAGI et CAIRN dans des intrusions réelles. Cela ne signifie pas que tous ces outils sont malveillants.",
+        "checks": [
+          "Rechercher les rafales d’appels API, les tests de privilèges cloud, les activités de comptes de service et les accès aux plans de contrôle.",
+          "Protéger les plans de contrôle, appliquer le moindre privilège et une segmentation stricte, et corréler les journaux d’identité, de réseau et d’applications.",
+          "Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements."
+        ],
+        "take": "Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Rechercher les rafales d’appels API, les tests de privilèges cloud, les activités de comptes de service et les accès aux plans de contrôle. Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "gtig-agentic-offensive-frameworks-2026",
+      "cves": []
+    },
+    {
       "id": "php",
       "cat": 1,
       "date": "2026-10-21",
