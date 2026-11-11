@@ -13,7 +13,7 @@ import re
 import sys
 import time
 from urllib.parse import urljoin, urlsplit
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -34,6 +34,14 @@ def current_stories(document):
     return [a for a in published if edition(a) == latest]
 
 
+class SiteOnlyRedirect(HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        final = urlsplit(newurl)
+        if final.scheme != "https" or final.hostname not in ("weownit.net", "www.weownit.net"):
+            raise ValueError("Unexpected redirect destination")
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
 def public_get(path):
     url = urljoin(SITE, path)
     parsed = urlsplit(url)
@@ -41,7 +49,7 @@ def public_get(path):
         raise ValueError("External destination forbidden")
     request = Request(url, headers={"User-Agent": "weownit-briefing-public-smoke/1.0",
                                     "Accept": "text/html,application/javascript,application/xml"})
-    with urlopen(request, timeout=12) as response:
+    with build_opener(SiteOnlyRedirect()).open(request, timeout=12) as response:
         final = urlsplit(response.url)
         if final.scheme != "https" or final.hostname not in ("weownit.net", "www.weownit.net"):
             raise ValueError("Unexpected redirect destination")
