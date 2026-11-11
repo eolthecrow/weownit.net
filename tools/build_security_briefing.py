@@ -13,6 +13,13 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 
+# Hash-based script CSP for generated pages (see tools/csp_meta.py). Loaded by
+# path so the module also works when this file is imported by the test suite.
+import importlib.util as _ilu
+_csp_spec = _ilu.spec_from_file_location('csp_meta', Path(__file__).resolve().parent / 'csp_meta.py')
+csp_meta = _ilu.module_from_spec(_csp_spec)
+_csp_spec.loader.exec_module(csp_meta)
+
 
 def data_cache_key():
     """Content-address the generated client data so caches cannot serve a stale edition."""
@@ -196,7 +203,8 @@ def outputs(data, today=None):
         links+=f'<xhtml:link rel="alternate" hreflang="x-default" href="{PUBLIC+path}?lang=en"/>'
         for lang in LANGUAGES:urls.append(f'  <url><loc>{PUBLIC+path}?lang={lang}</loc>{links}</url>')
     out['sitemap.xml']=sitemap.replace('</urlset>','  <!-- security-briefing:sitemap -->\n'+'\n'.join(urls)+'\n  <!-- /security-briefing:sitemap -->\n</urlset>')
-    return out
+    # Every generated page carries hashes for its own inline scripts.
+    return {name:(csp_meta.apply(content) if name.endswith('.html') else content) for name,content in out.items()}
 
 
 def main():

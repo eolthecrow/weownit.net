@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches: [main]
-    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', 'tools.html', 'tools-existing.html', 'store.html', 'index.html', 'briefing.html', 'briefing/**', 'content/**', 'tools/build_security_briefing.py', '.github/workflows/verify-tools.yml']
+    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', '*.html', 'briefing/**', 'content/**', 'tools/build_security_briefing.py', 'tools/csp_meta.py', '.github/workflows/verify-tools.yml']
 permissions:
   contents: read
 concurrency:
@@ -29,7 +29,7 @@ jobs:
         run: python tools/build_security_briefing.py --check
   browser:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
@@ -51,6 +51,10 @@ jobs:
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
         run: node tests/browser/security-briefing.smoke.cjs
+      - name: Load every page with its hash-based script CSP and fail on any violation
+        env:
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+        run: node tests/browser/csp.smoke.cjs
       - name: Verify Products offers, sample, mobile layout and disabled checkout in EN RO FR
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
