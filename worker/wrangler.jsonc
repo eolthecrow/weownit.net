@@ -43,7 +43,9 @@
     "head_sampling_rate": 1,
     "logs": {
       "enabled": true,
-      "invocation_logs": true,
+      // Invocation logs record full request URLs, which include newsletter
+      // confirm/unsubscribe tokens. Application logs (console.*) stay on.
+      "invocation_logs": false,
       "head_sampling_rate": 1
     }
   }
