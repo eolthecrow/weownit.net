@@ -143,8 +143,8 @@ test("LIVE admin offers guarded Stripe archiving on desktop and mobile without t
       await page.goto("https://admin.weownit.net/admin");
       await page.getByLabel("Token administrativ").fill("a".repeat(64));
       await page.getByRole("button", { name: "Deschide catalogul" }).click();
-      await page.locator("#archiveStripePrice").waitFor();
       await page.getByText("Curăță prețuri și produse Stripe LIVE").click();
+      await page.locator("#archiveStripePrice").waitFor();
       await page.locator("#priceSelect").selectOption("price_orphan");
       assert.equal(await page.locator("#archiveStripePrice").isEnabled(), true);
       page.once("dialog", dialog => dialog.accept());
