@@ -49,7 +49,7 @@ class BriefingLiveTests(unittest.TestCase):
         self.assertEqual(result["errors"][0]["label"], "article:second")
 
     def test_stale_listing_fails_even_when_articles_exist(self):
-        self.responses["briefing.html"] = self.responses["briefing.html"].replace("second", "not-second")
+        self.responses["briefing.html"] = self.responses["briefing.html"].replace("second", "unrelated")
         result = live.run_checks(self.data, self.responses.__getitem__)
         self.assertFalse(result["ok"])
         self.assertEqual(result["errors"][0]["label"], "listing")
