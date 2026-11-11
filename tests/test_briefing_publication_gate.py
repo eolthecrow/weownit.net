@@ -93,14 +93,16 @@ class PublicationGateTests(unittest.TestCase):
         self.assertEqual([s["state"] for s in result["stories"]],
                          ["ALREADY_PUBLISHED", "DUPLICATE_COVERED"])
 
-    def test_legacy_weekly_github_workflow_has_no_publication_path(self):
-        workflow = (ROOT / ".github/workflows/weekly-briefing.yml").read_text()
-        self.assertIn("cron: '17 16 * * 0'", workflow)
-        self.assertIn("run: python tools/briefing_candidates.py", workflow)
-        self.assertNotIn("23 8 * * 1", workflow)
-        self.assertNotIn("pull-requests: write", workflow)
-        self.assertNotIn("gh pr create", workflow)
-        self.assertNotIn("  publication:", workflow)
+    def test_only_owned_publication_path_remains_in_github(self):
+        workflow_root = ROOT / ".github/workflows"
+        self.assertFalse((workflow_root / "weekly-briefing.yml").exists())
+        # GitHub may only generate derived pages on an approved publisher branch.
+        autobuild = (workflow_root / "briefing-autobuild.yml").read_text()
+        self.assertIn("briefing/auto-*", autobuild)
+        self.assertNotIn("gh pr create", autobuild)
+        public_smoke = (workflow_root / "briefing-live-smoke.yml").read_text()
+        self.assertIn("run: python tools/check_briefing_live.py", public_smoke)
+        self.assertNotIn("pull-requests: write", public_smoke)
 
     def test_approved_missing_and_duplicate_candidate_fail_closed(self):
         a = story("a", "https://vendor.example/a")
