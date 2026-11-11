@@ -25,7 +25,8 @@
   "send_email": [
     {
       "name": "EMAIL",
-      "destination_address": "vladimir.arjoca@outlook.com",
+      // No fixed destination: the recipient comes from the CONTACT_TO_EMAIL secret and
+      // must be a verified Email Routing destination address in this account.
       "allowed_sender_addresses": [
         "contact@weownit.net"
       ]

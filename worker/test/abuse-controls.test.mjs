@@ -60,7 +60,7 @@ test("oversized JSON bodies are rejected before parsing", async () => {
 
 test("contact strips CR/LF from header-bound fields and requires a form timestamp", async () => {
   let sent;
-  const env = { CONTACT_FROM_EMAIL: "contact@weownit.net", EMAIL: { send: async (m) => { sent = m; return { messageId: "1" }; } } };
+  const env = { CONTACT_FROM_EMAIL: "contact@weownit.net", CONTACT_TO_EMAIL: "owner@example.com", EMAIL: { send: async (m) => { sent = m; return { messageId: "1" }; } } };
   const valid = {
     name: "Eve\r\nBcc: victim@example.com",
     email: "eve@example.com",
@@ -80,6 +80,16 @@ test("contact strips CR/LF from header-bound fields and requires a form timestam
   assert.doesNotMatch(sent.replyTo.name, /[\r\n]/);
   assert.match(sent.subject, /ACME X-Injected: 1/);
   assert.match(sent.text, /multiline is fine here/);
+  assert.equal(sent.to, "owner@example.com");
+});
+
+test("contact refuses to send when the destination secret is missing", async () => {
+  let sent;
+  const env = { CONTACT_FROM_EMAIL: "contact@weownit.net", EMAIL: { send: async (m) => { sent = m; return {}; } } };
+  const body = { name: "A", email: "a@example.com", message: "hi", consent: true, submittedAt: Date.now() - 10_000 };
+  const res = await worker.fetch(post("/contact", body, { Origin: site }), env, {});
+  assert.equal(res.status, 503);
+  assert.equal(sent, undefined);
 });
 
 test("health endpoint does not disclose provider or model", async () => {

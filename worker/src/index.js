@@ -141,7 +141,8 @@ function extractAnswer(result) {
 }
 
 
-const CONTACT_TO_EMAIL = "vladimir.arjoca@outlook.com";
+// The inbox that receives contact requests is the CONTACT_TO_EMAIL Worker secret
+// (a verified Email Routing destination), so it is not published in this repository.
 const MAX_CONTACT_MESSAGE_CHARS = 5000;
 
 const DOWNLOADS = {
@@ -346,7 +347,7 @@ async function handleContact(request, env, origin) {
     return json({ error: "Please complete the required fields." }, 400, origin);
   }
 
-  if (!env.EMAIL || !env.CONTACT_FROM_EMAIL) {
+  if (!env.EMAIL || !env.CONTACT_FROM_EMAIL || !isValidEmail(env.CONTACT_TO_EMAIL || "")) {
     return json({ error: "Contact delivery is not configured yet." }, 503, origin);
   }
 
@@ -383,7 +384,7 @@ async function handleContact(request, env, origin) {
 
   try {
     const result = await env.EMAIL.send({
-      to: CONTACT_TO_EMAIL,
+      to: env.CONTACT_TO_EMAIL,
       from: {
         email: env.CONTACT_FROM_EMAIL,
         name: "Network & Security Consultant",
