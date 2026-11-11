@@ -25,7 +25,8 @@
 - The last known pre-remediation `main` baseline was `8752c274dd6f88c8891bd63ff72c735c8cea43ec`; prefer a scoped revert PR over resetting or force-pushing main.
 
 ## Workflow ownership
+- Owner-private Site intake: Sunday 16:17 Bucharest; it is the sole scheduled editorial candidate source.
 - ChatGPT approved-only publisher: weekdays 09:00 Bucharest.
-- GitHub Sunday workflow: **source-title candidate artifact only**, no publication job or write permissions.
+- The legacy GitHub weekly workflow has been retired entirely to prevent redundant Sunday research and Monday PR preparation.
 - ChatGPT health notification: weekdays 10:15 Bucharest.
-- GitHub live public smoke: weekdays 10:05 Bucharest.
+- GitHub live public smoke: weekdays 10:05 Bucharest and after relevant main pushes (following Pages propagation).
