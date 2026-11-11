@@ -1,6 +1,14 @@
 name: Briefing live public smoke
 # Read-only public website validation. Does not approve, publish, or scan targets.
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/security-briefing.json'
+      - 'briefing.html'
+      - 'briefing/**'
+      - 'assets/security-briefing-data.js'
+      - '.github/workflows/briefing-live-smoke.yml'
   schedule:
     - cron: '5 10 * * 1-5'
       timezone: 'Europe/Bucharest'
@@ -16,6 +24,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Allow GitHub Pages and CDN to propagate on pushes
+        if: github.event_name == 'push'
+        run: sleep 75
       - name: Verify latest published Briefing URLs, RSS and client data
         run: python tools/check_briefing_live.py --attempts 3
       - name: Save public verification evidence even on failure
