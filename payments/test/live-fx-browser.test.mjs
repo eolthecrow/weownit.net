@@ -99,3 +99,68 @@ test("LIVE admin recalculates all RON/EUR/USD combinations without writing until
     }
   } finally { await browser.close(); }
 });
+
+test("LIVE admin offers guarded Stripe archiving on desktop and mobile without touching sandbox", { timeout: 90_000 }, async () => {
+  const browser = await chromium.launch({ headless: true,
+    ...(process.env.CATALOG_CHROMIUM_PATH ? { executablePath: process.env.CATALOG_CHROMIUM_PATH } : {}),
+    args: ["--no-sandbox", "--disable-dev-shm-usage"] });
+  try {
+    for (const viewport of [{ width: 1365, height: 950 }, { width: 390, height: 844 }]) {
+      const linked = { id: "11111111-1111-4111-8111-111111111111", price_id: "price_linked",
+        stripe_product_id: "prod_used", state: "active", title: "Linked Toolkit", revision: 1,
+        display_price: "120 RON", currency: "ron", unit_amount: 12000, object_key: "products/used.zip" };
+      let priceList = [
+        { price_id: "price_linked", product_id: "prod_used", title: "Linked Toolkit", display_price: "120 RON" },
+        { price_id: "price_orphan", product_id: "prod_orphan", title: "Unused price", display_price: "100 RON" },
+        { price_id: "price_other", product_id: "prod_other", title: "Unused product", display_price: "80 RON" },
+      ];
+      const writes = [], context = await browser.newContext({ viewport }), page = await context.newPage();
+      const errors = []; page.on("pageerror", e => errors.push(e.message));
+      await page.route("https://admin.weownit.net/**", async route => {
+        const req = route.request(), path = new URL(req.url()).pathname;
+        if (!path.startsWith("/admin/api/")) {
+          const asset = adminAsset(path, { live: true });
+          return asset ? route.fulfill({ status: 200, contentType: asset.headers.get("Content-Type"), body: await asset.text() })
+            : route.fulfill({ status: 404, body: "Not found" });
+        }
+        const api = path.slice("/admin/api/".length);
+        let status = 200, data = {};
+        if (api === "products") data = { products: [linked], live_mode: true, checkout_enabled: false,
+          store_connected: false, price_create_enabled: true, uploads_enabled: true, cursor: null };
+        else if (api === "prices") data = { prices: priceList, cursor: null };
+        else if (api === "files") data = { files: [], cursor: null };
+        else if (api === "stripe-archive") {
+          const body = JSON.parse(req.postData() || "{}"); writes.push(body);
+          if (body.price_id === "price_linked") { status = 409; data = { error: "Asociere activă" }; }
+          else {
+            const product = priceList.find(p => p.price_id === body.price_id)?.product_id;
+            priceList = priceList.filter(p => body.target === "price" ? p.price_id !== body.price_id : p.product_id !== product);
+            data = { status: "archived", target: body.target };
+          }
+        } else { status = 404; data = { error: "Unknown fixture endpoint" }; }
+        await route.fulfill({ status, contentType: "application/json", body: JSON.stringify(data) });
+      });
+      await page.goto("https://admin.weownit.net/admin");
+      await page.getByLabel("Token administrativ").fill("a".repeat(64));
+      await page.getByRole("button", { name: "Deschide catalogul" }).click();
+      await page.locator("#archiveStripePrice").waitFor();
+      await page.getByText("Curăță prețuri și produse Stripe LIVE").click();
+      await page.locator("#priceSelect").selectOption("price_orphan");
+      assert.equal(await page.locator("#archiveStripePrice").isEnabled(), true);
+      page.once("dialog", dialog => dialog.accept());
+      await page.getByRole("button", { name: "Arhivează prețul" }).click();
+      await page.getByRole("status").filter({ hasText: "Prețul a fost arhivat" }).waitFor();
+      await page.locator("#priceSelect").selectOption("price_other");
+      page.once("dialog", dialog => dialog.accept());
+      await page.getByRole("button", { name: "Arhivează produsul Stripe" }).click();
+      await page.getByRole("status").filter({ hasText: "Produsul a fost arhivat" }).waitFor();
+      assert.deepEqual(writes.map(x => [x.price_id, x.target]),
+        [["price_orphan", "price"], ["price_other", "product"]]);
+      assert.equal(priceList.length, 1);
+      assert.equal(await page.locator("#archiveStripePrice").isDisabled(), true);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), true);
+      assert.deepEqual(errors, []);
+      await context.close();
+    }
+  } finally { await browser.close(); }
+});

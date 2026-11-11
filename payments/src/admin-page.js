@@ -172,6 +172,16 @@ export const ADMIN_JS = String.raw`'use strict';
     }
     $('priceSelect').value = selectedPrice;
     $('priceSelect').disabled = !!editing;
+    if ($('archiveStripePrice')) {
+      var selected = prices.find(function (p) { return p.price_id === selectedPrice; });
+      var usedPrice = products.some(function (p) { return p.price_id === selectedPrice; });
+      var usedProduct = selected && products.some(function (p) { return p.stripe_product_id === selected.product_id; });
+      $('archiveStripePrice').disabled = !selected || usedPrice || !!editing;
+      $('archiveStripeProduct').disabled = !selected || usedProduct || !!editing;
+      $('stripeArchiveHelp').textContent = !selected ? 'Selectează mai întâi un preț din listă.'
+        : usedProduct || usedPrice ? 'Prețurile sau produsele asociate unui catalog (inclusiv retras) nu pot fi arhivate aici.'
+        : 'Arhivarea în Stripe LIVE le ascunde din lista activă, fără să șteargă istoricul tranzacțiilor.';
+    }
     if (!editing) {
       var selectedProduct = products.find(function (p) { return p.price_id === $('priceSelect').value; });
       $('priceHelp').textContent = selectedProduct && selectedProduct.state === 'archived'
@@ -457,6 +467,25 @@ export const ADMIN_JS = String.raw`'use strict';
     }
     renderOptions();
   });
+  [['archiveStripePrice', 'price'], ['archiveStripeProduct', 'product']].forEach(function (action) {
+    var button = $(action[0]); if (!button) return; // Stripe LIVE only, never sandbox.
+    button.addEventListener('click', function () {
+      var price = prices.find(function (p) { return p.price_id === $('priceSelect').value; });
+      if (!price || editing) { message('Selectează un preț Stripe LIVE din listă.', true); return; }
+      var label = action[1] === 'price' ? 'PREȚUL' : 'PRODUSUL';
+      if (!window.confirm('Arhivezi ' + label + ' din Stripe LIVE?\n' + price.title + '\n' +
+        (price.display_prices || price.display_price) + '\nPrice ID: ' + price.price_id +
+        '\n\nNu se șterg plăți și nu se modifică arhivele R2. Dacă este asociat catalogului, operațiunea va fi refuzată.')) return;
+      run(button, async function () {
+        await api('stripe-archive', { method: 'POST', body: {
+          price_id: price.price_id, target: action[1], request_id: crypto.randomUUID() } });
+        $('priceSelect').value = '';
+        await loadPrices(false);
+        message(action[1] === 'price' ? 'Prețul a fost arhivat în Stripe LIVE.' :
+          'Produsul a fost arhivat în Stripe LIVE, împreună cu disponibilitatea prețurilor sale.');
+      });
+    });
+  });
   $('uploadZip').addEventListener('click', function () {
     run($('uploadZip'), async function () {
       var file = $('zipFile').files && $('zipFile').files[0];
@@ -538,6 +567,7 @@ const LIVE_ADMIN_HTML = ADMIN_HTML
   .replace('Mediu de test. Publicarea pregătește doar catalogul de staging; nu modifică Store-ul public și nu activează Stripe Live.',
     'Catalog Stripe LIVE. Crearea de produse și prețuri modifică Stripe LIVE când este activată. Publicarea în Store este permisă numai după verificarea conexiunii de plată și livrare.')
   .replace('Alege un preț Stripe sandbox', 'Alege un preț Stripe LIVE')
+  .replace('<p id="priceHelp" class="hint">', '<details class="inline-editor"><summary>Curăță prețuri și produse Stripe LIVE</summary><p id="stripeArchiveHelp" class="hint">Selectează mai întâi un preț din listă.</p><div class="actions"><button id="archiveStripePrice" type="button" class="quiet" disabled>Arhivează prețul</button><button id="archiveStripeProduct" type="button" class="quiet" disabled>Arhivează produsul Stripe</button></div><p class="hint">Disponibile doar pentru obiecte fără asociere în catalog. Nu șterg istoricul plăților.</p></details><p id="priceHelp" class="hint">')
   .replace('preluate automat din Stripe sandbox', 'preluate automat din Stripe LIVE')
   .replace('Doar sandbox. Preț fix, o singură plată, în RON. Categoria fiscală pentru Live trebuie verificată separat.',
     'Schimbă oricare dintre cele trei prețuri: celelalte două se recalculează la cursul BCE. Pentru sume independente, dezactivează conversia automată. Stripe salvează prețuri fixe numai la confirmare.')

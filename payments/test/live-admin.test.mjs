@@ -39,23 +39,36 @@ async function context() {
   const env = { ...platform.env, ADMIN_PROBE_TOKEN: token, LIVE_ADMIN_ENABLED: "true",
     LIVE_ADMIN_WRITES_ENABLED: "true", LIVE_ADMIN_UPLOAD_ENABLED: "true", LIVE_EXPECTED_ACCOUNT_ID: "acct_livefixture",
     STRIPE_LIVE_SECRET_KEY: "rk_live_localfixture" };
-  const prices = new Map(); const calls = [];
+  const prices = new Map(); const stripeProducts = new Map(); const calls = [];
   const stripe = {
     accounts: { async retrieveCurrent() { calls.push("identity"); return { object: "account", id: "acct_livefixture" }; } },
     prices: {
       async create(input, opts) {
         calls.push({ create: input, idempotency: opts.idempotencyKey });
-        const pId = input.product || "prod_livefixture1";
+        const pId = input.product || "prod_livefixture" + (prices.size + 1);
+        if (!stripeProducts.has(pId)) stripeProducts.set(pId, {
+          object: "product", id: pId, name: input.product_data?.name || "Toolkit", active: true, livemode: true });
         const p = { object: "price", id: "price_livefixture" + (prices.size + 1), livemode: true, active: true,
           type: "one_time", unit_amount: input.unit_amount, currency: input.currency, recurring: null,
           custom_unit_amount: null, transform_quantity: null, billing_scheme: "per_unit",
           currency_options: input.currency_options || null,
-          product: { object: "product", id: pId, name: input.product_data?.name || "Toolkit", active: true, livemode: true } };
+          product: structuredClone(stripeProducts.get(pId)) };
         prices.set(p.id, p); return { ...p, product: pId };
       },
       async retrieve(id) { return structuredClone(prices.get(id)); },
-      async list() { return { data: [...prices.values()].map(p => structuredClone(p)), has_more: false }; },
+      async list(input) { return { data: [...prices.values()].filter(p =>
+        (!input.active || p.active) && p.product.active).map(p => structuredClone(p)), has_more: false }; },
+      async update(id, patch, options) {
+        calls.push({ archivePrice: id, patch, idempotency: options.idempotencyKey });
+        const p = prices.get(id); p.active = patch.active; return structuredClone(p);
+      },
     },
+    products: { async update(id, patch, options) {
+      calls.push({ archiveProduct: id, patch, idempotency: options.idempotencyKey });
+      const p = stripeProducts.get(id); p.active = patch.active;
+      for (const price of prices.values()) if (price.product.id === id) price.product.active = patch.active;
+      return structuredClone(p);
+    } },
   };
   return { platform, db, env, prices, stripe, calls };
 }
@@ -85,6 +98,58 @@ test("LIVE admin identity and writes fail closed on auth, account mismatch and d
     assert.equal((await handleLiveRequest(request(p, "POST", body), { ...env, LIVE_EXPECTED_ACCOUNT_ID: "acct_other" }, { stripeClient: stripe })).status, 503);
     assert.equal((await handleLiveRequest(request(p, "POST", body), { ...env, LIVE_ADMIN_WRITES_ENABLED: "false" }, { stripeClient: stripe })).status, 403);
     assert.equal(calls.filter(x => typeof x === "object").length, 0);
+  } finally { await platform.dispose(); }
+});
+
+test("LIVE admin archives only unused Stripe prices/products, preserving catalog and payment history", async () => {
+  const { platform, env, stripe, db, calls, prices } = await context();
+  const call = (path, method = "GET", body, overrides = {}) => handleLiveRequest(request(path, method, body),
+    { ...env, ...overrides }, { stripeClient: stripe });
+  const archive = (id, target, overrides) => call("/admin/api/stripe-archive", "POST",
+    { price_id: id, target, request_id: crypto.randomUUID() }, overrides);
+  try {
+    const active = (await (await call("/admin/api/stripe-products", "POST", {
+      name: "Published Toolkit", unit_amount: 12000, request_id: crypto.randomUUID() })).json()).price;
+    const duplicate = (await (await call("/admin/api/stripe-products", "POST", {
+      name: "Unused Duplicate", unit_amount: 10000, request_id: crypto.randomUUID() })).json()).price;
+    const orphan = (await (await call("/admin/api/stripe-products", "POST", {
+      name: "Abandoned Product", unit_amount: 9900, request_id: crypto.randomUUID() })).json()).price;
+    await env.LIVE_TOOLKITS_R2.put("products/used.zip", new Uint8Array(12));
+    const linked = (await (await call("/admin/api/products", "POST", {
+      title: "Published Toolkit", price_id: active.price_id, object_key: "products/used.zip" })).json()).product;
+
+    const unauthorized = await handleLiveRequest(new Request(base + "/admin/api/stripe-archive", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ price_id: duplicate.price_id, target: "price", request_id: crypto.randomUUID() })
+    }), env, { stripeClient: stripe });
+    assert.equal(unauthorized.status, 401);
+    assert.equal((await archive(duplicate.price_id, "price", { LIVE_ADMIN_WRITES_ENABLED: "false" })).status, 403);
+    assert.equal((await archive(duplicate.price_id, "price", { LIVE_EXPECTED_ACCOUNT_ID: "acct_other" })).status, 503);
+    assert.equal((await archive(duplicate.price_id, "permanent-delete")).status, 400);
+    assert.equal((await archive("not_a_price", "price")).status, 400);
+    assert.equal(calls.filter(c => c.archivePrice || c.archiveProduct).length, 0);
+
+    assert.equal((await archive(active.price_id, "price")).status, 409, "active catalog price protected");
+    assert.equal((await archive(active.price_id, "product")).status, 409, "active catalog product protected");
+    const withdrawn = await call("/admin/api/products/" + linked.id + "/archive", "POST", { revision: linked.revision });
+    assert.equal(withdrawn.status, 200);
+    assert.equal((await archive(active.price_id, "price")).status, 409, "withdrawn product remains restorable");
+    assert.equal((await archive(active.price_id, "product")).status, 409, "withdrawn Stripe product protected");
+
+    const archivedPrice = await archive(duplicate.price_id, "price");
+    assert.equal(archivedPrice.status, 200, await archivedPrice.clone().text());
+    assert.deepEqual(await archivedPrice.json(), { status: "archived", target: "price" });
+    assert.equal(prices.get(duplicate.price_id).active, false);
+    assert.equal(calls.find(c => c.archivePrice === duplicate.price_id).patch.active, false);
+    assert.equal((await archive(duplicate.price_id, "price")).status, 409);
+    const archivedProduct = await archive(orphan.price_id, "product");
+    assert.equal(archivedProduct.status, 200, await archivedProduct.clone().text());
+    assert.equal(prices.get(orphan.price_id).product.active, false);
+    assert.equal(calls.find(c => c.archiveProduct === prices.get(orphan.price_id).product.id).patch.active, false);
+    const listed = (await (await call("/admin/api/prices")).json()).prices;
+    assert.deepEqual(listed.map(p => p.price_id), [active.price_id]);
+    assert.equal((await db.prepare("SELECT state FROM live_products WHERE id = ?").bind(linked.id).first()).state,
+      "archived", "Stripe archival does not mutate the catalog");
   } finally { await platform.dispose(); }
 });
 
@@ -308,6 +373,9 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(liveScript, /Conversie automată RON \/ EUR \/ USD/);
     assert.match(liveScript, /Se verifică ultimul curs disponibil al BCE/);
     assert.match(liveScript, /price-change-editor/);
+    assert.match(html, /id="archiveStripePrice"/);
+    assert.match(html, /id="archiveStripeProduct"/);
+    assert.match(liveScript, /stripe-archive/);
     assert.match(html, /<select id="priceSelect">/);
     assert.match(html, /<select id="fileSelect">/);
     assert.doesNotMatch(html, /<select id="priceSelect" required>/);
@@ -319,6 +387,7 @@ test("LIVE routes keep the existing sandbox UI untouched", async () => {
     assert.match(liveScript, /checkout\.weownit\.net/);
     const sandboxHtml = await adminAsset("/admin").text();
     assert.doesNotMatch(sandboxHtml, /id="newStripeEur"/);
+    assert.doesNotMatch(sandboxHtml, /id="archiveStripePrice"|id="archiveStripeProduct"/);
     assert.doesNotMatch(sandboxHtml, /id="suggestFx"/);
     assert.doesNotMatch(sandboxHtml, /id="autoFxCreate"/);
     assert.match(sandboxHtml, /<select id="priceSelect" required>/);

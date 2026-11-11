@@ -257,10 +257,49 @@ export async function handleLiveCatalog(request, env, { stripeClient, fxFetch = 
         expand: ["data.product", "data.currency_options"], ...(cursor ? { starting_after: cursor } : {}) });
       return respond({ prices: result.data.filter(p => livePrice(p) && p.product?.livemode === true &&
         p.product?.active === true && !p.product.deleted).map(p => ({ price_id: p.id,
-        title: p.product.name, currency: p.currency, unit_amount: p.unit_amount,
+        product_id: p.product.id, title: p.product.name, currency: p.currency, unit_amount: p.unit_amount,
         display_price: displayPrice(p.unit_amount, p.currency), display_prices: displayCurrencies(p),
         currency_options: secondaryFromStripe(p) })),
       cursor: result.has_more ? result.data.at(-1)?.id : null });
+    }
+    // Archive unused Stripe LIVE objects without deleting payment history.
+    // The catalog is authoritative: never break an existing (even withdrawn)
+    // product's ability to be previewed or restored by archiving its Price/Product.
+    if (route === "stripe-archive" && request.method === "POST") {
+      canWrite(env);
+      const data = await json(request, ["price_id", "target", "request_id"]);
+      if (!PRICE_ID.test(data.price_id || "") || !["price", "product"].includes(data.target)) {
+        throw new Invalid("Alege un preț Stripe valid și o operațiune permisă.");
+      }
+      const requestId = requiredRequestId(data.request_id);
+      await identity();
+      const price = await stripe.prices.retrieve(data.price_id, { expand: ["product"] });
+      if (!livePrice(price) || !price.product || typeof price.product !== "object" ||
+          !PRODUCT_ID.test(price.product.id || "") || price.product.livemode !== true ||
+          price.product.active !== true || price.product.deleted) {
+        throw new Invalid("Prețul sau produsul Stripe nu mai este activ. Actualizează lista.", 409);
+      }
+      const inCatalog = await db.prepare(data.target === "price"
+        ? "SELECT id FROM live_products WHERE price_id = ? LIMIT 1"
+        : "SELECT id FROM live_products WHERE stripe_product_id = ? LIMIT 1")
+        .bind(data.target === "price" ? price.id : price.product.id).first();
+      if (inCatalog) {
+        throw new Invalid("Obiectul este încă asociat unui produs din catalog, inclusiv înregistrărilor retrase. Arhivarea a fost blocată.", 409);
+      }
+      if (data.target === "price") {
+        const archived = await stripe.prices.update(price.id, { active: false },
+          { idempotencyKey: "weownit-live-admin-archive-price-" + requestId });
+        if (archived?.id !== price.id || archived.livemode !== true || archived.active !== false) {
+          throw Error("Unexpected Stripe archive response");
+        }
+      } else {
+        const archived = await stripe.products.update(price.product.id, { active: false },
+          { idempotencyKey: "weownit-live-admin-archive-product-" + requestId });
+        if (archived?.id !== price.product.id || archived.livemode !== true || archived.active !== false) {
+          throw Error("Unexpected Stripe archive response");
+        }
+      }
+      return respond({ status: "archived", target: data.target });
     }
     if (route === "files" && request.method === "GET") {
       if (cursor && cursor.length > 2048) throw new Invalid("Cursor R2 invalid.");
