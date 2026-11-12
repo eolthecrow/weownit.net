@@ -22,7 +22,7 @@ Owner ran authorized Wrangler 4.160.0 from WSL against Cloudflare account 78a9f6
 - The R2 bucket exists but these commands do NOT prove that any referenced ZIP is present. The OAuth scope output does not list an explicit R2 object write scope; verify effective upload rights without exposing a token.
 - Stripe LIVE webhook count was previously verified as zero. The nine approved default Stripe Product/Price pairs exist but none is represented by an active, published D1 catalog row.
 
-**Safety response:** leave the two archival records intact (do not delete/mutate them); export a full remote D1 backup before additive schema writes. Keep checkout and Store flags off.
+**Safety response:** leave the two archival records intact (do not delete/mutate them). The pre-migration D1 export and additive checkout schema execution have now been verified separately, as recorded below. Keep checkout and Store flags off.
 
 Safe confirmed backup command (perform in an owner-private directory, note that remote D1 export may briefly interrupt reads):
 
@@ -35,6 +35,18 @@ Validate that the file exists, is nonzero and contains schema/INSERT statements.
 After separately approving the backup, verify checkout schema file exists in the current working copy and matches the reviewed candidate PR #48 version before any write. A missing local file must NOT be reconstructed manually from terminal snippets. Only then consider applying `payments/live-checkout-schema.sql` to the reviewed remote D1; all seven checkout-related tables will be new, while pre-existing tables should remain unchanged by CREATE TABLE IF NOT EXISTS. Inspect the D1 result again after any migration. Do not publish products yet.
 
 To verify ZIP presence, obtain an owner-private R2 object inventory via authenticated Admin or R2 dashboard. `wrangler r2 bucket list` does not inspect objects. No newer nine-ZIP manifest has been verified in remote R2.
+## Remote LIVE checkout migration — confirmed 12 November 2026
+
+- Operator confirmed the two local SQL files are byte-identical to the reviewed candidate blobs:
+  - `live-checkout-schema.sql` Git blob `ef9209febbd2de5578b285e1648301b6deb4dc45`.
+  - `live-multicurrency-schema.sql` Git blob `173e15ac0394d575e76f6da8d6b1a9606e104659`.
+- Remote D1 pre-migration export downloaded privately to `$HOME/weownit-live-backups/weownit_live_catalog_pre_checkout_20261112.sql` (approximately 3.7 KB), then successfully executed into an in-memory SQLite database: 2 rows in `live_products`, both `archived`.
+- Operator applied the canonical `live-checkout-schema.sql` against **remote** `weownit_live_catalog`, processing 10 queries successfully.
+- Post-migration `sqlite_master` lists `live_checkout_attempts`, `live_purchases`, `live_payment_events`, `live_delivery_blocks`, `live_download_grants`, `live_recovery_requests` in addition to the pre-existing catalog tables.
+- Post-migration grouped `live_products` count remains **2 archived/draft**. No nine-product import or archive modification occurred.
+- `live-multicurrency-schema.sql` was **not rerun** because `live_product_currencies` already exists. The schema includes EUR/USD constraints; remote currency rows are still unpopulated pending an owner-private upload and D1 association.
+
+**Migration gate passed from operator logs.** Do not rerun `live-checkout-schema.sql` or assume payment-readiness from a schema-only PASS. Still outstanding: nine verified R2 ZIP objects, nine correct active D1/Stripe price associations, deployed buyer Worker, Stripe LIVE webhook, seller tax/terms and controlled end-to-end acceptance.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
