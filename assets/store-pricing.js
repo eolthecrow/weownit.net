@@ -21,21 +21,21 @@
   const I18N = {
     en: {
       pickerLabel: "Price currency",
-      pickerHint: "Select the currency to preview fixed toolkit prices.",
+      pickerHint: "Currency preview",
       availability: "Listed prices only. Checkout and ZIP delivery are not active.",
       tax: "Tax treatment will be confirmed before sales begin.",
       priceLabel: "Listed price"
     },
     ro: {
       pickerLabel: "Moneda prețului",
-      pickerHint: "Selectează moneda pentru a vedea prețurile fixe ale toolkit-urilor.",
+      pickerHint: "Previzualizare prețuri",
       availability: "Prețuri afișate pentru informare. Plata și livrarea ZIP nu sunt active.",
       tax: "Tratamentul TVA va fi confirmat înainte de începerea vânzărilor.",
       priceLabel: "Preț afișat"
     },
     fr: {
       pickerLabel: "Devise du prix",
-      pickerHint: "Choisissez la devise pour voir les prix fixes des kits.",
+      pickerHint: "Aperçu des prix",
       availability: "Prix affichés à titre informatif. Paiement et livraison ZIP inactifs.",
       tax: "Le traitement fiscal sera confirmé avant l'ouverture des ventes.",
       priceLabel: "Prix affiché"
@@ -79,7 +79,7 @@
     const controls = create("div", "store-currency-controls");
     controls.setAttribute("role", "group");
     controls.setAttribute("aria-label", words.pickerLabel);
-    ["RON", "EUR", "USD"].forEach(function (currency) {
+    ["RON", "USD", "EUR"].forEach(function (currency) {
       const button = create("button", "store-currency-button", currency);
       button.type = "button";
       button.setAttribute("aria-pressed", String(currency === chosenCurrency));
