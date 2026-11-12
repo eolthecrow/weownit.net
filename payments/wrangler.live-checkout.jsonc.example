@@ -5,6 +5,7 @@
   "compatibility_date": "2026-10-21",
   "workers_dev": false,
   "vars": {
+    "LIVE_COMMERCIAL_SIGNOFF": "false",
     "LIVE_CHECKOUT_ENABLED": "false",
     "LIVE_WEBHOOK_ENABLED": "false",
     "LIVE_DELIVERY_ENABLED": "false",
