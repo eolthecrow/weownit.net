@@ -57,7 +57,17 @@ async function main(){
       assert.equal(await page.locator('#planned-catalog').evaluate(el=>el.open),true);
       assert.ok((await page.locator('#planned-catalog > summary').innerText()).includes(labels[lang].catalog));
       assert.equal(await page.locator('#store-currency-picker button').count(),3);
+      assert.deepEqual(await page.locator('#store-currency-picker button').allTextContents(),['RON','USD','EUR']);
       assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),labels[lang].currency);
+      const activeCode=lang==='ro'?'RON':'EUR';
+      const activeStyle=await page.locator('#store-currency-picker button:has-text("'+activeCode+'")').evaluate(el=>({
+        color:getComputedStyle(el).color,
+        underline:getComputedStyle(el).borderBottomColor,
+        background:getComputedStyle(el).backgroundColor
+      }));
+      assert.equal(activeStyle.color,'rgb(108, 226, 199)');
+      assert.equal(activeStyle.underline,'rgb(108, 226, 199)');
+      assert.equal(activeStyle.background,'rgba(0, 0, 0, 0)');
       await page.locator('#store-currency-picker button:has-text("USD")').click();
       assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),'$33');
       await page.locator('#store-currency-picker button:has-text("RON")').click();
