@@ -1,0 +1,55 @@
+name: Deploy Worker
+
+# Deploys worker/ to Cloudflare after its tests pass. Runs on merges to main
+# that touch the Worker, or manually from the Actions tab.
+#
+# One-time setup by the owner (the token never needs to leave Cloudflare/GitHub):
+#   1. Cloudflare → My Profile → API Tokens → Create Token → template
+#      "Edit Cloudflare Workers", restricted to this account.
+#   2. GitHub → Settings → Secrets and variables → Actions → New repository
+#      secret: CLOUDFLARE_API_TOKEN (and CLOUDFLARE_ACCOUNT_ID if the token can
+#      see more than one account).
+# Until the secret exists this workflow only runs the tests and skips deploy.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'worker/src/**'
+      - 'worker/wrangler.jsonc'
+      - 'worker/package-lock.json'
+      - 'assets/cve-risk-core.js'
+      - '.github/workflows/deploy-worker.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install pinned Worker tooling
+        working-directory: worker
+        run: npm ci
+      - name: Test Worker before deploying
+        run: node --test worker/test/*.mjs
+      - name: Deploy to Cloudflare
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker
+        run: npx wrangler deploy
+      - name: Explain skipped deploy
+        if: env.CLOUDFLARE_API_TOKEN == ''
+        run: echo "::notice::CLOUDFLARE_API_TOKEN is not set; tests passed but nothing was deployed. See the setup notes at the top of this workflow."

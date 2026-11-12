@@ -37,10 +37,15 @@
     "Pachete, șabloane și resurse digitale pentru rețele și securitate cibernetică, realizate de Vladimir Arjoca.",
     "Kits, modèles et ressources numériques pour les réseaux et la cybersécurité, proposés par Vladimir Arjoca."
   ],
+  "briefing": [
+    "Cybersecurity news and research: vulnerabilities, ransomware, identity, cloud and software supply chains. Reported facts, practical checks and remediation you can validate.",
+    "Știri și cercetări de securitate cibernetică: vulnerabilități, ransomware, identitate, cloud și supply chain. Fapte documentate, verificări practice și remedieri care pot fi validate.",
+    "Actualités et recherches en cybersécurité : vulnérabilités, rançongiciels, identité, cloud et chaîne logicielle. Faits documentés, vérifications pratiques et remédiation vérifiable."
+  ],
   "tools": [
-    "Web-Check, CVE Risk Lens and local Firewall Change Review: configuration evidence and before/after traffic scenarios.",
-    "Web-Check, CVE Risk Lens și Firewall Change Review local: configurații și scenarii de trafic înainte/după.",
-    "Web-Check, CVE Risk Lens et Firewall Change Review local : configurations et scénarios de trafic avant/après."
+    "Web-Check, CVE Risk Lens and local exposure comparisons with traceable sources, coverage limits and next actions.",
+    "Web-Check, CVE Risk Lens și comparații locale ale expunerii, cu surse, limite și pași următori.",
+    "Web-Check, CVE Risk Lens et comparaisons locales de l’exposition : sources, limites et prochaines actions."
   ]
 };
   const labels = {
@@ -49,9 +54,9 @@
     fr: {privacy:"Confidentialité", skip:"Aller au contenu", language:"Langue", back:"← Contact"}
   };
   const navigation = {
-    en: {services:"Services", tools:"Tools", resources:"Products", store:"Products", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
-    ro: {services:"Servicii", tools:"Instrumente", resources:"Produse", store:"Produse", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
-    fr: {services:"Services", tools:"Outils", resources:"Produits", store:"Produits", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
+    en: {services:"Services", tools:"Tools", briefing:"Briefing", resources:"Products", store:"Products", about:"About", contact:"Contact", menu:"Menu", primary:"Primary navigation"},
+    ro: {services:"Servicii", tools:"Instrumente", briefing:"Briefing", resources:"Produse", store:"Produse", about:"Despre", contact:"Contact", menu:"Meniu", primary:"Navigație principală"},
+    fr: {services:"Services", tools:"Outils", briefing:"Briefing", resources:"Produits", store:"Produits", about:"À propos", contact:"Contact", menu:"Menu", primary:"Navigation principale"}
   };
   function getInitialLanguage() {
     const explicit = normalizeLanguage(new URL(location.href).searchParams.get("lang"));

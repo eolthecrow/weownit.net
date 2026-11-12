@@ -13,10 +13,20 @@
   "ai": {
     "binding": "AI"
   },
+  // Per-IP abuse limits (Workers Rate Limiting). period must be 10 or 60 seconds.
+  // namespace_id values must be unique integers within the Cloudflare account.
+  "ratelimits": [
+    { "name": "CHAT_LIMITER", "namespace_id": "4101", "simple": { "limit": 8, "period": 60 } },
+    { "name": "CONTACT_LIMITER", "namespace_id": "4102", "simple": { "limit": 3, "period": 60 } },
+    { "name": "CVE_LIMITER", "namespace_id": "4103", "simple": { "limit": 20, "period": 60 } },
+    { "name": "EVENT_LIMITER", "namespace_id": "4104", "simple": { "limit": 30, "period": 60 } },
+    { "name": "NEWSLETTER_LIMITER", "namespace_id": "4105", "simple": { "limit": 5, "period": 60 } }
+  ],
   "send_email": [
     {
       "name": "EMAIL",
-      "destination_address": "vladimir.arjoca@outlook.com",
+      // No fixed destination: the recipient comes from the CONTACT_TO_EMAIL secret and
+      // must be a verified Email Routing destination address in this account.
       "allowed_sender_addresses": [
         "contact@weownit.net"
       ]
@@ -34,7 +44,9 @@
     "head_sampling_rate": 1,
     "logs": {
       "enabled": true,
-      "invocation_logs": true,
+      // Invocation logs record full request URLs, which include newsletter
+      // confirm/unsubscribe tokens. Application logs (console.*) stay on.
+      "invocation_logs": false,
       "head_sampling_rate": 1
     }
   }

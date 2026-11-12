@@ -8,10 +8,18 @@ on:
       - feature/store-live-admin-20261109
     paths:
       - "payments/**"
+      - "store.html"
+      - "assets/store-live-checkout.js"
+      - "assets/store-pricing.js"
+      - "tests/store-*.test.cjs"
       - ".github/workflows/payments-guard-tests.yml"
   pull_request:
     paths:
       - "payments/**"
+      - "store.html"
+      - "assets/store-live-checkout.js"
+      - "assets/store-pricing.js"
+      - "tests/store-*.test.cjs"
       - ".github/workflows/payments-guard-tests.yml"
 
 permissions:

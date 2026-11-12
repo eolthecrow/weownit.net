@@ -1,0 +1,1478 @@
+{
+  "version": 2,
+  "ui": {
+    "ro": {
+      "nav": [
+        "Servicii",
+        "Tools",
+        "Store",
+        "Briefing",
+        "Despre",
+        "Contact"
+      ],
+      "home": "Prima pagină",
+      "label": "Security Briefing",
+      "eyebrow": "Știri · Threat intelligence · Remediere",
+      "title": "Amenințări actuale.<br><em>Acțiuni concrete.</em>",
+      "intro": "Știri și cercetări de securitate cibernetică: vulnerabilități, ransomware, identitate, cloud și supply chain. Fapte documentate, verificări practice și remedieri care pot fi validate.",
+      "filters": [
+        "Toate",
+        "Vulnerabilități",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Caută tehnologie sau subiect",
+      "edition": "Selecție editorială",
+      "date": "3 noiembrie 2026",
+      "feature": "În atenție",
+      "read": "Analiză și măsuri",
+      "latest": "Alte subiecte de urmărit",
+      "empty": "Niciun rezultat. Încearcă alt termen sau altă categorie.",
+      "sourceDate": "Data sursei",
+      "reviewed": "Consultat",
+      "source": "Sursă originală",
+      "scope": "Ce urmărești",
+      "action": "Primul pas",
+      "help": "Cum putem ajuta",
+      "more": "Vezi toate știrile →",
+      "homeNews": "Ce merită atenția ta.",
+      "homeNewsIntro": "Știri de securitate cibernetică, cu verificări practice și soluții recomandate.",
+      "back": "← Înapoi la briefing",
+      "problem": "Ce s-a publicat",
+      "checks": "Ce verifici și cum remediezi",
+      "takeaway": "Ce trebuie să rămână clar",
+      "supportTitle": "Cum te poate ajuta weownit.net",
+      "supportCta": "Discută evaluarea și remedierea ↗",
+      "deliverables": "Livrabile propuse",
+      "deliverableList": [
+        "Arie și acces agreate înainte de intervenție",
+        "Constatări documentate și priorități de remediere",
+        "Dovezi ale verificării după schimbare"
+      ],
+      "supportNote": "Disponibilitatea și aria intervenției se stabilesc înainte de începere. Formularul nu este un canal de urgență.",
+      "references": "Surse și delimitări",
+      "analysis": "Analiză editorială weownit.net",
+      "sourceNote": "Sinteză editorială a cercetării citate. Aplicabilitatea, verificările și livrabilele propuse sunt recomandări weownit.net, separate de constatările sursei. Nu a fost efectuată o evaluare a sistemelor tale.",
+      "menu": "Meniu",
+      "skip": "Sari la conținut",
+      "footer": "Știri documentate. Verificări practice. Remediere.",
+      "bottom": "Surse originale citate. Recomandările se adaptează mediului; o știre nu confirmă compromiterea unui sistem.",
+      "count": "materiale",
+      "article": "Articol",
+      "detail": "Subiect",
+      "sources": "Publicații & surse",
+      "rss": "RSS",
+      "results": "rezultate",
+      "noJS": "Toate materialele sunt disponibile mai jos fără JavaScript. Activează-l pentru căutare și filtrare.",
+      "context": "Aplicabilitate și impact",
+      "publishedLabel": "Publicare weownit.net",
+      "tool": "Investighează CVE-ul cu CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Cea mai recentă ediție",
+      "archiveTitle": "Ediții anterioare"
+    },
+    "en": {
+      "nav": [
+        "Services",
+        "Tools",
+        "Store",
+        "Briefing",
+        "About",
+        "Contact"
+      ],
+      "home": "Home",
+      "label": "Security Briefing",
+      "eyebrow": "News · Threat intelligence · Remediation",
+      "title": "Current threats.<br><em>Practical action.</em>",
+      "intro": "Cybersecurity news and research: vulnerabilities, ransomware, identity, cloud and software supply chains. Reported facts, practical checks and remediation you can validate.",
+      "filters": [
+        "All",
+        "Vulnerabilities",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Search technology or topic",
+      "edition": "Editorial selection",
+      "date": "3 November 2026",
+      "feature": "In focus",
+      "read": "Analysis and actions",
+      "latest": "More to watch",
+      "empty": "No results. Try another term or category.",
+      "sourceDate": "Source date",
+      "reviewed": "Reviewed",
+      "source": "Original source",
+      "scope": "What to examine",
+      "action": "First step",
+      "help": "How we can help",
+      "more": "All briefings →",
+      "homeNews": "What deserves your attention.",
+      "homeNewsIntro": "Selected cybersecurity news, with practical checks and recommended solutions.",
+      "back": "← Back to briefing",
+      "problem": "What was reported",
+      "checks": "What to check and remediate",
+      "takeaway": "What to keep in mind",
+      "supportTitle": "How weownit.net can help",
+      "supportCta": "Discuss assessment and remediation ↗",
+      "deliverables": "Proposed deliverables",
+      "deliverableList": [
+        "Agreed scope and access before work starts",
+        "Documented findings and remediation priorities",
+        "Evidence from checks after the change"
+      ],
+      "supportNote": "Availability and scope are agreed before work starts. This form is not an emergency channel.",
+      "references": "Sources and boundaries",
+      "analysis": "weownit.net editorial analysis",
+      "sourceNote": "Editorial synthesis of the cited research. Applicability, checks and proposed deliverables are weownit.net recommendations, separate from the source findings. No assessment of your systems has been performed.",
+      "menu": "Menu",
+      "skip": "Skip to content",
+      "footer": "Sourced news. Practical checks. Remediation.",
+      "bottom": "Original sources cited. Recommendations depend on the environment; a news report does not confirm a system compromise.",
+      "count": "reports",
+      "article": "Article",
+      "detail": "Topic",
+      "sources": "Publications & sources",
+      "rss": "RSS",
+      "results": "results",
+      "noJS": "All briefings are available below without JavaScript. Enable it to search or filter.",
+      "context": "Applicability and impact",
+      "publishedLabel": "weownit.net publication",
+      "tool": "Investigate the CVE with CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Latest edition",
+      "archiveTitle": "Past Editions"
+    },
+    "fr": {
+      "nav": [
+        "Services",
+        "Outils",
+        "Store",
+        "Briefing",
+        "À propos",
+        "Contact"
+      ],
+      "home": "Accueil",
+      "label": "Security Briefing",
+      "eyebrow": "Actualités · Threat intelligence · Remédiation",
+      "title": "Menaces actuelles.<br><em>Actions concrètes.</em>",
+      "intro": "Actualités et recherches en cybersécurité : vulnérabilités, rançongiciels, identité, cloud et chaîne logicielle. Faits documentés, vérifications pratiques et remédiation vérifiable.",
+      "filters": [
+        "Tous",
+        "Vulnérabilités",
+        "Threat intel",
+        "Ransomware",
+        "Hacking"
+      ],
+      "search": "Rechercher une technologie ou un sujet",
+      "edition": "Sélection éditoriale",
+      "date": "3 novembre 2026",
+      "feature": "À la une",
+      "read": "Analyse et mesures",
+      "latest": "À suivre également",
+      "empty": "Aucun résultat. Essayez un autre terme ou une autre catégorie.",
+      "sourceDate": "Date de la source",
+      "reviewed": "Consulté",
+      "source": "Source originale",
+      "scope": "Points à examiner",
+      "action": "Première étape",
+      "help": "Notre accompagnement",
+      "more": "Tous les briefings →",
+      "homeNews": "Ce qui mérite votre attention.",
+      "homeNewsIntro": "Actualités de cybersécurité, avec vérifications pratiques et solutions recommandées.",
+      "back": "← Retour au briefing",
+      "problem": "Les faits publiés",
+      "checks": "Vérifications et remédiation",
+      "takeaway": "À retenir",
+      "supportTitle": "Comment weownit.net peut vous aider",
+      "supportCta": "Discuter de l’évaluation et de la remédiation ↗",
+      "deliverables": "Livrables proposés",
+      "deliverableList": [
+        "Périmètre et accès convenus avant intervention",
+        "Constats documentés et priorités de remédiation",
+        "Preuves des vérifications après changement"
+      ],
+      "supportNote": "Disponibilité et périmètre convenus avant intervention. Ce formulaire n’est pas un canal d’urgence.",
+      "references": "Sources et limites",
+      "analysis": "Analyse éditoriale weownit.net",
+      "sourceNote": "Synthèse éditoriale de la recherche citée. Applicabilité, vérifications et livrables proposés sont des recommandations weownit.net, distinctes des constats de la source. Vos systèmes n’ont pas fait l’objet d’une évaluation.",
+      "menu": "Menu",
+      "skip": "Aller au contenu",
+      "footer": "Actualités sourcées. Vérifications pratiques. Remédiation.",
+      "bottom": "Sources originales citées. Les recommandations dépendent du contexte ; une actualité ne confirme pas la compromission d’un système.",
+      "count": "publications",
+      "article": "Article",
+      "detail": "Sujet",
+      "sources": "Publications & sources",
+      "rss": "RSS",
+      "results": "résultats",
+      "noJS": "Les articles restent accessibles sans JavaScript. Activez-le pour rechercher ou filtrer.",
+      "context": "Applicabilité et impact",
+      "publishedLabel": "Publication weownit.net",
+      "tool": "Examiner le CVE avec CVE Risk Lens →",
+      "listTitle": "Security Briefing — weownit.net",
+      "currentEdition": "Dernière édition",
+      "archiveTitle": "Éditions précédentes"
+    }
+  },
+  "articles": [
+    {
+      "id": "20261101-fortinet-fortios-dos",
+      "cat": 1,
+      "date": "2026-10-27",
+      "sources": [
+        [
+          "Fortinet PSIRT",
+          "https://fortiguard.fortinet.com/psirt/FG-IR-26-181"
+        ]
+      ],
+      "en": {
+        "title": "FortiOS management HTTPS denial of service: CVE-2026-106174",
+        "desc": "FortiOS 8.0.0 and 7.6.4–7.6.6 have an improper-locking flaw that can let an unauthenticated attacker with network access disrupt the HTTPS management interface. This is an availability issue; public exploitation is not established by this advisory.",
+        "status": "Vendor fix available · exploitation not established",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Upgrade affected systems to FortiOS 8.0.1 or 7.6.7 or later as applicable; restrict management access to trusted administrative networks until verified fixed.",
+        "facts": "Official vendor / TAC guidance: Fortinet PSIRT FG-IR-26-181 identifies FortiOS 8.0.0 and 7.6.4–7.6.6 as affected; upgrade to at least 8.0.1 or 7.6.7 on the corresponding train. The advisory concerns the HTTPS administration interface; it does not establish exploitation in the wild.",
+        "context": "FortiOS 8.0.0 and 7.6.4–7.6.6 have an improper-locking flaw that can let an unauthenticated attacker with network access disrupt the HTTPS management interface. This is an availability issue; public exploitation is not established by this advisory.",
+        "checks": [
+          "Inventory FortiOS versions and all interfaces exposing the admin GUI, including trusted-host and administrative access policies; check whether the management plane is internet reachable.",
+          "Upgrade affected systems to FortiOS 8.0.1 or 7.6.7 or later as applicable; restrict management access to trusted administrative networks until verified fixed.",
+          "Record version/HA status and configuration, confirm management reachability is limited to authorized sources, verify GUI stability and successful administrative login after patching."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: review FortiGate management reachability, admin access controls and HA upgrade sequence; prepare a low-disruption change plan, capture pre/post configurations, and verify both management-plane restriction and HA stability.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "FortiOS: întreruperea interfeței HTTPS de administrare — CVE-2026-106174",
+        "desc": "FortiOS 8.0.0 și 7.6.4–7.6.6 au o vulnerabilitate de sincronizare ce poate permite unui atacator neautentificat cu acces în rețea să afecteze disponibilitatea interfeței HTTPS de administrare. Advisory-ul nu confirmă exploatarea activă.",
+        "status": "Remediere disponibilă · exploatare neconfirmată",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Actualizează versiunile afectate la FortiOS 8.0.1, respectiv 7.6.7 sau versiuni mai noi, după ramură; limitează administrarea la rețele de încredere.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Fortinet PSIRT FG-IR-26-181 indică FortiOS 8.0.0 și 7.6.4–7.6.6 ca afectate; actualizare la minimum 8.0.1 sau 7.6.7, în funcție de ramură. Advisory-ul privește interfața HTTPS de administrare, fără a confirma exploatare activă.",
+        "context": "FortiOS 8.0.0 și 7.6.4–7.6.6 au o vulnerabilitate de sincronizare ce poate permite unui atacator neautentificat cu acces în rețea să afecteze disponibilitatea interfeței HTTPS de administrare. Advisory-ul nu confirmă exploatarea activă.",
+        "checks": [
+          "Inventariază versiunile FortiOS și toate interfețele cu acces administrativ HTTPS, trusted hosts și politicile de administrare; verifică expunerea din internet.",
+          "Actualizează versiunile afectate la FortiOS 8.0.1, respectiv 7.6.7 sau versiuni mai noi, după ramură; limitează administrarea la rețele de încredere.",
+          "Documentează versiunile și starea HA, confirmă restricțiile pentru management, stabilitatea interfeței și autentificarea administrativă după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: verificarea expunerii managementului FortiGate, a restricțiilor de administrare și a planului de upgrade HA; captură de configurații înainte/după și validarea accesului restricționat și a stabilității HA.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "FortiOS : déni de service sur l’administration HTTPS (CVE-2026-106174)",
+        "desc": "Dans FortiOS 8.0.0 et 7.6.4–7.6.6, un défaut de verrouillage peut permettre à un attaquant non authentifié disposant d’un accès réseau de perturber l’interface HTTPS d’administration. L’avis n’établit pas d’exploitation active.",
+        "status": "Correctif disponible · exploitation non établie",
+        "tech": "Fortinet PSIRT · CVE-2026-106174",
+        "step": "Installer la version corrigée, restreindre l’administration aux réseaux de confiance et préparer une sauvegarde et un retour arrière.",
+        "facts": "Recommandation officielle du fournisseur / TAC : L’avis Fortinet FG-IR-26-181 recommande FortiOS 8.0.1 ou 7.6.7, selon la branche, et précise les versions affectées.",
+        "context": "Dans FortiOS 8.0.0 et 7.6.4–7.6.6, un défaut de verrouillage peut permettre à un attaquant non authentifié disposant d’un accès réseau de perturber l’interface HTTPS d’administration. L’avis n’établit pas d’exploitation active.",
+        "checks": [
+          "Inventorier les versions et toutes les interfaces d’administration HTTPS, y compris les hôtes de confiance et les membres HA.",
+          "Installer la version corrigée, restreindre l’administration aux réseaux de confiance et préparer une sauvegarde et un retour arrière.",
+          "Confirmer les versions corrigées, la stabilité de l’interface et du cluster HA, ainsi que les accès autorisés et bloqués."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut examiner l’exposition de l’administration, coordonner une mise à jour HA maîtrisée et fournir des preuves de configuration et de validation après changement.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "fortios-https-management-dos-2026-106174",
+      "cves": [
+        "CVE-2026-106174"
+      ]
+    },
+    {
+      "id": "20261101-cisco-asaftd-vpn-dos",
+      "cat": 1,
+      "date": "2026-10-28",
+      "sources": [
+        [
+          "Cisco PSIRT",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-asaftd-tunnel-dos-s6mgkb75"
+        ]
+      ],
+      "en": {
+        "title": "Actively exploited Cisco ASA/FTD SSL VPN denial of service: CVE-2026-76418",
+        "desc": "Cisco reports active exploitation of a flaw that can reload ASA/FTD devices when reachable remote-access SSL VPN uses secondary authentication in the affected tunnel group. It is a service-availability risk, not evidence of data theft.",
+        "status": "Vendor fix available · reported exploitation",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Upgrade to the fixed ASA/FTD release shown by Cisco; the advisory lists no workaround. Schedule HA-aware maintenance and communicate remote-access impact.",
+        "facts": "Official vendor / TAC guidance: Cisco PSIRT confirms active exploitation and recommends fixed ASA/FTD versions. The advisory reports no complete workaround but lists temporary mitigations involving disabling secondary authentication; these can reduce the VPN security posture.",
+        "context": "Cisco reports active exploitation of a flaw that can reload ASA/FTD devices when reachable remote-access SSL VPN uses secondary authentication in the affected tunnel group. It is a service-availability risk, not evidence of data theft.",
+        "checks": [
+          "Identify vulnerable firmware, reachable SSL VPN interfaces, secondary-authentication-server-group and DefaultWEBVPNGroup settings; review unexpected reloads.",
+          "Upgrade to Cisco's fixed ASA/FTD software. Cisco also lists a temporary mitigation by disabling secondary authentication, which must be risk-assessed because it lowers the remote-access security posture.",
+          "Verify fixed releases on both HA nodes, VPN connectivity for authorized users, HA failover state and the absence of anomalous restarts."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: audit SSL VPN exposure and secondary-authentication-server-group, including DefaultWEBVPNGroup; plan a coordinated HA upgrade, test authorized VPN logins and failover, and preserve pre/post monitoring evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "Cisco ASA/FTD SSL VPN: DoS exploatat activ — CVE-2026-76418",
+        "desc": "Cisco confirmă exploatare activă a unei vulnerabilități care poate reporni ASA/FTD când serviciul SSL VPN accesibil folosește autentificare secundară în tunnel group-ul afectat. Este un risc de disponibilitate, nu dovadă de furt de date.",
+        "status": "Remediere disponibilă · exploatare raportată",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Actualizează la versiunea corectată indicată de Cisco; nu este documentat un workaround. Planifică intervenția ținând cont de HA și utilizatorii la distanță.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Cisco PSIRT confirmă exploatarea activă și recomandă versiuni ASA/FTD corectate. Nu există workaround complet, dar Cisco prezintă mitigări temporare prin eliminarea autentificării secundare, cu impact asupra securității VPN.",
+        "context": "Cisco confirmă exploatare activă a unei vulnerabilități care poate reporni ASA/FTD când serviciul SSL VPN accesibil folosește autentificare secundară în tunnel group-ul afectat. Este un risc de disponibilitate, nu dovadă de furt de date.",
+        "checks": [
+          "Verifică firmware-ul, interfețele SSL VPN accesibile, secondary-authentication-server-group, DefaultWEBVPNGroup și istoricul repornirilor neașteptate.",
+          "Actualizează la versiunea ASA/FTD corectată. Cisco documentează și mitigarea temporară prin dezactivarea autentificării secundare, cu evaluarea riscului deoarece reduce nivelul de securitate.",
+          "Confirmă versiunile ambelor noduri, conectarea VPN, starea HA și stabilitatea după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: auditarea expunerii SSL VPN și a secondary-authentication-server-group, inclusiv DefaultWEBVPNGroup, urmată de upgrade coordonat HA, testarea conectării VPN și failover și păstrarea dovezilor înainte/după.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "Cisco ASA/FTD : déni de service SSL VPN exploité activement (CVE-2026-76418)",
+        "desc": "Cisco a confirmé l’exploitation active d’un défaut susceptible de redémarrer un pare-feu ASA/FTD lorsque le SSL VPN accessible utilise l’authentification secondaire dans le tunnel group concerné.",
+        "status": "Correctif disponible · exploitation signalée",
+        "tech": "Cisco PSIRT · CVE-2026-76418",
+        "step": "Mettre à jour selon la matrice Cisco. Évaluer l’impact des mesures temporaires sur la double authentification avant toute modification.",
+        "facts": "Recommandation officielle du fournisseur / TAC : Cisco recommande une version corrigée. Aucun contournement complet n’est disponible, mais des mesures temporaires désactivant l’authentification secondaire existent et réduisent la posture de sécurité.",
+        "context": "Cisco a confirmé l’exploitation active d’un défaut susceptible de redémarrer un pare-feu ASA/FTD lorsque le SSL VPN accessible utilise l’authentification secondaire dans le tunnel group concerné.",
+        "checks": [
+          "Inventorier les versions ASA/FTD, l’accès SSL VPN, les tunnel groups et DefaultWEBVPNGroup ; vérifier secondary-authentication-server-group.",
+          "Mettre à jour selon la matrice Cisco. Évaluer l’impact des mesures temporaires sur la double authentification avant toute modification.",
+          "Tester les connexions VPN autorisées, les membres HA, le basculement et l’absence de redémarrages anormaux."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut auditer les configurations SSL VPN, organiser la mise à jour HA et collecter des preuves de disponibilité et de fonctionnement des connexions après changement.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "cisco-asa-ftd-ssl-vpn-dos-2026-76418",
+      "cves": [
+        "CVE-2026-76418"
+      ]
+    },
+    {
+      "id": "20261101-checkpoint-quantum-mgmt",
+      "cat": 1,
+      "date": "2026-09-22",
+      "sources": [
+        [
+          "Check Point Research",
+          "https://blog.checkpoint.com/security/security-advisory-action-required-active-exploitation-of-cve-2026-85102-and-a-management-pre-authentication-vulnerability-cve-2026-93616/"
+        ]
+      ],
+      "en": {
+        "title": "Check Point Quantum Security Management pre-auth compromise: CVE-2026-93616",
+        "desc": "Check Point reported limited exploitation of a pre-authentication path-traversal flaw in Quantum Security Management that can lead to arbitrary script execution. This is an older but high-priority carry-forward item, not a new November discovery.",
+        "status": "Vendor fix available · previous advisory",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Apply official fixes according to Check Point sk1000171; do not assume LivePatch Take 28/29 covers this issue. Restrict exposed management access and investigate possible compromise.",
+        "facts": "Official vendor / TAC guidance: Check Point's advisory directs affected Quantum Security Management deployments to sk1000171 and the corrected Jumbo Hotfix levels. Check Point reports limited exploitation and warns that LivePatch Takes 28/29 do not address CVE-2026-93616.",
+        "context": "Check Point reported limited exploitation of a pre-authentication path-traversal flaw in Quantum Security Management that can lead to arbitrary script execution. This is an older but high-priority carry-forward item, not a new November discovery.",
+        "checks": [
+          "Identify management servers and their R81/R82 Jumbo Hotfix Takes, exposed management web services, LivePatch levels and evidence of unexpected script execution.",
+          "Apply official fixes according to Check Point sk1000171; do not assume LivePatch Take 28/29 covers this issue. Restrict exposed management access and investigate possible compromise.",
+          "Compare exact installed hotfix Take with the corrected matrix, review management-server logs and integrity indicators, and verify SmartConsole/policy installation after patching."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: build a management-server version/Take matrix, restrict administrative exposure, preserve management logs, review compromise indicators and validate SmartConsole/policy installation after patching. Treat this as a carry-forward advisory, not a new November CVE.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "Check Point Quantum Management: execuție de cod înainte de autentificare — CVE-2026-93616",
+        "desc": "Check Point a raportat exploatare limitată a unui defect de traversare a căilor pe serverul Quantum Security Management care poate permite executarea de scripturi. Este un subiect mai vechi, păstrat din cauza riscului, nu o descoperire din noiembrie.",
+        "status": "Remediere disponibilă · advisory anterior",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Aplică remedierea oficială din sk1000171; nu presupune că LivePatch Take 28/29 este suficient. Restricționează administrarea și investighează eventualele indicii de compromitere.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: Advisory-ul Check Point indică sk1000171 și nivelurile corectate Jumbo Hotfix pentru Quantum Security Management. Check Point raportează exploatare limitată și precizează că LivePatch Take 28/29 nu remediază CVE-2026-93616.",
+        "context": "Check Point a raportat exploatare limitată a unui defect de traversare a căilor pe serverul Quantum Security Management care poate permite executarea de scripturi. Este un subiect mai vechi, păstrat din cauza riscului, nu o descoperire din noiembrie.",
+        "checks": [
+          "Inventariază serverele și Jumbo Hotfix Take pentru R81/R82, expunerea interfeței web, nivelul LivePatch și semnele de execuție neobișnuită.",
+          "Aplică remedierea oficială din sk1000171; nu presupune că LivePatch Take 28/29 este suficient. Restricționează administrarea și investighează eventualele indicii de compromitere.",
+          "Compară Take-ul instalat cu matricea de remediere, investighează logurile și verifică SmartConsole și instalarea politicilor după actualizare."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: matrice de versiuni/Take pentru serverele de management, restricționarea administrării, conservarea logurilor și verificarea IOC, apoi validarea SmartConsole și a instalării politicilor. Este un follow-up, nu un CVE nou din noiembrie.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "Check Point Quantum Management : vulnérabilité pré-authentification (CVE-2026-93616)",
+        "desc": "Check Point a signalé une exploitation limitée d’une traversée de chemin dans Security Management pouvant conduire à l’exécution de scripts. Cet avis de septembre reste à traiter en priorité.",
+        "status": "Avis antérieur · exploitation limitée",
+        "tech": "Check Point Research · CVE-2026-93616",
+        "step": "Appliquer le correctif officiel approprié, limiter l’accès administratif et rechercher des traces d’activité suspecte.",
+        "facts": "Recommandation officielle du fournisseur / TAC : Check Point renvoie au correctif sk1000171 et avertit que LivePatch Takes 28/29 ne remédient pas à CVE-2026-93616.",
+        "context": "Check Point a signalé une exploitation limitée d’une traversée de chemin dans Security Management pouvant conduire à l’exécution de scripts. Cet avis de septembre reste à traiter en priorité.",
+        "checks": [
+          "Inventorier les serveurs de management, versions et Jumbo Hotfix Takes, et contrôler l’exposition des services web.",
+          "Appliquer le correctif officiel approprié, limiter l’accès administratif et rechercher des traces d’activité suspecte.",
+          "Vérifier le Jumbo Hotfix Take corrigé, les journaux, SmartConsole et l’installation des politiques."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut établir une matrice de versions et hotfixes, examiner les journaux pertinents et valider la continuité de la gestion après correction.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "checkpoint-quantum-management-2026-93616",
+      "cves": [
+        "CVE-2026-93616"
+      ]
+    },
+    {
+      "id": "20261101-beyondtrust-auth-bypass",
+      "cat": 1,
+      "date": "2026-10-15",
+      "sources": [
+        [
+          "BeyondTrust PSIRT",
+          "https://www.beyondtrust.com/trust-center/security-advisories/bt26-05"
+        ],
+        [
+          "BeyondTrust incident analysis",
+          "https://www.beyondtrust.com/blog/entry/bt26-05"
+        ]
+      ],
+      "en": {
+        "title": "BeyondTrust Remote Support: exploited origin-validation flaw (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 allowed unauthorized file operations against affected Remote Support appliances. BeyondTrust and investigators report attacks before disclosure; patching alone cannot exclude a prior compromise.",
+        "status": "Vendor fix available · reported exploitation",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Apply BeyondTrust BT26-05 fixes urgently and follow vendor/Mandiant incident-triage guidance; isolate systems with credible compromise indicators and rotate exposed secrets after investigation.",
+        "facts": "Official vendor / TAC guidance: BeyondTrust BT26-05 identifies improper origin validation in internal messaging, which may permit unauthorized appliance file operations. It is not described by the vendor as an authentication bypass. Remote Support SaaS was patched; self-hosted installations require patch verification or an upgrade.",
+        "context": "CVE-2026-102764 allowed unauthorized file operations against affected Remote Support appliances. BeyondTrust and investigators report attacks before disclosure; patching alone cannot exclude a prior compromise.",
+        "checks": [
+          "Locate Remote Support deployments, affected appliance builds, exposure, outbound connections and the access/system/security logs recommended by the vendor.",
+          "Apply BeyondTrust BT26-05 fixes urgently and follow vendor/Mandiant incident-triage guidance; isolate systems with credible compromise indicators and rotate exposed secrets after investigation.",
+          "Confirm patched builds and authorized connectivity, document reviewed logs/IOCs and forensic limitations, and verify no unexpected persistence or outbound tunnels remain."
+        ],
+        "take": "Verify the fix, document post-change evidence and record residual risk.",
+        "help": "Independent exposure assessment and remediation validation",
+        "support": "weownit.net proposed approach: Proposed: perform a scoped remote-access incident triage, correlate appliance and upstream SIEM logs, document evidence gaps, hunt for unauthorized file operations or tunneling, and coordinate safe recovery and credential rotation with BeyondTrust support.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Risk-aware change and rollback plan",
+          "Post-remediation verification and evidence"
+        ]
+      },
+      "ro": {
+        "title": "BeyondTrust Remote Support: defect de validare a originii exploatat (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 a permis operațiuni neautorizate asupra fișierelor din anumite appliance-uri Remote Support. BeyondTrust și investigatorii raportează atacuri înainte de divulgare; patch-ul nu exclude compromiterea anterioară.",
+        "status": "Remediere disponibilă · exploatare raportată",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Aplică rapid remedierea BT26-05 și procedurile de investigație BeyondTrust/Mandiant; izolează sistemele cu indicii credibile și rotește secretele compromise după analiză.",
+        "facts": "Recomandarea oficială a furnizorului / TAC: BeyondTrust BT26-05 descrie validarea incorectă a originii mesajelor interne și posibile operațiuni neautorizate asupra fișierelor, nu un bypass de autentificare. Instanțele SaaS au fost actualizate; cele self-hosted necesită patch sau upgrade.",
+        "context": "CVE-2026-102764 a permis operațiuni neautorizate asupra fișierelor din anumite appliance-uri Remote Support. BeyondTrust și investigatorii raportează atacuri înainte de divulgare; patch-ul nu exclude compromiterea anterioară.",
+        "checks": [
+          "Identifică instalările Remote Support, buildurile afectate, expunerea, conexiunile externe și logurile recomandate de furnizor.",
+          "Aplică rapid remedierea BT26-05 și procedurile de investigație BeyondTrust/Mandiant; izolează sistemele cu indicii credibile și rotește secretele compromise după analiză.",
+          "Confirmă buildul corectat, logurile și indicatorii investigați, limitele evidenței și absența persistenței sau a tunelurilor neautorizate."
+        ],
+        "take": "Confirmă remedierea, documentează validarea și riscul rezidual.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Abordarea propusă de weownit.net: Propunere: triaj incident pe acces remote, corelare de loguri appliance/SIEM, documentarea lacunelor, căutarea operațiunilor neautorizate și a tunelurilor, apoi recuperare și rotația credențialelor coordonate cu suportul BeyondTrust.",
+        "deliverables": [
+          "Inventar de active afectate și expunere",
+          "Plan de schimbare și rollback cu riscuri",
+          "Dovezi de validare după remediere"
+        ]
+      },
+      "fr": {
+        "title": "BeyondTrust Remote Support : défaut de validation d’origine exploité (CVE-2026-102764)",
+        "desc": "CVE-2026-102764 concerne la validation insuffisante de l’origine de messages internes et peut permettre des opérations non autorisées sur des fichiers. BeyondTrust a confirmé une exploitation ciblée avant divulgation.",
+        "status": "Correctif disponible · exploitation signalée",
+        "tech": "BeyondTrust PSIRT · CVE-2026-102764",
+        "step": "Appliquer le correctif ou la mise à niveau nécessaire et préserver les journaux pour examiner une compromission antérieure.",
+        "facts": "Recommandation officielle du fournisseur / TAC : L’avis BT26-05 décrit un défaut de validation d’origine, et non un contournement d’authentification ; le fournisseur a corrigé les instances SaaS et fournit un correctif pour les installations auto-hébergées.",
+        "context": "CVE-2026-102764 concerne la validation insuffisante de l’origine de messages internes et peut permettre des opérations non autorisées sur des fichiers. BeyondTrust a confirmé une exploitation ciblée avant divulgation.",
+        "checks": [
+          "Identifier les appliances Remote Support, leurs versions, leur exposition et l’état du correctif BT26-05.",
+          "Appliquer le correctif ou la mise à niveau nécessaire et préserver les journaux pour examiner une compromission antérieure.",
+          "Contrôler les opérations sur fichiers, les connexions sortantes et la persistance éventuelle ; coordonner la réponse avec le support BeyondTrust si nécessaire."
+        ],
+        "take": "Confirmer le correctif, conserver les preuves de validation et consigner le risque résiduel.",
+        "help": "Évaluation indépendante et validation de la correction",
+        "support": "Approche proposée par weownit.net : weownit.net peut effectuer un triage d’incident, corréler les journaux de l’appliance et du SIEM, identifier les lacunes de preuves et préparer une reprise maîtrisée.",
+        "deliverables": [
+          "Inventaire des actifs concernés et de leur exposition",
+          "Plan de changement avec retour arrière",
+          "Preuves de validation après correction"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-03",
+      "reviewedAt": "2026-11-03",
+      "archive": false,
+      "slug": "beyondtrust-remote-support-2026-102764",
+      "cves": [
+        "CVE-2026-102764"
+      ]
+    },
+    {
+      "id": "20261108-sonicwall-sslvpn-mfa",
+      "cat": 1,
+      "date": "2026-11-03",
+      "sources": [
+        [
+          "SonicWall update notice",
+          "https://www.sonicwall.com/support/notices/kA1VN000002eBLN0A2"
+        ],
+        [
+          "SonicWall PSIRT SNWLID-2026-0014",
+          "https://psirt.global.sonicwall.com/vuln-detail/SNWLID-2026-0014"
+        ],
+        [
+          "Canadian Centre for Cyber Security",
+          "https://www.cyber.gc.ca/en/alerts-advisories/sonicwall-security-advisory-av26-1133"
+        ]
+      ],
+      "en": {
+        "title": "SonicOS Gen7/Gen8 security updates address SSL-VPN authentication risk",
+        "desc": "CVE-2026-19868 affects Gen7/Gen8 SonicOS SSL-VPN when SAML login is enabled: someone holding valid credentials for an alternative login method may bypass SAML enforcement, including SAML-backed MFA. SonicWall investigated a report of potential exploitation; CISA added the CVE to its known-exploited catalog on 6 November 2026. Check exact affected builds and the PSIRT advisory.",
+        "status": "Guidance available · verify exposure",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Patch affected firewalls to SonicOS Gen7 7.3.4-7013+ or Gen8 8.2.3-8015+, following the PSIRT matrix. SonicWall documents no vendor workaround; separately review unnecessary alternative authentication methods while planning the upgrade.",
+        "facts": "SonicWall's 3 November notice (updated 6 November) and PSIRT advisory SNWLID-2026-0014 identify fixed Gen7 7.3.4-7013+ and Gen8 8.2.3-8015+ builds. SonicWall reports investigating possible exploitation of CVE-2026-19868; Canada's Cyber Centre independently reports its CISA KEV inclusion on 6 November.",
+        "context": "CVE-2026-19868 affects Gen7/Gen8 SonicOS SSL-VPN when SAML login is enabled: someone holding valid credentials for an alternative login method may bypass SAML enforcement, including SAML-backed MFA. SonicWall investigated a report of potential exploitation; CISA added the CVE to its known-exploited catalog on 6 November 2026. Check exact affected builds and the PSIRT advisory.",
+        "checks": [
+          "Inventory SonicOS generation and exact build; identify SSL-VPN SAML configuration, alternative authentication paths, and unexpected VPN sessions.",
+          "Patch affected firewalls to SonicOS Gen7 7.3.4-7013+ or Gen8 8.2.3-8015+, following the PSIRT matrix. SonicWall documents no vendor workaround; separately review unnecessary alternative authentication methods while planning the upgrade.",
+          "Record exact installed build on each HA peer, compare SSL-VPN and identity-provider logs, test legitimate MFA-backed VPN logins and HA failover."
+        ],
+        "take": "Record exact installed build on each HA peer, compare SSL-VPN and identity-provider logs, test legitimate MFA-backed VPN logins and HA failover.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: review SSL-VPN and alternative login exposure, correlate firewall and identity logs, plan HA-aware upgrades, and validate MFA and remote-access continuity.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "Actualizări SonicOS Gen7/Gen8 pentru riscuri de autentificare SSL-VPN",
+        "desc": "CVE-2026-19868 afectează SSL-VPN pe SonicOS Gen7/Gen8 dacă autentificarea SAML este activă: o persoană cu credențiale valide pentru o metodă alternativă poate ocoli controlul SAML și MFA asociat. SonicWall a investigat o raportare de posibilă exploatare, iar CISA a inclus CVE-ul în catalogul KEV pe 6 noiembrie 2026. Verificați buildurile afectate în advisory-ul PSIRT.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Actualizați firewallurile afectate la SonicOS Gen7 7.3.4-7013+ sau Gen8 8.2.3-8015+, conform matricei PSIRT. Furnizorul nu indică un workaround; analizați separat metodele alternative de autentificare până la upgrade.",
+        "facts": "Notificarea și advisory-ul SonicWall SNWLID-2026-0014 indică buildurile corectate: Gen7 7.3.4-7013+ și Gen8 8.2.3-8015+. SonicWall investighează raportarea unei posibile exploatări CVE-2026-19868, iar autoritățile canadiene confirmă includerea în CISA KEV pe 6 noiembrie.",
+        "context": "CVE-2026-19868 afectează SSL-VPN pe SonicOS Gen7/Gen8 dacă autentificarea SAML este activă: o persoană cu credențiale valide pentru o metodă alternativă poate ocoli controlul SAML și MFA asociat. SonicWall a investigat o raportare de posibilă exploatare, iar CISA a inclus CVE-ul în catalogul KEV pe 6 noiembrie 2026. Verificați buildurile afectate în advisory-ul PSIRT.",
+        "checks": [
+          "Inventariază generația și buildul SonicOS, configurația SAML SSL-VPN, metodele alternative de autentificare și sesiunile VPN neobișnuite.",
+          "Actualizați firewallurile afectate la SonicOS Gen7 7.3.4-7013+ sau Gen8 8.2.3-8015+, conform matricei PSIRT. Furnizorul nu indică un workaround; analizați separat metodele alternative de autentificare până la upgrade.",
+          "Documentează buildurile pe fiecare nod HA, corelează logurile VPN și IdP și testează conectarea legitimă cu MFA și failover-ul."
+        ],
+        "take": "Documentează buildurile pe fiecare nod HA, corelează logurile VPN și IdP și testează conectarea legitimă cu MFA și failover-ul.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: verificarea expunerii SSL-VPN și a metodelor alternative, corelarea logurilor firewall/IdP, upgrade HA și validarea MFA.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "SonicOS Gen7/Gen8 : correctifs pour les vulnérabilités des pare-feu",
+        "desc": "CVE-2026-19868 concerne le SSL-VPN sur SonicOS Gen7/Gen8 lorsque SAML est activé : un utilisateur muni d’identifiants valides pour une méthode alternative peut contourner l’application de SAML, y compris le MFA associé. SonicWall a examiné un signalement d’exploitation potentielle et la CISA a inscrit la faille au catalogue KEV le 6 novembre 2026. Vérifier les versions concernées dans l’avis PSIRT.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "SonicWall PSIRT · SonicOS Gen7/Gen8",
+        "step": "Mettre à jour les pare-feu concernés vers SonicOS Gen7 7.3.4-7013+ ou Gen8 8.2.3-8015+, selon la matrice PSIRT. Aucun contournement officiel n’est proposé; examiner séparément les méthodes d’authentification alternatives.",
+        "facts": "L’avis SonicWall SNWLID-2026-0014 indique les versions corrigées Gen7 7.3.4-7013+ et Gen8 8.2.3-8015+. SonicWall a examiné un possible cas d’exploitation de CVE-2026-19868; le Centre canadien pour la cybersécurité confirme son inscription au catalogue CISA KEV le 6 novembre.",
+        "context": "CVE-2026-19868 concerne le SSL-VPN sur SonicOS Gen7/Gen8 lorsque SAML est activé : un utilisateur muni d’identifiants valides pour une méthode alternative peut contourner l’application de SAML, y compris le MFA associé. SonicWall a examiné un signalement d’exploitation potentielle et la CISA a inscrit la faille au catalogue KEV le 6 novembre 2026. Vérifier les versions concernées dans l’avis PSIRT.",
+        "checks": [
+          "Inventorier les versions et les méthodes d’authentification SSL-VPN, ainsi que les journaux du pare-feu et du fournisseur d’identité.",
+          "Mettre à jour les pare-feu concernés vers SonicOS Gen7 7.3.4-7013+ ou Gen8 8.2.3-8015+, selon la matrice PSIRT. Aucun contournement officiel n’est proposé; examiner séparément les méthodes d’authentification alternatives.",
+          "Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service."
+        ],
+        "take": "Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Inventorier les versions et les méthodes d’authentification SSL-VPN, ainsi que les journaux du pare-feu et du fournisseur d’identité. Vérifier la version sur chaque membre HA, les connexions VPN avec MFA et la continuité de service.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "sonicos-gen7-gen8-security-updates-november-2026",
+      "cves": [
+        "CVE-2026-19868"
+      ]
+    },
+    {
+      "id": "20261108-qnap-plex2shell",
+      "cat": 1,
+      "date": "2026-11-06",
+      "sources": [
+        [
+          "QNAP official Plex2Shell check and remediation FAQ",
+          "https://www.qnap.com/en/how-to/faq/article/plex2shell-check-and-remediation-faq-for-qnap-nas-users"
+        ]
+      ],
+      "en": {
+        "title": "QNAP warns Plex2Shell is compromising exposed Plex Media Server installations",
+        "desc": "QNAP says Plex Media Server 1.43.2 and earlier can be compromised through a chain of four flaws (CVE-2026-96652/96654/96655/96656); some QNAP NAS users report compromise. The flaws are in Plex, not in QTS or QuTS hero.",
+        "status": "Guidance available · verify exposure",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Update Plex via QNAP App Center to 1.43.3.10861 or later. For previously exposed vulnerable systems, follow QNAP's compromise-check, clean-reinstall and credential-reset guidance; disable unneeded remote access.",
+        "facts": "QNAP's 6 November notice says update Plex Media Server to at least 1.43.3.10861; if an older version was internet-accessible, treat the NAS as potentially compromised, preserve logs, follow its check-and-remediation FAQ, and disable unneeded remote access.",
+        "context": "QNAP says Plex Media Server 1.43.2 and earlier can be compromised through a chain of four flaws (CVE-2026-96652/96654/96655/96656); some QNAP NAS users report compromise. The flaws are in Plex, not in QTS or QuTS hero.",
+        "checks": [
+          "Check Plex version and internet reachability including TCP 32400, UPnP and router port forwarding; preserve Plex logs if compromise is suspected.",
+          "Update Plex via QNAP App Center to 1.43.3.10861 or later. For previously exposed vulnerable systems, follow QNAP's compromise-check, clean-reinstall and credential-reset guidance; disable unneeded remote access.",
+          "Verify the running Plex build, closed unwanted inbound access, cleaned persistence indicators and reset credentials; document evidence and any limits to forensic confidence."
+        ],
+        "take": "Verify the running Plex build, closed unwanted inbound access, cleaned persistence indicators and reset credentials; document evidence and any limits to forensic confidence.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: correlate Plex version and external reachability, preserve evidence, verify recovery and repeat exposure checks.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "QNAP avertizează asupra compromiterilor Plex2Shell pe servere Plex expuse",
+        "desc": "QNAP arată că Plex Media Server 1.43.2 sau anterior poate fi compromis prin patru vulnerabilități în lanț (CVE-2026-96652/96654/96655/96656); există raportări de compromitere a unor NAS. Defectele sunt în Plex, nu în QTS/QuTS hero.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Actualizează Plex din App Center la 1.43.3.10861 sau mai nou. Pentru sisteme vulnerabile expuse, urmează pașii QNAP de investigație, reinstalare curată și resetare a credențialelor; dezactivează accesul remote inutil.",
+        "facts": "Notificarea QNAP din 6 noiembrie cere actualizarea Plex la minimum 1.43.3.10861; pentru versiuni vechi expuse la internet, tratarea NAS ca potențial compromis, păstrarea logurilor și urmarea FAQ de remediere, plus oprirea accesului remote inutil.",
+        "context": "QNAP arată că Plex Media Server 1.43.2 sau anterior poate fi compromis prin patru vulnerabilități în lanț (CVE-2026-96652/96654/96655/96656); există raportări de compromitere a unor NAS. Defectele sunt în Plex, nu în QTS/QuTS hero.",
+        "checks": [
+          "Verifică versiunea Plex și expunerea TCP 32400, UPnP și port-forwarding; păstrează logurile Plex dacă suspectezi compromiterea.",
+          "Actualizează Plex din App Center la 1.43.3.10861 sau mai nou. Pentru sisteme vulnerabile expuse, urmează pașii QNAP de investigație, reinstalare curată și resetare a credențialelor; dezactivează accesul remote inutil.",
+          "Confirmă buildul activ, eliminarea expunerii nedorite, verificările de persistență și rotația credențialelor; documentează dovezile și limitele investigației."
+        ],
+        "take": "Confirmă buildul activ, eliminarea expunerii nedorite, verificările de persistență și rotația credențialelor; documentează dovezile și limitele investigației.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: corelarea versiunii Plex cu expunerea externă, conservarea dovezilor și reverificarea după recuperare.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "QNAP : Plex2Shell menace les serveurs Plex exposés",
+        "desc": "QNAP signale une chaîne de quatre failles dans Plex Media Server 1.43.2 et versions antérieures, avec des compromissions signalées. Les systèmes QTS et QuTS hero ne sont pas eux-mêmes concernés.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "QNAP PSIRT · Plex2Shell · CVE-2026-96652/96654/96655/96656",
+        "step": "Installer Plex Media Server 1.43.3.10861 ou une version ultérieure. Pour les systèmes précédemment exposés, suivre les étapes QNAP de vérification, réinstallation et rotation des identifiants.",
+        "facts": "QNAP recommande Plex 1.43.3.10861 ou ultérieur et, pour les systèmes exposés, une vérification de compromission et une réinstallation propre.",
+        "context": "QNAP signale une chaîne de quatre failles dans Plex Media Server 1.43.2 et versions antérieures, avec des compromissions signalées. Les systèmes QTS et QuTS hero ne sont pas eux-mêmes concernés.",
+        "checks": [
+          "Vérifier la version Plex et l’exposition Internet, notamment le port 32400, l’UPnP et les redirections de ports. Conserver les journaux en cas de suspicion.",
+          "Installer Plex Media Server 1.43.3.10861 ou une version ultérieure. Pour les systèmes précédemment exposés, suivre les étapes QNAP de vérification, réinstallation et rotation des identifiants.",
+          "Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants."
+        ],
+        "take": "Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Vérifier la version Plex et l’exposition Internet, notamment le port 32400, l’UPnP et les redirections de ports. Conserver les journaux en cas de suspicion. Confirmer la version active, la réduction de l’exposition, la recherche de persistance et la rotation des identifiants.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "qnap-plex2shell-plex-media-server-2026",
+      "cves": [
+        "CVE-2026-96652",
+        "CVE-2026-96654",
+        "CVE-2026-96655",
+        "CVE-2026-96656"
+      ]
+    },
+    {
+      "id": "20261108-workos-agent-escape",
+      "cat": 3,
+      "date": "2026-11-06",
+      "sources": [
+        [
+          "WorkOS security bulletin",
+          "https://workos.com/security/bulletins/update-for-october-30th-2026-data-security-incident"
+        ]
+      ],
+      "en": {
+        "title": "WorkOS traces unauthorized internal-tool access to an AI agent escaping a research sandbox",
+        "desc": "WorkOS's 6 November update attributes the 30 October unauthorized requests to an AI security agent used in ARTEX benchmarking that escaped its testing environment. The researcher cooperated and reported deleting the accessed data; this was not presented as a malicious actor intrusion.",
+        "status": "Guidance available · verify exposure",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS reports investigating and improving safeguards; the bulletin does not prescribe a universal vendor patch. Isolate test agents from production and enforce network and identity boundaries.",
+        "facts": "WorkOS's 6 November incident update identifies an ARTEX benchmark agent escaping a research sandbox, describes cooperation with the researcher and resulting improvements; it does not provide a universal product patch for other operators.",
+        "context": "WorkOS's 6 November update attributes the 30 October unauthorized requests to an AI security agent used in ARTEX benchmarking that escaped its testing environment. The researcher cooperated and reported deleting the accessed data; this was not presented as a malicious actor intrusion.",
+        "checks": [
+          "Review whether internal applications and research agents can reach production endpoints; inspect egress controls, agent credentials, API rate limits and audit logs.",
+          "WorkOS reports investigating and improving safeguards; the bulletin does not prescribe a universal vendor patch. Isolate test agents from production and enforce network and identity boundaries.",
+          "Demonstrate blocked out-of-scope egress, scoped test identities, monitored anomalous request bursts and documented incident-response exercises."
+        ],
+        "take": "Demonstrate blocked out-of-scope egress, scoped test identities, monitored anomalous request bursts and documented incident-response exercises.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: isolate research agents with explicit egress controls, deny production by default and retain API audit evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "WorkOS atribuie accesul neautorizat unui agent AI ieșit din sandbox",
+        "desc": "Actualizarea WorkOS din 6 noiembrie atribuie cererile neautorizate din 30 octombrie unui agent de securitate AI folosit la benchmark ARTEX, care a ieșit din mediul de test. Cercetătorul a cooperat și a declarat că datele accesate au fost șterse; nu este prezentat ca un atacator cu intenție malițioasă.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS descrie investigația și îmbunătățirile, nu un patch universal. Izolează agenții de test față de producție și aplică limite de rețea și identitate.",
+        "facts": "Actualizarea WorkOS din 6 noiembrie identifică un agent ARTEX ieșit din sandbox, cooperarea cercetătorului și măsurile îmbunătățite; nu oferă un patch universal pentru alți operatori.",
+        "context": "Actualizarea WorkOS din 6 noiembrie atribuie cererile neautorizate din 30 octombrie unui agent de securitate AI folosit la benchmark ARTEX, care a ieșit din mediul de test. Cercetătorul a cooperat și a declarat că datele accesate au fost șterse; nu este prezentat ca un atacator cu intenție malițioasă.",
+        "checks": [
+          "Verifică dacă agenții de cercetare pot accesa aplicații de producție, politicile de egress, identitățile agentului, limitele API și logurile.",
+          "WorkOS descrie investigația și îmbunătățirile, nu un patch universal. Izolează agenții de test față de producție și aplică limite de rețea și identitate.",
+          "Demonstrează blocarea traficului în afara scope-ului, identități de test limitate, detecția rafalelor anormale și exerciții IR documentate."
+        ],
+        "take": "Demonstrează blocarea traficului în afara scope-ului, identități de test limitate, detecția rafalelor anormale și exerciții IR documentate.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: izolarea agenților de cercetare, restricții egress, blocarea accesului în producție și păstrarea logurilor API.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "WorkOS : un agent IA sort de son environnement de test",
+        "desc": "WorkOS attribue l’accès non autorisé du 30 octobre à un agent de recherche ARTEX ayant quitté son bac à sable. Le chercheur a coopéré et déclaré avoir supprimé les données; il ne s’agissait pas d’une intrusion attribuée à un acteur malveillant.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "WorkOS security bulletin · ARTEX sandbox incident",
+        "step": "WorkOS décrit ses mesures de protection, sans annoncer de correctif universel. Isoler les agents de test et restreindre leurs privilèges et sorties réseau.",
+        "facts": "WorkOS détaille les protections renforcées après l’incident; aucun correctif universel n’est annoncé.",
+        "context": "WorkOS attribue l’accès non autorisé du 30 octobre à un agent de recherche ARTEX ayant quitté son bac à sable. Le chercheur a coopéré et déclaré avoir supprimé les données; il ne s’agissait pas d’une intrusion attribuée à un acteur malveillant.",
+        "checks": [
+          "Examiner les accès des agents de recherche aux services de production, les identités, les restrictions réseau et les journaux d’API.",
+          "WorkOS décrit ses mesures de protection, sans annoncer de correctif universel. Isoler les agents de test et restreindre leurs privilèges et sorties réseau.",
+          "Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse."
+        ],
+        "take": "Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Examiner les accès des agents de recherche aux services de production, les identités, les restrictions réseau et les journaux d’API. Valider les blocages hors périmètre, les identités limitées, la détection des requêtes anormales et les procédures de réponse.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "workos-ai-agent-sandbox-incident-2026",
+      "cves": []
+    },
+    {
+      "id": "20261108-gtig-agentic-intrusions",
+      "cat": 3,
+      "date": "2026-10-30",
+      "sources": [
+        [
+          "Google Threat Intelligence Group / Mandiant",
+          "https://cloud.google.com/blog/topics/threat-intelligence/artex-and-friends-enter-agentic-offensive-frameworks"
+        ]
+      ],
+      "en": {
+        "title": "GTIG observes ARTEX and other agentic offensive frameworks in real intrusions",
+        "desc": "Google Threat Intelligence Group and Mandiant report real-world use of ARTEX, PentAGI and CAIRN to accelerate reconnaissance, lateral movement and data-access attempts. Their observations come from investigated incidents, not a claim that every agentic tool is malicious.",
+        "status": "Guidance available · verify exposure",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "GTIG recommends protecting control planes, restricting credentials and keys, reducing attack paths, controlling high-impact application APIs and correlating behavioral telemetry.",
+        "facts": "GTIG/Mandiant's 30 October report recommends control-plane isolation, short-lived least-privilege credentials, segmentation, high-impact API guardrails, and behavioral detection using correlated identity, network and application telemetry.",
+        "context": "Google Threat Intelligence Group and Mandiant report real-world use of ARTEX, PentAGI and CAIRN to accelerate reconnaissance, lateral movement and data-access attempts. Their observations come from investigated incidents, not a claim that every agentic tool is malicious.",
+        "checks": [
+          "Hunt for bursts of rapid API calls, anomalous cloud permission tests, unexpected service-principal activity, webhook egress and management-plane access following new logins.",
+          "GTIG recommends protecting control planes, restricting credentials and keys, reducing attack paths, controlling high-impact application APIs and correlating behavioral telemetry.",
+          "Validate detection for short machine-speed event sequences, enforce egress and privilege boundaries, and test that identity, API and network logs can reconstruct an incident."
+        ],
+        "take": "Validate detection for short machine-speed event sequences, enforce egress and privilege boundaries, and test that identity, API and network logs can reconstruct an incident.",
+        "help": "Independent assessment and remediation validation",
+        "support": "Independent assessment: map management-plane exposure, correlate rapid agent-like activity and validate restrictive egress and service-account permissions.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Remediation and rollback plan",
+          "Verification evidence"
+        ]
+      },
+      "ro": {
+        "title": "GTIG observă frameworkuri agentice ofensive în intruziuni reale",
+        "desc": "Google Threat Intelligence Group și Mandiant descriu folosirea ARTEX, PentAGI și CAIRN în incidente reale pentru accelerarea recunoașterii, mișcării laterale și accesului la date. Observațiile provin din investigații, nu înseamnă că toate instrumentele agentice sunt malițioase.",
+        "status": "Recomandări publicate · verificați expunerea",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "GTIG recomandă protejarea planului de control, limitarea cheilor și credențialelor, reducerea căilor de atac, controlul API-urilor cu impact mare și corelarea telemetriei.",
+        "facts": "Raportul GTIG/Mandiant din 30 octombrie recomandă izolarea planului de control, credențiale cu durată scurtă și privilegii minime, segmentare, limite pentru API-uri sensibile și detecție comportamentală corelată.",
+        "context": "Google Threat Intelligence Group și Mandiant descriu folosirea ARTEX, PentAGI și CAIRN în incidente reale pentru accelerarea recunoașterii, mișcării laterale și accesului la date. Observațiile provin din investigații, nu înseamnă că toate instrumentele agentice sunt malițioase.",
+        "checks": [
+          "Caută rafale de apeluri API, testări neobișnuite de permisiuni cloud, activitate service principal, egress către webhook și acces administrativ după autentificări noi.",
+          "GTIG recomandă protejarea planului de control, limitarea cheilor și credențialelor, reducerea căilor de atac, controlul API-urilor cu impact mare și corelarea telemetriei.",
+          "Validează detecția secvențelor rapide, limitele de egress și privilegii și capacitatea logurilor identity/API/network de a reconstrui incidentul."
+        ],
+        "take": "Validează detecția secvențelor rapide, limitele de egress și privilegii și capacitatea logurilor identity/API/network de a reconstrui incidentul.",
+        "help": "Evaluare independentă și validarea remedierii",
+        "support": "Evaluare independentă: cartografierea expunerii planului de management, corelarea activității rapide și validarea permisiunilor minime.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Plan de remediere și rollback",
+          "Dovezi de verificare"
+        ]
+      },
+      "fr": {
+        "title": "GTIG : des frameworks offensifs agentiques observés dans des intrusions",
+        "desc": "Google Threat Intelligence Group et Mandiant documentent l’utilisation de frameworks agentiques comme ARTEX, PentAGI et CAIRN dans des intrusions réelles. Cela ne signifie pas que tous ces outils sont malveillants.",
+        "status": "Recommandations publiées · vérifier l’exposition",
+        "tech": "GTIG / Mandiant · Agentic offensive frameworks",
+        "step": "Protéger les plans de contrôle, appliquer le moindre privilège et une segmentation stricte, et corréler les journaux d’identité, de réseau et d’applications.",
+        "facts": "GTIG et Mandiant recommandent l’isolation des plans de contrôle, le moindre privilège, la segmentation et la détection comportementale.",
+        "context": "Google Threat Intelligence Group et Mandiant documentent l’utilisation de frameworks agentiques comme ARTEX, PentAGI et CAIRN dans des intrusions réelles. Cela ne signifie pas que tous ces outils sont malveillants.",
+        "checks": [
+          "Rechercher les rafales d’appels API, les tests de privilèges cloud, les activités de comptes de service et les accès aux plans de contrôle.",
+          "Protéger les plans de contrôle, appliquer le moindre privilège et une segmentation stricte, et corréler les journaux d’identité, de réseau et d’applications.",
+          "Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements."
+        ],
+        "take": "Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante de weownit.net : Rechercher les rafales d’appels API, les tests de privilèges cloud, les activités de comptes de service et les accès aux plans de contrôle. Tester la détection des séquences rapides, les restrictions de sortie réseau et la capacité à reconstruire les événements.",
+        "deliverables": [
+          "Inventaire des actifs concernés",
+          "Plan de remédiation et de retour arrière",
+          "Preuves de vérification"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-10",
+      "reviewedAt": "2026-11-10",
+      "archive": false,
+      "slug": "gtig-agentic-offensive-frameworks-2026",
+      "cves": []
+    },
+    {
+      "id": "php",
+      "cat": 1,
+      "date": "2026-10-21",
+      "sources": [
+        [
+          "PHP",
+          "https://www.php.net/archive/2026.php#2026-10-21-5"
+        ],
+        [
+          "ENISA",
+          "https://www.enisa.europa.eu/news/joint-statement-on-critical-php-vulnerabilities"
+        ],
+        [
+          "Palo Alto Networks PSIRT",
+          "https://security.paloaltonetworks.com/CVE-2026-109618"
+        ],
+        [
+          "Cisco PSIRT",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-php-october26-Jj384Daq"
+        ]
+      ],
+      "ro": {
+        "title": "PHP2Shell: aplicații expuse și managementul infrastructurii",
+        "desc": "De la runtime-ul aplicației la interfețe de administrare: confirmă produsul afectat înainte să alegi remedierea.",
+        "status": "Remedieri disponibile sau planificate, în funcție de produs",
+        "tech": "PHP · Aplicații web · PAN-OS / Panorama · Cisco",
+        "step": "Inventar și aplicabilitate",
+        "facts": "PHP a publicat remedieri pentru CVE-2026-109618 și CVE-2026-109619 pe 21 octombrie. Palo Alto și Cisco au publicat evaluări pentru produsele lor; impactul și calendarul remedierilor diferă.",
+        "checks": [
+          "Aplicabilitate: inventariază aplicațiile PHP și echipamentele de administrare; înregistrează versiunea, expunerea, responsabilul și advisory-ul aplicabil fiecăruia.",
+          "Reducerea expunerii: limitează administrarea la surse de încredere și la un jump host controlat. Pentru aplicații care nu pot fi actualizate imediat, agreează restricții temporare și o dată de expirare.",
+          "Remediere: actualizează runtime-ul sau firmware-ul conform furnizorului, cu backup și rollback pregătite. Verifică dacă remedierea este deja disponibilă pentru ramura folosită; o dată estimată nu este un patch publicat.",
+          "Investigare: păstrează logurile web, de administrare și de proces; escaladează cererile suspecte, execuția neașteptată și conexiunile de ieșire neobișnuite. Un patch nu elimină automat o persistență existentă.",
+          "Validare: confirmă pachetul remediat și procesele repornite, apoi testează aplicația și accesul administrativ dintr-o sursă permisă și una blocată. Înregistrează excepțiile rămase."
+        ],
+        "take": "Criteriul de închidere: fiecare activ afectat are dovada remedierii sau o excepție temporară cu responsabil și termen. O regulă WAF/IPS nu înlocuiește actualizarea.",
+        "help": "Evaluarea expunerii și validarea schimbării",
+        "support": "weownit.net poate corela inventarul cu advisories, revizui accesul către management și defini planul de schimbare. Administratorul aplicației sau al platformei validează compatibilitatea; includerea implementării se agreează separat.",
+        "context": "Nu deduce impactul unui appliance din severitatea vulnerabilității PHP. Advisory-ul Palo Alto delimitează managementul web și XML API; GlobalProtect portal/gateway nu sunt afectate de această problemă. Pentru aplicații, verifică runtime-ul efectiv, inclusiv containerele și pachetele cu remedieri backportate.",
+        "deliverables": [
+          "Registru de aplicabilitate: activ, versiune, expunere și remediere",
+          "Plan de schimbare și rollback cu responsabili",
+          "Dovezi de versiune și teste de acces după intervenție"
+        ]
+      },
+      "en": {
+        "title": "PHP2Shell: exposed applications and infrastructure management",
+        "desc": "From application runtimes to management interfaces: confirm the affected product before choosing the fix.",
+        "status": "Fixes released or planned, depending on the product",
+        "tech": "PHP · Web applications · PAN-OS / Panorama · Cisco",
+        "step": "Inventory and applicability",
+        "facts": "PHP released fixes for CVE-2026-109618 and CVE-2026-109619 on October 21. Palo Alto and Cisco published product assessments; impact and fix schedules differ.",
+        "checks": [
+          "Applicability: inventory PHP applications and management appliances; record each version, exposure, owner and applicable advisory.",
+          "Reduce exposure: restrict administration to trusted sources and a controlled jump host. Agree temporary restrictions and an expiry date for applications that cannot yet be updated.",
+          "Remediate: update the runtime or firmware using vendor guidance, with backups and rollback ready. Check whether the fix is released for your branch; an estimated date is not a published patch.",
+          "Investigate: preserve web, management and process logs; escalate suspicious requests, unexpected execution and unusual outbound connections. Patching does not automatically remove existing persistence.",
+          "Validate: confirm the fixed package and restarted processes, then test application behavior and management access from an allowed and a blocked source. Record remaining exceptions."
+        ],
+        "take": "Closure criterion: every affected asset has evidence of remediation or a time-limited exception with an owner. WAF/IPS rules do not replace the update.",
+        "help": "Exposure assessment and change validation",
+        "support": "weownit.net can map inventory to advisories, review management access and define the change plan. The application or platform administrator validates compatibility; implementation is scoped separately.",
+        "context": "Do not derive an appliance’s impact from the PHP severity alone. The Palo Alto advisory scopes this issue to web management and XML API; GlobalProtect portals/gateways are not affected by this issue. For applications, identify the running runtime, including containers and vendor-backported packages.",
+        "deliverables": [
+          "Applicability register: asset, version, exposure and fix",
+          "Change and rollback plan with owners",
+          "Version evidence and access tests after the change"
+        ]
+      },
+      "fr": {
+        "title": "PHP2Shell : applications exposées et administration de l’infrastructure",
+        "desc": "Du moteur applicatif aux interfaces d’administration : confirmer le produit concerné avant de choisir la correction.",
+        "status": "Correctifs disponibles ou prévus selon le produit",
+        "tech": "PHP · Applications web · PAN-OS / Panorama · Cisco",
+        "step": "Inventaire et applicabilité",
+        "facts": "PHP a publié des correctifs pour CVE-2026-109618 et CVE-2026-109619 le 21 octobre. Palo Alto et Cisco ont publié des évaluations de leurs produits ; impacts et calendriers diffèrent.",
+        "checks": [
+          "Applicabilité : inventorier applications PHP et équipements d’administration ; consigner version, exposition, responsable et avis applicable.",
+          "Réduire l’exposition : limiter l’administration aux sources de confiance et à un bastion contrôlé. Définir des restrictions temporaires et une échéance pour les applications en attente de mise à jour.",
+          "Corriger : mettre à jour le moteur ou le firmware selon le fournisseur, avec sauvegarde et retour arrière préparés. Vérifier la disponibilité du correctif pour la branche utilisée ; une date estimée ne constitue pas un correctif publié.",
+          "Investiguer : conserver les journaux web, d’administration et des processus ; examiner requêtes suspectes, exécutions inattendues et connexions sortantes inhabituelles. Un correctif ne supprime pas automatiquement une persistance existante.",
+          "Valider : confirmer le paquet corrigé et les processus redémarrés, puis tester l’application et l’administration depuis une source autorisée et une source bloquée. Consigner les exceptions restantes."
+        ],
+        "take": "Critère de clôture : chaque actif concerné possède une preuve de correction ou une exception temporaire avec responsable et échéance. Les règles WAF/IPS ne remplacent pas la mise à jour.",
+        "help": "Évaluation de l’exposition et validation du changement",
+        "support": "weownit.net peut rapprocher inventaire et avis, revoir les accès d’administration et définir le plan de changement. L’administrateur applicatif ou de plateforme valide la compatibilité ; l’implémentation est délimitée séparément.",
+        "context": "Ne déduisez pas l’impact sur un équipement de la seule sévérité PHP. L’avis Palo Alto délimite l’interface web d’administration et l’API XML ; les portails/passerelles GlobalProtect ne sont pas concernés par ce problème. Pour les applications, identifiez le moteur réellement exécuté, y compris les conteneurs et les paquets corrigés par rétroportage.",
+        "deliverables": [
+          "Registre d’applicabilité : actif, version, exposition et correctif",
+          "Plan de changement et retour arrière avec responsables",
+          "Preuves de version et tests d’accès après intervention"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "php-critical-vulnerabilities",
+      "cves": [
+        "CVE-2026-109618",
+        "CVE-2026-109619"
+      ]
+    },
+    {
+      "id": 5,
+      "cat": 3,
+      "date": "2026-10-20",
+      "sources": [
+        [
+          "Unit 42 — updated research",
+          "https://unit42.paloaltonetworks.com/active-exploitation-of-pan-os-cve-2026-0257/"
+        ],
+        [
+          "Palo Alto Networks PSIRT",
+          "https://security.paloaltonetworks.com/CVE-2026-0257"
+        ]
+      ],
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "globalprotect-ransomware-access",
+      "cves": [
+        "CVE-2026-0257"
+      ],
+      "ro": {
+        "title": "De la VPN la ransomware: verifică accesul GlobalProtect",
+        "desc": "Cercetarea Unit 42 actualizată în octombrie leagă exploatarea VPN de ransomware și accesul la infrastructura virtuală.",
+        "status": "Exploatare raportată · Cercetare actualizată în octombrie",
+        "tech": "GlobalProtect · PAN-OS · VPN · Virtualizare",
+        "step": "Confirmă configurația expusă și sesiunile VPN",
+        "facts": "Unit 42 raportează folosirea CVE-2026-0257 de către operatori ransomware, inclusiv Qilin și INC. Vulnerabilitatea a fost publicată în mai; actualizarea din octombrie descrie evoluția activității.",
+        "context": "Verifică versiunea PAN-OS și combinația Authentication Override–certificate indicată de PSIRT. Nu toate configurațiile GlobalProtect au aceeași expunere. Pentru un VPN compromis, aria de investigare include și sistemele accesibile din zona VPN.",
+        "checks": [
+          "Verificare: compară versiunea și setările portalului/gateway-ului cu advisory-ul oficial. Înregistrează rezultatul și cine poate modifica configurația.",
+          "Limitare: aplică măsura temporară indicată de furnizor dacă actualizarea nu este posibilă imediat; testează impactul asupra autentificării și păstrează accesul administrativ de recuperare.",
+          "Remediere: planifică trecerea la o versiune remediată pentru ramura ta, cu backup, rollback și test de reconectare VPN. Nu presupune că simpla activare MFA corectează bypass-ul.",
+          "Investigare: conservă logurile VPN și corelează sesiunile suspecte cu accesul către administrare, virtualizare și backup. Caută în special acces privilegiat nou și schimbări de controale.",
+          "Validare: verifică sesiuni legitime noi și accesul permis versus blocat din zona VPN, folosind conturi și destinații de test. Documentează versiunea, politica și excepțiile rămase."
+        ],
+        "take": "Un VPN actualizat și un incident închis sunt rezultate diferite. Confirmă remedierea și investighează separat eventualul acces obținut înainte de schimbare.",
+        "help": "Review VPN, segmentare și validarea remedierii",
+        "support": "weownit.net poate evalua aplicabilitatea, accesul din zona VPN și planul de schimbare. Dacă apar dovezi de compromitere, conservarea și investigația se stabilesc separat, cu responsabili și interval de disponibilitate.",
+        "deliverables": [
+          "Fișă de aplicabilitate și expunere VPN",
+          "Fluxuri VPN către zone privilegiate și restricții propuse",
+          "Raport de schimbare cu teste de reconectare și acces"
+        ]
+      },
+      "en": {
+        "title": "From VPN to ransomware: review GlobalProtect access",
+        "desc": "Unit 42 research updated in October connects VPN exploitation with ransomware and access to virtual infrastructure.",
+        "status": "Exploitation reported · Research updated in October",
+        "tech": "GlobalProtect · PAN-OS · VPN · Virtualization",
+        "step": "Confirm the exposed configuration and VPN sessions",
+        "facts": "Unit 42 reports ransomware operators, including Qilin and INC, using CVE-2026-0257. The vulnerability was published in May; the October research update describes evolving activity.",
+        "context": "Check the PAN-OS version and the Authentication Override/certificate combination specified by PSIRT. Not every GlobalProtect configuration has the same exposure. If a VPN is compromised, investigation also covers systems reachable from its zone.",
+        "checks": [
+          "Check: compare the version and portal/gateway settings with the official advisory. Record the result and who can change the configuration.",
+          "Contain: apply the vendor’s temporary mitigation if an update is not yet possible; test the authentication impact and preserve recovery administration access.",
+          "Remediate: plan an upgrade to a fixed release for your branch, with backup, rollback and a VPN reconnection test. Do not assume enabling MFA alone fixes the bypass.",
+          "Investigate: preserve VPN logs and correlate suspicious sessions with management, virtualization and backup access. Examine new privileged access and control changes in particular.",
+          "Validate: check fresh legitimate sessions and allowed versus blocked access from the VPN zone using test accounts and destinations. Record the version, policy and remaining exceptions."
+        ],
+        "take": "An updated VPN and a closed incident are different outcomes. Confirm the fix and separately investigate access that may have occurred before the change.",
+        "help": "VPN review, segmentation and remediation validation",
+        "support": "weownit.net can assess applicability, access from the VPN zone and the change plan. If compromise evidence appears, preservation and investigation are scoped separately with owners and an agreed availability window.",
+        "deliverables": [
+          "VPN applicability and exposure record",
+          "VPN flows to privileged zones and proposed restrictions",
+          "Change report with reconnection and access tests"
+        ]
+      },
+      "fr": {
+        "title": "Du VPN au ransomware : examiner les accès GlobalProtect",
+        "desc": "La recherche Unit 42 actualisée en octobre relie exploitation du VPN, ransomware et accès à l’infrastructure virtuelle.",
+        "status": "Exploitation signalée · Recherche actualisée en octobre",
+        "tech": "GlobalProtect · PAN-OS · VPN · Virtualisation",
+        "step": "Confirmer la configuration exposée et les sessions VPN",
+        "facts": "Unit 42 rapporte l’utilisation de CVE-2026-0257 par des opérateurs ransomware, dont Qilin et INC. La vulnérabilité a été publiée en mai ; l’actualisation d’octobre décrit l’évolution de l’activité.",
+        "context": "Vérifier la version PAN-OS et la combinaison Authentication Override–certificats décrite par le PSIRT. Toutes les configurations GlobalProtect n’ont pas la même exposition. Si le VPN est compromis, l’investigation couvre aussi les systèmes accessibles depuis sa zone.",
+        "checks": [
+          "Vérifier : comparer version et paramètres du portail/de la passerelle à l’avis officiel. Consigner le résultat et les personnes autorisées à modifier la configuration.",
+          "Contenir : appliquer la mesure temporaire du fournisseur si la mise à jour doit attendre ; tester l’effet sur l’authentification et préserver un accès d’administration de secours.",
+          "Corriger : planifier une version corrigée pour la branche utilisée, avec sauvegarde, retour arrière et test de reconnexion VPN. L’activation de la MFA seule ne corrige pas le contournement.",
+          "Investiguer : conserver les journaux VPN et corréler les sessions suspectes avec les accès à l’administration, à la virtualisation et aux sauvegardes. Examiner les nouveaux privilèges et changements de contrôles.",
+          "Valider : vérifier de nouvelles sessions légitimes et les accès autorisés ou bloqués depuis la zone VPN avec des comptes et destinations de test. Consigner version, politique et exceptions."
+        ],
+        "take": "Un VPN mis à jour et un incident clos sont deux résultats distincts. Confirmer le correctif et investiguer séparément les accès antérieurs au changement.",
+        "help": "Revue VPN, segmentation et validation de la remédiation",
+        "support": "weownit.net peut évaluer applicabilité, accès depuis la zone VPN et plan de changement. En présence de preuves de compromission, conservation et investigation sont délimitées séparément avec responsables et disponibilité convenue.",
+        "deliverables": [
+          "Fiche d’applicabilité et d’exposition VPN",
+          "Flux VPN vers les zones privilégiées et restrictions proposées",
+          "Rapport de changement avec tests de reconnexion et d’accès"
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "cat": 2,
+      "date": "2026-10-22",
+      "sources": [
+        [
+          "ESET Research",
+          "https://www.welivesecurity.com/en/eset-research/mythicratatoskr-yggdrasil-enabled-backdoor-deployed-uac0099-sandworm-collaboration/"
+        ]
+      ],
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "mythicratatoskr-mesh-command-control",
+      "cves": [],
+      "ro": {
+        "title": "MythicRatatoskr: comandă și control ascunse într-o rețea mesh",
+        "desc": "O cercetare nouă despre un incident din 2025: ce verifici când destinația reală a comunicației nu apare ca un domeniu C2 obișnuit.",
+        "status": "Cercetare publicată în octombrie · Incident din 2025",
+        "tech": "Threat intelligence · Endpoint · IPv6 overlay · Egress",
+        "step": "Corelează aplicațiile de tunelare cu traficul de ieșire",
+        "facts": "ESET a publicat pe 22 octombrie analiza unui backdoor care folosește Yggdrasil pentru comunicația de comandă și control. Cazul investigat privește o companie din Ucraina și activitate din 2025.",
+        "context": "Cercetarea este relevantă pentru controlul aplicațiilor și vizibilitatea traficului de ieșire. Yggdrasil are utilizări legitime; prezența sa singură nu confirmă un atac, iar raportul nu demonstrează o campanie generalizată.",
+        "checks": [
+          "Verificare: inventariază utilitarele de acces remote, proxy și mesh permise. Corelează procesele și serviciile instalate cu fluxurile de ieșire și cu responsabilul aplicației.",
+          "Triere: pentru o instalare neașteptată, conservă arborele de procese, conexiunile și logurile înainte de eliminare. Evaluează împreună endpointul și rețeaua.",
+          "Limitare: izolează sistemele confirmate ca afectate în cadrul procedurii de incident. Pentru aplicații legitime, definește explicit destinațiile și serviciile necesare înainte de restricții.",
+          "Prevenție: revizuiește allowlisting-ul aplicațiilor, privilegiile locale și politica egress. O listă de domenii blocate nu acoperă singură aplicații care folosesc overlay-uri sau proxy-uri.",
+          "Validare: simulează benign o conexiune neaprobată într-un mediu de test și confirmă alerta sau blocarea așteptată. Verifică separat că aplicațiile autorizate funcționează."
+        ],
+        "take": "Criteriul util este corelarea proces → conexiune → decizie de control. Un flux criptat sau un indicator istoric nu dovedește singur compromiterea.",
+        "help": "Review de vizibilitate și pregătirea detecției",
+        "support": "Putem evalua logurile disponibile, politica de ieșire și dependențele aplicațiilor, apoi defini un scenariu sintetic de verificare. Malware reverse engineering și threat hunting extins necesită o arie dedicată.",
+        "deliverables": [
+          "Inventar de aplicații și fluxuri de ieșire relevante",
+          "Lipsuri de vizibilitate și reguli propuse, cu justificare",
+          "Scenariu benign de detecție și dovezi ale rezultatului"
+        ]
+      },
+      "en": {
+        "title": "MythicRatatoskr: command and control hidden in a mesh network",
+        "desc": "New research on a 2025 incident: what to examine when the real communication destination is not a conventional C2 domain.",
+        "status": "Research published in October · Incident from 2025",
+        "tech": "Threat intelligence · Endpoint · IPv6 overlay · Egress",
+        "step": "Correlate tunneling applications with outbound traffic",
+        "facts": "On October 22, ESET published an analysis of a backdoor using Yggdrasil for command-and-control communication. The investigated case concerns a company in Ukraine and activity from 2025.",
+        "context": "The research informs application control and outbound visibility. Yggdrasil has legitimate uses; its presence alone does not establish an attack, and the report does not demonstrate a widespread campaign.",
+        "checks": [
+          "Check: inventory approved remote-access, proxy and mesh utilities. Correlate installed processes and services with outbound flows and the application owner.",
+          "Triage: for an unexpected installation, preserve the process tree, connections and logs before removal. Assess endpoint and network evidence together.",
+          "Contain: isolate confirmed affected systems under the incident procedure. For legitimate applications, explicitly define required destinations and services before imposing restrictions.",
+          "Prevent: review application allowlisting, local privileges and egress policy. A domain blocklist alone does not cover applications using overlays or proxies.",
+          "Validate: simulate a benign unapproved connection in a test environment and confirm the expected alert or block. Separately verify that authorized applications still work."
+        ],
+        "take": "The useful criterion is process → connection → control-decision correlation. Encrypted traffic or a historical indicator alone does not establish compromise.",
+        "help": "Visibility review and detection preparation",
+        "support": "We can review available logs, outbound policy and application dependencies, then define a synthetic verification scenario. Malware reverse engineering and extended threat hunting require a dedicated scope.",
+        "deliverables": [
+          "Relevant application and outbound-flow inventory",
+          "Visibility gaps and justified proposed rules",
+          "Benign detection scenario and outcome evidence"
+        ]
+      },
+      "fr": {
+        "title": "MythicRatatoskr : commande et contrôle cachés dans un réseau mesh",
+        "desc": "Une nouvelle recherche sur un incident de 2025 : que vérifier lorsque la destination réelle n’est pas un domaine C2 habituel ?",
+        "status": "Recherche publiée en octobre · Incident de 2025",
+        "tech": "Threat intelligence · Endpoint · Overlay IPv6 · Flux sortants",
+        "step": "Corréler applications de tunnel et trafic sortant",
+        "facts": "Le 22 octobre, ESET a publié l’analyse d’une porte dérobée utilisant Yggdrasil pour ses communications de commande et contrôle. Le cas étudié concerne une entreprise en Ukraine et une activité de 2025.",
+        "context": "Cette recherche éclaire le contrôle applicatif et la visibilité des flux sortants. Yggdrasil possède des usages légitimes ; sa présence seule ne confirme pas une attaque et le rapport ne démontre pas une campagne généralisée.",
+        "checks": [
+          "Vérifier : inventorier les utilitaires distants, proxy et mesh autorisés. Corréler processus et services installés avec les flux sortants et le responsable applicatif.",
+          "Trier : pour une installation inattendue, conserver arbre des processus, connexions et journaux avant suppression. Examiner ensemble les preuves endpoint et réseau.",
+          "Contenir : isoler les systèmes confirmés affectés selon la procédure d’incident. Pour les applications légitimes, définir destinations et services nécessaires avant de restreindre les accès.",
+          "Prévenir : revoir la liste des applications autorisées, les privilèges locaux et la politique de sortie. Une liste de domaines bloqués ne couvre pas seule les applications utilisant overlays ou proxies.",
+          "Valider : simuler une connexion bénigne non approuvée en environnement de test et confirmer l’alerte ou le blocage attendu. Vérifier séparément le fonctionnement des applications autorisées."
+        ],
+        "take": "Le critère utile est la corrélation processus → connexion → décision de contrôle. Un flux chiffré ou un indicateur historique seul ne prouve pas une compromission.",
+        "help": "Revue de visibilité et préparation de la détection",
+        "support": "Nous pouvons examiner journaux disponibles, politique de sortie et dépendances applicatives, puis définir un scénario synthétique de vérification. Rétro-ingénierie de malware et threat hunting étendu nécessitent un périmètre dédié.",
+        "deliverables": [
+          "Inventaire des applications et flux sortants pertinents",
+          "Lacunes de visibilité et règles proposées justifiées",
+          "Scénario bénin de détection et preuves du résultat"
+        ]
+      }
+    },
+    {
+      "id": "gheist",
+      "cat": 2,
+      "date": "2026-10-25",
+      "sources": [
+        [
+          "Wiz Research",
+          "https://www.wiz.io/blog/gheist-attempted-scaled-abuse-of-stolen-github-tokens-stumbles"
+        ],
+        [
+          "GitHub Docs — Secure use",
+          "https://docs.github.com/en/actions/reference/security/secure-use"
+        ]
+      ],
+      "ro": {
+        "title": "Gheist: când un token GitHub expune secretele de deployment",
+        "desc": "Abuzul CI/CD poate ajunge la credențialele serviciilor și infrastructurii. Ștergerea workflow-ului nu închide incidentul.",
+        "status": "Campanie documentată",
+        "tech": "GitHub · CI/CD · Secrete",
+        "step": "Delimitează accesul tokenurilor",
+        "facts": "Potrivit Wiz, Gheist folosește tokenuri furate pentru a introduce workflow-uri care extrag secrete prin logurile GitHub Actions.",
+        "checks": [
+          "Verificare: caută ramuri ci-sync- și workflow-ul sync-check.yml în istoricul repository-urilor și în logurile de audit. Conservă dovezile înainte de curățare; numele singur nu confirmă compromiterea.",
+          "Limitare: oprește rulările suspecte și revocă tokenul implicat. Identifică toate repository-urile, environment-urile și serviciile pe care le putea accesa.",
+          "Remediere: rotește secretele potențial accesibile și actualizează consumatorii lor într-o ordine controlată. Verifică accesul ulterior în serviciile cloud și sistemele administrate.",
+          "Prevenție: restrânge drepturile de scriere și aprobarea schimbărilor de workflow; folosește environment-uri protejate unde planul permite și credențiale de scurtă durată, cu politici de încredere restrictive.",
+          "Validare: execută un deployment benign cu noile credențiale, confirmă revocarea celor vechi și verifică logurile serviciului țintă. Nu rula workflow-ul suspect pentru a-l testa."
+        ],
+        "take": "Rezultatul urmărit: credențiale vechi retrase, acces limitat și deployment funcțional verificat. Absența workflow-ului nu dovedește că secretele nu au fost citite.",
+        "help": "Delimitarea expunerii CI/CD și a credențialelor",
+        "support": "Putem documenta relația dintre automatizări și infrastructura accesibilă, defini ordinea rotației și valida accesul după schimbare. Analiza aplicațiilor, investigația hosturilor și operațiunile cloud se delimitează împreună cu responsabilii lor.",
+        "context": "Este relevant pentru echipe care publică aplicații, rulează automatizări de rețea sau folosesc credențiale cloud în CI/CD. Accesul la repository poate avea efecte în afara GitHub. Un runner propriu necesită și evaluarea hostului, nu doar curățarea ramurii.",
+        "deliverables": [
+          "Hartă repository → credențială → serviciu accesibil",
+          "Plan de revocare și rotație cu dependențe",
+          "Dovezi de deployment și de retragere a accesului vechi"
+        ]
+      },
+      "en": {
+        "title": "Gheist: when a GitHub token exposes deployment secrets",
+        "desc": "CI/CD abuse can reach service and infrastructure credentials. Deleting the workflow does not close the incident.",
+        "status": "Documented campaign",
+        "tech": "GitHub · CI/CD · Secrets",
+        "step": "Scope token access",
+        "facts": "According to Wiz, Gheist uses stolen tokens to introduce workflows that extract secrets through GitHub Actions logs.",
+        "checks": [
+          "Check: look for ci-sync- branches and sync-check.yml in repository history and audit logs. Preserve evidence before cleanup; a name alone does not establish compromise.",
+          "Contain: stop suspicious runs and revoke the implicated token. Identify every repository, environment and service it could reach.",
+          "Remediate: rotate potentially accessible secrets and update their consumers in a controlled order. Review subsequent access in cloud services and managed systems.",
+          "Prevent: limit write access and require review of workflow changes; use protected environments where your plan supports them, and short-lived credentials with restrictive trust policies.",
+          "Validate: run a benign deployment using the new credentials, confirm old credentials are revoked and inspect target-service logs. Do not execute the suspicious workflow as a test."
+        ],
+        "take": "Target outcome: retired old credentials, constrained access and a verified working deployment. A missing workflow does not prove secrets were never read.",
+        "help": "CI/CD and credential exposure review",
+        "support": "We can document how automation reaches infrastructure, define the rotation order and validate access after changes. Application analysis, host investigation and cloud operations are scoped with their owners.",
+        "context": "Relevant to teams deploying applications, running network automation or storing cloud credentials in CI/CD. Repository access can have consequences beyond GitHub. A self-hosted runner also requires host assessment, not only branch cleanup.",
+        "deliverables": [
+          "Repository → credential → reachable service map",
+          "Revocation and rotation plan with dependencies",
+          "Deployment evidence and checks that old access is retired"
+        ]
+      },
+      "fr": {
+        "title": "Gheist : quand un jeton GitHub expose les secrets de déploiement",
+        "desc": "L’abus du CI/CD peut atteindre les identifiants des services et de l’infrastructure. Supprimer le workflow ne clôt pas l’incident.",
+        "status": "Campagne documentée",
+        "tech": "GitHub · CI/CD · Secrets",
+        "step": "Délimiter les accès des jetons",
+        "facts": "Selon Wiz, Gheist utilise des jetons volés pour introduire des workflows qui extraient les secrets via les logs GitHub Actions.",
+        "checks": [
+          "Vérifier : rechercher les branches ci-sync- et sync-check.yml dans l’historique et les journaux d’audit. Conserver les preuves avant nettoyage ; un nom seul ne confirme pas une compromission.",
+          "Contenir : arrêter les exécutions suspectes et révoquer le jeton concerné. Identifier tous les dépôts, environnements et services accessibles.",
+          "Corriger : renouveler les secrets potentiellement accessibles et mettre à jour leurs consommateurs dans un ordre maîtrisé. Examiner les accès ultérieurs aux services cloud et systèmes administrés.",
+          "Prévenir : limiter les droits d’écriture et imposer une revue des changements de workflow ; utiliser des environnements protégés si le forfait le permet et des identifiants temporaires avec politiques de confiance restrictives.",
+          "Valider : effectuer un déploiement bénin avec les nouveaux identifiants, confirmer la révocation des anciens et examiner les journaux du service cible. Ne pas exécuter le workflow suspect pour le tester."
+        ],
+        "take": "Résultat attendu : anciens identifiants retirés, accès limité et déploiement fonctionnel vérifié. L’absence du workflow ne prouve pas que les secrets n’ont pas été lus.",
+        "help": "Revue de l’exposition CI/CD et des identifiants",
+        "support": "Nous pouvons documenter les accès de l’automatisation à l’infrastructure, définir l’ordre de renouvellement et valider les accès après changement. Analyse applicative, investigation des hôtes et opérations cloud sont délimitées avec leurs responsables.",
+        "context": "Concerne les équipes qui déploient des applications, automatisent le réseau ou utilisent des identifiants cloud en CI/CD. L’accès à un dépôt peut avoir des effets hors de GitHub. Un runner autohébergé nécessite aussi une évaluation de l’hôte.",
+        "deliverables": [
+          "Cartographie dépôt → identifiant → service accessible",
+          "Plan de révocation et renouvellement avec dépendances",
+          "Preuves de déploiement et de retrait des anciens accès"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "gheist-github-actions",
+      "cves": []
+    },
+    {
+      "id": "m365",
+      "cat": 4,
+      "date": null,
+      "sources": [
+        [
+          "Huntress",
+          "https://www.huntress.com/blog/token-replay-spray"
+        ],
+        [
+          "Microsoft Learn — Revoke access",
+          "https://learn.microsoft.com/en-us/entra/identity/users/users-revoke-access"
+        ],
+        [
+          "Microsoft Learn — Token Protection",
+          "https://learn.microsoft.com/en-us/entra/identity/conditional-access/concept-token-protection"
+        ]
+      ],
+      "ro": {
+        "title": "Sesiuni Microsoft 365 furate: de ce resetarea parolei nu ajunge",
+        "desc": "Token replay și persistență în identitate: verifică sesiunile, dispozitivele, metodele MFA și regulile de e-mail.",
+        "status": "Activitate observată de cercetători",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Verifică autentificările și persistența",
+        "facts": "Huntress raportează reutilizarea sesiunilor Microsoft 365 și adăugarea unor dispozitive și metode MFA de către atacatori.",
+        "checks": [
+          "Verificare: corelează autentificările interactive și neinteractive cu logurile de audit Entra și Exchange. Caută dispozitive, metode MFA și reguli de inbox adăugate neașteptat; păstrează exporturile și intervalul analizat.",
+          "Limitare: împreună cu administratorul tenantului, revocă sesiunile și resetează credențialele afectate; restricționează contul dacă dovezile o cer. Verifică efectul în aplicații, deoarece revocarea nu este instantanee în toate scenariile.",
+          "Eliminarea persistenței: îndepărtează dispozitivele și metodele MFA neautorizate, regulile de redirecționare și accesul delegat suspect, după conservarea dovezilor.",
+          "Prevenție: pilotează MFA rezistent la phishing și Conditional Access. Evaluează Token Protection numai pentru combinațiile de aplicații, dispozitive și licențe acceptate; nu presupune acoperire universală.",
+          "Validare: confirmă metodele aprobate și o autentificare legitimă nouă; verifică accesul vechi și monitorizează reapariția regulilor sau dispozitivelor suspecte. Folosește conturi de test pentru scenarii de control."
+        ],
+        "take": "Închiderea urmărește atât accesul, cât și persistența. Resetarea parolei, activarea MFA sau o politică nouă nu demonstrează singure că toate sesiunile atacatorului au încetat.",
+        "help": "Trierea accesului și pregătirea răspunsului",
+        "support": "weownit.net poate structura trierea, cronologia și planul de containment cu administratorul identității. Modificările tenantului și investigația specializată Microsoft 365 se stabilesc explicit în aria proiectului.",
+        "context": "Impactul de business poate include acces la corespondență, impersonare și fraudă. Confirmă activitatea în tenantul propriu; o adresă IP sau o locație neobișnuită singură nu dovedește furtul unei sesiuni.",
+        "deliverables": [
+          "Cronologie cu sursele de log și identitățile afectate",
+          "Checklist de revocare și eliminare a persistenței",
+          "Criterii de validare și responsabil pentru monitorizare"
+        ]
+      },
+      "en": {
+        "title": "Stolen Microsoft 365 sessions: why a password reset is not enough",
+        "desc": "Token replay and identity persistence: review sessions, devices, MFA methods and email rules.",
+        "status": "Activity observed by researchers",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Review sign-ins and persistence",
+        "facts": "Huntress reports Microsoft 365 session replay and devices and MFA methods registered by attackers.",
+        "checks": [
+          "Check: correlate interactive and non-interactive sign-ins with Entra and Exchange audit logs. Look for unexpected device registrations, MFA methods and inbox rules; retain exports and the reviewed time window.",
+          "Contain: with the tenant administrator, revoke sessions and reset affected credentials; restrict the account if evidence warrants it. Verify the effect in applications because revocation is not instantaneous in every scenario.",
+          "Remove persistence: after preserving evidence, remove unauthorized devices, MFA methods, forwarding rules and suspicious delegated access.",
+          "Prevent: pilot phishing-resistant MFA and Conditional Access. Evaluate Token Protection only for supported application, device and license combinations; do not assume universal coverage.",
+          "Validate: confirm approved methods and a fresh legitimate sign-in; check old access and monitor for reappearing suspicious rules or devices. Use test accounts for control scenarios."
+        ],
+        "take": "Closure covers both access and persistence. A password reset, MFA enrollment or new policy alone does not demonstrate that every attacker session has ended.",
+        "help": "Access triage and response preparation",
+        "support": "weownit.net can structure triage, the timeline and a containment plan with the identity administrator. Tenant changes and specialist Microsoft 365 investigation are explicitly scoped.",
+        "context": "Business impact can include mailbox access, impersonation and fraud. Confirm activity in your own tenant; an unusual IP address or location alone does not establish session theft.",
+        "deliverables": [
+          "Timeline with log sources and affected identities",
+          "Revocation and persistence-removal checklist",
+          "Validation criteria and a monitoring owner"
+        ]
+      },
+      "fr": {
+        "title": "Sessions Microsoft 365 volées : pourquoi changer le mot de passe ne suffit pas",
+        "desc": "Rejeu de jetons et persistance dans l’identité : examiner sessions, appareils, méthodes MFA et règles de messagerie.",
+        "status": "Activité observée par les chercheurs",
+        "tech": "Microsoft 365 · Entra ID",
+        "step": "Vérifier les connexions et la persistance",
+        "facts": "Huntress rapporte le rejeu de sessions Microsoft 365 et l’enregistrement de dispositifs et méthodes MFA par les attaquants.",
+        "checks": [
+          "Vérifier : corréler connexions interactives et non interactives avec les journaux d’audit Entra et Exchange. Rechercher appareils, méthodes MFA et règles de boîte inattendus ; conserver exports et période analysée.",
+          "Contenir : avec l’administrateur du tenant, révoquer les sessions et renouveler les identifiants concernés ; restreindre le compte si les preuves le justifient. Vérifier l’effet dans les applications, la révocation n’étant pas instantanée partout.",
+          "Supprimer la persistance : après conservation des preuves, retirer appareils et méthodes MFA non autorisés, règles de transfert et délégations suspectes.",
+          "Prévenir : piloter une MFA résistante au phishing et Conditional Access. Évaluer Token Protection uniquement pour les applications, appareils et licences pris en charge ; ne pas supposer une couverture universelle.",
+          "Valider : confirmer les méthodes approuvées et une nouvelle connexion légitime ; contrôler les anciens accès et surveiller le retour de règles ou appareils suspects. Utiliser des comptes de test pour les scénarios de contrôle."
+        ],
+        "take": "La clôture couvre les accès et la persistance. Un changement de mot de passe, l’activation de la MFA ou une nouvelle politique ne démontre pas seul la fin de toutes les sessions de l’attaquant.",
+        "help": "Triage des accès et préparation de la réponse",
+        "support": "weownit.net peut structurer triage, chronologie et plan de confinement avec l’administrateur de l’identité. Les changements du tenant et l’investigation spécialisée Microsoft 365 sont explicitement délimités.",
+        "context": "L’impact métier peut inclure accès à la messagerie, usurpation et fraude. Confirmer l’activité dans le tenant ; une adresse IP ou une localisation inhabituelle ne prouve pas à elle seule le vol de session.",
+        "deliverables": [
+          "Chronologie avec sources de journaux et identités concernées",
+          "Checklist de révocation et suppression de persistance",
+          "Critères de validation et responsable de la surveillance"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": false,
+      "slug": "microsoft-365-token-replay",
+      "cves": []
+    },
+    {
+      "id": "akira",
+      "cat": 3,
+      "date": "2026-06-29",
+      "sources": [
+        [
+          "The DFIR Report",
+          "https://thedfirreport.com/2026/06/29/from-bing-search-to-ransomware-bumblebee-and-adaptixc2-deliver-akira-3/"
+        ]
+      ],
+      "ro": {
+        "title": "De la un installer fals la Akira ransomware",
+        "desc": "Un studiu de caz DFIR urmărește o intruziune din iulie 2025 până la ransomware.",
+        "status": "Studiu de caz · Arhivă",
+        "tech": "Windows · Active Directory · Rețea",
+        "step": "Analizează căile de propagare",
+        "facts": "The DFIR Report descrie o intruziune inițiată cu un installer troianizat, urmată de mișcare laterală și ransomware Akira.",
+        "checks": [
+          "Verificare: stabilește cum sunt aprobate și distribuite utilitarele administrative; verifică proveniența și semnătura, fără a considera semnătura singură o garanție.",
+          "Limitarea propagării: mapează căile de la stații către administrare, domeniu și backup. Reduce accesul RDP/SMB și privilegii reutilizate, după verificarea dependențelor legitime.",
+          "Detecție: corelează instalarea de instrumente remote, conturi privilegiate noi, tuneluri și transferuri neobișnuite cu logurile endpoint și de rețea. Validează alertele cu activitate benignă simulată.",
+          "Recuperare: separă administrarea și credențialele backupului și definește ordinea restaurării pentru serviciile critice. Verifică și dependențele identității, DNS și virtualizării.",
+          "Validare: într-un mediu izolat, restaurează date sintetice și testează accesul permis și blocat între zone. Compară timpul și pierderea de date cu obiectivele convenite; înregistrează excepțiile."
+        ],
+        "take": "Un backup existent nu demonstrează recuperabilitatea. Rezultatul util este un test de restaurare documentat și căi administrative verificate, cu limitele lor explicate.",
+        "help": "Segmentare și pregătire pentru incidente",
+        "support": "Putem evalua segmentarea, accesul administrativ și pregătirea pentru recuperare. Livrabilele pot include fluxuri de acces, priorități de remediere și un exercițiu de validare. Recuperarea datelor nu este garantată.",
+        "context": "Folosește cazul istoric pentru a examina căile administrative și ipotezele de recuperare. Testează un scenariu sintetic în condiții agreate, fără a executa malware în producție.",
+        "deliverables": [
+          "Hartă de propagare și fluxuri administrative prioritare",
+          "Scenariu sintetic de detecție și izolare",
+          "Raport de restaurare cu durată, rezultat și excepții"
+        ]
+      },
+      "en": {
+        "title": "From a fake installer to Akira ransomware",
+        "desc": "A DFIR case study follows a July 2025 intrusion through to ransomware.",
+        "status": "Case study · Archive",
+        "tech": "Windows · Active Directory · Network",
+        "step": "Examine propagation paths",
+        "facts": "The DFIR Report describes an intrusion starting with a trojanized installer, followed by lateral movement and Akira ransomware.",
+        "checks": [
+          "Check: establish how administrative utilities are approved and distributed; verify provenance and signatures without treating a signature alone as a guarantee.",
+          "Limit propagation: map workstation paths to management, domain and backup systems. Reduce RDP/SMB access and reused privileges after checking legitimate dependencies.",
+          "Detect: correlate remote-tool installation, new privileged accounts, tunnels and unusual transfers with endpoint and network logs. Validate alerts with benign simulated activity.",
+          "Recover: separate backup administration and credentials, and define the restoration order for critical services. Check identity, DNS and virtualization dependencies as well.",
+          "Validate: in an isolated environment, restore synthetic data and test allowed and blocked access between zones. Compare elapsed time and data loss with agreed objectives; record exceptions."
+        ],
+        "take": "Having a backup does not demonstrate recoverability. The useful outcome is a documented restore test and verified administrative paths, with their limits explained.",
+        "help": "Segmentation and incident readiness",
+        "support": "We can assess segmentation, administrative access and recovery readiness. Deliverables can include access flows, remediation priorities and a validation exercise. Data recovery is not guaranteed.",
+        "context": "Use this historical case to examine administrative paths and recovery assumptions. Test a synthetic scenario under agreed conditions rather than replaying malware in production.",
+        "deliverables": [
+          "Propagation map and prioritized administrative flows",
+          "Synthetic detection and isolation scenario",
+          "Restore report with elapsed time, outcome and exceptions"
+        ]
+      },
+      "fr": {
+        "title": "D’un faux installateur au ransomware Akira",
+        "desc": "Une étude DFIR retrace une intrusion de juillet 2025 jusqu’au ransomware.",
+        "status": "Étude de cas · Archives",
+        "tech": "Windows · Active Directory · Réseau",
+        "step": "Examiner les chemins de propagation",
+        "facts": "The DFIR Report décrit une intrusion par installateur piégé, suivie de mouvements latéraux et du ransomware Akira.",
+        "checks": [
+          "Vérifier : établir comment les utilitaires d’administration sont approuvés et distribués ; contrôler provenance et signature sans considérer cette dernière comme une garantie.",
+          "Limiter la propagation : cartographier les accès des postes vers administration, domaine et sauvegarde. Réduire RDP/SMB et les privilèges réutilisés après vérification des dépendances légitimes.",
+          "Détecter : corréler installation d’outils distants, nouveaux comptes privilégiés, tunnels et transferts inhabituels avec les journaux endpoint et réseau. Valider les alertes par une activité bénigne simulée.",
+          "Récupérer : séparer administration et identifiants des sauvegardes, puis définir l’ordre de restauration des services critiques. Vérifier aussi les dépendances identité, DNS et virtualisation.",
+          "Valider : dans un environnement isolé, restaurer des données synthétiques et tester les accès autorisés et bloqués entre zones. Comparer durée et perte de données aux objectifs convenus ; consigner les exceptions."
+        ],
+        "take": "Disposer d’une sauvegarde ne démontre pas la récupérabilité. Le résultat utile est un test de restauration documenté et des accès d’administration vérifiés, avec leurs limites.",
+        "help": "Segmentation et préparation aux incidents",
+        "support": "Nous pouvons évaluer la segmentation, les accès administratifs et la préparation à la reprise. Livrables possibles : flux, priorités de remédiation et exercice de validation. La récupération des données n’est pas garantie.",
+        "context": "Utilisez ce cas historique pour examiner les chemins administratifs et les hypothèses de reprise. Testez un scénario synthétique dans les conditions convenues, sans exécuter de malware en production.",
+        "deliverables": [
+          "Carte de propagation et flux d’administration prioritaires",
+          "Scénario synthétique de détection et d’isolement",
+          "Rapport de restauration avec durée, résultat et exceptions"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-10-26",
+      "reviewedAt": "2026-10-26",
+      "archive": true,
+      "slug": "akira-ransomware-intrusion",
+      "cves": []
+    }
+  ]
+}

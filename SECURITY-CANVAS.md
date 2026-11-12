@@ -9,7 +9,6 @@ Security Canvas is the default Tools view at `/tools.html`. A visitor chooses a 
 - Additional backup before these improvements: `backup/pre-canvas-improvements-20261011`, commit `1f67190332770b827651f2fd5e2808bbc5b20830`.
 - The existing Tools page is preserved exactly at `tools-existing.html`, Git blob `a81bc8cb6178bdf29b9fb2d8681b18463cd7fa85`.
 - Shared navigation, language state, site CSS, chat, contact, Store and all existing analysis engines are reused. Other public pages are untouched.
-- The private concept remains available separately at https://weownit-security-canvas.vladimir-arjoca.chatgpt.site.
 
 To revert the entry experience without undoing subsequent work, restore `tools.html` from the baseline in a new commit and deploy through GitHub Pages. The new Canvas assets may remain unused. Prefer this scoped restoration to resetting all of `main`.
 

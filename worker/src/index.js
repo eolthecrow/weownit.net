@@ -11,10 +11,53 @@ const ALLOWED_ORIGINS = new Set([
   "https://eolthecrow.github.io",
 ]);
 
-function isAllowedOrigin(origin) {
+// Browser-only endpoints: a real browser always sends Origin on these
+// cross-origin POSTs, so a missing Origin means a script, not the website.
+// Origin is still spoofable by non-browser clients; rate limits are the real control.
+const BROWSER_ONLY_PATHS = new Set(["/chat", "/contact"]);
+const MAX_JSON_BYTES = 64 * 1024;
+
+function isAllowedOrigin(origin, env) {
   if (!origin) return true;
   if (ALLOWED_ORIGINS.has(origin)) return true;
-  return /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+  // Local development origins are opt-in so production never trusts localhost pages.
+  return env?.ALLOW_LOCAL_ORIGINS === "true" && /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+}
+
+// Cloudflare Workers Rate Limiting bindings, configured in wrangler.jsonc.
+// Missing bindings (local tests, first deploy) fail open, and logging makes that visible.
+const RATE_LIMITERS = {
+  "/chat": "CHAT_LIMITER",
+  "/contact": "CONTACT_LIMITER",
+  "/cve-risk": "CVE_LIMITER",
+  "/download-event": "EVENT_LIMITER",
+  "/download": "EVENT_LIMITER",
+  "/newsletter/subscribe": "NEWSLETTER_LIMITER",
+};
+
+async function rateLimited(request, env, pathname) {
+  const binding = env?.[RATE_LIMITERS[pathname]];
+  if (!binding?.limit) return false;
+  const ip = request.headers.get("CF-Connecting-IP") || "unknown";
+  try {
+    const { success } = await binding.limit({ key: pathname + ":" + ip });
+    return !success;
+  } catch (error) {
+    console.error("Rate limiter error", pathname, error?.message);
+    return false;
+  }
+}
+
+async function readBoundedJson(request) {
+  const declared = Number(request.headers.get("Content-Length") || 0);
+  if (declared > MAX_JSON_BYTES) return { tooLarge: true };
+  const text = await request.text();
+  if (text.length > MAX_JSON_BYTES) return { tooLarge: true };
+  try {
+    return { body: JSON.parse(text) };
+  } catch {
+    return { invalid: true };
+  }
 }
 
 function corsHeaders(origin) {
@@ -98,7 +141,8 @@ function extractAnswer(result) {
 }
 
 
-const CONTACT_TO_EMAIL = "vladimir.arjoca@outlook.com";
+// The inbox that receives contact requests is the CONTACT_TO_EMAIL Worker secret
+// (a verified Email Routing destination), so it is not published in this repository.
 const MAX_CONTACT_MESSAGE_CHARS = 5000;
 
 const DOWNLOADS = {
@@ -257,6 +301,12 @@ function cleanText(value, max) {
   return typeof value === "string" ? value.trim().slice(0, max) : "";
 }
 
+// Single-line fields end up in email headers (subject, Reply-To display name):
+// remove control characters, including CR/LF, so they cannot inject header lines.
+function cleanLine(value, max) {
+  return cleanText(value, max * 2).replace(/[\u0000-\u001f\u007f\u2028\u2029]+/g, " ").replace(/\s{2,}/g, " ").trim().slice(0, max);
+}
+
 function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) && value.length <= 254;
 }
@@ -271,17 +321,15 @@ function escapeHtml(value) {
 }
 
 async function handleContact(request, env, origin) {
-  let body;
-  try {
-    body = await request.json();
-  } catch {
-    return json({ error: "Invalid JSON body." }, 400, origin);
-  }
+  const parsed = await readBoundedJson(request);
+  if (parsed.tooLarge) return json({ error: "Request too large." }, 413, origin);
+  if (parsed.invalid) return json({ error: "Invalid JSON body." }, 400, origin);
+  const body = parsed.body;
 
-  const name = cleanText(body?.name, 120);
-  const email = cleanText(body?.email, 254).toLowerCase();
-  const company = cleanText(body?.company, 160);
-  const phone = cleanText(body?.phone, 80);
+  const name = cleanLine(body?.name, 120);
+  const email = cleanLine(body?.email, 254).toLowerCase();
+  const company = cleanLine(body?.company, 160);
+  const phone = cleanLine(body?.phone, 80);
   const message = cleanText(body?.message, MAX_CONTACT_MESSAGE_CHARS);
   const language = normalizeLanguage(body?.language);
   const consent = body?.consent === true;
@@ -290,7 +338,8 @@ async function handleContact(request, env, origin) {
 
   // Honeypot + simple timing check. These are lightweight abuse controls, not a substitute for rate limiting.
   if (website) return json({ ok: true }, 200, origin);
-  if (submittedAt && Date.now() - submittedAt < 1500) {
+  // submittedAt is client-supplied, so this only stops naive bots; per-IP rate limiting covers the rest.
+  if (!Number.isFinite(submittedAt) || submittedAt <= 0 || Date.now() - submittedAt < 1500) {
     return json({ error: "Please try again." }, 429, origin);
   }
 
@@ -298,7 +347,7 @@ async function handleContact(request, env, origin) {
     return json({ error: "Please complete the required fields." }, 400, origin);
   }
 
-  if (!env.EMAIL || !env.CONTACT_FROM_EMAIL) {
+  if (!env.EMAIL || !env.CONTACT_FROM_EMAIL || !isValidEmail(env.CONTACT_TO_EMAIL || "")) {
     return json({ error: "Contact delivery is not configured yet." }, 503, origin);
   }
 
@@ -335,7 +384,7 @@ async function handleContact(request, env, origin) {
 
   try {
     const result = await env.EMAIL.send({
-      to: CONTACT_TO_EMAIL,
+      to: env.CONTACT_TO_EMAIL,
       from: {
         email: env.CONTACT_FROM_EMAIL,
         name: "Network & Security Consultant",
@@ -373,7 +422,7 @@ export default {
     const newsletterTokenAction =
       ["/newsletter/confirm", "/newsletter/unsubscribe"].includes(url.pathname) &&
       (request.method === "GET" || request.method === "POST");
-    if (!newsletterTokenAction && !isAllowedOrigin(origin)) {
+    if (!newsletterTokenAction && !isAllowedOrigin(origin, env)) {
       return json({ error: "Origin not allowed." }, 403, "https://weownit.net");
     }
 
@@ -381,6 +430,18 @@ export default {
       return new Response(null, {
         status: 204,
         headers: corsHeaders(origin),
+      });
+    }
+
+    if (request.method === "POST" && BROWSER_ONLY_PATHS.has(url.pathname) && !origin) {
+      return json({ error: "Origin required." }, 403, "https://weownit.net");
+    }
+
+    if (await rateLimited(request, env, url.pathname)) {
+      const headers = { "Retry-After": "60" };
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again shortly." }), {
+        status: 429,
+        headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin), ...headers },
       });
     }
 
@@ -408,12 +469,7 @@ export default {
 
     if (request.method === "GET" && url.pathname === "/health") {
       return json(
-        {
-          ok: true,
-          service: "network-security-assistant",
-          provider: "Cloudflare Workers AI",
-          model: MODEL,
-        },
+        { ok: true, service: "network-security-assistant" },
         200,
         origin
       );
@@ -427,12 +483,10 @@ export default {
       return json({ error: "Not found." }, 404, origin);
     }
 
-    let body;
-    try {
-      body = await request.json();
-    } catch {
-      return json({ error: "Invalid JSON body." }, 400, origin);
-    }
+    const parsed = await readBoundedJson(request);
+    if (parsed.tooLarge) return json({ error: "Request too large." }, 413, origin);
+    if (parsed.invalid) return json({ error: "Invalid JSON body." }, 400, origin);
+    const body = parsed.body;
 
     const message = typeof body?.message === "string" ? body.message.trim() : "";
     if (!message) {
@@ -469,7 +523,7 @@ export default {
         return json({ error: "The AI model returned an empty response." }, 502, origin);
       }
 
-      return json({ answer, model: MODEL }, 200, origin);
+      return json({ answer }, 200, origin);
     } catch (error) {
       console.error("Workers AI error", error);
       return json(
