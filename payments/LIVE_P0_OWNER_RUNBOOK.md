@@ -63,6 +63,16 @@ The private R2 object at `products/palo-alto-ngfw-panorama-hardening-toolkit-202
 Operator verified by listing: assessment `.xlsx`, hardening standard `.pdf` and `.docx`, quick validation guide `.pdf` and `.docx`, README, LICENSE, PRODUCTION_QA_REPORT, Future Live Validation Plan, Read-Only Validation Commands, and SHA256SUMS. **File names only:** file contents, SHA256SUMS matches, rights/license scope, macro/safety review, and production claims are not yet signed off. Do not call the package `Live Validated` based solely on these names.
 
 Keep existing archive in place and both D1 entries archived/draft. Do not associate the current default Palo Alto Stripe Price or publish the product until license, QA and internal checksums have been reviewed. This is **one** of nine product artifacts; eight others lack R2 integrity evidence.
+## Palo Alto v2.0 detailed QA and checksum evidence — 12 November 2026
+
+Owner inspected the downloaded R2 ZIP with Python, printing LICENSE.txt, PRODUCTION_QA_REPORT.txt, and verifying the SHA256SUMS manifest. The manifest verification returned **10 PASS / 0 FAIL**, including LICENSE, QA, workbook, standard PDF/DOCX, quick validation PDF/DOCX, README, command notes and future validation plan.
+
+- LICENSE: `2026 Production Edition v2.0 - Single-Organization Commercial License`. Purchaser may use/copy/adapt internally within one legal entity; redistribution/resale/sublicensing and multi-client/MSP distribution are prohibited without separate license.
+- Trademark disclaimer: no Palo Alto Networks endorsement or ownership asserted. Toolkit intended for security engineering/operational planning, not vendor support, certification or regulatory/legal advice.
+- PRODUCTION_QA_REPORT date 2026-09-25: 149 controls, including 60 Panorama IDs; workbook statuses initially Not Executed; 0 reported formula errors; tagged/readable PDF checks passed; documentary/visual QA reported passed.
+- Crucial limitation: **NO live PAN-OS firewall, Panorama, Log Collector or representative lab functional validation was performed**. Release decision supports documentation-validated v2.0 distribution only; verify vendor release guidance and compatibility again before any production use.
+- The ZIP's internal SHA256 matches and a self-declared QA report do **not** by themselves prove external vendor compatibility, copyright ownership/redistribution rights of all constituent materials, legal sufficiency of the license, or ZIP vulnerability/malware-free status.
+- P0 status for this one archived R2 object: **existence, size, ZIP integrity, package inventory and internal checksums PASS**. **Commercial/ownership signoff and current default Stripe Price-to-D1 association still BLOCKED**. No product was published or sold.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
