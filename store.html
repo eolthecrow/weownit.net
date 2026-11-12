@@ -163,14 +163,16 @@
     .catalog-archive>summary::-webkit-details-marker{display:none}.catalog-archive>summary::after{content:"+";font-size:1.4rem;line-height:1}.catalog-archive[open]>summary::after{content:"−"}
     .catalog-archive .catalog-intro{margin-top:1.3rem}.catalog-archive .catalog-disclaimer{margin-bottom:1rem}
     @media(max-width:700px){.offer-grid{grid-template-columns:1fr}.offer-card{padding:1.25rem}.offer-card .buy{width:100%}}
-      .store-currency-picker{border:1px solid var(--line);background:var(--bg2);padding:1rem 1.2rem;margin:1.25rem 0 1.75rem;display:grid;gap:.65rem}
-    .store-currency-title{font-weight:700;font-size:.82rem;margin:0}
-    .store-currency-controls{display:flex;gap:.5rem;flex-wrap:wrap}
-    .store-currency-button{min-width:70px;min-height:44px;padding:.65rem 1rem;border:1px solid var(--line);background:transparent;color:var(--ink);font-family:var(--mono);font-weight:700;cursor:pointer}
-    .store-currency-button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent);color:#06201e}
-    .store-currency-button:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
-    .store-currency-notice{font-size:.72rem;color:var(--quiet);margin:0;line-height:1.6}
-    @media(max-width:600px){.store-currency-picker{padding:1rem}.store-currency-button{flex:1 1 70px}}
+    /* Currency preview mirrors the understated RO / EN / FR selector. */
+    .store-currency-picker{border:0;background:transparent;padding:0;margin:1.25rem 0 1.75rem;display:flex;align-items:center;gap:.45rem 1rem;flex-wrap:wrap}
+    .store-currency-title{font-family:var(--mono);font-size:.65625rem;letter-spacing:.045em;font-weight:500;line-height:1.3;color:var(--muted);margin:0}
+    .store-currency-controls{display:inline-flex;align-items:center;gap:0;flex-wrap:nowrap}
+    .store-currency-button{appearance:none;min-width:36px;min-height:36px;padding:.25rem .45rem;border:0;border-bottom:1px solid transparent;border-radius:0;box-shadow:none;background:transparent;color:var(--muted);font-family:var(--mono);font-size:.65625rem;line-height:1;font-weight:500;cursor:pointer}
+    .store-currency-button:hover{color:var(--ink)}
+    .store-currency-button[aria-pressed="true"]{background:transparent;color:var(--accent);border-bottom-color:var(--accent);font-weight:800}
+    .store-currency-button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+    .store-currency-notice{font-size:.72rem;color:var(--quiet);margin:0;line-height:1.6;flex-basis:100%}
+    @media(max-width:600px){.store-currency-button{min-height:44px;min-width:44px}.store-currency-picker{gap:.25rem .65rem}}
   </style>
   <link rel="stylesheet" href="assets/chatbox.css?v=8">
   <link rel="stylesheet" href="assets/site.css?v=23">
@@ -549,7 +551,7 @@
 
 <footer><div class="wrap">© 2026 Vladimir Arjoca · <span data-footer-brand>Network & Security Consultant</span></div><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
 
-<script src="assets/store-pricing.js?v=1"></script>
+<script src="assets/store-pricing.js?v=2"></script>
 <script>
 (() => {
   const SAMPLE_PDF_URLS={
