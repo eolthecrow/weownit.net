@@ -47,6 +47,15 @@ To verify ZIP presence, obtain an owner-private R2 object inventory via authenti
 - `live-multicurrency-schema.sql` was **not rerun** because `live_product_currencies` already exists. The schema includes EUR/USD constraints; remote currency rows are still unpopulated pending an owner-private upload and D1 association.
 
 **Migration gate passed from operator logs.** Do not rerun `live-checkout-schema.sql` or assume payment-readiness from a schema-only PASS. Still outstanding: nine verified R2 ZIP objects, nine correct active D1/Stripe price associations, deployed buyer Worker, Stripe LIVE webhook, seller tax/terms and controlled end-to-end acceptance.
+## R2 Palo Alto ZIP object verification — owner evidence, 12 November 2026
+
+- Remote D1 retains exactly two archived/draft catalog rows; no active product was published.
+- R2 bucket `weownit-store-live-toolkits` returned the existing object `products/palo-alto-ngfw-panorama-hardening-toolkit-2026-produ-6b385de9-40ce-46f8-8382-9d0caa32ee9d.zip` using `npx wrangler r2 object get --remote`.
+- Downloaded ZIP size **475,617 bytes**, exactly matching `live_products.object_size_bytes` in the two archived records.
+- Python `zipfile.ZipFile.testzip()` reported PASS; ZIP contains **12 entries**.
+- This is **existence/integrity evidence for one R2 object only**, not evidence for the other eight toolkit ZIPs, licensing/commercial review, Stripe association, content safety or suitability for public sale.
+- Preserve both archived records and the existing R2 object. Reuse it only after the actual product version, license, content and owner distribution rights have been validated.
+- Do not upload/write/delete objects, publish D1 catalog rows, or enable payment flags until the full product-to-Price-to-private-object matrix is reviewed.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
