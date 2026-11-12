@@ -103,6 +103,12 @@ test("LIVE buyer Worker is separated and fails closed until all gates are enable
     assert.equal(cors.headers.get("Access-Control-Allow-Origin"), "https://weownit.net");
     const badCors = await ctx.call(new Request(base + "/catalog", { headers: { Origin: "https://attacker.invalid" } }));
     assert.equal(badCors.headers.get("Access-Control-Allow-Origin"), null);
+    assert.equal((await ctx.call(new Request(base + "/catalog"), { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 404);
+    assert.equal((await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "ro" }),
+      { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 503);
+    // Disabling sales does not disable the signed webhook needed for already-paid buyers.
+    assert.equal((await ctx.call(new Request(base + "/stripe/webhook", { method: "POST", body: "{}" }),
+      { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 400);
     assert.equal((await ctx.call(new Request(base + "/catalog"), { LIVE_CHECKOUT_ENABLED: "false" })).status, 404);
     assert.equal((await ctx.call(new Request(base + "/customer/product/" + productId), { LIVE_CHECKOUT_ENABLED: "false" })).status, 404);
     const disabled = await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "ro" }),
