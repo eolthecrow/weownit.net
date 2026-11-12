@@ -8,9 +8,9 @@ const {chromium}=require(process.env.WIT_PLAYWRIGHT_MODULE||'playwright');
 const root=path.resolve(__dirname,'../..');
 const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.pdf':'application/pdf'};
 const labels={
-  en:{intro:'Security, with a clear next step.',catalog:'Browse planned toolkits',note:'Online checkout is not active',sample:'PREVIEW SAMPLE REPORT'},
-  ro:{intro:'Securitate, cu un pas următor clar.',catalog:'Explorează toolkit-urile',note:'Checkout-ul online nu este activ',sample:'VEZI UN RAPORT EXEMPLU'},
-  fr:{intro:'Une sécurité aux prochaines étapes claires.',catalog:'Parcourir les kits',note:"Le paiement en ligne n'est pas actif",sample:'VOIR'}
+  en:{intro:'Security, with a clear next step.',catalog:'Browse toolkit prices',note:'Online checkout is not active',sample:'PREVIEW SAMPLE REPORT',currency:'€29'},
+  ro:{intro:'Securitate, cu un pas următor clar.',catalog:'Explorează prețurile',note:'Checkout-ul online nu este activ',sample:'VEZI UN RAPORT EXEMPLU',currency:'149 RON'},
+  fr:{intro:'Une sécurité aux prochaines étapes claires.',catalog:'Parcourir les prix',note:"Le paiement en ligne n'est pas actif",sample:'VOIR',currency:'€29'}
 };
 const server=http.createServer(async(req,res)=>{
   try{
@@ -56,9 +56,17 @@ async function main(){
       await page.locator('#planned-catalog > summary').click();
       assert.equal(await page.locator('#planned-catalog').evaluate(el=>el.open),true);
       assert.ok((await page.locator('#planned-catalog > summary').innerText()).includes(labels[lang].catalog));
+      assert.equal(await page.locator('#store-currency-picker button').count(),3);
+      assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),labels[lang].currency);
+      await page.locator('#store-currency-picker button:has-text("USD")').click();
+      assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),'$33');
+      await page.locator('#store-currency-picker button:has-text("RON")').click();
+      assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),'149 RON');
       await page.locator('#planned-catalog > summary').click();
       await page.locator('#security-toolkits-product .buy').click();
-      await page.waitForFunction(()=>document.querySelector('#network-security-assessment-sample').open);
+      await page.waitForFunction(()=>document.querySelector('#planned-catalog').open);
+      assert.equal(await page.locator('#network-security-assessment-sample').evaluate(el=>el.open),false);
+      await page.locator('#network-security-assessment-sample > summary').click();
       assert.ok((await page.locator('[data-sample-download]').getAttribute('href')).includes('_'+lang.toUpperCase()+'_2026.pdf'));
       assert.deepEqual(errors,[]);
       await context.close();journeys++;
