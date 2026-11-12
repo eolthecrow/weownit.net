@@ -1,3 +1,6 @@
 
 # Node dependencies
 worker/node_modules/
+
+# Python bytecode caches from local test runs
+__pycache__/

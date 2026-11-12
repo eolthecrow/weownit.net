@@ -4,9 +4,9 @@
   const status=document.getElementById('booking-status');
   if(!details||!calendar||!status)return;
   const copy={
-    en:{loading:'Loading available days and times…',slow:'The calendar is taking longer to load. Use the booking link above to choose a time directly.',ready:'Choose an available day and time below.',error:'The calendar could not load here. Use the booking link above to choose a time directly.',title:'Book a 30-minute call'},
-    ro:{loading:'Se încarcă zilele și orele disponibile…',slow:'Calendarul se încarcă mai greu. Folosește linkul de mai sus pentru a alege direct o oră.',ready:'Alege mai jos o zi și o oră disponibile.',error:'Calendarul nu s-a putut încărca aici. Folosește linkul de mai sus pentru a alege direct o oră.',title:'Programează un apel de 30 de minute'},
-    fr:{loading:'Chargement des jours et horaires disponibles…',slow:'Le calendrier met plus de temps à charger. Utilisez le lien ci-dessus pour choisir directement un horaire.',ready:'Choisissez un jour et un horaire disponibles ci-dessous.',error:'Le calendrier n’a pas pu se charger ici. Utilisez le lien ci-dessus pour choisir directement un horaire.',title:'Réserver un appel de 30 minutes'}
+    en:{loading:'Loading available days and times…',slow:'The calendar is taking longer to load. Use the booking link above to choose a time directly.',ready:'Choose an available day and time below.',error:'The calendar could not load here. Use the booking link above to choose a time directly.',title:'Schedule a 30-minute meeting'},
+    ro:{loading:'Se încarcă zilele și orele disponibile…',slow:'Calendarul se încarcă mai greu. Folosește linkul de mai sus pentru a alege direct o oră.',ready:'Alege mai jos o zi și o oră disponibile.',error:'Calendarul nu s-a putut încărca aici. Folosește linkul de mai sus pentru a alege direct o oră.',title:'Programează o întâlnire de 30 de minute'},
+    fr:{loading:'Chargement des jours et horaires disponibles…',slow:'Le calendrier met plus de temps à charger. Utilisez le lien ci-dessus pour choisir directement un horaire.',ready:'Choisissez un jour et un horaire disponibles ci-dessous.',error:'Le calendrier n’a pas pu se charger ici. Utilisez le lien ci-dessus pour choisir directement un horaire.',title:'Planifier une réunion de 30 minutes'}
   };
   let started=false,ready=false,state='loading',timer;
   const language=()=>copy[document.documentElement.lang]?document.documentElement.lang:'en';
@@ -38,3 +38,4 @@
   window.addEventListener('hashchange',followHash);
   refresh();if(details.open||location.hash==='#book')open();
 })();
+

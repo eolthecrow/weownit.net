@@ -91,13 +91,16 @@ The same Worker now exposes:
 POST /contact
 ```
 
-The website sends contact-form submissions directly to this endpoint. The Worker validates the request and sends it to the fixed destination configured in `wrangler.jsonc` using Cloudflare Email Service. The submitted email address is set as `replyTo`, so replying from the inbox goes directly to the visitor.
+The website sends contact-form submissions directly to this endpoint. The Worker validates the request and sends it, using Cloudflare Email Service, to the inbox stored in the `CONTACT_TO_EMAIL` Worker secret. The submitted email address is set as `replyTo`, so replying from the inbox goes directly to the visitor.
 
 ### One-time Cloudflare email setup
 
 1. In Cloudflare, open **Compute > Email Service** and onboard a domain that uses Cloudflare DNS.
-2. Under **Email Routing > Destination Addresses**, add and verify:
-   `vladimir.arjoca@outlook.com`
+2. Under **Email Routing > Destination Addresses**, add and verify the inbox that should receive contact requests, then store it as a secret (it is intentionally not in this repository):
+   ```bash
+   npx wrangler secret put CONTACT_TO_EMAIL
+   ```
+   Without this secret the contact endpoint answers 503 instead of sending.
 3. Use the configured sender address:
    `contact@weownit.net`
    The address is already set in `wrangler.jsonc` as `CONTACT_FROM_EMAIL` and restricted by the email binding.
@@ -107,7 +110,7 @@ The website sends contact-form submissions directly to this endpoint. The Worker
    ```
 5. Test the contact endpoint from the website or with a POST request from an allowed origin.
 
-The `send_email` binding is restricted to the verified Outlook destination in `wrangler.jsonc`.
+The `send_email` binding is restricted to the `contact@weownit.net` sender; Cloudflare only delivers to verified destination addresses in the account.
 
 ### Contact-form safeguards
 
