@@ -81,7 +81,7 @@ test("product catalog has exactly nine standalone ZIP prices and no payment CTA"
 });
 
 test("RON, EUR and USD values agree with the approved 2026-11-12 grid", () => {
-  const { cards, window } = fixture();
+  const { cards, window, archive } = fixture();
   const checks = {
     "network-security-assessment-toolkit": ["149 RON", "€29", "$33"],
     "network-automation-compliance-toolkit": ["179 RON", "€35", "$39"],
@@ -98,23 +98,19 @@ test("RON, EUR and USD values agree with the approved 2026-11-12 grid", () => {
   for (const [id, amounts] of Object.entries(checks))
     assert.equal(cards.get(id).price.textContent, amounts[0], "RON: " + id);
 
+  function fixtureButtons() { return archive.intro.children[0].children[1].children; }
   let buttons = fixtureButtons();
-  function fixtureButtons() { return cards && entry.archive.intro.children[0].children[1].children; }
-  // Create a fresh fixture to inspect only the toolbar.
-  const entry = fixture();
-  entry.window.WeOwnITStorePricing.render("ro");
-  buttons = fixtureButtons();
   assert.deepEqual(Array.from(buttons, b => b.textContent), ["RON", "EUR", "USD"]);
   buttons[1].listeners.click();
   for (const [id, amounts] of Object.entries(checks))
-    assert.equal(entry.cards.get(id).price.textContent, amounts[1], "EUR: " + id);
+    assert.equal(cards.get(id).price.textContent, amounts[1], "EUR: " + id);
   buttons = fixtureButtons();
   buttons[2].listeners.click();
   for (const [id, amounts] of Object.entries(checks))
-    assert.equal(entry.cards.get(id).price.textContent, amounts[2], "USD: " + id);
-  entry.window.WeOwnITStorePricing.render("fr");
-  assert.equal(entry.cards.get("check-point-hardening-toolkit").price.textContent, "$29");
-  assert.equal(entry.archive.intro.children[0].children[1].attributes["aria-label"], "Devise du prix");
+    assert.equal(cards.get(id).price.textContent, amounts[2], "USD: " + id);
+  window.WeOwnITStorePricing.render("fr");
+  assert.equal(cards.get("check-point-hardening-toolkit").price.textContent, "$29");
+  assert.equal(archive.intro.children[0].children[1].attributes["aria-label"], "Devise du prix");
 });
 
 test("zero-decimal display is a preview, not a tax or delivery claim", () => {
