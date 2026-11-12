@@ -2,6 +2,19 @@
 
 Status: **code candidate; NO-GO for public real-money transactions**.
 
+**12 November 2026 P0 read-only verification:** nine current Stripe LIVE
+Product/Price pairs are pinned in [live-p0-stripe-manifest.json](live-p0-stripe-manifest.json).
+Stripe currently has **zero LIVE webhook endpoints** and the nine default Prices
+still report **tax_behavior=unspecified**. Cloudflare D1/R2, restricted keys,
+public Worker and R2 objects were not remotely verified here; no Cloudflare
+connector was available. See [LIVE_P0_OWNER_RUNBOOK.md](LIVE_P0_OWNER_RUNBOOK.md)
+and run the local fail-closed preflight auditor before any transaction.
+New buyer checkout requires **LIVE_COMMERCIAL_SIGNOFF=true** in addition to its
+existing flags. This flag MUST NOT be set without a documented seller-specific
+legal/tax/invoice/licensing review; it does not block webhook or delivery for
+already-paid buyers.
+
+
 **Operator decision, 10 November 2026:** Stripe Sandbox acceptance was already
 completed. Do **not** schedule another hosted Sandbox test cycle. The next
 acceptance stages concern the isolated LIVE infrastructure and the eventual
@@ -106,6 +119,9 @@ checkout flow are not replaced.
   the remote schema really supports `ron`, `eur`, and `usd`.
 - Recovery requires `RESEND_RECOVERY_API_KEY`; validate the verified sender
   address and email-delivery limits separately before enabling it.
+- Keep `LIVE_COMMERCIAL_SIGNOFF=false` until seller, VAT/invoicing, consumer
+  rights, ZIP/licence and rights checks are formally approved; it gates only
+  new Checkout sessions, not webhook or delivery for previous purchases.
 - Enable `LIVE_CHECKOUT_ENABLED`, `LIVE_WEBHOOK_ENABLED`,
   `LIVE_DELIVERY_ENABLED`, `LIVE_RECOVERY_ENABLED`,
   `LIVE_PUBLIC_CATALOG_ENABLED`, `LIVE_STORE_CONNECTED` **only after** the
