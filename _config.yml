@@ -2,3 +2,36 @@
 # Needed so /.well-known/security.txt is published.
 include:
   - .well-known
+
+# Keep repository internals off weownit.net. The repository stays public on
+# GitHub; this only stops these files being served on the site's own origin.
+# tools/index.html and store/index.html are redirects and stay published.
+exclude:
+  - worker
+  - tests
+  - docs
+  - scripts
+  - content
+  - README.md
+  - SECURITY-CANVAS.md
+  - SITE-SIMPLIFICATION.md
+  - tools/__pycache__
+  - tools/briefing_candidates.py
+  - tools/briefing_publication_gate.py
+  - tools/build_security_briefing.py
+  - tools/change-confidence-support.json
+  - tools/change-confidence.md
+  - tools/check_briefing_live.py
+  - tools/connected-case.md
+  - tools/csp_meta.py
+  - tools/endpoint-evidence.md
+  - tools/firewall-review.md
+  - tools/free_sample_builder.py
+  - tools/free_sample_en.json
+  - tools/free_sample_fr.json
+  - tools/free_sample_ro.json
+  - tools/incident-evidence-triage.md
+  - tools/refresh_webcheck_preview.py
+  - tools/security-briefing-weekly.md
+  - tools/vendor-hardening.md
+  - tools/webcheck-preview.md
