@@ -41,3 +41,7 @@ jobs:
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
         run: node tests/browser/change-confidence.smoke.cjs
+      - name: Verify nine-product Store on desktop and mobile in EN RO FR
+        env:
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+        run: node tests/browser/store-p0.smoke.cjs
