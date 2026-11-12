@@ -73,7 +73,7 @@ function fixture() {
 
 test("product catalog has exactly nine standalone ZIP prices and no payment CTA", () => {
   assert.equal((store.match(/class="buy is-contact" data-buy-key="/g) || []).length, 9);
-  assert.match(store, /<script src="assets\/store-pricing\.js\?v=1"><\/script>/);
+  assert.match(store, /<script src="assets\/store-pricing\.js\?v=2"><\/script>/);
   assert.match(store, /window\.WeOwnITStorePricing\.render\(lang\)/);
   assert.doesNotMatch(code, /checkout\.stripe\.com|payment_link|createCheckout|\/stripe\/webhook/);
   assert.doesNotMatch(store, /2026 v2\.1/);
@@ -100,16 +100,16 @@ test("RON, EUR and USD values agree with the approved 2026-11-12 grid", () => {
 
   function fixtureButtons() { return archive.intro.children[0].children[1].children; }
   let buttons = fixtureButtons();
-  assert.deepEqual(Array.from(buttons, b => b.textContent), ["RON", "EUR", "USD"]);
+  assert.deepEqual(Array.from(buttons, b => b.textContent), ["RON", "USD", "EUR"]);
   buttons[1].listeners.click();
   for (const [id, amounts] of Object.entries(checks))
-    assert.equal(cards.get(id).price.textContent, amounts[1], "EUR: " + id);
+    assert.equal(cards.get(id).price.textContent, amounts[2], "USD: " + id);
   buttons = fixtureButtons();
   buttons[2].listeners.click();
   for (const [id, amounts] of Object.entries(checks))
-    assert.equal(cards.get(id).price.textContent, amounts[2], "USD: " + id);
+    assert.equal(cards.get(id).price.textContent, amounts[1], "EUR: " + id);
   window.WeOwnITStorePricing.render("fr");
-  assert.equal(cards.get("check-point-hardening-toolkit").price.textContent, "$29");
+  assert.equal(cards.get("check-point-hardening-toolkit").price.textContent, "€25");
   assert.equal(archive.intro.children[0].children[1].attributes["aria-label"], "Devise du prix");
 });
 
@@ -119,4 +119,7 @@ test("zero-decimal display is a preview, not a tax or delivery claim", () => {
   assert.match(archive.intro.children[0].children[2].textContent, /Checkout and ZIP delivery are not active/);
   assert.match(archive.intro.children[0].children[2].textContent, /Tax treatment will be confirmed/);
   assert.match(store, /No payment is taken on this page/);
+  assert.match(store, /\.store-currency-button\[aria-pressed="true"\]\{[^}]*border-bottom-color:var\(--accent\)/s);
+  assert.doesNotMatch(store, /\.store-currency-button\{min-width:70px/);
+  assert.match(store, /\.store-currency-picker\{border:0;background:transparent/);
 });
