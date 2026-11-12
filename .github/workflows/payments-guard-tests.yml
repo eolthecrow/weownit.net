@@ -51,6 +51,8 @@ jobs:
         run: npm run test:live-checkout
         env:
           WRANGLER_SEND_METRICS: "false"
+      - name: Audit LIVE P0 fail-closed evidence checker (synthetic only)
+        run: npm run test:live-p0
   release-safety:
     runs-on: ubuntu-latest
     timeout-minutes: 12
