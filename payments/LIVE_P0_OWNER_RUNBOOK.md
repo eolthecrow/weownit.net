@@ -73,6 +73,18 @@ Owner inspected the downloaded R2 ZIP with Python, printing LICENSE.txt, PRODUCT
 - Crucial limitation: **NO live PAN-OS firewall, Panorama, Log Collector or representative lab functional validation was performed**. Release decision supports documentation-validated v2.0 distribution only; verify vendor release guidance and compatibility again before any production use.
 - The ZIP's internal SHA256 matches and a self-declared QA report do **not** by themselves prove external vendor compatibility, copyright ownership/redistribution rights of all constituent materials, legal sufficiency of the license, or ZIP vulnerability/malware-free status.
 - P0 status for this one archived R2 object: **existence, size, ZIP integrity, package inventory and internal checksums PASS**. **Commercial/ownership signoff and current default Stripe Price-to-D1 association still BLOCKED**. No product was published or sold.
+## Nine-product local audit execution — 12 November 2026
+
+Owner ran the packaged `weownit_audit_9_toolkits.py` from WSL, with `--remote-d1`, local ZIP directories and a private JSON report. Results:
+
+- **All 9 current default Stripe Prices have no matching active D1 product association** (`MISSING_CURRENT_PRICE_ASSOCIATION`). This is expected with two old archived/draft records still preserved; never update/archive-delete them by accident.
+- **All 9 R2 inventory statuses `UNVERIFIED`** because neither `--r2-inventory` nor a read-only `CLOUDFLARE_API_TOKEN` was supplied. This is not proof that objects are absent.
+- **Palo Alto local ZIP CRC PASS / internal SHA256 manifest PASS**, consistent with the previously verified remote R2 object; archive QA/rights remain separate.
+- **Network Assessment local ZIP `AMBIGUOUS_LOCAL_VERSIONS`**: several candidate files; the intended commercial v2 release must be explicitly selected by exact filename plus checksum and compared with the R2 object. Do not choose automatically.
+- Other **eight minus Network Assessment = seven** products have no locally selected ZIP integrity evidence in this run; don't label them invalid or missing from R2.
+- Report saved privately to `$HOME/weownit-live-backups/all_9_products_audit.json`. No remote modifications occurred.
+
+Next evidence gate: use a **bucket-scoped, temporary read-only Cloudflare R2 API token** for REST `GET /accounts/{account_id}/r2/buckets/{bucket_name}/objects` or supply a pre-exported JSON inventory; run with `--download-r2`. This invokes only Wrangler R2 GET and D1 SELECT and leaves production sale flags OFF. Check for multiple potential objects and content/license/QA claims before release.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
