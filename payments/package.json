@@ -11,7 +11,8 @@
     "test:browser": "node --test test/admin-browser.test.mjs test/customer-browser.test.mjs test/live-fx-browser.test.mjs",
     "test:live-admin": "node --test test/live-admin.test.mjs",
     "test:live-checkout": "node --test test/live-checkout.test.mjs",
-    "deploy:catalog": "node scripts/deploy-catalog.mjs"
+    "deploy:catalog": "node scripts/deploy-catalog.mjs",
+    "test:live-p0": "node --test test/live-p0-audit.test.mjs"
   },
   "devDependencies": {
     "jsonc-parser": "3.3.1",

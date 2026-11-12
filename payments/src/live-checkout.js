@@ -81,7 +81,8 @@ async function rawBody(request, limit = 65536) {
 function configured(env, mode) {
   if (!env?.LIVE_CATALOG_DB?.prepare || !env?.LIVE_CATALOG_DB?.batch ||
       !/^acct_[A-Za-z0-9]+$/.test(env.LIVE_EXPECTED_ACCOUNT_ID || "")) return false;
-  if (mode === "checkout") return env.LIVE_CHECKOUT_ENABLED === "true" && env.LIVE_STORE_CONNECTED === "true" &&
+  if (mode === "checkout") return env.LIVE_COMMERCIAL_SIGNOFF === "true" &&
+      env.LIVE_CHECKOUT_ENABLED === "true" && env.LIVE_STORE_CONNECTED === "true" &&
       apiKey(env.STRIPE_LIVE_CHECKOUT_KEY) && env.LIVE_TOOLKITS_R2?.head;
   if (mode === "webhook") return env.LIVE_WEBHOOK_ENABLED === "true" && apiKey(env.STRIPE_LIVE_FULFILLMENT_KEY) &&
       SIGNATURE.test(env.STRIPE_LIVE_WEBHOOK_SECRET || "");

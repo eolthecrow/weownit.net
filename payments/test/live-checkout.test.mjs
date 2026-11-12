@@ -43,7 +43,8 @@ async function fixture() {
   ]);
   await platform.env.LIVE_TOOLKITS_R2.put("products/firewall.zip", "1234567890abcdef");
   const env = { ...platform.env, LIVE_EXPECTED_ACCOUNT_ID: "acct_livefixture",
-    LIVE_CHECKOUT_ORIGIN: base, LIVE_CHECKOUT_ENABLED: "true", LIVE_STORE_CONNECTED: "true",
+    LIVE_CHECKOUT_ORIGIN: base, LIVE_COMMERCIAL_SIGNOFF: "true",
+    LIVE_CHECKOUT_ENABLED: "true", LIVE_STORE_CONNECTED: "true",
     LIVE_PUBLIC_CATALOG_ENABLED: "true", LIVE_WEBHOOK_ENABLED: "true", LIVE_DELIVERY_ENABLED: "true",
     LIVE_RECOVERY_ENABLED: "false", RESEND_RECOVERY_API_KEY: "re_test_fixture",
     STRIPE_LIVE_CHECKOUT_KEY: "rk_live_syntheticonly",
@@ -102,6 +103,12 @@ test("LIVE buyer Worker is separated and fails closed until all gates are enable
     assert.equal(cors.headers.get("Access-Control-Allow-Origin"), "https://weownit.net");
     const badCors = await ctx.call(new Request(base + "/catalog", { headers: { Origin: "https://attacker.invalid" } }));
     assert.equal(badCors.headers.get("Access-Control-Allow-Origin"), null);
+    assert.equal((await ctx.call(new Request(base + "/catalog"), { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 404);
+    assert.equal((await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "ro" }),
+      { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 503);
+    // Disabling sales does not disable the signed webhook needed for already-paid buyers.
+    assert.equal((await ctx.call(new Request(base + "/stripe/webhook", { method: "POST", body: "{}" }),
+      { LIVE_COMMERCIAL_SIGNOFF: "false" })).status, 400);
     assert.equal((await ctx.call(new Request(base + "/catalog"), { LIVE_CHECKOUT_ENABLED: "false" })).status, 404);
     assert.equal((await ctx.call(new Request(base + "/customer/product/" + productId), { LIVE_CHECKOUT_ENABLED: "false" })).status, 404);
     const disabled = await ctx.call(post("/customer/checkout", { product_id: productId, quantity: 1, language: "ro" }),
