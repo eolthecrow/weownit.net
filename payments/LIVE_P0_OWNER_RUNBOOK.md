@@ -56,6 +56,13 @@ To verify ZIP presence, obtain an owner-private R2 object inventory via authenti
 - This is **existence/integrity evidence for one R2 object only**, not evidence for the other eight toolkit ZIPs, licensing/commercial review, Stripe association, content safety or suitability for public sale.
 - Preserve both archived records and the existing R2 object. Reuse it only after the actual product version, license, content and owner distribution rights have been validated.
 - Do not upload/write/delete objects, publish D1 catalog rows, or enable payment flags until the full product-to-Price-to-private-object matrix is reviewed.
+## Palo Alto ZIP release inventory — operator evidence, 12 November 2026
+
+The private R2 object at `products/palo-alto-ngfw-panorama-hardening-toolkit-2026-produ-6b385de9-40ce-46f8-8382-9d0caa32ee9d.zip` was downloaded successfully. ZIP integrity (`ZipFile.testzip`) passed, archive byte count matched D1 (475617), and 11 files + one top-level directory were listed under `Palo_Alto_NGFW_Panorama_Hardening_Toolkit_2026_Production_v2.0_RELEASE/`.
+
+Operator verified by listing: assessment `.xlsx`, hardening standard `.pdf` and `.docx`, quick validation guide `.pdf` and `.docx`, README, LICENSE, PRODUCTION_QA_REPORT, Future Live Validation Plan, Read-Only Validation Commands, and SHA256SUMS. **File names only:** file contents, SHA256SUMS matches, rights/license scope, macro/safety review, and production claims are not yet signed off. Do not call the package `Live Validated` based solely on these names.
+
+Keep existing archive in place and both D1 entries archived/draft. Do not associate the current default Palo Alto Stripe Price or publish the product until license, QA and internal checksums have been reviewed. This is **one** of nine product artifacts; eight others lack R2 integrity evidence.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
