@@ -10,6 +10,31 @@
 - The owner confirms the intended seller model as a Romanian natural person without PFA/SRL. Keep this model; obtain a documented seller-specific fiscal and invoicing classification, including digital-product and cross-border tax implications.
 - PR #48 is a Draft based on a LIVE-admin feature branch, not today's published main. Never overwrite the new Store currency selector when integrating it.
 
+## Remote D1/Worker evidence received — 12 November 2026
+
+Owner ran authorized Wrangler 4.160.0 from WSL against Cloudflare account 78a9f61f124deea3fe71dac228a5e0c0:
+
+- D1 `weownit_live_catalog` UUID matches the reviewed `e3a475e0-7732-4fcc-b903-4db073182318`.
+- `live_products` and `live_product_currencies` exist, but checkout/purchase/delivery tables (`live_checkout_attempts`, `live_purchases`, `live_delivery_blocks`, `live_download_grants`, `live_payment_events`) are absent. Do not mistake `d1 list num_tables=0` for an empty SQLite schema.
+- `live_products`: exactly **two archived, draft** Palo Alto records referencing the same R2 object key. One is the existing approved Stripe Product ID but points to an old Price ID with 29900 RON minor units; the second is a legacy test-like Stripe Product ID at 10000 RON minor units.
+- `live_product_currencies`: **zero rows**. No EUR/USD catalog snapshots.
+- `weownit-store-live-checkout` Worker: **not deployed** (`10007` absent script). The already deployed `weownit-store-live-admin` is a different script.
+- The R2 bucket exists but these commands do NOT prove that any referenced ZIP is present. The OAuth scope output does not list an explicit R2 object write scope; verify effective upload rights without exposing a token.
+- Stripe LIVE webhook count was previously verified as zero. The nine approved default Stripe Product/Price pairs exist but none is represented by an active, published D1 catalog row.
+
+**Safety response:** leave the two archival records intact (do not delete/mutate them); export a full remote D1 backup before additive schema writes. Keep checkout and Store flags off.
+
+Safe confirmed backup command (perform in an owner-private directory, note that remote D1 export may briefly interrupt reads):
+
+    umask 077
+    mkdir -p "$HOME/weownit-live-backups"
+    npx wrangler d1 export weownit_live_catalog --remote --output="$HOME/weownit-live-backups/weownit_live_catalog_pre_checkout_20261112.sql"
+
+Validate that the file exists, is nonzero and contains schema/INSERT statements. Never upload the backup to a public repository.
+
+After separately approving the backup, verify checkout schema file exists in the current working copy and matches the reviewed candidate PR #48 version before any write. A missing local file must NOT be reconstructed manually from terminal snippets. Only then consider applying `payments/live-checkout-schema.sql` to the reviewed remote D1; all seven checkout-related tables will be new, while pre-existing tables should remain unchanged by CREATE TABLE IF NOT EXISTS. Inspect the D1 result again after any migration. Do not publish products yet.
+
+To verify ZIP presence, obtain an owner-private R2 object inventory via authenticated Admin or R2 dashboard. `wrangler r2 bucket list` does not inspect objects. No newer nine-ZIP manifest has been verified in remote R2.
 ## 1. Owner's WSL Cloudflare read-only checks
 
 Run the commands in the authenticated Cloudflare account; they do NOT modify remote data. Do not paste API keys, customer purchases, ZIP contents or unredacted Access details into chat.
