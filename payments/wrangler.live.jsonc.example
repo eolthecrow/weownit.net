@@ -4,6 +4,8 @@
   "main": "src/live-index.js",
   "compatibility_date": "2026-10-21",
   "workers_dev": false,
+  // A preview URL would reach the admin without Cloudflare Access (token only).
+  "preview_urls": false,
   "vars": {
     "LIVE_ADMIN_ENABLED": "false",
     "LIVE_ADMIN_WRITES_ENABLED": "false",

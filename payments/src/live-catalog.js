@@ -438,7 +438,7 @@ export async function handleLiveCatalog(request, env, { stripeClient, fxFetch = 
       return respond({ deliveries: orders.results.map(p => ({ session_id: p.session_id,
         title: p.title, quantity: p.quantity, display_total: displayPrice(p.amount_total, p.currency),
         payment_status: p.payment_status, blocked: Boolean(p.blocked),
-        fulfillment_status: p.payment_status === "paid" ? "Plătit · livrare eligibilă" : "Acces indisponibil",
+        fulfillment_status: p.payment_status === "paid" && !p.blocked ? "Plătit · livrare eligibilă" : "Acces indisponibil",
         download_attempts: p.download_attempts,
         observed_at: new Date(p.observed_at * 1000).toISOString() })) });
     }

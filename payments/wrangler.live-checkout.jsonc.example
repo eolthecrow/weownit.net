@@ -4,6 +4,14 @@
   "main": "src/live-public-index.js",
   "compatibility_date": "2026-10-21",
   "workers_dev": false,
+  // Never expose this Worker on *.workers.dev preview URLs; serve only checkout.weownit.net.
+  "preview_urls": false,
+  // Per-client limits; the buyer Worker refuses checkout/recovery if these are missing.
+  // namespace_id must be unique in the Cloudflare account (the site Worker uses 4101-4105).
+  "ratelimits": [
+    { "name": "LIVE_CHECKOUT_LIMITER", "namespace_id": "4201", "simple": { "limit": 5, "period": 60 } },
+    { "name": "LIVE_RECOVERY_LIMITER", "namespace_id": "4202", "simple": { "limit": 3, "period": 60 } }
+  ],
   "vars": {
     "LIVE_COMMERCIAL_SIGNOFF": "false",
     "LIVE_CHECKOUT_ENABLED": "false",

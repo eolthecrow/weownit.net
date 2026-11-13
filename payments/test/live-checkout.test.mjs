@@ -44,6 +44,9 @@ async function fixture() {
   await platform.env.LIVE_TOOLKITS_R2.put("products/firewall.zip", "1234567890abcdef");
   const env = { ...platform.env, LIVE_EXPECTED_ACCOUNT_ID: "acct_livefixture",
     LIVE_CHECKOUT_ORIGIN: base, LIVE_COMMERCIAL_SIGNOFF: "true",
+    // Synthetic per-client limiters (Workers Rate Limiting bindings in production).
+    LIVE_CHECKOUT_LIMITER: { limit: async () => ({ success: true }) },
+    LIVE_RECOVERY_LIMITER: { limit: async () => ({ success: true }) },
     LIVE_CHECKOUT_ENABLED: "true", LIVE_STORE_CONNECTED: "true",
     LIVE_PUBLIC_CATALOG_ENABLED: "true", LIVE_WEBHOOK_ENABLED: "true", LIVE_DELIVERY_ENABLED: "true",
     LIVE_RECOVERY_ENABLED: "false", RESEND_RECOVERY_API_KEY: "re_test_fixture",
