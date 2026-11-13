@@ -1,0 +1,77 @@
+name: Deploy LIVE buyer Worker (sales off)
+
+# Manual only. Deploys payments/ as the isolated weownit-store-live-checkout Worker
+# on checkout.weownit.net with EVERY sales switch off. It cannot open sales:
+# the guard step refuses any config where a LIVE_* switch is not "false".
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type exactly: deploy weownit-store-live-checkout with sales off'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-live-buyer-worker
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: payments
+    env:
+      CONFIG: wrangler.live-checkout.production.jsonc
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: "false"
+    steps:
+      - name: Require explicit confirmation
+        working-directory: .
+        env:
+          CONFIRM: ${{ inputs.confirm }}
+        run: |
+          [ "$CONFIRM" = "deploy weownit-store-live-checkout with sales off" ] || { echo "::error::Confirmation text does not match."; exit 1; }
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22'
+      - name: Install pinned payments tooling
+        run: npm ci
+      - name: Test payments before deploying
+        run: |
+          npm test
+          npm run test:live-checkout
+      - name: Refuse any config that could open sales
+        run: |
+          node -e '
+            const {parse}=require("jsonc-parser"),fs=require("fs");
+            const c=parse(fs.readFileSync(process.env.CONFIG,"utf8"));
+            const flags=Object.entries(c.vars).filter(([k])=>/^LIVE_/.test(k)&&!["LIVE_EXPECTED_ACCOUNT_ID","LIVE_CHECKOUT_ORIGIN"].includes(k));
+            const open=flags.filter(([,v])=>v!=="false");
+            const limiters=(c.ratelimits||[]).map(r=>r.name).sort().join();
+            const problems=[];
+            if(c.name!=="weownit-store-live-checkout")problems.push("unexpected Worker name");
+            if(open.length)problems.push("switches not false: "+open.map(([k])=>k).join(","));
+            if(c.workers_dev!==false||c.preview_urls!==false)problems.push("workers_dev/preview_urls must be false");
+            if(limiters!=="LIVE_CHECKOUT_LIMITER,LIVE_RECOVERY_LIMITER")problems.push("rate limiters missing");
+            if(problems.length){console.error(problems.join("; "));process.exit(1);}
+            console.log("Guard passed:",flags.length,"switches off; limiters present; no workers.dev/preview URLs.");'
+      - name: Deploy with sales off
+        run: npx wrangler deploy --config "$CONFIG"
+      - name: Verify health reports every path disabled
+        working-directory: .
+        run: |
+          for i in $(seq 1 24); do
+            body=$(curl -fsS https://checkout.weownit.net/health 2>/dev/null) && break
+            sleep 10
+          done
+          echo "health: $body"
+          echo "$body" | grep -q '"checkout":"disabled"' && echo "$body" | grep -q '"webhook":"disabled"' && echo "$body" | grep -q '"delivery":"disabled"' \
+            || { echo "::error::checkout.weownit.net/health did not report all paths disabled"; exit 1; }

@@ -1,0 +1,41 @@
+{
+  // Production LIVE buyer Worker. Deployed only by .github/workflows/deploy-live-buyer-worker.yml.
+  // Every sales switch stays "false" here; the workflow refuses to deploy otherwise.
+  // Secrets are set in Cloudflare, never in this file:
+  //   STRIPE_LIVE_CHECKOUT_KEY, STRIPE_LIVE_FULFILLMENT_KEY, STRIPE_LIVE_WEBHOOK_SECRET, RESEND_RECOVERY_API_KEY
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "weownit-store-live-checkout",
+  "main": "src/live-public-index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "checkout.weownit.net", "custom_domain": true }
+  ],
+  "ratelimits": [
+    { "name": "LIVE_CHECKOUT_LIMITER", "namespace_id": "4201", "simple": { "limit": 5, "period": 60 } },
+    { "name": "LIVE_RECOVERY_LIMITER", "namespace_id": "4202", "simple": { "limit": 3, "period": 60 } }
+  ],
+  "vars": {
+    "LIVE_COMMERCIAL_SIGNOFF": "false",
+    "LIVE_CHECKOUT_ENABLED": "false",
+    "LIVE_WEBHOOK_ENABLED": "false",
+    "LIVE_DELIVERY_ENABLED": "false",
+    "LIVE_RECOVERY_ENABLED": "false",
+    "LIVE_PUBLIC_CATALOG_ENABLED": "false",
+    "LIVE_STORE_CONNECTED": "false",
+    "LIVE_EXPECTED_ACCOUNT_ID": "acct_1UPSRGGmXsHGE7C9",
+    "LIVE_CHECKOUT_ORIGIN": "https://checkout.weownit.net"
+  },
+  "r2_buckets": [
+    { "binding": "LIVE_TOOLKITS_R2", "bucket_name": "weownit-store-live-toolkits" }
+  ],
+  "d1_databases": [
+    {
+      "binding": "LIVE_CATALOG_DB",
+      "database_name": "weownit_live_catalog",
+      "database_id": "e3a475e0-7732-4fcc-b903-4db073182318"
+    }
+  ],
+  "observability": { "enabled": true, "logs": { "enabled": true, "invocation_logs": false } }
+}
