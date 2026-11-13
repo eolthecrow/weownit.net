@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches: [main]
-    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', '*.html', 'briefing/**', 'content/**', 'tools/build_security_briefing.py', 'tools/csp_meta.py', '.github/workflows/verify-tools.yml']
+    paths: ['assets/**', 'tests/**', 'worker/src/**', 'worker/test/**', 'worker/scripts/**', 'worker/wrangler.jsonc', '*.html', 'briefing/**', 'content/**', 'tools/build_security_briefing.py', 'tools/csp_meta.py', '.github/workflows/verify-tools.yml']
 permissions:
   contents: read
 concurrency:
@@ -59,3 +59,7 @@ jobs:
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
         run: node tests/browser/store-p0.smoke.cjs
+      - name: Verify contact success and failure handling in EN RO FR without sending email
+        env:
+          WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+        run: node tests/browser/contact.smoke.cjs

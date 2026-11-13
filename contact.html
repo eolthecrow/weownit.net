@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' 'sha256-uKpU8R8CCnodD7Rjf+Z/oB7cWq+X7EGJaD6gL/xiiYM=' 'sha256-lI0zKSCFGwwjYaPMrz/Npuf5N8Ui9e2wE5cj5gJhwWE=' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
+  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' 'sha256-M8M/YUDs10MhMIDnHAIQdWPwUCx6YY7ntHpMwKmBXzE=' 'sha256-lI0zKSCFGwwjYaPMrz/Npuf5N8Ui9e2wE5cj5gJhwWE=' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a151c">
   <meta name="description" content="Contact Vladimir Arjoca about cybersecurity, network security, incident response, FortiGate, troubleshooting, and automation.">
@@ -182,6 +182,31 @@
   };
 
 
+  Object.assign(translations.en, {
+    rateLimited:"Please wait a minute before trying again. Your message is still here.",
+    tooFast:"Please wait a moment before sending. Your message is still here.",
+    unavailable:"Direct messaging is temporarily unavailable. Your message is still here; you can email it instead.",
+    invalid:"Check the required fields and message length before sending again.",
+    unknown:"We couldn’t confirm whether your message was sent. It is still here. Sending again or using email may create a duplicate.",
+    reference:"Reference"
+  });
+  Object.assign(translations.ro, {
+    rateLimited:"Așteaptă un minut înainte de a încerca din nou. Mesajul tău este păstrat aici.",
+    tooFast:"Așteaptă un moment înainte de trimitere. Mesajul tău este păstrat aici.",
+    unavailable:"Trimiterea directă este temporar indisponibilă. Mesajul este păstrat aici; îl poți trimite prin email.",
+    invalid:"Verifică toate câmpurile obligatorii și lungimea mesajului înainte de a retrimite.",
+    unknown:"Nu am putut confirma dacă mesajul a fost trimis. Este păstrat aici. Retrimiterea sau folosirea emailului poate crea un duplicat.",
+    reference:"Referință"
+  });
+  Object.assign(translations.fr, {
+    rateLimited:"Patientez une minute avant de réessayer. Votre message est conservé ici.",
+    tooFast:"Patientez un instant avant l’envoi. Votre message est conservé ici.",
+    unavailable:"L’envoi direct est temporairement indisponible. Votre message est conservé ici ; vous pouvez l’envoyer par e-mail.",
+    invalid:"Vérifiez les champs obligatoires et la longueur du message avant de réessayer.",
+    unknown:"Nous n’avons pas pu confirmer l’envoi. Votre message est conservé ici. Un nouvel envoi ou un e-mail peut créer un doublon.",
+    reference:"Référence"
+  });
+
   Object.assign(translations.en,{messageChoice:"Send a message",bookChoice:"Book a call ↗",bookTitle:"Book a 30-minute call",bookText:"A focused conversation about your network or security challenge. The calendar loads only when you open this section.",bookFallback:"Open the booking page directly ↗",reviewNote:"A brief review summary has been added. Edit it before sending; nothing has been sent yet."});
   Object.assign(translations.ro,{messageChoice:"Trimite un mesaj",bookChoice:"Programează un apel ↗",bookTitle:"Programează un apel de 30 de minute",bookText:"O discuție despre problema ta de rețea sau securitate. Calendarul se încarcă doar când deschizi această secțiune.",bookFallback:"Deschide direct pagina de programare ↗",reviewNote:"A fost adăugat un rezumat scurt al analizei. Editează-l înainte de trimitere; nimic nu a fost trimis încă."});
   Object.assign(translations.fr,{messageChoice:"Envoyer un message",bookChoice:"Réserver un appel ↗",bookTitle:"Réserver un appel de 30 minutes",bookText:"Une discussion ciblée sur votre problème de réseau ou de sécurité. Le calendrier se charge à l’ouverture de cette section.",bookFallback:"Ouvrir directement la page de réservation ↗",reviewNote:"Un bref résumé de la revue a été ajouté. Modifiez-le avant l’envoi ; rien n’a encore été envoyé."});
@@ -296,7 +321,7 @@
     qs('label[for="company"]').innerHTML=t.company+' <span class="hint">'+t.optional+'</span>';
     qs('label[for="phone"]').innerHTML=t.phone+' <span class="hint">'+t.optional+'</span>';
     qs('label[for="message"]').textContent=t.message; qs(".consent span").innerHTML=t.consent; qs(".submit").textContent=t.send;
-    qs(".response-note").textContent=t.reply; qs("#status").textContent=t.status; qs(".privacy").textContent=t.privacy;
+    qs(".response-note").textContent=t.reply; if(qs("#status").style.display!=="block") qs("#status").textContent=t.status; qs(".privacy").textContent=t.privacy;
     document.querySelectorAll(".lang-switch button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.lang===lang)));
     document.querySelectorAll("[data-contact-copy]").forEach(el=>el.textContent=t[el.dataset.contactCopy]);
     qs("#book").setAttribute("aria-label",t.bookTitle);qs("#booking-frame").title=t.bookTitle;
@@ -315,11 +340,15 @@
   if(review){qs("#message").value=review.summary;qs("#review-summary-note").hidden=false;}
 
   const formLoadedAt=Date.now();
+  const monotonicNow=()=>globalThis.performance?.now() ?? Date.now();
+  const formStartedAt=monotonicNow();
+  let contactPending=false;
 
   qs("#contact-form").addEventListener("submit", async e => {
     e.preventDefault();
     const form=qs("#contact-form");
-    if(!form.reportValidity()) return;
+    if(contactPending || !form.reportValidity()) return;
+    contactPending=true;
 
     const lang=document.documentElement.lang;
     const t=translations[lang]||translations.en;
@@ -337,24 +366,41 @@
       submittedAt:formLoadedAt
     };
 
+    const controls=Array.from(form.querySelectorAll("input,textarea,button"));
+    const disabledBefore=controls.map(control=>control.disabled);
+    controls.forEach(control=>{control.disabled=true;});
     button.disabled=true;
     button.textContent=t.sending;
     status.classList.remove("is-error");
     status.style.display="none";
 
+    let timeout;
     try{
+      // Autofill can complete the form before the anti-bot dwell time has elapsed.
+      const remaining=1600-(monotonicNow()-formStartedAt);
+      if(remaining>0) await new Promise(resolve=>setTimeout(resolve,remaining));
+      payload.elapsedMs=Math.max(0,Math.floor(monotonicNow()-formStartedAt));
+      const controller=new AbortController();
+      timeout=setTimeout(()=>controller.abort(),20000);
       const endpoint=window.NETWORK_SECURITY_CONTACT_ENDPOINT ||
         "https://network-security-assistant.vlad-network-security.workers.dev/contact";
       const response=await fetch(endpoint,{
         method:"POST",
         headers:{"Content-Type":"application/json"},
-        body:JSON.stringify(payload)
+        body:JSON.stringify(payload),
+        signal:controller.signal
       });
       const data=await response.json().catch(()=>({}));
 
-      if(!response.ok || !data.ok) throw new Error(data.error||"Delivery failed");
+      if(!response.ok || data.ok!==true) {
+        const error=new Error("Contact request not accepted");
+        error.status=response.status;
+        error.code=data.code;
+        error.requestId=data.requestId;
+        throw error;
+      }
 
-      status.textContent=t.status;
+      status.textContent=(translations[document.documentElement.lang]||translations.en).status;
       status.style.display="block";
       form.reset();
     }catch(error){
@@ -368,12 +414,29 @@
         payload.message
       ].join("\n");
       const fallbackHref="mailto:contact@weownit.net?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
+      const copy=translations[document.documentElement.lang]||translations.en;
+      const key=error.code==="CONTACT_TOO_FAST" ? "tooFast" :
+        error.code==="CONTACT_RATE_LIMITED" || error.status===429 ? "rateLimited" :
+        ["CONTACT_NOT_CONFIGURED","CONTACT_UNAVAILABLE"].includes(error.code) ? "unavailable" :
+        [400,413].includes(error.status) ? "invalid" : "unknown";
       status.classList.add("is-error");
-      status.innerHTML=t.error+' <a href="'+fallbackHref+'">'+t.fallback+' ↗</a>';
+      status.textContent=copy[key]+" ";
+      const fallback=document.createElement("a");
+      fallback.href=fallbackHref;
+      fallback.textContent=copy.fallback+" ↗";
+      status.appendChild(fallback);
+      if(typeof error.requestId==="string" && /^[0-9a-f-]{36}$/i.test(error.requestId)) {
+        const reference=document.createElement("span");
+        reference.textContent=" · "+copy.reference+": "+error.requestId;
+        status.appendChild(reference);
+      }
       status.style.display="block";
     }finally{
+      clearTimeout(timeout);
+      controls.forEach((control,index)=>{control.disabled=disabledBefore[index];});
+      contactPending=false;
       button.disabled=false;
-      button.textContent=t.send;
+      button.textContent=(translations[document.documentElement.lang]||translations.en).send;
     }
   });
 })();
