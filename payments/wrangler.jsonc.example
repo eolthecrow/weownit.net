@@ -1,0 +1,29 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "weownit-payments",
+  "main": "src/index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": true,
+  "vars": {
+    "STRIPE_WEBHOOK_ENABLED": "false",
+    "SANDBOX_FULFILLMENT_ENABLED": "false",
+    "SANDBOX_ADMIN_UPLOAD_ENABLED": "false",
+    "SANDBOX_ADMIN_PRICE_CREATE_ENABLED": "false",
+    "SANDBOX_PUBLIC_CATALOG_ENABLED": "false",
+    "SANDBOX_RECOVERY_ENABLED": "false",
+    "SANDBOX_RECOVERY_ORIGIN": "https://weownit-payments.vlad-network-security.workers.dev"
+  },
+  "r2_buckets": [
+    {
+      "binding": "TOOLKITS_R2",
+      "bucket_name": "weownit-toolkits"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "R2_BUDGET_DB",
+      "database_name": "weownit_r2_budget",
+      "database_id": "REPLACE_WITH_REAL_D1_UUID"
+    }
+  ]
+}

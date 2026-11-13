@@ -1,0 +1,92 @@
+{
+  "reviewed_at": "2026-11-12",
+  "stripe_live_account": "acct_1UPSRGGmXsHGE7C9",
+  "d1_database_name": "weownit_live_catalog",
+  "d1_database_id": "e3a475e0-7732-4fcc-b903-4db073182318",
+  "r2_bucket_name": "weownit-store-live-toolkits",
+  "worker_origin": "https://checkout.weownit.net",
+  "notes": "Read-only reconciliation baseline. zip_filename_hint is NOT a verified R2 key; check actual D1 association and R2 object metadata. Product and Price IDs observed in Stripe LIVE.",
+  "items": [
+    {
+      "sku": "WOI-CP-HARDENING-2026-V2",
+      "product_id": "prod_Vbx2hfTEEwsiDY",
+      "price_id": "price_1Uasj3GmXsHGE7C9YKDLoomO",
+      "ron": 12900,
+      "usd": 2900,
+      "eur": 2500,
+      "zip_filename_hint": "Check_Point_Gateway_Management_Security_Hardening_Vendor_Edition_2026_v2"
+    },
+    {
+      "sku": "WOI-INCIDENT-RESPONSE-2026-V2",
+      "product_id": "prod_Vbx3izo7yMaIaY",
+      "price_id": "price_1Uasj5GmXsHGE7C90bxPhsIW",
+      "ron": 17900,
+      "usd": 3900,
+      "eur": 3500,
+      "zip_filename_hint": "Cybersecurity_Incident_Response_Toolkit_2026_v2"
+    },
+    {
+      "sku": "WOI-FIREWALL-HARDENING-2026-V2",
+      "product_id": "prod_Vbx3aSkv4mEcu6",
+      "price_id": "price_1Uasj8GmXsHGE7C9kMSNogQ1",
+      "ron": 17900,
+      "usd": 3900,
+      "eur": 3500,
+      "zip_filename_hint": "Firewall_Security_Hardening_Toolkit_2026_v2"
+    },
+    {
+      "sku": "WOI-FORTINET-HARDENING-2026-V2",
+      "product_id": "prod_Vbx3JJAoWWewkq",
+      "price_id": "price_1UaslLGmXsHGE7C93KJzEua4",
+      "ron": 12900,
+      "usd": 2900,
+      "eur": 2500,
+      "zip_filename_hint": "Fortinet_FortiGate_Security_Hardening_Vendor_Edition_2026_v2"
+    },
+    {
+      "sku": "WOI-NETWORK-ARCH-2026-V2",
+      "product_id": "prod_Vbx3BwtRTsOTKW",
+      "price_id": "price_1UaslNGmXsHGE7C9EQ7K5DdU",
+      "ron": 19900,
+      "usd": 4500,
+      "eur": 3900,
+      "zip_filename_hint": "Network_Architecture_Segmentation_Toolkit_2026_v2"
+    },
+    {
+      "sku": "WOI-NETWORK-AUTOMATION-2026-V2",
+      "product_id": "prod_Vbx3FEwwy3R610",
+      "price_id": "price_1UaslPGmXsHGE7C9jcafEzOM",
+      "ron": 17900,
+      "usd": 3900,
+      "eur": 3500,
+      "zip_filename_hint": "Network_Automation_Compliance_Toolkit_2026_Production"
+    },
+    {
+      "sku": "WOI-NETWORK-ASSESSMENT-2026-V2",
+      "product_id": "prod_Vbx3mnr476pnHb",
+      "price_id": "price_1UaslRGmXsHGE7C9tuuLmqIY",
+      "ron": 14900,
+      "usd": 3300,
+      "eur": 2900,
+      "zip_filename_hint": "Network_Security_Assessment_Toolkit_2026_v2"
+    },
+    {
+      "sku": "WOI-PALOALTO-HARDENING-2026-V2",
+      "product_id": "prod_Vbx304HNvDRhXe",
+      "price_id": "price_1UaslTGmXsHGE7C9W4vvmVCW",
+      "ron": 12900,
+      "usd": 2900,
+      "eur": 2500,
+      "zip_filename_hint": "Palo_Alto_NGFW_Panorama_Security_Hardening_Vendor_Edition_2026_v2"
+    },
+    {
+      "sku": "WOI-TROUBLESHOOTING-2026-V2",
+      "product_id": "prod_Vbx3oJh2Vi6E9d",
+      "price_id": "price_1UaslWGmXsHGE7C9lpP1NRZ1",
+      "ron": 14900,
+      "usd": 3300,
+      "eur": 2900,
+      "zip_filename_hint": "Troubleshooting_Incident_Diagnostics_Toolkit_2026_Production"
+    }
+  ]
+}

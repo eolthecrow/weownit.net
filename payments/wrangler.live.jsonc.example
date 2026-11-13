@@ -1,0 +1,27 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "weownit-store-live-admin",
+  "main": "src/live-index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  // A preview URL would reach the admin without Cloudflare Access (token only).
+  "preview_urls": false,
+  "vars": {
+    "LIVE_ADMIN_ENABLED": "false",
+    "LIVE_ADMIN_WRITES_ENABLED": "false",
+    "LIVE_ADMIN_UPLOAD_ENABLED": "false",
+    "LIVE_PUBLIC_CATALOG_ENABLED": "false",
+    "LIVE_STORE_CONNECTED": "false",
+    "LIVE_EXPECTED_ACCOUNT_ID": "REPLACE_WITH_REVIEWED_LIVE_STRIPE_ACCOUNT_ID"
+  },
+  "r2_buckets": [
+    { "binding": "LIVE_TOOLKITS_R2", "bucket_name": "REPLACE_WITH_PRIVATE_LIVE_BUCKET" }
+  ],
+  "d1_databases": [
+    {
+      "binding": "LIVE_CATALOG_DB",
+      "database_name": "REPLACE_WITH_ISOLATED_LIVE_D1_NAME",
+      "database_id": "REPLACE_WITH_ISOLATED_LIVE_D1_UUID"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "weownit-payments-local-tests",
+  "main": "../src/index.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": false,
+  "r2_buckets": [{
+    "binding": "TOOLKITS_R2",
+    "bucket_name": "weownit-payments-local-test-only"
+  }],
+  "d1_databases": [{
+    "binding": "R2_BUDGET_DB",
+    "database_name": "weownit_payments_local_test_only",
+    "database_id": "00000000-0000-0000-0000-000000000001"
+  }]
+}
