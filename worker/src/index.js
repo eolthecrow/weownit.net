@@ -1,3 +1,4 @@
+import {contactConfiguration, deliveryFailure} from "./contact-delivery.js";
 import {handleCveRisk} from "./cve-risk.js";
 import {handleNewsletter} from "./newsletter.js";
 const MODEL = "@cf/zai-org/glm-4.7-flash";
@@ -65,6 +66,7 @@ function corsHeaders(origin) {
     "Access-Control-Allow-Origin": origin || "https://weownit.net",
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Expose-Headers": "Retry-After",
     "Access-Control-Max-Age": "86400",
     "Vary": "Origin",
   };
@@ -321,9 +323,16 @@ function escapeHtml(value) {
 }
 
 async function handleContact(request, env, origin) {
+  const requestId = crypto.randomUUID();
+  const reply = (data, status, retryAfter) => {
+    const response = json({ ...data, requestId }, status, origin);
+    response.headers.set("Cache-Control", "no-store");
+    if (retryAfter) response.headers.set("Retry-After", String(retryAfter));
+    return response;
+  };
   const parsed = await readBoundedJson(request);
-  if (parsed.tooLarge) return json({ error: "Request too large." }, 413, origin);
-  if (parsed.invalid) return json({ error: "Invalid JSON body." }, 400, origin);
+  if (parsed.tooLarge) return reply({ error: "Request too large.", code: "CONTACT_INVALID" }, 413);
+  if (parsed.invalid) return reply({ error: "Invalid JSON body.", code: "CONTACT_INVALID" }, 400);
   const body = parsed.body;
 
   const name = cleanLine(body?.name, 120);
@@ -337,18 +346,23 @@ async function handleContact(request, env, origin) {
   const submittedAt = Number(body?.submittedAt || 0);
 
   // Honeypot + simple timing check. These are lightweight abuse controls, not a substitute for rate limiting.
-  if (website) return json({ ok: true }, 200, origin);
-  // submittedAt is client-supplied, so this only stops naive bots; per-IP rate limiting covers the rest.
-  if (!Number.isFinite(submittedAt) || submittedAt <= 0 || Date.now() - submittedAt < 1500) {
-    return json({ error: "Please try again." }, 429, origin);
+  if (website) return reply({ ok: true }, 200);
+  // Both timing fields are client-supplied, not proof of humanity. Modern clients
+  // send monotonic elapsed time so an inaccurate device clock cannot block them.
+  const elapsed = body?.elapsedMs === undefined ? Date.now() - submittedAt : body.elapsedMs;
+  if ((body?.elapsedMs === undefined && (!Number.isFinite(submittedAt) || submittedAt <= 0)) ||
+      typeof elapsed !== "number" || !Number.isFinite(elapsed) || elapsed < 1500) {
+    return reply({ error: "Please wait a moment before sending.", code: "CONTACT_TOO_FAST" }, 429, 2);
   }
 
   if (!name || !isValidEmail(email) || !message || !consent) {
-    return json({ error: "Please complete the required fields." }, 400, origin);
+    return reply({ error: "Please complete the required fields.", code: "CONTACT_INVALID" }, 400);
   }
 
-  if (!env.EMAIL || !env.CONTACT_FROM_EMAIL || !isValidEmail(env.CONTACT_TO_EMAIL || "")) {
-    return json({ error: "Contact delivery is not configured yet." }, 503, origin);
+  const configuration = contactConfiguration(env);
+  if (!configuration.configured) {
+    console.error(JSON.stringify({ event: "contact_delivery_failure", requestId, code: "CONTACT_NOT_CONFIGURED", missing: configuration.missing }));
+    return reply({ error: "Contact delivery is unavailable.", code: "CONTACT_NOT_CONFIGURED" }, 503);
   }
 
   const subjectPrefix = {
@@ -384,9 +398,9 @@ async function handleContact(request, env, origin) {
 
   try {
     const result = await env.EMAIL.send({
-      to: env.CONTACT_TO_EMAIL,
+      to: configuration.to,
       from: {
-        email: env.CONTACT_FROM_EMAIL,
+        email: configuration.from,
         name: "Network & Security Consultant",
       },
       replyTo: {
@@ -398,15 +412,15 @@ async function handleContact(request, env, origin) {
       html: htmlBody,
     });
 
-    return json(
-      { ok: true, messageId: result?.messageId || null },
-      200,
-      origin
-    );
+    if (typeof result?.messageId !== "string" || !result.messageId.trim()) {
+      throw new Error("Email service did not acknowledge acceptance");
+    }
+    console.log(JSON.stringify({ event: "contact_delivery_accepted", requestId }));
+    return reply({ ok: true, messageId: result.messageId }, 200);
   } catch (error) {
-    console.error("Contact email error", error?.code, error?.message);
-    const status = error?.code === "E_RATE_LIMIT_EXCEEDED" ? 429 : 503;
-    return json({ error: "Message delivery failed. Please try again later." }, status, origin);
+    const failure = deliveryFailure(error);
+    console.error(JSON.stringify({ event: "contact_delivery_failure", requestId, code: failure.code, providerCode: failure.providerCode }));
+    return reply({ error: "Message delivery could not be confirmed.", code: failure.code }, failure.status, failure.retryAfter);
   }
 }
 
@@ -439,7 +453,7 @@ export default {
 
     if (await rateLimited(request, env, url.pathname)) {
       const headers = { "Retry-After": "60" };
-      return new Response(JSON.stringify({ error: "Too many requests. Please try again shortly." }), {
+      return new Response(JSON.stringify({ error: "Too many requests. Please try again shortly.", ...(url.pathname === "/contact" ? { code: "CONTACT_RATE_LIMITED", requestId: crypto.randomUUID() } : {}) }), {
         status: 429,
         headers: { "Content-Type": "application/json; charset=utf-8", ...corsHeaders(origin), ...headers },
       });
@@ -465,6 +479,13 @@ export default {
 
     if (request.method === "GET" && url.pathname === "/cve-risk") {
       return handleCveRisk(request, origin, ctx);
+    }
+
+    if (request.method === "GET" && url.pathname === "/health/contact") {
+      const { configured } = contactConfiguration(env);
+      const response = json({ ok: configured, service: "contact", contract: "contact-v1", configured, deliveryVerified: false }, configured ? 200 : 503, origin);
+      response.headers.set("Cache-Control", "no-store");
+      return response;
     }
 
     if (request.method === "GET" && url.pathname === "/health") {

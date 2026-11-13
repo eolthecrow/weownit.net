@@ -16,6 +16,8 @@ on:
     branches: [main]
     paths:
       - 'worker/src/**'
+      - 'worker/scripts/**'
+      - 'worker/test/**'
       - 'worker/wrangler.jsonc'
       - 'worker/package-lock.json'
       - 'assets/cve-risk-core.js'
@@ -46,10 +48,22 @@ jobs:
         run: npm ci
       - name: Test Worker before deploying
         run: node --test worker/test/*.mjs
+      - name: Validate contact configuration
+        run: node worker/scripts/check-contact-config.mjs
+      - name: Verify destination secret exists before deployment
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        working-directory: worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx wrangler secret list --format json | node scripts/check-contact-config.mjs --secrets
       - name: Deploy to Cloudflare
         if: env.CLOUDFLARE_API_TOKEN != ''
         working-directory: worker
         run: npx wrangler deploy
+      - name: Check deployed contact configuration and CORS without sending email
+        if: env.CLOUDFLARE_API_TOKEN != ''
+        run: node worker/scripts/check-contact-health.mjs
       - name: Explain skipped deploy
         if: env.CLOUDFLARE_API_TOKEN == ''
         run: echo "::notice::CLOUDFLARE_API_TOKEN is not set; tests passed but nothing was deployed. See the setup notes at the top of this workflow."
