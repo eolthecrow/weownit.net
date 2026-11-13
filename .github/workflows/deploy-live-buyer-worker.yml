@@ -69,9 +69,13 @@ jobs:
         working-directory: .
         run: |
           for i in $(seq 1 24); do
-            body=$(curl -fsS https://checkout.weownit.net/health 2>/dev/null) && break
+            code=$(curl -sS -o health.json -D health.headers -w '%{http_code}' https://checkout.weownit.net/health || echo 000)
+            [ "$code" = "200" ] && break
             sleep 10
           done
-          echo "health: $body"
-          echo "$body" | grep -q '"checkout":"disabled"' && echo "$body" | grep -q '"webhook":"disabled"' && echo "$body" | grep -q '"delivery":"disabled"' \
-            || { echo "::error::checkout.weownit.net/health did not report all paths disabled"; exit 1; }
+          echo "HTTP $code"
+          grep -iE '^(server|cf-ray|cf-mitigated|content-type|location):' health.headers || true
+          head -c 400 health.json; echo
+          [ "$code" = "200" ] && grep -q '"checkout":"disabled"' health.json && grep -q '"webhook":"disabled"' health.json \
+            && grep -q '"delivery":"disabled"' health.json \
+            || { echo "::error::checkout.weownit.net/health did not answer 200 with all paths disabled (HTTP $code)"; exit 1; }
