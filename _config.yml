@@ -8,6 +8,7 @@ include:
 # tools/index.html and store/index.html are redirects and stay published.
 exclude:
   - worker
+  - payments
   - tests
   - docs
   - scripts
