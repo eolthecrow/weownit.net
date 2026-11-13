@@ -1,9 +1,0 @@
-{
-  "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "network-security-advisory-chat",
-  "main": "worker.js",
-  "compatibility_date": "2026-09-01",
-  "ai": {
-    "binding": "AI"
-  }
-}

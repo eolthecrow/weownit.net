@@ -83,7 +83,7 @@ function configured(env, mode) {
       !/^acct_[A-Za-z0-9]+$/.test(env.LIVE_EXPECTED_ACCOUNT_ID || "")) return false;
   if (mode === "checkout") return env.LIVE_COMMERCIAL_SIGNOFF === "true" &&
       env.LIVE_CHECKOUT_ENABLED === "true" && env.LIVE_STORE_CONNECTED === "true" &&
-      apiKey(env.STRIPE_LIVE_CHECKOUT_KEY) && env.LIVE_TOOLKITS_R2?.head;
+      apiKey(env.STRIPE_LIVE_CHECKOUT_KEY) && env.LIVE_TOOLKITS_R2?.head && env.LIVE_CHECKOUT_LIMITER?.limit;
   if (mode === "webhook") return env.LIVE_WEBHOOK_ENABLED === "true" && apiKey(env.STRIPE_LIVE_FULFILLMENT_KEY) &&
       SIGNATURE.test(env.STRIPE_LIVE_WEBHOOK_SECRET || "");
   if (mode === "delivery") return env.LIVE_DELIVERY_ENABLED === "true" && apiKey(env.STRIPE_LIVE_FULFILLMENT_KEY) &&
@@ -107,6 +107,14 @@ async function paidNow(stripe, purchase) {
     charge.payment_intent === pi.id && charge.amount_captured === purchase.amount_total &&
     charge.currency === purchase.currency && charge.refunded !== true && charge.amount_refunded === 0 &&
     charge.disputed !== true;
+}
+// Per-client limits (Workers Rate Limiting bindings). Fails closed: a missing or
+// failing limiter refuses the request rather than allowing unbounded use.
+async function clientLimited(request, limiter, scope) {
+  if (!limiter?.limit) return true;
+  const client = request.headers.get("CF-Connecting-IP") || "unknown";
+  try { return (await limiter.limit({ key: scope + ":" + client })).success !== true; }
+  catch { return true; }
 }
 function lang(value) { return ["ro","en","fr"].includes(value) ? value : "ro"; }
 
@@ -166,7 +174,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
     }
     if (path.startsWith("/customer/recovery/") && request.method === "POST") {
       if (env.LIVE_RECOVERY_ENABLED !== "true" || !configured(env, "delivery") ||
-          !configured(env, "webhook") || !env.RESEND_RECOVERY_API_KEY) throw new Denied("service_unavailable", 503);
+          !configured(env, "webhook") || !env.RESEND_RECOVERY_API_KEY || !env.LIVE_RECOVERY_LIMITER?.limit) throw new Denied("service_unavailable", 503);
       originAllowed(url, env); sameOrigin(request);
       const stripe = fulfillmentStripe || createStripeClient(env.STRIPE_LIVE_FULFILLMENT_KEY);
       if (path === "/customer/recovery/request") {
@@ -175,7 +183,12 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
             typeof data.email !== "string" || data.email.length > 254 ||
             !["ro","en","fr"].includes(data.language)) throw new Denied("invalid_input");
         const generic = () => finish(respond({ status: "requested" }));
+        if (await clientLimited(request, env.LIVE_RECOVERY_LIMITER, "recovery")) return generic();
         if (!SESSION.test(data.session_id) || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) return generic();
+        // Unknown or unpaid session references never consume the shared hourly budget.
+        const eligible = await db.prepare(`SELECT 1 FROM live_checkout_attempts a JOIN live_purchases p ON p.session_id = a.session_id
+          WHERE a.session_id = ? AND a.access_expires_at > ? AND p.payment_status = 'paid'`).bind(data.session_id, now).first();
+        if (!eligible) return generic();
         const token = randomSecret(), id = crypto.randomUUID();
         await db.prepare("DELETE FROM live_recovery_requests WHERE created_at < ?").bind(now - 86400).run();
         const reserved = await db.prepare(`INSERT INTO live_recovery_requests (id,session_id,token_hash,created_at,expires_at)
@@ -238,7 +251,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
             AND NOT EXISTS (SELECT 1 FROM live_delivery_blocks b WHERE b.session_id = live_recovery_requests.session_id)
             AND NOT EXISTS (SELECT 1 FROM live_download_grants g WHERE g.session_id = live_recovery_requests.session_id AND (g.revoked = 1 OR g.uses >= 3)) RETURNING session_id`)
             .bind(now, claimId, tokenHash, now, now),
-          db.prepare(`UPDATE live_checkout_attempts SET owner_hash = ? WHERE session_id = ?
+          db.prepare(`UPDATE live_checkout_attempts SET owner_hash = ?,receipt_checks = 0 WHERE session_id = ?
             AND EXISTS (SELECT 1 FROM live_recovery_requests WHERE token_hash = ? AND claim_id = ?)`)
             .bind(ownerHash, record.session_id, tokenHash, claimId),
           db.prepare(`UPDATE live_download_grants SET owner_hash = ?,ticket_hash = ?,expires_at = 0 WHERE session_id = ?
@@ -258,6 +271,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       if (!configured(env, "checkout") || !configured(env, "webhook") || !configured(env, "delivery") ||
           env.LIVE_PUBLIC_CATALOG_ENABLED !== "true") throw new Denied("service_unavailable", 503);
       originAllowed(url, env); sameOrigin(request);
+      if (await clientLimited(request, env.LIVE_CHECKOUT_LIMITER, "checkout")) throw new Denied("checkout_limited", 429);
       const data = await body(request, ["product_id", "quantity", "language", "currency"]);
       if (!UUID.test(data.product_id || "") || !Number.isSafeInteger(data.quantity) ||
           data.quantity < 1 || data.quantity > 3 || !["ro","en","fr"].includes(data.language) ||
@@ -323,10 +337,14 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       if (!SESSION.test(data.session_id || "")) throw new Denied("invalid_input");
       const owner = cookie(request); if (!owner) throw new Denied("browser_required", 401);
       const ownerHash = await hash(owner);
-      const attempt = await db.prepare(`UPDATE live_checkout_attempts SET last_receipt_at = ?,receipt_checks = receipt_checks + 1
-        WHERE session_id = ? AND owner_hash = ? AND access_expires_at > ? AND last_receipt_at <= ? AND receipt_checks < 30
+      // At most 30 checks per rolling hour (not per purchase), so a delayed webhook
+      // cannot permanently lock a paying buyer out of their download.
+      const attempt = await db.prepare(`UPDATE live_checkout_attempts SET
+        receipt_checks = CASE WHEN last_receipt_at < ? THEN 1 ELSE receipt_checks + 1 END, last_receipt_at = ?
+        WHERE session_id = ? AND owner_hash = ? AND access_expires_at > ? AND last_receipt_at <= ?
+        AND (receipt_checks < 30 OR last_receipt_at < ?)
         AND NOT EXISTS (SELECT 1 FROM live_delivery_blocks b WHERE b.session_id = live_checkout_attempts.session_id) RETURNING *`)
-        .bind(now, data.session_id, ownerHash, now, now - 3).first();
+        .bind(now - 3600, now, data.session_id, ownerHash, now, now - 3, now - 3600).first();
       if (!attempt) throw new Denied("receipt_unavailable", 403);
       const purchase = await db.prepare("SELECT * FROM live_purchases WHERE session_id = ? AND payment_status = 'paid'")
         .bind(attempt.session_id).first();
@@ -461,6 +479,10 @@ export async function handleLiveWebhook(request, env, { stripeClient, clock = no
         line?.currency !== attempt.currency || line?.amount_total !== attempt.quantity * attempt.unit_amount ||
         session.currency !== attempt.currency || session.amount_total !== line.amount_total ||
         session.amount_subtotal !== line.amount_total) return respond({ error: "unmatched_amount" }, 409);
+    // Stripe does not guarantee event order: a refund or dispute may already have
+    // been delivered (and ignored) before this purchase existed.
+    const stillPaid = await paidNow(stripe, { payment_intent_id: session.payment_intent,
+      currency: attempt.currency, amount_total: line.amount_total });
     await db.batch([
       db.prepare(`INSERT INTO live_purchases
         (session_id,payment_intent_id,product_id,price_id,object_key,currency,amount_total,quantity,payment_status,observed_at)
@@ -474,6 +496,8 @@ export async function handleLiveWebhook(request, env, { stripeClient, clock = no
       db.prepare(`INSERT INTO live_payment_events (event_id,event_type,session_id,outcome,observed_at)
         SELECT ?,?,?,?,? WHERE EXISTS (SELECT 1 FROM live_purchases WHERE session_id = ?)
         ON CONFLICT(event_id) DO NOTHING`).bind(event.id, event.type, id, "recorded", now, id),
+      ...(stillPaid ? [] : [db.prepare(`INSERT OR IGNORE INTO live_delivery_blocks (session_id,reason,blocked_at)
+        SELECT ?,'payment-invalid',? WHERE EXISTS (SELECT 1 FROM live_purchases WHERE session_id = ?)`).bind(id, now, id)]),
     ]);
     const saved = await db.prepare("SELECT session_id FROM live_purchases WHERE session_id = ?").bind(id).first();
     if (!saved) return respond({ error: "persistence_unavailable" }, 503);
