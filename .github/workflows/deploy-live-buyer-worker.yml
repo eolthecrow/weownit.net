@@ -1,13 +1,25 @@
-name: Deploy LIVE buyer Worker (sales off)
+name: Deploy LIVE buyer Worker
 
 # Manual only. Deploys payments/ as the isolated weownit-store-live-checkout Worker
-# on checkout.weownit.net with EVERY sales switch off. It cannot open sales:
-# the guard step refuses any config where a LIVE_* switch is not "false".
+# on checkout.weownit.net in one of three modes. The config file always keeps every
+# switch "false"; the chosen mode turns on an exact, reviewed set with --var.
+#
+#   off               everything off (default state)
+#   test-window       owner's controlled LIVE purchase: checkout + webhook + delivery on,
+#                     recovery off. Close it with fulfillment-only right after the test.
+#   fulfillment-only  no new checkouts; webhook + delivery stay on so paid orders,
+#                     refunds and disputes are still recorded and enforced.
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: 'Mode'
+        required: true
+        type: choice
+        default: 'off'
+        options: ['off', 'test-window', 'fulfillment-only']
       confirm:
-        description: 'Type exactly: deploy weownit-store-live-checkout with sales off'
+        description: 'Type exactly: deploy weownit-store-live-checkout as <mode>'
         required: true
         type: string
 
@@ -28,16 +40,17 @@ jobs:
         working-directory: payments
     env:
       CONFIG: wrangler.live-checkout.production.jsonc
+      MODE: ${{ inputs.mode }}
       CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
       CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
       WRANGLER_SEND_METRICS: "false"
     steps:
-      - name: Require explicit confirmation
+      - name: Require explicit confirmation for the chosen mode
         working-directory: .
         env:
           CONFIRM: ${{ inputs.confirm }}
         run: |
-          [ "$CONFIRM" = "deploy weownit-store-live-checkout with sales off" ] || { echo "::error::Confirmation text does not match."; exit 1; }
+          [ "$CONFIRM" = "deploy weownit-store-live-checkout as $MODE" ] || { echo "::error::Confirmation must be exactly: deploy weownit-store-live-checkout as $MODE"; exit 1; }
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
         with:
@@ -48,7 +61,7 @@ jobs:
         run: |
           npm test
           npm run test:live-checkout
-      - name: Refuse any config that could open sales
+      - name: Check config file keeps every switch off, and compute the mode's overrides
         run: |
           node -e '
             const {parse}=require("jsonc-parser"),fs=require("fs");
@@ -58,24 +71,40 @@ jobs:
             const limiters=(c.ratelimits||[]).map(r=>r.name).sort().join();
             const problems=[];
             if(c.name!=="weownit-store-live-checkout")problems.push("unexpected Worker name");
-            if(open.length)problems.push("switches not false: "+open.map(([k])=>k).join(","));
+            if(open.length)problems.push("config file switches not false: "+open.map(([k])=>k).join(","));
             if(c.workers_dev!==false||c.preview_urls!==false)problems.push("workers_dev/preview_urls must be false");
             if(limiters!=="LIVE_CHECKOUT_LIMITER,LIVE_RECOVERY_LIMITER")problems.push("rate limiters missing");
+            const modes={
+              "off": [],
+              "test-window": ["LIVE_COMMERCIAL_SIGNOFF","LIVE_CHECKOUT_ENABLED","LIVE_STORE_CONNECTED",
+                              "LIVE_PUBLIC_CATALOG_ENABLED","LIVE_WEBHOOK_ENABLED","LIVE_DELIVERY_ENABLED"],
+              "fulfillment-only": ["LIVE_WEBHOOK_ENABLED","LIVE_DELIVERY_ENABLED"],
+            };
+            const on=modes[process.env.MODE];
+            if(!on)problems.push("unknown mode");
             if(problems.length){console.error(problems.join("; "));process.exit(1);}
-            console.log("Guard passed:",flags.length,"switches off; limiters present; no workers.dev/preview URLs.");'
-      - name: Deploy with sales off
-        run: npx wrangler deploy --config "$CONFIG"
-      - name: Verify health reports every path disabled
+            // Recovery stays off in every mode until the Resend key and journey are verified.
+            if(on.includes("LIVE_RECOVERY_ENABLED"))process.exit(1);
+            fs.writeFileSync(process.env.GITHUB_ENV,"VAR_ARGS="+on.map(k=>"--var "+k+":true").join(" ")+"\n",{flag:"a"});
+            console.log("Mode",process.env.MODE,"switches on:",on.length?on.join(", "):"none");'
+      - name: Deploy
+        run: npx wrangler deploy --config "$CONFIG" $VAR_ARGS
+      - name: Verify health matches the mode
         working-directory: .
         run: |
+          case "$MODE" in
+            off)              want='"checkout":"disabled","webhook":"disabled","delivery":"disabled"' ;;
+            test-window)      want='"checkout":"configured","webhook":"configured","delivery":"configured"' ;;
+            fulfillment-only) want='"checkout":"disabled","webhook":"configured","delivery":"configured"' ;;
+          esac
           for i in $(seq 1 24); do
             code=$(curl -sS -o health.json -D health.headers -w '%{http_code}' https://checkout.weownit.net/health || echo 000)
-            [ "$code" = "200" ] && break
+            [ "$code" = "200" ] && grep -qF "$want" health.json && break
             sleep 10
           done
           echo "HTTP $code"
-          grep -iE '^(server|cf-ray|cf-mitigated|content-type|location):' health.headers || true
+          grep -iE '^(server|cf-mitigated|content-type):' health.headers || true
           head -c 400 health.json; echo
-          [ "$code" = "200" ] && grep -q '"checkout":"disabled"' health.json && grep -q '"webhook":"disabled"' health.json \
-            && grep -q '"delivery":"disabled"' health.json \
-            || { echo "::error::checkout.weownit.net/health did not answer 200 with all paths disabled (HTTP $code)"; exit 1; }
+          [ "$code" = "200" ] && grep -qF "$want" health.json || {
+            echo "::error::Health does not match mode $MODE. 'disabled' where 'configured' is expected usually means a missing or malformed Stripe secret (rk_live_/sk_live_ keys, whsec_ secret) or D1/R2 binding."
+            exit 1; }
