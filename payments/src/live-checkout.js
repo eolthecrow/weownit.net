@@ -17,7 +17,8 @@ const SUPPORTED_CURRENCIES = new Set(["ron", "eur", "usd"]);
 const SIGNATURE = /^whsec_[A-Za-z0-9]{24,}$/;
 const nowSeconds = () => Math.floor(Date.now() / 1000);
 class Denied extends Error {
-  constructor(code, status = 400) { super(code); this.status = status; }
+  // reason is for operator logs only; buyers only ever see code.
+  constructor(code, status = 400, reason = code) { super(code); this.status = status; this.reason = reason; }
 }
 const randomSecret = () => Array.from(crypto.getRandomValues(new Uint8Array(32)), n => n.toString(16).padStart(2, "0")).join("");
 const integrationIdentifier = () => "weownit-live-" + Array.from(crypto.getRandomValues(new Uint8Array(8)),
@@ -93,9 +94,9 @@ function configured(env, mode) {
 function originAllowed(url, env) {
   const configuredOrigin = env.LIVE_CHECKOUT_ORIGIN;
   let target;
-  try { target = new URL(configuredOrigin); } catch { throw new Denied("service_unavailable", 503); }
+  try { target = new URL(configuredOrigin); } catch { throw new Denied("service_unavailable", 503, "origin_config_invalid"); }
   if (target.protocol !== "https:" || target.origin !== url.origin || target.pathname !== "/" ||
-      target.search || target.hash || target.username || target.password) throw new Denied("service_unavailable", 503);
+      target.search || target.hash || target.username || target.password) throw new Denied("service_unavailable", 503, "origin_mismatch");
 }
 async function paidNow(stripe, purchase) {
   const pi = await stripe.paymentIntents.retrieve(purchase.payment_intent_id, { expand: ["latest_charge"] });
@@ -115,6 +116,15 @@ async function clientLimited(request, limiter, scope) {
   const client = request.headers.get("CF-Connecting-IP") || "unknown";
   try { return (await limiter.limit({ key: scope + ":" + client })).success !== true; }
   catch { return true; }
+}
+// Operator diagnostics only: error class and codes, never request bodies,
+// emails, keys, tickets or cookies. Stripe masks keys in its own messages.
+function logFailure(where, error) {
+  try {
+    console.error(JSON.stringify({ event: "live_checkout_failure", where,
+      reason: error?.reason, name: error?.name, type: error?.type, code: error?.code, statusCode: error?.statusCode,
+      message: String(error?.message || "").replace(/(sk|rk)_(live|test)_[A-Za-z0-9]+/g, "$1_$2_[redacted]").slice(0, 240) }));
+  } catch { /* logging must never change the response */ }
 }
 function lang(value) { return ["ro","en","fr"].includes(value) ? value : "ro"; }
 
@@ -269,7 +279,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
     }
     if (path === "/customer/checkout" && request.method === "POST") {
       if (!configured(env, "checkout") || !configured(env, "webhook") || !configured(env, "delivery") ||
-          env.LIVE_PUBLIC_CATALOG_ENABLED !== "true") throw new Denied("service_unavailable", 503);
+          env.LIVE_PUBLIC_CATALOG_ENABLED !== "true") throw new Denied("service_unavailable", 503, "checkout_gates_closed");
       originAllowed(url, env); sameOrigin(request);
       if (await clientLimited(request, env.LIVE_CHECKOUT_LIMITER, "checkout")) throw new Denied("checkout_limited", 429);
       const data = await body(request, ["product_id", "quantity", "language", "currency"]);
@@ -289,7 +299,7 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
       if (!found || found.size !== product.object_size_bytes) throw new Denied("product_unavailable", 404);
       const stripe = checkoutStripe || createStripeClient(env.STRIPE_LIVE_CHECKOUT_KEY);
       const account = await stripe.accounts.retrieveCurrent();
-      if (account?.id !== env.LIVE_EXPECTED_ACCOUNT_ID) throw new Denied("service_unavailable", 503);
+      if (account?.id !== env.LIVE_EXPECTED_ACCOUNT_ID) throw new Denied("service_unavailable", 503, "stripe_account_mismatch");
       const price = await stripe.prices.retrieve(product.price_id, { expand: ["product", "currency_options"] });
       if (price?.object !== "price" || price.livemode !== true || price.active !== true ||
           price.type !== "one_time" || price.currency !== "ron" || price.unit_amount !== product.unit_amount ||
@@ -319,15 +329,15 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
         cancel_url: url.origin + "/buy/" + product.id + "?cancelled=1&lang=" + data.language,
         expires_at: now + 3600, locale: data.language,
       }, { idempotencyKey: "weownit-live-" + id });
-      let checkoutUrl; try { checkoutUrl = new URL(session.url); } catch { throw new Denied("service_unavailable", 503); }
+      let checkoutUrl; try { checkoutUrl = new URL(session.url); } catch { throw new Denied("service_unavailable", 503, "session_url_invalid"); }
       if (session.object !== "checkout.session" || !SESSION.test(session.id || "") || session.livemode !== true ||
           session.currency !== chosenCurrency || session.amount_total !== chosenPrice.unit_amount * data.quantity ||
           checkoutUrl.origin !== "https://checkout.stripe.com" || checkoutUrl.username || checkoutUrl.password) {
-        throw new Denied("service_unavailable", 503);
+        throw new Denied("service_unavailable", 503, "session_mismatch");
       }
       const saved = await db.prepare("UPDATE live_checkout_attempts SET session_id = ? WHERE id = ? AND owner_hash = ? AND session_id IS NULL RETURNING id")
         .bind(session.id, id, ownerHash).first();
-      if (!saved) throw new Denied("service_unavailable", 503);
+      if (!saved) throw new Denied("service_unavailable", 503, "attempt_save_failed");
       return finish(respond({ checkout_url: checkoutUrl.href }, 201));
     }
     if (path === "/customer/receipt" && request.method === "POST") {
@@ -409,8 +419,12 @@ export async function handleLiveCustomer(request, env, { checkoutStripe, fulfill
     }
     throw new Denied("not_found", 404);
   } catch (error) {
-    if (error instanceof Denied) return finish(respond({ error: error.message }, error.status));
+    if (error instanceof Denied) {
+      if (error.status >= 500) logFailure(path, error);
+      return finish(respond({ error: error.message }, error.status));
+    }
     if (error instanceof R2LimitReached) return finish(respond({ error: "r2_limit" }, 429));
+    logFailure(path, error);
     return finish(respond({ error: "service_unavailable" }, 503));
   }
 }
@@ -502,5 +516,5 @@ export async function handleLiveWebhook(request, env, { stripeClient, clock = no
     const saved = await db.prepare("SELECT session_id FROM live_purchases WHERE session_id = ?").bind(id).first();
     if (!saved) return respond({ error: "persistence_unavailable" }, 503);
     return respond({ received: true, outcome: "recorded" });
-  } catch { return respond({ error: "webhook_unavailable" }, 503); }
+  } catch (error) { logFailure("/stripe/webhook", error); return respond({ error: "webhook_unavailable" }, 503); }
 }
