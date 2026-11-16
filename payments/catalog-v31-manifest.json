@@ -1,0 +1,140 @@
+{
+  "version": "3.1",
+  "items": [
+    {
+      "product_id": "prod_Vbx2hfTEEwsiDY",
+      "price_id": "price_1Uasj3GmXsHGE7C9YKDLoomO",
+      "sku": "WOI-CP-HARDENING-2026-V2",
+      "file": "weownit_checkpoint_v3_1.zip",
+      "sha256": "ef6a29b1527f537024e786b1b6c3b74e10bd3e681fafd6299fda1ac2670f9a8d",
+      "bytes": 420718,
+      "proposed_object_key": "products/v3.1/ef6a29b1527f537024e786b1b6c3b74e10bd3e681fafd6299fda1ac2670f9a8d/weownit_checkpoint_v3_1.zip",
+      "currencies": {
+        "ron": 12900,
+        "eur": 2500,
+        "usd": 2900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3izo7yMaIaY",
+      "price_id": "price_1Uasj5GmXsHGE7C90bxPhsIW",
+      "sku": "WOI-INCIDENT-RESPONSE-2026-V2",
+      "file": "weownit_incident_response_v3_1.zip",
+      "sha256": "46e5b7aedd2883d27b844a5796899e1de31a61cddfa9ce564c8746d53fc50fef",
+      "bytes": 1312786,
+      "proposed_object_key": "products/v3.1/46e5b7aedd2883d27b844a5796899e1de31a61cddfa9ce564c8746d53fc50fef/weownit_incident_response_v3_1.zip",
+      "currencies": {
+        "ron": 17900,
+        "eur": 3500,
+        "usd": 3900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3aSkv4mEcu6",
+      "price_id": "price_1Uasj8GmXsHGE7C9kMSNogQ1",
+      "sku": "WOI-FIREWALL-HARDENING-2026-V2",
+      "file": "weownit_firewall_hardening_v3_1.zip",
+      "sha256": "ac732ac9c10e17677a47765229b0c661e50e21c9a2042a14d87ae7cd7697deb1",
+      "bytes": 1403215,
+      "proposed_object_key": "products/v3.1/ac732ac9c10e17677a47765229b0c661e50e21c9a2042a14d87ae7cd7697deb1/weownit_firewall_hardening_v3_1.zip",
+      "currencies": {
+        "ron": 17900,
+        "eur": 3500,
+        "usd": 3900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3JJAoWWewkq",
+      "price_id": "price_1UaslLGmXsHGE7C93KJzEua4",
+      "sku": "WOI-FORTINET-HARDENING-2026-V2",
+      "file": "weownit_fortinet_v3_1.zip",
+      "sha256": "0eef79b8fd074c170e2a7c3e78654c0df3a09ab05f75856bb97dcfc4bad9f006",
+      "bytes": 422438,
+      "proposed_object_key": "products/v3.1/0eef79b8fd074c170e2a7c3e78654c0df3a09ab05f75856bb97dcfc4bad9f006/weownit_fortinet_v3_1.zip",
+      "currencies": {
+        "ron": 12900,
+        "eur": 2500,
+        "usd": 2900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3BwtRTsOTKW",
+      "price_id": "price_1UaslNGmXsHGE7C9EQ7K5DdU",
+      "sku": "WOI-NETWORK-ARCH-2026-V2",
+      "file": "weownit_architecture_segmentation_v3_1.zip",
+      "sha256": "bcafa7d5bbd0b8e306d432181d433f4c11c41d67dcfd9bb33552bf352d59f64b",
+      "bytes": 1260564,
+      "proposed_object_key": "products/v3.1/bcafa7d5bbd0b8e306d432181d433f4c11c41d67dcfd9bb33552bf352d59f64b/weownit_architecture_segmentation_v3_1.zip",
+      "currencies": {
+        "ron": 19900,
+        "eur": 3900,
+        "usd": 4500
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3FEwwy3R610",
+      "price_id": "price_1UaslPGmXsHGE7C9jcafEzOM",
+      "sku": "WOI-NETWORK-AUTOMATION-2026-V2",
+      "file": "weownit_automation_compliance_v3_1.zip",
+      "sha256": "bed26279e3c7fce5bc92a35aa375434d7e6f001a091ff3d56868cadb8f122edc",
+      "bytes": 1119741,
+      "proposed_object_key": "products/v3.1/bed26279e3c7fce5bc92a35aa375434d7e6f001a091ff3d56868cadb8f122edc/weownit_automation_compliance_v3_1.zip",
+      "currencies": {
+        "ron": 17900,
+        "eur": 3500,
+        "usd": 3900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3mnr476pnHb",
+      "price_id": "price_1UaslRGmXsHGE7C9tuuLmqIY",
+      "sku": "WOI-NETWORK-ASSESSMENT-2026-V2",
+      "file": "weownit_security_assessment_v3_1.zip",
+      "sha256": "3b84051e2e157c9a93c76742a8ba9d2cf2e40c257cd82054f2422d27b5cba555",
+      "bytes": 1319191,
+      "proposed_object_key": "products/v3.1/3b84051e2e157c9a93c76742a8ba9d2cf2e40c257cd82054f2422d27b5cba555/weownit_security_assessment_v3_1.zip",
+      "currencies": {
+        "ron": 14900,
+        "eur": 2900,
+        "usd": 3300
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx304HNvDRhXe",
+      "price_id": "price_1UaslTGmXsHGE7C9W4vvmVCW",
+      "sku": "WOI-PALOALTO-HARDENING-2026-V2",
+      "file": "weownit_palo_alto_v3_1.zip",
+      "sha256": "91f600fe3eb0244109fd03e9ec7150ad1ef77191b7709d78d846218945419f48",
+      "bytes": 422410,
+      "proposed_object_key": "products/v3.1/91f600fe3eb0244109fd03e9ec7150ad1ef77191b7709d78d846218945419f48/weownit_palo_alto_v3_1.zip",
+      "currencies": {
+        "ron": 12900,
+        "eur": 2500,
+        "usd": 2900
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    },
+    {
+      "product_id": "prod_Vbx3oJh2Vi6E9d",
+      "price_id": "price_1UaslWGmXsHGE7C9lpP1NRZ1",
+      "sku": "WOI-TROUBLESHOOTING-2026-V2",
+      "file": "weownit_troubleshooting_v3_1.zip",
+      "sha256": "90b7bf1c5cd711a2bf95e56ca5328546f528afb820833fbdb1525f2e493c4572",
+      "bytes": 1289337,
+      "proposed_object_key": "products/v3.1/90b7bf1c5cd711a2bf95e56ca5328546f528afb820833fbdb1525f2e493c4572/weownit_troubleshooting_v3_1.zip",
+      "currencies": {
+        "ron": 14900,
+        "eur": 2900,
+        "usd": 3300
+      },
+      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+    }
+  ]
+}
