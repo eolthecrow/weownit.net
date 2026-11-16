@@ -5,9 +5,9 @@
  */
 (() => {
   "use strict";
-  // Separate owner-reviewed release. Keep OFF until signed webhook + actual
-  // fulfillment + revocation/rollback + tax/consumer/rights signoff pass.
-  const LIVE_STORE_CATALOG_UI_ENABLED = false;
+  // Owner-authorized public Store release; backend gates and exact catalog
+  // validation still control whether any purchase link is displayed.
+  const LIVE_STORE_CATALOG_UI_ENABLED = true;
   const ORIGIN = "https://checkout.weownit.net";
   const PRODUCTS = Object.freeze({
     networkAssessment: ["Network Security Assessment Toolkit 2026",14900,2900,3300],
