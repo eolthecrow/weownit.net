@@ -73,7 +73,7 @@ function fixture() {
 
 test("product catalog has exactly nine standalone ZIP prices and no payment CTA", () => {
   assert.equal((store.match(/class="buy is-contact" data-buy-key="/g) || []).length, 9);
-  assert.match(store, /<script src="assets\/store-pricing\.js\?v=2"><\/script>/);
+  assert.match(store, /<script src="assets\/store-pricing\.js\?v=3"><\/script>/);
   assert.match(store, /window\.WeOwnITStorePricing\.render\(lang\)/);
   assert.doesNotMatch(code, /checkout\.stripe\.com|payment_link|createCheckout|\/stripe\/webhook/);
   assert.doesNotMatch(store, /2026 v2\.1/);
@@ -95,12 +95,19 @@ test("RON, EUR and USD values agree with the approved 2026-11-12 grid", () => {
   };
   assert.equal(cards.size, 9);
   window.WeOwnITStorePricing.render("ro");
-  for (const [id, amounts] of Object.entries(checks))
-    assert.equal(cards.get(id).price.textContent, amounts[0], "RON: " + id);
+  for (const lang of ["ro", "en", "fr"]) {
+    window.WeOwnITStorePricing.render(lang);
+    for (const [id, amounts] of Object.entries(checks))
+      assert.equal(cards.get(id).price.textContent, amounts[2], "Default USD: " + id);
+  }
 
   function fixtureButtons() { return archive.intro.children[0].children[1].children; }
   let buttons = fixtureButtons();
   assert.deepEqual(Array.from(buttons, b => b.textContent), ["RON", "USD", "EUR"]);
+  buttons[0].listeners.click();
+  for (const [id, amounts] of Object.entries(checks))
+    assert.equal(cards.get(id).price.textContent, amounts[0], "RON: " + id);
+  buttons = fixtureButtons();
   buttons[1].listeners.click();
   for (const [id, amounts] of Object.entries(checks))
     assert.equal(cards.get(id).price.textContent, amounts[2], "USD: " + id);

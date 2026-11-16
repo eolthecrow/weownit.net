@@ -63,7 +63,7 @@
     const words = I18N[lang];
     const archive = document.getElementById("planned-catalog");
     if (!archive) return;
-    if (!userSelectedCurrency) chosenCurrency = lang === "ro" ? "RON" : "EUR";
+    if (!userSelectedCurrency) chosenCurrency = "USD";
 
     let toolbar = document.getElementById("store-currency-picker");
     if (!toolbar) {
