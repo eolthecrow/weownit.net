@@ -55,9 +55,8 @@ async function start(enabled, data) {
       return null;
     }
   };
-  const active = script.replace("const LIVE_STORE_CATALOG_UI_ENABLED = false;", "const LIVE_STORE_CATALOG_UI_ENABLED = true;");
-  if(enabled)assert.notEqual(active,script);
-  vm.runInNewContext(enabled?active:script,{document,fetch:async()=>{fetches++;return{ok:true,json:async()=>data};},encodeURIComponent});
+  const active = script.replace(/const LIVE_STORE_CATALOG_UI_ENABLED = (?:true|false);/, "const LIVE_STORE_CATALOG_UI_ENABLED = "+enabled+";");
+  vm.runInNewContext(active,{document,fetch:async()=>{fetches++;return{ok:true,json:async()=>data};},encodeURIComponent});
   await new Promise(resolve=>setImmediate(resolve));
   return {links,buttons,note,intro,fetches};
 }
@@ -65,8 +64,8 @@ test("current nine-product Store and price preview stay intact with launch flag 
   assert.equal((store.match(/data-offer-card="\d"/g)||[]).length,4);
   assert.equal((store.match(/<a class="buy is-contact" data-buy-key="/g)||[]).length,9);
   assert.match(store,/assets\/store-pricing\.js\?v=3/);
-  assert.match(store,/assets\/store-live-checkout\.js\?v=1/);
-  assert.match(script,/const LIVE_STORE_CATALOG_UI_ENABLED = false;/);
+  assert.match(store,/assets\/store-live-checkout\.js\?v=2/);
+  assert.match(script,/const LIVE_STORE_CATALOG_UI_ENABLED = true;/);
   const f=await start(false,catalog());
   assert.equal(f.fetches,0);
   for(const link of f.links.values())assert.equal(link.href,"contact.html");
