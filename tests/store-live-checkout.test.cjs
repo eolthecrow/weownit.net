@@ -64,7 +64,7 @@ async function start(enabled, data) {
 test("current nine-product Store and price preview stay intact with launch flag disabled",async()=>{
   assert.equal((store.match(/data-offer-card="\d"/g)||[]).length,4);
   assert.equal((store.match(/<a class="buy is-contact" data-buy-key="/g)||[]).length,9);
-  assert.match(store,/assets\/store-pricing\.js\?v=2/);
+  assert.match(store,/assets\/store-pricing\.js\?v=3/);
   assert.match(store,/assets\/store-live-checkout\.js\?v=1/);
   assert.match(script,/const LIVE_STORE_CATALOG_UI_ENABLED = false;/);
   const f=await start(false,catalog());
