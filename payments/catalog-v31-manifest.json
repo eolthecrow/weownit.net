@@ -14,7 +14,8 @@
         "eur": 2500,
         "usd": 2900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "1d9d9ea8-9abf-484a-9634-72aa180d861e"
     },
     {
       "product_id": "prod_Vbx3izo7yMaIaY",
@@ -29,7 +30,8 @@
         "eur": 3500,
         "usd": 3900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "45e5868e-4e34-44b8-954b-42d6a226ed0b"
     },
     {
       "product_id": "prod_Vbx3aSkv4mEcu6",
@@ -44,7 +46,8 @@
         "eur": 3500,
         "usd": 3900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf"
     },
     {
       "product_id": "prod_Vbx3JJAoWWewkq",
@@ -59,7 +62,8 @@
         "eur": 2500,
         "usd": 2900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "6cde3094-a73a-4070-b27c-6bcbc10251c9"
     },
     {
       "product_id": "prod_Vbx3BwtRTsOTKW",
@@ -74,7 +78,8 @@
         "eur": 3900,
         "usd": 4500
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "809df436-bb8c-441c-8d6e-91dd552636cc"
     },
     {
       "product_id": "prod_Vbx3FEwwy3R610",
@@ -89,7 +94,8 @@
         "eur": 3500,
         "usd": 3900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "a22b8ab0-3aa8-4064-85a0-c41f2283523c"
     },
     {
       "product_id": "prod_Vbx3mnr476pnHb",
@@ -104,7 +110,8 @@
         "eur": 2900,
         "usd": 3300
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "03e200e8-31d2-4bc8-9083-7cdffabe76df"
     },
     {
       "product_id": "prod_Vbx304HNvDRhXe",
@@ -119,7 +126,8 @@
         "eur": 2500,
         "usd": 2900
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "d8848e04-7369-42ca-ae98-da7c38a2dbe7"
     },
     {
       "product_id": "prod_Vbx3oJh2Vi6E9d",
@@ -134,7 +142,8 @@
         "eur": 2900,
         "usd": 3300
       },
-      "status": "uploaded_sha256_verified_pending_admin_reconciliation"
+      "status": "reconciled_active_draft",
+      "catalog_id": "d2ddbc8a-db49-4a5b-919a-9fee949b1bba"
     }
   ]
 }

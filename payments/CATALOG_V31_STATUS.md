@@ -42,18 +42,28 @@ package language. Fortinet titles no longer imply standalone FortiManager
 coverage; Panorama and automation limitations are explicit. Design, pricing
 and checkout gates are unchanged. Three Store test suites pass.
 
-## Pending admin access
+## D1 reconciliation applied
 
-Unauthenticated admin API returns HTTP 302 to Access. No local admin token
-or Access session was available in the task environment. Obtain the existing
-secure authentication method; never paste credentials into chat or Git.
-Then re-inventory the catalog, archive obsolete active rows reversibly,
-create/reuse exactly nine current mappings through the existing admin API,
-verify ZIP sizes and all currencies, and keep visibility draft. Preserve
-historical products, price history, attempts, purchases and delivery blocks.
+Following explicit owner authorization to use the existing Cloudflare access,
+reconciled D1 directly with the catalog schema and admin write semantics.
+Fresh Stripe/R2 reads and private `reconcile-before.sql` export preceded writes.
+The sole active row was already the current Palo Alto Price: its ID and price
+were preserved and its ZIP updated. Added the other eight products with RON
+price history and sixteen EUR/USD snapshots. All nine remain active/draft.
+The three obsolete rows were already archived and remain unchanged.
 
-Do not mark catalog reconciliation, buyer delivery or publication complete
-until those operations and their verification have actually succeeded.
+The guarded SQL refuses changed preexisting catalog rows. It was rehearsed on
+the exported SQLite database before remote execution. Private evidence includes
+`reconcile.sql`, apply log, pre/post exports and fresh Stripe/R2 inventories.
+Post-write comparisons confirm nine exact mappings and all 27 currency amounts,
+all previous price/currency history retained, all three archived rows unchanged,
+and every non-catalog table (including orders/delivery) unchanged. Existing
+Palo Alto EUR/USD snapshots were retained. No Stripe mutation or duplicate.
+
+Buyer health remains checkout disabled, webhook configured, delivery configured.
+This completes catalog association, not buyer delivery acceptance or publication.
+Refresh the authenticated admin to view the nine drafts; hide archived entries
+for the current catalog. Authentication is no longer a blocker for this change.
 
 ## R2 applied
 
