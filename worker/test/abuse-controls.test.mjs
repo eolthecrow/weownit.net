@@ -102,3 +102,14 @@ test("missing rate-limit bindings fail open so first deploys keep working", asyn
   const res = await worker.fetch(post("/chat", { message: "hi" }, { Origin: site }), env, {});
   assert.equal(res.status, 200);
 });
+
+test("/download-event rejects oversized POST bodies", async () => {
+  const big = JSON.stringify({ file: "network-assessment", pad: "x".repeat(70 * 1024) });
+  const res = await worker.fetch(post("/download-event", big, { Origin: site }), {}, {});
+  assert.equal(res.status, 413);
+});
+
+test("/download-event still rejects malformed JSON with 400", async () => {
+  const res = await worker.fetch(post("/download-event", "{nope", { Origin: site }), {}, {});
+  assert.equal(res.status, 400);
+});

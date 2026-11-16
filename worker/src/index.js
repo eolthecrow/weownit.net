@@ -208,12 +208,10 @@ async function handleDownloadEvent(request, env, origin) {
     language = normalizeLanguage(url.searchParams.get("lang"));
     source = cleanText(url.searchParams.get("source"), 40) || "store";
   } else {
-    let body;
-    try {
-      body = JSON.parse(await request.text());
-    } catch {
-      return json({ error: "Invalid download event." }, 400, origin);
-    }
+    const parsed = await readBoundedJson(request);
+    if (parsed.tooLarge) return json({ error: "Download event too large." }, 413, origin);
+    if (parsed.invalid) return json({ error: "Invalid download event." }, 400, origin);
+    const body = parsed.body;
 
     fileKey = cleanText(body?.file, 80) || "network-assessment";
     language = normalizeLanguage(body?.lang);
