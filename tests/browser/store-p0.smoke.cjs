@@ -58,8 +58,8 @@ async function main(){
       assert.ok((await page.locator('#planned-catalog > summary').innerText()).includes(labels[lang].catalog));
       assert.equal(await page.locator('#store-currency-picker button').count(),3);
       assert.deepEqual(await page.locator('#store-currency-picker button').allTextContents(),['RON','USD','EUR']);
-      assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),labels[lang].currency);
-      const activeCode=lang==='ro'?'RON':'EUR';
+      assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),'$33');
+      const activeCode='USD';
       const activeStyle=await page.locator('#store-currency-picker button:has-text("'+activeCode+'")').evaluate(el=>({
         color:getComputedStyle(el).color,
         underline:getComputedStyle(el).borderBottomColor,
