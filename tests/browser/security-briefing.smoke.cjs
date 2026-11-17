@@ -51,11 +51,19 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          background:getComputedStyle(el).backgroundImage,waveDisplay:getComputedStyle(el.querySelector('.rd-wave')).display,
          width:illustration.width,assetWidth:el.getBoundingClientRect().width };
      });
-     assert.ok(blendedHero.image.includes('approved-original-hero.avif'),JSON.stringify(blendedHero));
-     assert.ok(blendedHero.mask.includes('linear-gradient'),JSON.stringify(blendedHero));
+     assert.ok(blendedHero.image.includes('approved-home-hero-20261117.avif'),JSON.stringify(blendedHero));
+     assert.equal(blendedHero.mask,'none','Transparent artwork replaces the old hard-edged/masked crop');
      assert.ok(blendedHero.background.includes('radial-gradient'),JSON.stringify(blendedHero));
      assert.equal(blendedHero.waveDisplay,'none');
      assert.ok(parseFloat(blendedHero.width)<blendedHero.assetWidth,'Overlay must blend into full hero canvas');
+     const boxes=await page.evaluate(()=>{
+       const a=s=>{const r=document.querySelector(s).getBoundingClientRect();return {w:r.width,h:r.height,y:r.y}};
+       return {nav:a('.rd-nav'),hero:a('.rd-hero'),offers:a('.rd-offers'),card:a('.rd-offer'),briefing:a('.rd-briefing')};
+     });
+     assert.ok(boxes.nav.h<=65,'Keep compact reference nav: '+JSON.stringify(boxes));
+     assert.ok(boxes.hero.h>=263&&boxes.hero.h<380,'Keep the reference hero proportions: '+JSON.stringify(boxes));
+     assert.ok(boxes.card.h>=405&&boxes.card.h<560,'Keep 3 aligned offer panels: '+JSON.stringify(boxes));
+     assert.ok(boxes.offers.y<boxes.briefing.y,'Briefing must remain below cards');
      const heroFile=await page.request.get(base+'/assets/approved-original-hero.avif?v=1');
      assert.equal(heroFile.status(),200);
      assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'0');
