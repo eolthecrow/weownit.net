@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
-import { TOOLKIT_DETAILS, TOOLKIT_LABELS, renderToolkitDetails } from '../src/toolkit-details.js';
+import { TOOLKIT_DETAILS, TOOLKIT_LABELS, TOOLKIT_RENDER_JS } from '../src/toolkit-details.js';
 import { liveCustomerAsset } from '../src/live-customer-page.js';
 import { customerAsset } from '../src/customer-page.js';
+const renderToolkitDetails = vm.runInNewContext(TOOLKIT_RENDER_JS + ';renderToolkitDetails');
 
 function dom() {
   function element(tag) {

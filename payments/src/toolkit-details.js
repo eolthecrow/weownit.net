@@ -296,7 +296,7 @@ export const TOOLKIT_LABELS = {
 
 // Also serialized into the same-origin LIVE client bundle. Use DOM text nodes,
 // never HTML from a product title or catalog response. Unknown products stay hidden.
-export function renderToolkitDetails(document, productId, product, language, details, labels) {
+export const TOOLKIT_RENDER_JS = String.raw`function renderToolkitDetails(document, productId, product, language, details, labels) {
   const container = document.getElementById('toolkitDetails');
   if (!container) return;
   container.replaceChildren();
@@ -326,4 +326,4 @@ export function renderToolkitDetails(document, productId, product, language, det
   for (const text of [t.requirements, t.usage, t.validation]) add(before, 'p', text);
   container.appendChild(before);
   container.hidden = false;
-}
+}`;

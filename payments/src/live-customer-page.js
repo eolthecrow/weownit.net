@@ -1,5 +1,5 @@
-import { ASSESSMENT_ID, ASSESSMENT_COPY, ASSESSMENT_CSS, assessmentPurchaseHtml, renderAssessmentPage } from "./assessment-purchase-page.js";
-import { TOOLKIT_DETAILS, TOOLKIT_LABELS, renderToolkitDetails } from "./toolkit-details.js";
+import { ASSESSMENT_ID, ASSESSMENT_COPY, ASSESSMENT_CSS, assessmentPurchaseHtml, ASSESSMENT_RENDER_JS } from "./assessment-purchase-page.js";
+import { TOOLKIT_DETAILS, TOOLKIT_LABELS, TOOLKIT_RENDER_JS } from "./toolkit-details.js";
 import { customerAsset, CUSTOMER_JS, CUSTOMER_TRANSLATIONS } from "./customer-page.js";
 
 // Keep the established responsive RO/EN/FR checkout page. Do not change the
@@ -72,7 +72,7 @@ function liveJs(enabled) {
       currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : 'ron';
       $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;`);
   script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n    renderAssessmentPage(document, productId, product, language, assessmentCopy, toolkitLabels, toolkitDetails);\n  }");
-  const detailBundle = "const toolkitDetails = " + JSON.stringify(TOOLKIT_DETAILS) + ";\nconst toolkitLabels = " + JSON.stringify(TOOLKIT_LABELS) + ";\n" + renderToolkitDetails.toString() + ";\n";
+  const detailBundle = "const toolkitDetails = " + JSON.stringify(TOOLKIT_DETAILS) + ";\nconst toolkitLabels = " + JSON.stringify(TOOLKIT_LABELS) + ";\n" + TOOLKIT_RENDER_JS + ";\n";
   script = replaceRequired(script, "  render();\n  if (productId)", `  const imageDialog = $('assessmentImage');
   if (imageDialog) {
     document.querySelectorAll('[data-preview]').forEach(button => button.addEventListener('click', () => {
@@ -85,7 +85,7 @@ function liveJs(enabled) {
   }
   render();
   if (productId)`);
-  const assessmentBundle = "const assessmentCopy = " + JSON.stringify(ASSESSMENT_COPY) + ";\n" + renderAssessmentPage.toString() + ";\n";
+  const assessmentBundle = "const assessmentCopy = " + JSON.stringify(ASSESSMENT_COPY) + ";\n" + ASSESSMENT_RENDER_JS + ";\n";
   return "'use strict';\n" + assessmentBundle + detailBundle + "const translations = " + JSON.stringify(translations(enabled)) + ";\n" + script;
 }
 
