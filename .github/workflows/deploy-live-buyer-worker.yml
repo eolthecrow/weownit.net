@@ -1,9 +1,10 @@
 name: Deploy LIVE buyer Worker
 
 # Manual only. Deploys payments/ as the isolated weownit-store-live-checkout Worker
-# on checkout.weownit.net in one of three modes. The config file always keeps every
+# on checkout.weownit.net in one of four modes. The config file always keeps every
 # switch "false"; the chosen mode turns on an exact, reviewed set with --var.
 #
+#   production        public nine-toolkit sales; recovery remains off
 #   off               everything off (default state)
 #   test-window       owner's controlled LIVE purchase: checkout + webhook + delivery on,
 #                     recovery off. Close it with fulfillment-only right after the test.
@@ -17,7 +18,7 @@ on:
         required: true
         type: choice
         default: 'off'
-        options: ['off', 'test-window', 'fulfillment-only']
+        options: ['off', 'test-window', 'fulfillment-only', 'production']
       confirm:
         description: 'Type exactly: deploy weownit-store-live-checkout as <mode>'
         required: true
@@ -76,6 +77,8 @@ jobs:
             if(limiters!=="LIVE_CHECKOUT_LIMITER,LIVE_RECOVERY_LIMITER")problems.push("rate limiters missing");
             const modes={
               "off": [],
+              "production": ["LIVE_COMMERCIAL_SIGNOFF","LIVE_CHECKOUT_ENABLED","LIVE_STORE_CONNECTED",
+                             "LIVE_PUBLIC_CATALOG_ENABLED","LIVE_WEBHOOK_ENABLED","LIVE_DELIVERY_ENABLED"],
               "test-window": ["LIVE_COMMERCIAL_SIGNOFF","LIVE_CHECKOUT_ENABLED","LIVE_STORE_CONNECTED",
                               "LIVE_PUBLIC_CATALOG_ENABLED","LIVE_WEBHOOK_ENABLED","LIVE_DELIVERY_ENABLED"],
               "fulfillment-only": ["LIVE_WEBHOOK_ENABLED","LIVE_DELIVERY_ENABLED"],
@@ -94,7 +97,7 @@ jobs:
         run: |
           case "$MODE" in
             off)              want='"checkout":"disabled","webhook":"disabled","delivery":"disabled"' ;;
-            test-window)      want='"checkout":"configured","webhook":"configured","delivery":"configured"' ;;
+            test-window|production) want='"checkout":"configured","webhook":"configured","delivery":"configured"' ;;
             fulfillment-only) want='"checkout":"disabled","webhook":"configured","delivery":"configured"' ;;
           esac
           for i in $(seq 1 24); do
