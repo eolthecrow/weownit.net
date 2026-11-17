@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' 'sha256-6UepIlw+eeVglvILB3q9H3npFAp0sIHeKY9nex0AtD4=' 'sha256-kEMB/ygjr6DF4zapXrdjUhvqcK4A2JomXz5KtpwIP9g=' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
+  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' 'sha256-QzupYJM4tJ0GfD+NopqJWDCBk8tIcOytDRQkuLVjN60=' 'sha256-kEMB/ygjr6DF4zapXrdjUhvqcK4A2JomXz5KtpwIP9g=' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#0a151c">
   <meta name="description" content="Explore public security checks, the ServiceWatch pilot, scoped validation and practical network security toolkits from weownit.net.">
@@ -159,6 +159,22 @@
     .offer-card h3{font-size:clamp(1.45rem,2.5vw,2rem);letter-spacing:-.04em;line-height:1.12;margin:0}
     .offer-card p{margin:0;color:var(--muted);font-size:.9rem}.offer-outcome{font-size:.78rem;color:#d6e0de;margin-top:auto;padding-top:.4rem}
     .offer-card .buy{margin-top:.4rem;font-size:.86rem}.offer-card .buy:focus-visible,.catalog-archive>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    /* ServiceWatch card: exact two-action hierarchy from the approved reference. */
+    #servicewatch-product{background:#0d1e26;border-color:#36545d;border-radius:14px;padding:clamp(1rem,2vw,1.5rem);gap:.68rem}
+    #servicewatch-product .offer-status{font-size:.67rem;font-weight:700}
+    #servicewatch-product h3{font-size:clamp(1.35rem,2vw,1.62rem);letter-spacing:-.035em}
+    #servicewatch-product p{font-size:.875rem;line-height:1.55}
+    #servicewatch-product .offer-outcome{display:none}
+    #servicewatch-product .buy{min-height:50px;border-radius:5px;font-size:.9rem;font-weight:700;margin-top:.1rem}
+    #servicewatch-product .sw-how{background:#6ce2c7;color:#082b2d}
+    #servicewatch-product .sw-how:hover{background:#a1f0de}
+    #servicewatch-product .sw-how::before{content:"▶";display:inline-grid;place-items:center;width:13px;height:13px;border-radius:50%;background:#082b2d;color:#6ce2c7;font-size:7px;line-height:1;margin-right:10px;flex:none}
+    #servicewatch-product .sw-contact{margin-top:0;background:transparent;color:#6ce2c7}
+    #servicewatch-product .sw-contact:hover{background:#6ce2c7;color:#082b2d}
+    .sw-contact [data-sw-contact-lang]{display:none}
+    html[lang="en"] .sw-contact [data-sw-contact-lang="en"],
+    html[lang="ro"] .sw-contact [data-sw-contact-lang="ro"],
+    html[lang="fr"] .sw-contact [data-sw-contact-lang="fr"]{display:inline}
     .catalog-archive{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:1.2rem}.catalog-archive>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;color:var(--accent);font-weight:700}
     .catalog-archive>summary::-webkit-details-marker{display:none}.catalog-archive>summary::after{content:"+";font-size:1.4rem;line-height:1}.catalog-archive[open]>summary::after{content:"−"}
     .catalog-archive .catalog-intro{margin-top:1.3rem}.catalog-archive .catalog-disclaimer{margin-bottom:1rem}
@@ -235,9 +251,14 @@
         <article class="offer-card" data-offer-card="1" id="servicewatch-product">
           <span class="offer-status">Controlled pilot</span>
           <h3>ServiceWatch</h3>
-          <p>Track external exposure, findings and remediation evidence. The current pilot uses a restricted test environment.</p>
+          <p>Understand what's visible from the internet, identify potential risks, and know what to address first.</p>
           <div class="offer-outcome">Outcome: evidence-led exposure review, under validation</div>
-          <a class="buy is-contact" href="contact.html">Ask about the pilot →</a>
+          <a class="buy sw-how" href="servicewatch-how.html">How ServiceWatch Works</a>
+          <a class="buy is-contact sw-contact" href="contact.html">
+            <span data-sw-contact-lang="en">Ask about the pilot →</span>
+            <span data-sw-contact-lang="ro" lang="ro">Întreabă despre pilot →</span>
+            <span data-sw-contact-lang="fr" lang="fr">Se renseigner sur le pilote →</span>
+          </a>
         </article>
         <article class="offer-card" data-offer-card="2" id="advanced-validation-product">
           <span class="offer-status">Scoped enquiry</span>
@@ -579,7 +600,7 @@
       offerGridLabel:"Security product options",
       offerCards:[
         {status:"Available · Public sources",title:"Exposure Snapshot",description:"Review public information about a domain and identify what deserves a closer look. This is not a vulnerability scan.",outcome:"Outcome: initial checks and source references",action:"Open free checks →"},
-        {status:"Controlled pilot",title:"ServiceWatch",description:"Track external exposure, findings and remediation evidence. The current pilot uses a restricted test environment.",outcome:"Outcome: evidence-led exposure review, under validation",action:"Ask about the pilot →"},
+        {status:"Controlled pilot",title:"ServiceWatch",description:"Understand what's visible from the internet, identify potential risks, and know what to address first.",outcome:"Outcome: evidence-led exposure review, under validation",action:"How ServiceWatch Works"},
         {status:"Scoped enquiry",title:"Advanced Validation",description:"Discuss an authorized security assessment with defined targets, engineer review and practical next steps.",outcome:"Outcome: agreed scope before any active testing",action:"Discuss an assessment →"},
         {status:"Nine toolkits · Prices available",title:"Security Toolkits",description:"Browse nine professionally structured digital toolkits and a free assessment report sample. Sales open after final release checks.",outcome:"Prices from 129 RON · Checkout not yet active",action:"Browse nine toolkit prices →"}
       ],
@@ -645,7 +666,7 @@
       offerGridLabel:"Opțiuni de produse de securitate",
       offerCards:[
         {status:"Disponibil · Surse publice",title:"Exposure Snapshot",description:"Verifică informațiile publice despre un domeniu și identifică aspectele care merită analizate. Nu este o scanare de vulnerabilități.",outcome:"Rezultat: verificări inițiale și referințe la surse",action:"Deschide verificările gratuite →"},
-        {status:"Pilot controlat",title:"ServiceWatch",description:"Urmărește expunerea externă, constatările și dovezile de remediere. Pilotul actual folosește un mediu de test restricționat.",outcome:"Rezultat: evaluare a expunerii bazată pe dovezi, în validare",action:"Întreabă despre pilot →"},
+        {status:"Pilot controlat",title:"ServiceWatch",description:"Înțelege ce este vizibil din internet, identifică riscurile potențiale și află ce trebuie abordat mai întâi.",outcome:"Rezultat: evaluare a expunerii bazată pe dovezi, în validare",action:"Cum funcționează ServiceWatch"},
         {status:"Discuție pentru definirea scopului",title:"Advanced Validation",description:"Discută o evaluare de securitate autorizată, cu ținte definite, revizuire de către inginer și pași practici.",outcome:"Rezultat: scop convenit înaintea testării active",action:"Discută o evaluare →"},
         {status:"Nouă toolkit-uri · Prețuri afișate",title:"Security Toolkits",description:"Explorează nouă toolkit-uri digitale și un raport exemplu gratuit. Vânzările vor începe după verificările finale.",outcome:"Prețuri de la 129 RON · Checkout încă inactiv",action:"Vezi prețurile celor nouă toolkit-uri →"}
       ],
@@ -711,7 +732,7 @@
       offerGridLabel:"Options de produits de sécurité",
       offerCards:[
         {status:"Disponible · Sources publiques",title:"Exposure Snapshot",description:"Examinez les informations publiques d'un domaine et repérez les points à approfondir. Il ne s'agit pas d'un scan de vulnérabilités.",outcome:"Résultat : premiers contrôles et références aux sources",action:"Ouvrir les vérifications gratuites →"},
-        {status:"Pilote contrôlé",title:"ServiceWatch",description:"Suivez l'exposition externe, les constats et les preuves de remédiation. Le pilote actuel utilise un environnement de test restreint.",outcome:"Résultat : revue de l'exposition fondée sur des preuves, en validation",action:"Demander des informations sur le pilote →"},
+        {status:"Pilote contrôlé",title:"ServiceWatch",description:"Comprenez ce qui est visible sur Internet, identifiez les risques potentiels et sachez quoi traiter en priorité.",outcome:"Résultat : revue de l'exposition fondée sur des preuves, en validation",action:"Comment fonctionne ServiceWatch"},
         {status:"Demande de cadrage",title:"Advanced Validation",description:"Discutez une évaluation de sécurité autorisée, avec des cibles définies, une revue par un ingénieur et des actions concrètes.",outcome:"Résultat : périmètre convenu avant tout test actif",action:"Discuter d'une évaluation →"},
         {status:"Neuf kits · Prix affichés",title:"Security Toolkits",description:"Explorez neuf kits numériques et un exemple gratuit de rapport. Les ventes ouvriront après les vérifications finales.",outcome:"Prix à partir de 129 RON · Paiement inactif",action:"Voir les prix des neuf kits →"}
       ],
