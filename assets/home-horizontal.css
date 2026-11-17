@@ -139,3 +139,32 @@ opacity:.96;pointer-events:none}
 @media(max-width:1120px){.rd-hero-right::before{left:-4%;width:140px;height:170px;top:19%}}
 @media(max-width:900px){.rd-wave{width:96%;opacity:.78}.rd-hero-right::before{display:none}}
 @media(max-width:700px){.rd-wave{width:119%;height:90%;top:9%;opacity:.34;background-position:63% center;background-size:cover}.rd-hero-shield{width:63px;height:67px}}
+
+/* 2026-11-17 — approved ORIGINAL hero art, cropped directly from the owner's
+   reference screenshot. Unlike the earlier procedural meshes, this keeps the
+   exact mountains, shield, checkmark, checklist and corner brackets.
+   The top-left brand mark remains the unchanged assets/va-symbol.svg. */
+@media(min-width:1121px){
+  .rd-hero{background:#06171e}
+  .rd-wave{
+    inset:0 0 auto auto;
+    width:min(55.86vw,858px);
+    height:100%;
+    min-height:320px;
+    opacity:1;
+    background-image:url("approved-original-hero.avif?v=1");
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    background-position:right center
+  }
+  /* The approved illustration contains the shield and checklist as pixels.
+     Preserve the existing semantic checklist in the document for assistive
+     technology without drawing another shield over the same image. */
+  .rd-hero-right{opacity:0;pointer-events:none}
+  .rd-hero-right::before{display:none}
+}
+@media(max-width:1120px){
+  .rd-hero-right{opacity:1}
+  .rd-wave{background-image:url("hero-mountain-shield-fidelity.svg?v=1")}
+}
+/* Preserve the original graphic's aspect ratio when resized on wide screens. */
