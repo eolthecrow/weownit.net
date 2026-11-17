@@ -64,7 +64,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      assert.equal(art.overlay,'grid');
      const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
      assert.equal(asset.status(),200);
-     assert.ok((asset.headers()['content-type']||'').includes('image/avif'));
+     const magic=await asset.body();assert.ok(magic.length>12000 && magic.toString('ascii',4,12).startsWith('ftypavif'), 'AVIF bytes must be served, not an error page');
      const desktop=await page.locator('#rd-root .rd-hero').evaluate(el=>{
        const b=el.getBoundingClientRect(),shieldFrame={left:b.width*.762,center:b.width*.658};
        return {w:b.width,h:b.height,frame:shieldFrame};
