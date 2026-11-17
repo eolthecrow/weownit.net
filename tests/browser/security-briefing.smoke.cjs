@@ -64,7 +64,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      assert.equal(art.overlay,'grid');
      const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
      assert.equal(asset.status(),200);
-     assert.ok((await asset.headerValue('content-type')||'').includes('image/avif'));
+     assert.ok((asset.headers()['content-type']||'').includes('image/avif'));
      const desktop=await page.locator('#rd-root .rd-hero').evaluate(el=>{
        const b=el.getBoundingClientRect(),shieldFrame={left:b.width*.762,center:b.width*.658};
        return {w:b.width,h:b.height,frame:shieldFrame};
