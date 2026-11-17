@@ -164,3 +164,67 @@ test("LIVE admin offers guarded Stripe archiving on desktop and mobile without t
     }
   } finally { await browser.close(); }
 });
+
+// Exercise the actual LIVE buyer HTML and generated client bundle, with local
+// synthetic product responses only. No Stripe session or network payment occurs.
+test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and language switches", { timeout: 90_000 }, async () => {
+  const { liveCustomerAsset } = await import('../src/live-customer-page.js');
+  const { TOOLKIT_DETAILS, TOOLKIT_LABELS } = await import('../src/toolkit-details.js');
+  const browser = await chromium.launch({ headless: true,
+    ...(process.env.CATALOG_CHROMIUM_PATH ? { executablePath: process.env.CATALOG_CHROMIUM_PATH } : {}),
+    args: ['--no-sandbox', '--disable-dev-shm-usage'] });
+  try {
+    for (const viewport of [{width:1365,height:950},{width:390,height:844}]) {
+      const context = await browser.newContext({viewport});
+      const page = await context.newPage(), errors = [], writes = [];
+      page.on('pageerror', e => errors.push(e.message));
+      await page.route('**/*', async route => {
+        const request = route.request(), url = new URL(request.url());
+        if (request.method() !== 'GET') { writes.push(url.pathname); return route.abort(); }
+        if (url.origin !== 'https://checkout.weownit.net') return route.abort();
+        if (url.pathname.startsWith('/customer/product/')) {
+          const id = url.pathname.split('/').pop(), entry = TOOLKIT_DETAILS[id];
+          return route.fulfill({status:200,contentType:'application/json',body:JSON.stringify({product:{id,
+            title:entry?.title || 'Unlisted product',unit_amount:14900,currency:'ron',minor_units:2,
+            prices:[{currency:'ron',unit_amount:14900},{currency:'eur',unit_amount:2900},{currency:'usd',unit_amount:3300}]}})});
+        }
+        const asset = await liveCustomerAsset(url.pathname);
+        return asset ? route.fulfill({status:200,headers:Object.fromEntries(asset.headers),body:await asset.text()})
+          : route.fulfill({status:404,body:'Not found'});
+      });
+      for (const [id, entry] of Object.entries(TOOLKIT_DETAILS)) {
+        await page.goto('https://checkout.weownit.net/buy/' + id + '?lang=en');
+        await page.locator('#toolkitDetails').waitFor({state:'visible'});
+        for (const lang of ['en','ro','fr']) {
+          await page.locator('[data-lang="'+lang+'"]').click();
+          assert.equal(await page.locator('#productTitle').textContent(),entry.title);
+          assert.deepEqual(await page.locator('#toolkitDetails h3').allTextContents(),TOOLKIT_LABELS[lang].sections);
+          const copy = await page.locator('#toolkitDetails').textContent();
+          for (const paragraph of entry.text[lang]) assert.ok(copy.includes(paragraph));
+          assert.equal(await page.locator('#checkoutButton').isEnabled(),true);
+          assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+        }
+        await page.locator('#currency').selectOption('usd');
+        await page.locator('#quantity').selectOption('2');
+        assert.match(await page.locator('#total').textContent(),/66/);
+        if (id === '03e200e8-31d2-4bc8-9083-7cdffabe76df') {
+          const { ASSESSMENT_COPY } = await import('../src/assessment-purchase-page.js');
+          assert.equal(await page.locator('.assessment-page').count(), 1);
+          assert.equal(await page.locator('.assessment-thumb').count(), 3);
+          assert.ok(await page.locator('.assessment-thumb img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)));
+          await page.locator('.assessment-thumb').first().click();
+          assert.equal(await page.locator('#assessmentImage').isVisible(), true);
+          await page.locator('#assessmentClose').click();
+          await page.getByText(ASSESSMENT_COPY.fr.usage, {exact:true}).click();
+        } else await page.locator('#toolkitDetails summary').click();
+        assert.equal(await page.getByText(TOOLKIT_LABELS.fr.usage,{exact:true}).isVisible(),true);
+      }
+      await page.goto('https://checkout.weownit.net/buy/00000000-0000-4000-8000-000000000000?lang=en');
+      await page.locator('#checkoutForm').waitFor({state:'visible'});
+      assert.equal(await page.locator('#toolkitDetails').isVisible(),false);
+      assert.deepEqual(errors,[]);
+      assert.deepEqual(writes,[]);
+      await context.close();
+    }
+  } finally { await browser.close(); }
+});
