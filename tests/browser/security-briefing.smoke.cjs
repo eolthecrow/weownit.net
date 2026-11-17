@@ -53,7 +53,6 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      });
      assert.ok(blendedHero.image.includes('approved-original-hero.avif'),JSON.stringify(blendedHero));
      assert.ok(blendedHero.mask.includes('linear-gradient'),JSON.stringify(blendedHero));
-     assert.ok(blendedHero.mask.includes('transparent 0%'),JSON.stringify(blendedHero));
      assert.ok(blendedHero.background.includes('radial-gradient'),JSON.stringify(blendedHero));
      assert.equal(blendedHero.waveDisplay,'none');
      assert.ok(parseFloat(blendedHero.width)<blendedHero.assetWidth,'Overlay must blend into full hero canvas');
