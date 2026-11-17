@@ -84,8 +84,14 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      assert.equal(art.hiddenShield,'1');
      assert.equal(art.overlay,'none');
      assert.equal(await page.locator('#rd-root .rd-hero-shield').isVisible(),width<=700||width>=701);
-     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el,'::before').display);
-     assert.equal(frame,'block','Shield frame missing on '+width+'px in '+lang);
+     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>{
+       const style=getComputedStyle(el,'::before'),shield=el.querySelector('.rd-hero-shield').getBoundingClientRect();
+       const parent=el.getBoundingClientRect();
+       return {display:style.display,frameCenter:parent.left+parseFloat(style.left)+parseFloat(style.width)/2,shieldCenter:shield.left+shield.width/2};
+     });
+     assert.equal(frame.display,'block','Shield frame missing on '+width+'px in '+lang);
+     assert.ok(Math.abs(frame.frameCenter-frame.shieldCenter)<16,
+       'Shield must be centered in corner frame '+JSON.stringify(frame));
    }
    assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
    await geometry(page);
