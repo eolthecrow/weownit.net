@@ -87,7 +87,5 @@ document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 document.addEventListener('click',function(e){if(!nav.contains(e.target)&&!menu.contains(e.target))close()});
 var names={essential:'Essential Exposure Review · pilot',monitoring:'Continuous Monitoring · proposed',advanced:'Advanced Validation · scoped enquiry'};
 root.querySelectorAll('[data-rd-path]').forEach(function(btn){btn.addEventListener('click',function(){root.querySelectorAll('[data-rd-path]').forEach(function(b){b.setAttribute('aria-pressed',String(b===btn))});root.querySelector('#rd-sw-label').textContent=names[btn.dataset.rdPath]})});
-var ns='http://www.w3.org/2000/svg',wave=document.createElementNS(ns,'svg');wave.setAttribute('viewBox','0 0 1080 350');wave.setAttribute('preserveAspectRatio','none');
-for(var r=0;r<24;r++)for(var c=0;c<88;c++){var x=c*12.5,n=c/87,y=85+r*6.7+Math.sin(n*11+r*.055)*28+Math.cos(n*6.5)*29,fade=Math.max(.08,Math.min(.85,(n*.9+.15)*(1-Math.abs(r-12)/35)));var dot=document.createElementNS(ns,'circle');dot.setAttribute('cx',x.toFixed(1));dot.setAttribute('cy',y.toFixed(1));dot.setAttribute('r',(0.5+fade*.8).toFixed(2));dot.setAttribute('fill','#53e2d0');dot.setAttribute('opacity',fade.toFixed(2));wave.appendChild(dot)}
-root.querySelector('.rd-wave').appendChild(wave);
+// Decorative particle waves are now a reusable external SVG; no 2,000-node runtime SVG.
 })();
