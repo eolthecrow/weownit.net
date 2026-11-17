@@ -34,15 +34,15 @@ export const ASSESSMENT_COPY = {
 };
 
 // Reuse the real, tested forms and their IDs; never embed a second checkout implementation.
-export function assessmentPurchaseHtml(original) {
+export function assessmentPurchaseHtml(original, options = {}) {
  const form = original.match(/<form id="checkoutForm"[\s\S]*?<\/form>/)?.[0];
  const tail = original.match(/<form id="downloadForm"[\s\S]*?<\/section>/)?.[0];
  if (!form || !tail) throw new Error('Assessment page is incompatible with the buyer template');
- const gallery = ASSESSMENT_IMAGES.map((src,i)=>`<button type="button" class="assessment-thumb" data-preview="${i}"><img src="${src}" alt="" width="834" height="1179"><strong data-preview-title="${i}"></strong><span data-assessment="enlarge"></span></button>`).join('');
- return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Network Security Assessment Toolkit — weownit.net</title><link rel="stylesheet" href="/customer/style.css"><script src="/customer/app.js" defer></script></head><body class="assessment-page">
+ const gallery = (options.images || ASSESSMENT_IMAGES).map((src,i)=>`<button type="button" class="assessment-thumb" data-preview="${i}"><img src="${src}" alt="" width="834" height="1179"><strong data-preview-title="${i}"></strong><span data-assessment="enlarge"></span></button>`).join('');
+ return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${options.title || "Network Security Assessment Toolkit"} — weownit.net</title><link rel="stylesheet" href="/customer/style.css"><script src="/customer/app.js" defer></script></head><body class="assessment-page">
  <header class="assessment-header"><span class="brand">weownit.net</span><nav aria-label="Language"><button type="button" data-lang="ro">RO</button><button type="button" data-lang="en">EN</button><button type="button" data-lang="fr">FR</button></nav></header>
  <main><a id="assessmentBack" class="assessment-back" href="https://weownit.net/store.html" data-assessment="back"></a><h1 id="heading" hidden></h1><p id="status" role="status" aria-live="polite"></p>
- <div class="assessment-layout"><div class="assessment-content"><div class="assessment-hero"><p class="assessment-eyebrow" data-assessment="eyebrow"></p><h1 id="productTitle">Network Security Assessment Toolkit 2026</h1><p class="assessment-lead" data-assessment="outcome"></p><p class="assessment-chips" data-assessment="edition"></p>
+ <div class="assessment-layout"><div class="assessment-content"><div class="assessment-hero"><p class="assessment-eyebrow" data-assessment="eyebrow"></p><h1 id="productTitle">${options.title || "Network Security Assessment Toolkit 2026"}</h1><p class="assessment-lead" data-assessment="outcome"></p><p class="assessment-chips" data-assessment="edition"></p>
  <div id="assessmentPreview" hidden><div class="assessment-gallery">${gallery}</div><p class="assessment-caption" data-assessment="caption"></p><a class="assessment-sample" id="assessmentSample" href="https://weownit.net/downloads/WeOwnIT_Network_Security_Assessment_Sample_EN_2026.pdf" target="_blank" rel="noopener" data-assessment="sample"></a></div></div>
  <div class="assessment-body"><section id="toolkitDetails" aria-labelledby="toolkitDetailsHeading" hidden></section><div id="assessmentExtra" hidden></div></div></div>
  <aside id="purchaseOptions" class="assessment-purchase" aria-labelledby="purchaseTitle"><h2 id="purchaseTitle" data-assessment="purchase"></h2><div id="details" hidden><p id="price" aria-live="polite"></p><p class="assessment-price-note" data-assessment="oneTime"></p></div>${form}<p class="assessment-small" data-assessment="licence"></p><p class="assessment-small" data-assessment="payment"></p><p class="assessment-small" data-assessment="delivery"></p><p class="assessment-small" data-i18n="sandbox"></p></aside></div>
@@ -55,6 +55,7 @@ export const ASSESSMENT_RENDER_JS = String.raw`function renderAssessmentPage(doc
  const lang = Object.hasOwn(copy, language) ? language : 'en', t = copy[lang];
  document.querySelectorAll('[data-assessment]').forEach(el => { el.textContent = t[el.dataset.assessment]; });
  document.getElementById('assessmentBack').href = 'https://weownit.net/store.html?lang=' + lang;
+ document.getElementById('assessmentSample').hidden = !t.sample;
  document.getElementById('assessmentSample').href = 'https://weownit.net/downloads/WeOwnIT_Network_Security_Assessment_Sample_' + lang.toUpperCase() + '_2026.pdf';
  document.querySelectorAll('[data-preview-title]').forEach(el => { el.textContent = t.previews[Number(el.dataset.previewTitle)]; });
  document.querySelectorAll('[data-preview]').forEach(button => {

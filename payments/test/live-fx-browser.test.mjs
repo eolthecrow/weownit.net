@@ -209,10 +209,14 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
         await page.locator('#currency').selectOption('usd');
         await page.locator('#quantity').selectOption('2');
         assert.match(await page.locator('#total').textContent(),/66/);
-        if (id === '03e200e8-31d2-4bc8-9083-7cdffabe76df') {
+        if (['03e200e8-31d2-4bc8-9083-7cdffabe76df','8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf'].includes(id)) {
           const { ASSESSMENT_COPY } = await import('../src/assessment-purchase-page.js');
           assert.equal(await page.locator('.assessment-page').count(), 1);
           assert.equal(await page.locator('.assessment-thumb').count(), 3);
+          if (id === '8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf') {
+            assert.match(await page.locator('.assessment-lead').textContent(), /firewall/i);
+            assert.equal(await page.locator('#assessmentSample').isVisible(), false);
+          }
           await page.locator('.assessment-again').click();
           assert.equal(await page.locator('#currency').evaluate(el => el === document.activeElement), true);
           assert.ok(await page.locator('#checkoutButton').evaluate(el => {
