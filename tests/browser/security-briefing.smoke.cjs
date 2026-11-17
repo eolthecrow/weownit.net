@@ -45,7 +45,17 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const waveBackground=await page.locator('#rd-root .rd-wave').evaluate(el=>getComputedStyle(el).backgroundImage);
    if(width===1440&&lang==='en'){
-     assert.ok(waveBackground.includes('approved-original-hero.avif'),waveBackground);
+     const blendedHero=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const illustration=getComputedStyle(el,'::before');
+       return { image:illustration.backgroundImage,mask:illustration.maskImage,position:illustration.position,
+         background:getComputedStyle(el).backgroundImage,waveDisplay:getComputedStyle(el.querySelector('.rd-wave')).display,
+         width:illustration.width,assetWidth:el.getBoundingClientRect().width };
+     });
+     assert.ok(blendedHero.image.includes('approved-original-hero.avif'),JSON.stringify(blendedHero));
+     assert.ok(blendedHero.mask.includes('linear-gradient'),JSON.stringify(blendedHero));
+     assert.ok(blendedHero.background.includes('radial-gradient'),JSON.stringify(blendedHero));
+     assert.equal(blendedHero.waveDisplay,'none');
+     assert.ok(parseFloat(blendedHero.width)<blendedHero.assetWidth,'Overlay must blend into full hero canvas');
      const heroFile=await page.request.get(base+'/assets/approved-original-hero.avif?v=1');
      assert.equal(heroFile.status(),200);
      assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'0');

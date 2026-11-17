@@ -184,3 +184,33 @@ opacity:.96;pointer-events:none}
     display:block
   }
 }
+
+
+/* Continuous hero fix — retain the approved bitmap at its natural proportions,
+   but blend its left boundary into ONE hero backdrop. No split image panel.
+   This only affects English desktop; existing localized/mobile layouts remain. */
+@media (min-width:1121px){
+  html[lang="en"] .rd-hero{
+    background:radial-gradient(ellipse 75% 115% at 75% 47%, #0b2b30 0%, #071e25 46%, #06171e 90%);
+    isolation:isolate;
+  }
+  html[lang="en"] .rd-hero::before{
+    content:"";
+    position:absolute;
+    inset:0 0 0 auto;
+    width:min(55.86vw,858px);
+    z-index:0;
+    pointer-events:none;
+    background-image:url("approved-original-hero.avif?v=1");
+    background-size:100% 100%;
+    background-position:right center;
+    background-repeat:no-repeat;
+    -webkit-mask-image:linear-gradient(to right,
+      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
+      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
+    mask-image:linear-gradient(to right,
+      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
+      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
+  }
+  html[lang="en"] .rd-hero .rd-wave{display:none}
+}
