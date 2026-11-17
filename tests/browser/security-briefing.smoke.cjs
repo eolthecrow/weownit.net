@@ -44,12 +44,28 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const expectedHeadlines={
-     en:['Stronger networks.','Smarter security.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
-     ro:['Rețele mai solide.','Securitate mai inteligentă.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
-     fr:['Des réseaux plus robustes.','Une sécurité plus intelligente.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
+     en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
+     ro:['Expertiză în rețele.','Perspective de securitate.','Instrumente practice.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
+     fr:['Expertise réseau.','Analyses de sécurité.','Outils pratiques.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
    };
-   const headlineText=async()=>Promise.all(['headline','headlineAccent','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
+   const headlineText=async()=>Promise.all(['headline','headlineAccent','headlineThird','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
    assert.deepEqual(await headlineText(),expectedHeadlines[lang]);
+
+   const h1Lines=await page.locator('#rd-root #rd-h1').evaluate(el=>{
+     const p=el.querySelector('.rd-heading-primary'),a=el.querySelector('.rd-heading-accent');
+     return {p:getComputedStyle(p).display,a:getComputedStyle(a).display,
+       third:getComputedStyle(el.querySelector('[data-rd-text="headlineThird"]')).display};
+   });
+   assert.equal(h1Lines.p,'block');
+   assert.equal(h1Lines.a,'block');
+   assert.equal(h1Lines.third,'block');
+
+   const expectedTaglines={
+     en:'NETWORK & SECURITY CONSULTING / DIGITAL PRODUCTS / PRACTICAL TOOLS',
+     ro:'CONSULTANȚĂ REȚELE ȘI SECURITATE / PRODUSE DIGITALE / INSTRUMENTE',
+     fr:'CONSEIL RÉSEAU ET SÉCURITÉ / PRODUITS NUMÉRIQUES / OUTILS'
+   };
+   assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[lang]);
    const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
      const deco=getComputedStyle(el,'::before');
      const overlay=el.querySelector('.rd-art-checks');
@@ -69,6 +85,12 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      assert.equal(art.wave,'none');
      assert.equal(art.hiddenShield,'0');
      assert.equal(art.overlay,'grid');
+     const heroStyle=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const style=getComputedStyle(el,'::before');
+       return {opacity:parseFloat(style.opacity),mask:style.maskImage};
+     });
+     assert.ok(heroStyle.opacity>.85&&heroStyle.opacity<.92,'Hero should be subtly muted: '+JSON.stringify(heroStyle));
+     assert.ok(heroStyle.mask.includes('linear-gradient'),'Keep mountain fade for contrast: '+JSON.stringify(heroStyle));
      const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
      assert.equal(asset.status(),200);
      const magic=await asset.body();assert.ok(magic.length>12000 && magic.toString('ascii',4,12).startsWith('ftypavif'), 'AVIF bytes must be served, not an error page');
@@ -84,6 +106,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          await page.waitForFunction(l=>document.documentElement.lang===l,next);
          assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[next]);
          assert.deepEqual(await headlineText(),expectedHeadlines[next],'Homepage headline must translate on language switch');
+         assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[next]);
          const a=await page.locator('#rd-root .rd-hero').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
          assert.ok(a.includes('hero-unified-en-ro-fr.avif'),'Artwork changed on language switch '+next);
        }
@@ -91,6 +114,8 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    }else{
      assert.equal(art.hiddenShield,'1');
      assert.equal(art.overlay,'none');
+     const waveOpacity=await page.locator('#rd-root .rd-wave').evaluate(el=>parseFloat(getComputedStyle(el).opacity));
+     assert.ok(waveOpacity<=.72,'Mobile/tablet illustration should be subtle: '+waveOpacity);
      assert.equal(await page.locator('#rd-root .rd-hero-shield').isVisible(),width<=700||width>=701);
      const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>{
        const style=getComputedStyle(el,'::before'),shield=el.querySelector('.rd-hero-shield').getBoundingClientRect();

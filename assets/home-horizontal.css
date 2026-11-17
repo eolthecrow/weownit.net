@@ -361,3 +361,54 @@ opacity:.96;pointer-events:none}
     max-height:none;
   }
 }
+
+
+/* 2026-11-18 — subtle brand strapline and quieter hero backdrop.
+   Keep the original shield/mountain asset and the real VA SVG unchanged.
+   The foreground of the mountain and shield remains visible; the illustration
+   fades toward the headline for cleaner text/background separation. */
+.rd-enabled .rd-root .rd-eyebrow{
+  text-transform:none;
+  letter-spacing:.055em;
+  font-size:clamp(10.5px,.86vw,12px);
+  line-height:1.4;
+  color:#c9e6e1;
+}
+@media(min-width:1121px){
+  .rd-enabled .rd-root .rd-hero::before{
+    opacity:.88;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
+    mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
+  }
+}
+@media(min-width:701px) and (max-width:1120px){
+  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.68}
+}
+@media(max-width:700px){
+  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.26}
+}
+
+
+/* Three-part hero positioning: the approved brand message is now the H1,
+   not duplicated in the smaller category label above it. */
+.rd-enabled .rd-root .rd-eyebrow{
+  text-transform:uppercase;
+  letter-spacing:.12em;
+  font-size:clamp(9px,.75vw,11px);
+  color:#c9e6e1;
+}
+.rd-enabled .rd-root .rd-hero h1 .rd-heading-primary,
+.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent,
+.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent>span{display:block}
+.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent{font-style:normal;color:#6ce2c7}
+@media(min-width:1121px){
+  .rd-enabled .rd-root .rd-hero h1{
+    font-size:clamp(32px,2.55vw,42px);
+    line-height:1.045;
+    letter-spacing:-.045em;
+  }
+  .rd-enabled .rd-root .rd-hero>.rd-wrap{min-height:294px}
+}
+@media(max-width:700px){
+  .rd-enabled .rd-root .rd-hero h1{font-size:clamp(29px,7.4vw,40px);line-height:1.06}
+}
