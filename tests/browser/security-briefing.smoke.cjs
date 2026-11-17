@@ -43,45 +43,51 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
-   const waveBackground=await page.locator('#rd-root .rd-wave').evaluate(el=>getComputedStyle(el).backgroundImage);
-   if(width===1440&&lang==='en'){
-     const blendedHero=await page.locator('#rd-root .rd-hero').evaluate(el=>{
-       const illustration=getComputedStyle(el,'::before');
-       return { image:illustration.backgroundImage,mask:illustration.maskImage,position:illustration.position,
-         background:getComputedStyle(el).backgroundImage,waveDisplay:getComputedStyle(el.querySelector('.rd-wave')).display,
-         width:illustration.width,assetWidth:el.getBoundingClientRect().width };
-     });
-     assert.ok(blendedHero.image.includes('approved-home-hero-20261117.avif'),JSON.stringify(blendedHero));
-     assert.equal(blendedHero.mask,'none','Transparent artwork replaces the old hard-edged/masked crop');
-     assert.ok(blendedHero.background.includes('radial-gradient'),JSON.stringify(blendedHero));
-     assert.equal(blendedHero.waveDisplay,'none');
-     assert.ok(parseFloat(blendedHero.width)<blendedHero.assetWidth,'Overlay must blend into full hero canvas');
-     const boxes=await page.evaluate(()=>{
-       const a=s=>{const r=document.querySelector(s).getBoundingClientRect();return {w:r.width,h:r.height,y:r.y}};
-       return {nav:a('.rd-nav'),hero:a('.rd-hero'),offers:a('.rd-offers'),card:a('.rd-offer'),briefing:a('.rd-briefing')};
-     });
-     assert.ok(boxes.nav.h<=65,'Keep compact reference nav: '+JSON.stringify(boxes));
-     assert.ok(boxes.hero.h>=263&&boxes.hero.h<380,'Keep the reference hero proportions: '+JSON.stringify(boxes));
-     assert.ok(boxes.card.h>=405&&boxes.card.h<560,'Keep 3 aligned offer panels: '+JSON.stringify(boxes));
-     assert.ok(boxes.offers.y<boxes.briefing.y,'Briefing must remain below cards');
-     const heroFile=await page.request.get(base+'/assets/approved-original-hero.avif?v=1');
-     assert.equal(heroFile.status(),200);
-     assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'0');
-   } else {
-     assert.ok(waveBackground.includes('hero-mountain-shield-fidelity.svg'),waveBackground);
-     assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'1');
-   }
+   const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+     const deco=getComputedStyle(el,'::before');
+     const overlay=el.querySelector('.rd-art-checks');
+     return {image:deco.backgroundImage,background:getComputedStyle(el).backgroundImage,
+       wave:getComputedStyle(el.querySelector('.rd-wave')).display,
+       hiddenShield:getComputedStyle(el.querySelector('.rd-hero-right')).opacity,
+       overlay:getComputedStyle(overlay).display,
+       overlayText:overlay.textContent};
+   });
    assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
-   if(width===1440&&lang==='en'){
-     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
-     assert.ok(frame.includes('linear-gradient'),frame);
+   const labels={en:['Assess','Harden','Monitor','Respond','Reduce Risk'],
+     ro:['Evaluează','Securizează','Monitorizează','Răspunde','Reduce riscul'],
+     fr:['Évaluer','Renforcer','Surveiller','Réagir','Réduire les risques']};
+   assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[lang]);
+   if(width>=1121){
+     assert.ok(art.image.includes('hero-unified-en-ro-fr.avif'),JSON.stringify(art));
+     assert.equal(art.wave,'none');
+     assert.equal(art.hiddenShield,'0');
+     assert.equal(art.overlay,'grid');
+     const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
+     assert.equal(asset.status(),200);
+     assert.ok((await asset.headerValue('content-type')||'').includes('image/avif'));
+     const desktop=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const b=el.getBoundingClientRect(),shieldFrame={left:b.width*.762,center:b.width*.658};
+       return {w:b.width,h:b.height,frame:shieldFrame};
+     });
+     assert.ok(desktop.h>=263&&desktop.h<430,'Hero keeps shared desktop dimensions '+JSON.stringify(desktop));
+     if(width===1440&&lang==='en'){
+       // Check switching languages in-place: no different shield/background or layout.
+       for(const next of ['ro','fr','en']){
+         await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
+         await page.waitForFunction(l=>document.documentElement.lang===l,next);
+         assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[next]);
+         const a=await page.locator('#rd-root .rd-hero').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
+         assert.ok(a.includes('hero-unified-en-ro-fr.avif'),'Artwork changed on language switch '+next);
+       }
+     }
+   }else{
+     assert.equal(art.hiddenShield,'1');
+     assert.equal(art.overlay,'none');
+     assert.equal(await page.locator('#rd-root .rd-hero-shield').isVisible(),width<=700||width>=701);
+     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el,'::before').display);
+     assert.equal(frame,'block','Shield frame missing on '+width+'px in '+lang);
    }
    assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
-   if(width===360&&lang==='en'){
-     const waveAsset=await page.request.get(base+'/assets/hero-mountain-shield-fidelity.svg?v=1');
-     assert.equal(waveAsset.status(),200);
-     assert.ok((await waveAsset.text()).includes('viewBox'));
-   }
    await geometry(page);
    for(const record of data.articles){
     await page.goto(base+'/briefing/'+record.slug+'.html?lang='+lang);
