@@ -44,17 +44,26 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const expectedHeadlines={
-     en:['Stronger networks.','Smarter security.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
-     ro:['Rețele mai solide.','Securitate mai inteligentă.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
-     fr:['Des réseaux plus robustes.','Une sécurité plus intelligente.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
+     en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
+     ro:['Expertiză în rețele.','Perspective de securitate.','Instrumente practice.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
+     fr:['Expertise réseau.','Analyses de sécurité.','Outils pratiques.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
    };
-   const headlineText=async()=>Promise.all(['headline','headlineAccent','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
+   const headlineText=async()=>Promise.all(['headline','headlineAccent','headlineThird','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
    assert.deepEqual(await headlineText(),expectedHeadlines[lang]);
 
+   const h1Lines=await page.locator('#rd-root #rd-h1').evaluate(el=>{
+     const p=el.querySelector('.rd-heading-primary'),a=el.querySelector('.rd-heading-accent');
+     return {p:getComputedStyle(p).display,a:getComputedStyle(a).display,
+       third:getComputedStyle(el.querySelector('[data-rd-text="headlineThird"]')).display};
+   });
+   assert.equal(h1Lines.p,'block');
+   assert.equal(h1Lines.a,'block');
+   assert.equal(h1Lines.third,'block');
+
    const expectedTaglines={
-     en:'Network expertise. Security insights. Practical tools.',
-     ro:'Expertiză în rețele. Perspective de securitate. Instrumente practice.',
-     fr:'Expertise réseau. Analyses de sécurité. Outils pratiques.'
+     en:'NETWORK & SECURITY CONSULTING / DIGITAL PRODUCTS / PRACTICAL TOOLS',
+     ro:'CONSULTANȚĂ REȚELE ȘI SECURITATE / PRODUSE DIGITALE / INSTRUMENTE',
+     fr:'CONSEIL RÉSEAU ET SÉCURITÉ / PRODUITS NUMÉRIQUES / OUTILS'
    };
    assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[lang]);
    const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
