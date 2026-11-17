@@ -25,7 +25,25 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await page.locator('#sb-results a[href*="briefing/gheist-github-actions.html"]').first().click();await page.waitForURL('**/briefing/gheist-github-actions.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('h1').innerText(),gheist[lang].title);await geometry(page);
    const next=lang==='fr'?'ro':'fr';await page.locator('[data-lang="'+next+'"]').click();assert.equal(await page.locator('h1').innerText(),gheist[next].title);assert.ok((await page.locator('.sb-support .sb-button').getAttribute('href')).includes('lang='+next));assert.ok((await page.locator('link[rel=canonical]').getAttribute('href')).includes('/briefing/gheist-github-actions.html?lang='+next));await geometry(page);
    const menu=page.locator('[data-nav-toggle]');if(await menu.isVisible()){await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');await geometry(page);await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');}
-   await page.goto(base+'/index.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('#sb-home-cards .sb-card').count(),3);assert.equal(await page.locator('#sb-home-title').innerText(),data.ui[lang].homeNews);assert.ok(!(await page.locator('#sb-home-cards').innerText()).includes('Akira'));assert.ok(!(await page.locator('.rail-nav').innerText()).includes('undefined'));await geometry(page);
+   await page.goto(base+'/index.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('#sb-home-cards .sb-card').count(),3);assert.equal(await page.locator('#sb-home-title').innerText(),data.ui[lang].homeNews);assert.ok(!(await page.locator('#sb-home-cards').innerText()).includes('Akira'));assert.ok(!(await page.locator('.rail-nav').innerText()).includes('undefined'));
+   // Approved horizontal homepage integration: real VA SVG, responsive nav, safe product links.
+   assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
+   assert.equal(await page.locator('#rd-root .rd-offer').count(),3);
+   assert.equal(await page.locator('#rd-root .rd-mini').count(),4);
+   assert.equal(await page.locator('#rd-root .rd-path').count(),3);
+   assert.equal(await page.locator('#rd-root .rd-demo').isVisible(),true);
+   if(width<=430){
+     assert.equal(await page.locator('#rd-links').isVisible(),false);
+     await page.locator('#rd-menu').click();
+     assert.equal(await page.locator('#rd-links').isVisible(),true);
+     await page.keyboard.press('Escape');
+     assert.equal(await page.locator('#rd-links').isVisible(),false);
+   }else assert.equal(await page.locator('#rd-links').isVisible(),true);
+   const pilotPath=page.locator('#rd-root [data-rd-path="monitoring"]');
+   await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
+   assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
+   assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
+   await geometry(page);
    for(const record of data.articles){
     await page.goto(base+'/briefing/'+record.slug+'.html?lang='+lang);
     await page.waitForFunction(l=>document.documentElement.lang===l,lang);
