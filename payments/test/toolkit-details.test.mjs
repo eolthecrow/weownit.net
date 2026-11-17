@@ -68,3 +68,23 @@ test('LIVE bundle includes renderer in language render path without changing san
   assert.doesNotMatch(await customerAsset('/customer/app.js').text(), /toolkitDetails/);
   assert.doesNotMatch(await customerAsset('/buy/11111111-1111-4111-8111-111111111111').text(), /toolkitDetails/);
 });
+
+
+test('Assessment preview layout retains one real checkout form and strict same-origin scripts', async () => {
+  const { ASSESSMENT_ID } = await import('../src/assessment-purchase-page.js');
+  const response = await liveCustomerAsset('/buy/' + ASSESSMENT_ID);
+  const html = await response.text();
+  assert.match(html, /class="assessment-page"/);
+  assert.equal((html.match(/id="checkoutForm"/g)||[]).length, 1);
+  assert.equal((html.match(/id="currency"/g)||[]).length, 1);
+  assert.equal((html.match(/id="quantity"/g)||[]).length, 1);
+  assert.equal((html.match(/class="assessment-thumb"/g)||[]).length, 3);
+  const ids=[...html.matchAll(/\bid="([^"]+)"/g)].map(m=>m[1]);
+  assert.equal(ids.length,new Set(ids).size);
+  assert.doesNotMatch(html, /preview only|design preview|demo-pay/i);
+  assert.match(response.headers.get('Content-Security-Policy'), /script-src 'self'/);
+  assert.match(response.headers.get('Content-Security-Policy'), /img-src data:/);
+  assert.doesNotMatch(response.headers.get('Content-Security-Policy'), /unsafe-inline/);
+  const receipt = await (await liveCustomerAsset('/complete')).text();
+  assert.doesNotMatch(receipt,/assessment-page/);
+});

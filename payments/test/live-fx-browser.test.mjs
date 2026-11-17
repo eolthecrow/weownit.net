@@ -207,7 +207,16 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
         await page.locator('#currency').selectOption('usd');
         await page.locator('#quantity').selectOption('2');
         assert.match(await page.locator('#total').textContent(),/66/);
-        await page.locator('#toolkitDetails summary').click();
+        if (id === '03e200e8-31d2-4bc8-9083-7cdffabe76df') {
+          const { ASSESSMENT_COPY } = await import('../src/assessment-purchase-page.js');
+          assert.equal(await page.locator('.assessment-page').count(), 1);
+          assert.equal(await page.locator('.assessment-thumb').count(), 3);
+          assert.ok(await page.locator('.assessment-thumb img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)));
+          await page.locator('.assessment-thumb').first().click();
+          assert.equal(await page.locator('#assessmentImage').isVisible(), true);
+          await page.locator('#assessmentClose').click();
+          await page.getByText(ASSESSMENT_COPY.fr.usage, {exact:true}).click();
+        } else await page.locator('#toolkitDetails summary').click();
         assert.equal(await page.getByText(TOOLKIT_LABELS.fr.usage,{exact:true}).isVisible(),true);
       }
       await page.goto('https://checkout.weownit.net/buy/00000000-0000-4000-8000-000000000000?lang=en');

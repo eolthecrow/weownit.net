@@ -1,3 +1,4 @@
+import { ASSESSMENT_ID, ASSESSMENT_COPY, ASSESSMENT_CSS, assessmentPurchaseHtml, renderAssessmentPage } from "./assessment-purchase-page.js";
 import { TOOLKIT_DETAILS, TOOLKIT_LABELS, renderToolkitDetails } from "./toolkit-details.js";
 import { customerAsset, CUSTOMER_JS, CUSTOMER_TRANSLATIONS } from "./customer-page.js";
 
@@ -70,16 +71,29 @@ function liveJs(enabled) {
       const preferred = params.get('currency');
       currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : 'ron';
       $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;`);
-  script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n  }");
+  script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n    renderAssessmentPage(document, productId, product, language, assessmentCopy, toolkitLabels, toolkitDetails);\n  }");
   const detailBundle = "const toolkitDetails = " + JSON.stringify(TOOLKIT_DETAILS) + ";\nconst toolkitLabels = " + JSON.stringify(TOOLKIT_LABELS) + ";\n" + renderToolkitDetails.toString() + ";\n";
-  return "'use strict';\n" + detailBundle + "const translations = " + JSON.stringify(translations(enabled)) + ";\n" + script;
+  script = replaceRequired(script, "  render();\n  if (productId)", `  const imageDialog = $('assessmentImage');
+  if (imageDialog) {
+    document.querySelectorAll('[data-preview]').forEach(button => button.addEventListener('click', () => {
+      const image = button.querySelector('img');
+      $('assessmentLargeImage').src = image.src;
+      $('assessmentLargeImage').alt = image.alt;
+      imageDialog.showModal();
+    }));
+    $('assessmentClose').addEventListener('click', () => imageDialog.close());
+  }
+  render();
+  if (productId)`);
+  const assessmentBundle = "const assessmentCopy = " + JSON.stringify(ASSESSMENT_COPY) + ";\n" + renderAssessmentPage.toString() + ";\n";
+  return "'use strict';\n" + assessmentBundle + detailBundle + "const translations = " + JSON.stringify(translations(enabled)) + ";\n" + script;
 }
 
 export async function liveCustomerAsset(path, env = {}) {
   const enabled = env.LIVE_RECOVERY_ENABLED === "true";
   const original = customerAsset(path, { SANDBOX_RECOVERY_ENABLED: enabled ? "true" : "false" });
   if (!original) return null;
-  if (path === "/customer/style.css") return new Response((await original.text()) + "\n#toolkitDetails{margin:24px 0;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}#toolkitDetails h3{font-size:15px;margin:20px 0 6px}#toolkitDetails p{margin:6px 0 12px}#toolkitDetails summary{cursor:pointer;font-weight:650;min-height:44px;padding:10px 0}#toolkitDetails details{margin-top:18px}", { headers: original.headers });
+  if (path === "/customer/style.css") return new Response((await original.text()) + ASSESSMENT_CSS + "\n#toolkitDetails{margin:24px 0;padding:20px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}#toolkitDetails h3{font-size:15px;margin:20px 0 6px}#toolkitDetails p{margin:6px 0 12px}#toolkitDetails summary{cursor:pointer;font-weight:650;min-height:44px;padding:10px 0}#toolkitDetails details{margin-top:18px}", { headers: original.headers });
   const headers = new Headers(original.headers);
   if (path === "/customer/app.js") return new Response(liveJs(enabled), { headers });
   if (path === "/customer/recovery.js") {
@@ -98,5 +112,9 @@ export async function liveCustomerAsset(path, env = {}) {
     .replace('<span class="badge">sandbox</span>', '<span class="badge">Stripe LIVE</span>')
     .replace('<label for="quantity" data-i18n="quantity"></label>',
       '<label for="currency" data-i18n="currency"></label><select id="currency"></select><label for="quantity" data-i18n="quantity"></label>');
+  if (path === '/buy/' + ASSESSMENT_ID) {
+    headers.set('Content-Security-Policy', headers.get('Content-Security-Policy') + "; img-src data:");
+    return new Response(assessmentPurchaseHtml(html), { headers });
+  }
   return new Response(html, { headers });
 }
