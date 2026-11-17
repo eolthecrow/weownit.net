@@ -1,0 +1,878 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta name="robots" content="noindex, nofollow">
+  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' 'sha256-0dm+qsQPZvq7S2Iehoct7t1f2BqsgyLPIMdwzvUIRYk=' 'sha256-cAZwYXqByLhHOSxAXQIACBVFgq004FN7/aX4HaEY8jI=' 'sha256-kEMB/ygjr6DF4zapXrdjUhvqcK4A2JomXz5KtpwIP9g=' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0a151c">
+  <meta name="description" content="Network and security consulting for SMBs and IT teams: firewall reviews, network assessments, segmentation, and prioritized remediation by Vladimir Arjoca.">
+  <title>Network & Security Consultant — Vladimir Arjoca</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230a151c'/%3E%3Cpath d='M13 17h38v30H13z' fill='none' stroke='%236ce2c7' stroke-width='4'/%3E%3Cpath d='m22 27 10 12 10-12' fill='none' stroke='%23f2f1e8' stroke-width='4'/%3E%3C/svg%3E">
+  <link rel="canonical" href="https://weownit.net/?lang=en">
+  <link rel="alternate" hreflang="en" href="https://weownit.net/?lang=en">
+  <link rel="alternate" hreflang="ro" href="https://weownit.net/?lang=ro">
+  <link rel="alternate" hreflang="fr" href="https://weownit.net/?lang=fr">
+  <link rel="alternate" hreflang="x-default" href="https://weownit.net/?lang=en">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Network &amp; Security Consultant — Vladimir Arjoca">
+  <meta property="og:description" content="Network and security consulting for SMBs and IT teams: firewall reviews, network assessments, segmentation, and prioritized remediation by Vladimir Arjoca.">
+  <meta property="og:url" content="https://weownit.net/?lang=en">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:site_name" content="Network &amp; Security Consultant">
+  <meta property="og:image" content="https://weownit.net/assets/og-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="weownit.net — Network & Security Consultant">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://weownit.net/assets/og-card.png">
+  <style>
+    :root { color-scheme: dark; --bg:#0a151c; --bg2:#0e1d25; --panel:#12232b; --line:#29404a; --line-strong:#507078; --ink:#f2f1e8; --muted:#a6b8ba; --quiet:#81969a; --accent:#6ce2c7; --accent-dark:#123b39; --amber:#f4bc79; --font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace }
+    * { box-sizing:border-box }
+    html { scroll-behavior:smooth }
+    body { margin:0; background:var(--bg); color:var(--ink); font-family:var(--font); font-size:15px; line-height:1.58 }
+    a { color:inherit; text-decoration:none }
+    a:focus-visible, summary:focus-visible { outline:2px solid var(--accent); outline-offset:4px }
+    ::selection { background:var(--accent); color:var(--bg) }
+    .skip { position:absolute; z-index:10; top:-5rem; left:1rem; padding:.65rem 1rem; background:var(--accent); color:var(--bg) }
+    .skip:focus { top:1rem }
+    .shell { max-width:1510px; margin:0 auto; display:grid; grid-template-columns:255px minmax(0,1fr); min-height:100vh }
+    .rail { border-right:1px solid var(--line); padding:2.2rem 1.55rem 1.8rem; display:flex; flex-direction:column; gap:3.4rem; position:sticky; top:0; height:100vh; min-height:630px; background:var(--bg); z-index:3 }
+    .brand { display:flex; align-items:center; gap:.75rem; line-height:1.1; font-weight:750; letter-spacing:-.035em; font-size:.945rem }
+    .mark { width:41px; height:41px; display:grid; place-items:center; color:var(--accent); border:0; background:transparent; box-shadow:none; outline:none; font-family:var(--mono); font-size:.738rem; letter-spacing:-.08em; flex:none }
+    .mark img { width:34px; height:auto; max-height:34px; display:block; object-fit:contain }
+    .brand span:last-child { max-width:135px }
+    .rail-nav { display:grid; gap:.12rem }
+    .rail-nav a { display:flex; align-items:baseline; gap:.7rem; padding:.64rem .25rem; color:var(--muted); font-size:.85rem; transition:color .2s,transform .2s }
+    .rail-nav a:hover { color:var(--accent); transform:translateX(3px) }
+    .rail-nav span { font-family:var(--mono); font-size:.7rem; color:var(--quiet) }
+    .rail-foot { margin-top:auto; border-top:1px solid var(--line); padding-top:1.2rem; color:var(--quiet); font-size:.75rem; line-height:1.55 }
+    .rail-foot b { color:var(--muted); font-weight:600 }
+    .main { min-width:0 }
+    .topline { height:68px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--line); padding:0 clamp(1.3rem,4vw,4rem); color:var(--muted); font-family:var(--mono); font-size:.7rem; text-transform:uppercase; letter-spacing:.13em }
+    .topline-right { display:flex; align-items:center; gap:.62rem; color:var(--accent) }
+    .topline-right::before { content:""; display:block; width:7px; height:7px; border-radius:50%; background:var(--accent) }
+    .topline-tools { display:flex; align-items:center; gap:1rem }
+    
+    
+    
+    
+    
+    .hero { padding:clamp(3.4rem,7vw,7.5rem) clamp(1.3rem,4vw,4rem) clamp(3.6rem,6vw,6rem); display:grid; grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr); gap:clamp(2rem,5vw,5rem); position:relative; overflow:hidden; border-bottom:1px solid var(--line) }
+    .hero::before { content:""; position:absolute; inset:0 0 auto auto; width:32%; height:100%; opacity:.22; pointer-events:none; background-image:linear-gradient(to right,var(--line) 1px,transparent 1px),linear-gradient(to bottom,var(--line) 1px,transparent 1px); background-size:40px 40px; mask-image:linear-gradient(to left,#000,transparent) }
+    .hero > * { position:relative }
+    .eyebrow { font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); display:flex; align-items:center; gap:.75rem; margin:0 0 1.5rem }
+    .eyebrow::before { content:""; width:25px; height:1px; background:currentColor; flex:none }
+    h1,h2,h3,p { margin-top:0 }
+    h1 { max-width:840px; font-size:clamp(2.925rem,6.12vw,6.66rem); line-height:.99; letter-spacing:-.075em; font-weight:670; margin:0 0 1.8rem }
+    h1 em { font-style:normal; color:var(--accent) }
+    .hero-copy { max-width:670px; color:var(--muted); font-size:clamp(.945rem,1.215vw,1.143rem); line-height:1.65; margin-bottom:2.15rem }
+    .actions { display:flex; flex-wrap:wrap; gap:.75rem }
+    .button { display:inline-flex; align-items:center; justify-content:center; gap:1.8rem; min-height:47px; padding:.7rem 1rem; background:var(--accent); border:1px solid var(--accent); color:#07211f; font-weight:700; font-size:.81rem; transition:background .2s,color .2s,transform .2s }
+    .button:hover { background:#a1f0de; transform:translateY(-2px) }
+    .button.secondary { color:var(--ink); background:transparent; border-color:var(--line-strong) }
+    .button.secondary:hover { border-color:var(--accent); color:var(--accent); background:transparent }
+    .arrow { font-size:1.008rem; line-height:1 }
+    .hero-aside { align-self:end; background:var(--bg2); border:1px solid var(--line-strong); padding:1.35rem; max-width:370px; width:100%; box-shadow:10px 10px 0 rgba(7,16,21,.5) }
+    .aside-label,.micro { color:var(--accent); font-family:var(--mono); text-transform:uppercase; letter-spacing:.11em; font-size:.72rem }
+    .hero-aside p { font-size:1.242rem; line-height:1.27; font-weight:600; letter-spacing:-.035em; margin:1.05rem 0 1.35rem }
+    .hero-aside ul { margin:0; padding:0; list-style:none; border-top:1px solid var(--line) }
+    .hero-aside li { display:flex; justify-content:space-between; gap:1rem; padding:.65rem 0; border-bottom:1px solid var(--line); font-size:.8rem; color:var(--muted) }
+    .hero-aside li span:first-child { font-family:var(--mono); color:var(--accent) }
+    .section { padding:clamp(3.2rem,6vw,6rem) clamp(1.3rem,4vw,4rem); border-bottom:1px solid var(--line); scroll-margin-top:1rem }
+    .section-head { display:flex; justify-content:space-between; align-items:end; gap:2rem; margin-bottom:2.1rem }
+    .section-head h2 { font-size:clamp(2.07rem,3.6vw,3.96rem); letter-spacing:-.065em; line-height:1.06; margin:.65rem 0 0; font-weight:640 }
+    .section-head > p { color:var(--muted); max-width:320px; font-size:.846rem; margin:0 }
+    .resource-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line) }
+    .resource { min-width:0; background:var(--bg2); padding:clamp(1.4rem,2.5vw,2.55rem); border-right:1px solid var(--line); border-bottom:1px solid var(--line); display:flex; flex-direction:column; min-height:375px; transition:background .2s }
+    .resource:hover { background:#13262e }
+    .resource.featured { grid-column:span 2; background:#14302f; min-height:350px; display:grid; grid-template-columns:minmax(0,1.12fr) minmax(230px,.88fr); gap:clamp(1.5rem,4vw,4rem) }
+    .resource-top { display:flex; align-items:center; justify-content:space-between; gap:1rem; margin-bottom:2rem }
+    .resource .index { font-family:var(--mono); color:var(--accent); font-size:.747rem }
+    .resource .kind { color:var(--quiet); text-transform:uppercase; font-family:var(--mono); font-size:.621rem; letter-spacing:.11em; text-align:right }
+    .resource h3 { font-size:clamp(1.395rem,2.205vw,2.115rem); line-height:1.12; letter-spacing:-.055em; font-weight:630; margin:0 0:.85rem }
+    .resource .desc { color:var(--muted); font-size:.846rem; max-width:560px; margin:0 0:1.5rem }
+    .resource .list { list-style:none; padding:0; margin:auto 0 1.55rem; display:grid; gap:.48rem; color:#d4dedb; font-size:.792rem }
+    .resource .list li { display:flex; gap:.55rem; align-items:baseline }
+    .resource .list li::before { content:"/"; font-family:var(--mono); color:var(--accent) }
+    .resource .sample { border-top:1px solid var(--line-strong); padding-top:1rem; color:var(--amber); font-size:.747rem; font-weight:650; margin-top:auto }
+    .resource .sample a:hover { text-decoration:underline; text-underline-offset:4px }
+
+    .resource-references { margin-top:.85rem; padding-top:.55rem; display:flex; align-items:baseline; flex-wrap:wrap; gap:.45rem .85rem }
+    .resource-ref-label { font:600 .605rem var(--mono); color:var(--quiet); text-transform:uppercase; letter-spacing:.065em }
+    .resource-ref-links { display:flex; flex-wrap:wrap; gap:.4rem .85rem }
+    .resource-ref-links a { font-size:.688rem; color:var(--accent); text-decoration:none; border-bottom:1px solid transparent; transition:border-color .2s }
+    .resource-ref-links a:hover { border-bottom-color:currentColor }
+    .resource-ref-links a:focus-visible,.trusted-links a:focus-visible { outline:2px solid var(--accent); outline-offset:3px }
+    .resource-spotlight { display:flex; justify-content:space-between; align-items:center; gap:1.25rem 2rem; margin-top:1.65rem; padding:1.25rem 1.5rem; background:linear-gradient(95deg,rgba(108,226,199,.055),rgba(16,32,41,.7) 72%); border:1px solid var(--line); border-left:2px solid var(--accent) }
+    .spotlight-copy { flex:1; min-width:0; max-width:720px }
+    .spotlight-label { color:var(--accent); font-size:.62rem; letter-spacing:.09em }
+    .resource-spotlight h3 { font-size:clamp(1.22rem,2.05vw,1.75rem); line-height:1.2; letter-spacing:-.035em; font-weight:660; margin:.45rem 0 .45rem }
+    .spotlight-description { color:var(--muted); font-size:.765rem; line-height:1.55; margin:0 }
+    .spotlight-action { display:flex; flex-direction:column; align-items:flex-end; gap:.45rem; flex:0 0 auto }
+    .spotlight-diff { font-family:var(--mono); color:var(--ink); font-size:.89rem; letter-spacing:.07em; white-space:nowrap }
+    .spotlight-diff span { color:var(--accent); margin:0 .25rem }
+    .spotlight-link { display:inline-block; color:var(--accent); border-bottom:1px solid currentColor; font-size:.75rem; font-weight:720; padding-bottom:.15rem; text-align:right }
+    .spotlight-link:hover { color:var(--ink) }
+    .spotlight-link:focus-visible { outline:2px solid var(--accent); outline-offset:4px }
+    .spotlight-note { color:var(--quiet); font-size:.625rem; text-align:right }
+    @media(max-width:760px) { .resource-spotlight { align-items:stretch; flex-direction:column; padding:1.1rem 1.2rem; gap:.85rem } .spotlight-action { flex-direction:row; align-items:center; flex-wrap:wrap; gap:.5rem 1rem } .spotlight-note { width:100%; text-align:left } .spotlight-link { text-align:left } }
+    .trusted-references { border-top:1px solid var(--line-strong); margin-top:2.25rem; padding-top:1.85rem }
+    .trusted-head { display:flex; align-items:end; justify-content:space-between; gap:1rem 2rem; margin-bottom:1.1rem }
+    .trusted-head h3 { font-size:clamp(1.35rem,2.3vw,1.8rem); letter-spacing:-.045em; font-weight:650; margin:.4rem 0 0 }
+    .trusted-intro { color:var(--muted); font-size:.782rem; max-width:480px; margin:0 }
+    .trusted-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; border:1px solid var(--line); background:var(--line) }
+    .trusted-card { background:#102029; padding:1.15rem 1.3rem 1.25rem; min-width:0 }
+    .trusted-card h4 { color:var(--ink); font-size:.825rem; line-height:1.3; font-weight:680; margin:0 0:.85rem }
+    .trusted-links { display:flex; flex-wrap:wrap; gap:.5rem 1rem }
+    .trusted-links a { color:#b7d3cf; font-size:.717rem; text-decoration:none; border-bottom:1px solid transparent }
+    .trusted-links a:hover { color:var(--accent); border-bottom-color:currentColor }
+    .trusted-note { color:var(--quiet); font-size:.669rem; margin:.85rem 0 0 }
+    @media(max-width:900px){.trusted-grid{grid-template-columns:1fr}.trusted-head{align-items:start;flex-direction:column}}
+    .vendor-links { display:flex; flex-direction:column; gap:.45rem }
+    .resource.featured .list { margin:0 0 1.5rem }
+    .resource.featured .feature-side { border-left:1px solid #42736e; padding-left:clamp(1.5rem,3vw,3rem); display:flex; flex-direction:column; justify-content:center }
+    .feature-side .micro { color:var(--amber) }
+    .feature-side blockquote { margin:1.1rem 0 1.5rem; font-size:1.125rem; line-height:1.4; letter-spacing:-.035em }
+    .feature-side a { align-self:flex-start; color:var(--accent); font-size:.801rem; font-weight:650; border-bottom:1px solid currentColor; padding-bottom:.2rem }
+    .premium-offer { margin-top:1.8rem; padding-top:1.45rem; border-top:1px solid #42736e }
+    .premium-offer .premium-label { display:block; font-family:var(--mono); color:var(--amber); font-size:.621rem; letter-spacing:.1em; text-transform:uppercase; margin-bottom:.6rem }
+    .premium-offer strong { display:block; font-size:.945rem; letter-spacing:-.025em; margin-bottom:.45rem }
+    .premium-offer p { color:#b7cbc7; font-size:.747rem; line-height:1.5; margin:0 0 .85rem; max-width:360px }
+    .premium-offer .premium-link { color:var(--ink); border:1px solid #5f8b85; padding:.58rem .72rem; font-family:var(--mono); font-size:.639rem; letter-spacing:.05em; text-transform:uppercase; transition:border-color .2s,color .2s,background .2s }
+    .premium-offer .premium-link:hover { border-color:var(--accent); color:var(--accent); background:rgba(108,226,199,.05) }
+    .vendor-guidance { display:flex; align-items:center; justify-content:space-between; gap:.7rem 1rem; flex-wrap:wrap }
+    .vendor-guidance .guidance-label { color:var(--amber); font-family:var(--mono); font-size:.612rem; letter-spacing:.075em; text-transform:uppercase }
+    .vendor-guidance .vendor-links { display:flex; flex-direction:row; flex-wrap:wrap; gap:.45rem .8rem }
+    .vendor-guidance .vendor-links a { font-size:.657rem; color:var(--muted) }
+    .vendor-guidance .vendor-links a:hover { color:var(--accent) }
+    .vendor-toolkit-shelf { margin-top:1.1rem; padding-top:.35rem }
+    .vendor-toolkit-head { display:flex; justify-content:space-between; align-items:center; gap:1rem; margin-bottom:.75rem }
+    .vendor-toolkit-head .micro { font-size:.585rem }
+    .toolkit-edition { color:var(--quiet); font-family:var(--mono); font-size:.54rem; letter-spacing:.075em; text-transform:uppercase }
+    .vendor-toolkit-marquee { position:relative; overflow:hidden; margin:0 -.15rem; padding:.05rem .15rem .45rem }
+    .vendor-toolkit-marquee::before,.vendor-toolkit-marquee::after { content:""; position:absolute; top:0; bottom:0; width:24px; z-index:2; pointer-events:none }
+    .vendor-toolkit-marquee::before { left:0; background:linear-gradient(90deg,var(--bg2),transparent) }
+    .vendor-toolkit-marquee::after { right:0; background:linear-gradient(270deg,var(--bg2),transparent) }
+    .vendor-toolkit-track { display:flex; width:max-content; will-change:transform; animation:vendor-toolkit-scroll-right 20s linear infinite }
+    .vendor-toolkit-group { display:flex; gap:1.65rem; padding-right:1.65rem }
+    .vendor-toolkit { width:clamp(185px,21vw,235px); flex:none; min-width:0; padding:.45rem .15rem .42rem 0; background:transparent; position:relative; transition:transform .2s,color .2s }
+    .vendor-toolkit::after { content:""; position:absolute; left:0; bottom:0; width:28px; height:1px; background:var(--line-strong); transition:width .2s,background .2s }
+    .vendor-toolkit:hover { transform:translateY(-1px) }
+    .vendor-toolkit:hover::after { width:54px; background:var(--accent) }
+    .vendor-toolkit .vendor-name { display:block; color:var(--accent); font-family:var(--mono); font-size:.549rem; letter-spacing:.07em; text-transform:uppercase; white-space:nowrap; overflow:hidden; text-overflow:ellipsis }
+    .vendor-toolkit strong { display:block; margin:.38rem 0 .52rem; font-size:.81rem; line-height:1.22; letter-spacing:-.022em; font-weight:650 }
+    .vendor-toolkit .vendor-cta { display:block; color:var(--muted); font-family:var(--mono); font-size:.531rem; letter-spacing:.045em; text-transform:uppercase }
+    .vendor-toolkit:hover .vendor-cta { color:var(--accent) }
+    @media (hover:hover) and (pointer:fine) { .vendor-toolkit-marquee:hover .vendor-toolkit-track { animation-play-state:paused } }
+    @media (hover:none), (pointer:coarse) { .vendor-toolkit-track { animation-play-state:running!important } }
+    @keyframes vendor-toolkit-scroll-right { from { transform:translateX(0) } to { transform:translateX(-50%) } }
+    .services-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); border-top:1px solid var(--line); border-left:1px solid var(--line) }
+    .service-card { min-width:0; padding:clamp(1.4rem,2.5vw,2.2rem); border-right:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--bg2) }
+    .service-card .service-index { display:block; color:var(--accent); font-family:var(--mono); font-size:.621rem; letter-spacing:.09em; text-transform:uppercase; margin-bottom:1rem }
+    .service-card h3 { font-size:clamp(1.215rem,1.8vw,1.62rem); line-height:1.12; letter-spacing:-.04em; margin:0 0 .7rem }
+    .service-card p { color:var(--muted); margin:0 0 1.15rem; max-width:560px }
+    .service-card a { color:var(--accent); font-family:var(--mono); font-size:.63rem; letter-spacing:.06em; text-transform:uppercase }
+    .service-card a:hover { color:var(--ink) }
+    .proof-strip { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); border:1px solid var(--line); border-top:0 }
+    .proof-item { padding:1.1rem 1.2rem; border-right:1px solid var(--line); background:#0c1920 }
+    .proof-item:last-child { border-right:0 }
+    .proof-item strong { display:block; color:var(--ink); font-size:.864rem; letter-spacing:-.025em }
+    .proof-item span { display:block; margin-top:.3rem; color:var(--quiet); font-family:var(--mono); font-size:.585rem; letter-spacing:.05em; text-transform:uppercase }
+    .sample-strip { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; background:var(--line); border:1px solid var(--line) }
+    .sample-strip article { background:var(--bg); padding:1.55rem }
+    .sample-strip span { font-family:var(--mono); color:var(--accent); font-size:.657rem }
+    .sample-strip h3 { font-size:1.107rem; letter-spacing:-.035em; margin:.8rem 0 .55rem }
+    .sample-strip p { color:var(--muted); font-size:.792rem; margin:0 }
+    .details-wrap { margin-top:2.2rem; display:grid; grid-template-columns:1fr 1fr; gap:1rem }
+    details { border:1px solid var(--line); background:var(--bg2); padding:0 1.1rem }
+    summary { cursor:pointer; list-style:none; padding:1rem 1.75rem 1rem 0; font-size:.846rem; font-weight:600; position:relative }
+    summary::-webkit-details-marker { display:none }
+    summary::after { content:"+"; position:absolute; right:0; color:var(--accent); font-size:1.125rem; top:.75rem }
+    details[open] summary::after { content:"−" }
+    details p { color:var(--muted); font-size:.792rem; padding-bottom:1rem; margin:0 }
+    .about-grid { display:grid; grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr); gap:clamp(2rem,5vw,6rem); align-items:start }
+    .about-grid h2 { font-size:clamp(2.07rem,3.6vw,3.96rem); line-height:1.08; letter-spacing:-.065em; margin:.7rem 0 0 }
+    .about-grid .lead { font-size:1.125rem; color:var(--ink); line-height:1.5; margin:0 0 1.5rem; max-width:690px }
+    .about-grid p { color:var(--muted); max-width:690px }
+    .expertise { display:flex; flex-wrap:wrap; gap:.55rem; margin-top:1.7rem }
+    .expertise span { border:1px solid var(--line-strong); padding:.37rem .65rem; font-family:var(--mono); font-size:.639rem; color:#c8d8d5 }
+    .contact { background:var(--accent); color:#092321; padding:clamp(3.2rem,6vw,6rem) clamp(1.3rem,4vw,4rem); display:flex; justify-content:space-between; align-items:end; gap:2rem }
+    .contact .micro { color:#195750 }
+    .contact h2 { max-width:780px; font-size:clamp(2.295rem,4.5vw,4.905rem); line-height:1.03; letter-spacing:-.07em; margin:.7rem 0 1rem }
+    .contact p { margin:0; max-width:560px; font-size:.9rem; color:#24544f }
+    .contact .button { color:var(--ink); background:var(--bg); border-color:var(--bg); flex:none }
+    .contact .button:hover { background:#1a3938 }
+    .footer { padding:2.5rem clamp(1.3rem,4vw,4rem) 2rem; display:grid; grid-template-columns:1fr auto; gap:1.5rem; color:var(--quiet); font-size:.738rem }
+    .footer .sources { grid-column:1/-1; border-top:1px solid var(--line); padding-top:1.3rem; display:flex; flex-wrap:wrap; column-gap:1.7rem; row-gap:.4rem }
+    .sources a { text-decoration:underline; text-underline-offset:3px; color:var(--muted) }
+    .sources a:hover,.footer a:hover { color:var(--accent) }
+    @media(max-width:1100px) { .shell { grid-template-columns:190px minmax(0,1fr) } .rail { padding:1.5rem 1rem } .hero { grid-template-columns:1fr } .hero-aside { max-width:none; display:none } }
+    @media(max-width:780px) { .services-grid { grid-template-columns:1fr } .proof-strip { grid-template-columns:repeat(2,minmax(0,1fr)) } .proof-item:nth-child(2) { border-right:0 } .proof-item { border-bottom:1px solid var(--line) } .proof-item:nth-child(3),.proof-item:nth-child(4) { border-bottom:0 } .vendor-toolkit { width:205px } .vendor-toolkit-group { gap:1.2rem; padding-right:1.2rem }   .shell { display:block } .rail { position:static; height:auto; min-height:0; padding:1rem 1.25rem; border-right:0; border-bottom:1px solid var(--line); display:block } .brand { font-size:.864rem } .mark { width:34px; height:34px } .rail-nav span,.rail-foot { display:none } .topline { height:auto; min-height:52px; padding:.55rem 1.25rem; font-size:.594rem; gap:.8rem } .topline-tools { gap:.55rem } .topline-right { display:none }  .hero { padding:3.3rem 1.25rem 3.6rem; display:block } h1 { font-size:clamp(2.835rem,9vw,4.77rem) } .section { padding:3.5rem 1.25rem } .section-head { display:block } .section-head > p { margin-top:1rem } .resource-grid { grid-template-columns:1fr } .resource.featured { grid-column:span 1; display:block } .resource.featured .feature-side { border:0; border-top:1px solid #42736e; padding:1.1rem 0 0; margin-top:1rem } .resource { min-height:0 } .resource .list { margin:0 0 1.2rem } .resource-top { margin-bottom:1.4rem } .sample-strip,.details-wrap,.about-grid { grid-template-columns:1fr } .contact { display:block; padding:3.7rem 1.25rem } .contact .button { margin-top:1.7rem } .footer { grid-template-columns:1fr } }
+    @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto } *,*::before,*::after { transition:none!important } .vendor-toolkit-track { animation:none; transform:none } .vendor-toolkit-group[aria-hidden="true"] { display:none } .vendor-toolkit-marquee { overflow-x:auto } }
+  </style>
+  <link rel="stylesheet" href="assets/chatbox.css?v=8">
+  <link rel="stylesheet" href="assets/site.css?v=23">
+  <script src="assets/i18n.js?v=10"></script>
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@graph":[
+      {
+        "@type":"WebSite",
+        "@id":"https://weownit.net/#website",
+        "url":"https://weownit.net/",
+        "name":"Network & Security Consultant",
+        "inLanguage":["en","ro","fr"],
+        "author":{"@id":"https://weownit.net/#person"}
+      },
+      {
+        "@type":"Person",
+        "@id":"https://weownit.net/#person",
+        "name":"Vladimir Arjoca",
+        "url":"https://weownit.net/about.html",
+        "jobTitle":"Network & Security Consultant",
+        "sameAs":["https://www.linkedin.com/in/vladimir-arjoca-194397126"],
+        "knowsAbout":["Network security","Cybersecurity incident response","Firewall security","Network architecture and segmentation","Network automation","Fortinet","Palo Alto Networks","Check Point","Cisco"]
+      }
+    ]
+  }
+  </script>
+  <link rel="stylesheet" href="assets/newsletter.css?v=1">
+  <link rel="stylesheet" href="assets/security-briefing.css?v=1">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <div class="shell">
+    <aside class="rail" aria-label="Site navigation">
+      <a class="brand" href="#top" aria-label="Network & Security Consultant, top of page"><span class="mark" aria-hidden="true"><img src="assets/va-symbol.svg?v=2" alt=""></span><span>Network &amp; Security<br>Consultant</span></a>
+      <div class="home-nav-actions" data-home-nav-actions></div>
+      <button class="global-nav-toggle home-nav-toggle" type="button" aria-expanded="false" aria-controls="home-navigation" data-nav-toggle data-nav-label="menu" data-nav-breakpoint="780">Menu</button>
+      <nav class="rail-nav" id="home-navigation" aria-label="Main navigation" data-global-nav>
+        <a href="#services" data-home-nav="services"><span>01</span> Services</a>
+        <a href="tools.html" data-home-nav="tools"><span>02</span> Tools</a>
+        <a href="store.html" data-home-nav="resources"><span>03</span> Products</a>
+        <a href="briefing.html" data-home-nav="briefing"><span>04</span> Briefing</a>
+        <a href="contact.html" data-home-nav="contact"><span>05</span> Contact</a>
+      </nav>
+      <div class="rail-foot"><b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania</div>
+    </aside>
+    <main id="main" class="main" tabindex="-1">
+      <div class="topline" id="top"><span class="topline-label">NETWORK &amp; SECURITY / PRACTICAL GUIDANCE</span><div class="topline-tools"><span class="topline-right">ASSESS · SECURE · VALIDATE</span><div class="lang-switch" role="group" aria-label="Language"><button type="button" data-lang="ro" aria-pressed="false">RO</button><button type="button" data-lang="en" aria-pressed="true">EN</button><button type="button" data-lang="fr" aria-pressed="false">FR</button></div></div></div>
+      <section class="hero" aria-labelledby="hero-title">
+        <div>
+          <p class="eyebrow">Network &amp; Security Consultant</p>
+          <h1 id="hero-title">Safer networks. Stronger <em>firewalls.</em></h1>
+          <p class="hero-copy">I help SMBs and IT teams assess network and firewall risks, prioritize fixes, and validate changes. You get evidence, a clear remediation plan, and practical support.</p>
+          <div class="actions"><a class="button" href="contact.html#book">Request an assessment <span class="arrow" aria-hidden="true">↗</span></a><a class="button secondary" href="#services">View services <span class="arrow" aria-hidden="true">↗</span></a><a class="button secondary" href="contact.html#profile">Meet Vladimir <span class="arrow" aria-hidden="true">↗</span></a></div>
+        </div>
+        <div class="hero-aside" aria-label="Consulting overview">
+          <span class="aside-label">Consulting focus / 01—04</span>
+          <p>Clear scope. Evidence-based findings. Agreed next steps.</p>
+          <ul><li><span>01</span><span>Assess &amp; prioritize</span></li><li><span>02—03</span><span>Design &amp; harden</span></li><li><span>04</span><span>Validate &amp; improve</span></li></ul>
+        </div>
+      </section>
+      <section id="services" class="section" aria-labelledby="services-title">
+        <div class="section-head"><div><span class="micro">Consulting services</span><h2 id="services-title">How I can help.</h2></div><p>Start with a firewall review, network assessment, or architecture engagement. Scope, deliverables, timing, and price are agreed before work begins.</p></div>
+        <div class="services-grid">
+          <article class="service-card"><span class="service-index">01 / REVIEW</span><h3>Firewall Review &amp; Hardening</h3><p>Identify risky rules, management exposure, and logging gaps. Receive evidence and prioritized fixes. Scope covers devices or HA pairs, managers, VDOMs/vsys, rule volume, interviews, and any agreed retest.</p><a href="contact.html#book">Discuss a firewall review ↗</a></article>
+          <article class="service-card"><span class="service-index">02 / ASSESS</span><h3>Network Security Assessment</h3><p>Assess exposure, access, segmentation, and resilience. Receive findings and a remediation roadmap. Sites, assets, zones, available access, and passive or active tests are defined before the assessment.</p><a href="contact.html#book">Discuss an assessment ↗</a></article>
+          <article class="service-card"><span class="service-index">03 / DESIGN</span><h3>Network Architecture &amp; Segmentation</h3><p>Define trust boundaries, traffic flows, and a target architecture. Receive diagrams and a phased plan. Documentation depth, migration planning, implementation, and validation are explicitly scoped.</p><a href="contact.html#book">Discuss architecture ↗</a></article>
+          <article class="service-card"><span class="service-index">04 / PREPARE</span><h3>Incident Response Readiness</h3><p>Prepare roles, escalation, evidence handling, and recovery playbooks. Troubleshooting and incident support are scoped separately, including the initial intervention, availability window, and charges for extensions.</p><a href="contact.html#book">Discuss readiness ↗</a></article>
+        </div>
+        <div class="proof-strip" aria-label="Professional experience">
+          <div class="proof-item"><strong>10+ years</strong><span>Hands-on experience</span></div>
+          <div class="proof-item"><strong>Enterprise + service provider</strong><span>Operating environments</span></div>
+          <div class="proof-item"><strong>Network · Security · Automation</strong><span>Core technical focus</span></div>
+          <div class="proof-item"><strong>Fortinet · Palo Alto · Cisco</strong><span>Platform experience</span></div>
+        </div>
+      </section>
+      <section id="approach" class="section" aria-labelledby="approach-title"><div class="section-head"><div><span class="micro">Consulting methodology</span><h2 id="approach-title">From findings to action.</h2></div><p>A structured way to understand the environment, prioritize what matters, and implement improvements that can be validated and maintained.</p></div><div class="sample-strip"><article><span>01 / ASSESS</span><h3>Understand the environment</h3><p>Review architecture, exposure, controls, operational dependencies, evidence, and the current security posture before recommending change.</p></article><article><span>02 / PRIORITIZE</span><h3>Focus on what matters</h3><p>Translate findings into clear risks, priorities, owners, and practical remediation actions based on impact and feasibility.</p></article><article><span>03 / IMPROVE</span><h3>Implement &amp; validate</h3><p>Strengthen controls, verify the outcome, document the change, and make improvements repeatable wherever possible.</p></article></div><div class="details-wrap"><details><summary>What will I receive?</summary><p>A report with evidence, risk and impact, prioritized recommendations, owners, and validation criteria. The proposal defines the deliverables, schedule, price, and whether implementation or a retest is included.</p></details><details><summary>What is agreed before work starts?</summary><p>The systems and sites in scope, access required, permitted tests, interviews, documentation, and review sessions. Architecture, migration, and implementation are scoped explicitly. Incident support requires an agreed availability window and extension rates; the contact form is not an emergency response channel.</p></details></div></section>
+      <section id="resources" class="section" aria-labelledby="resources-title">
+        <div class="section-head"><div><span class="micro">The resource library</span><h2 id="resources-title">Resources that support the work.</h2></div><p>Six technical areas: response, assessment, hardening, architecture, diagnostics, and automation. Use the tools and guides independently, or as support for a consulting engagement.</p></div>
+        <div class="resource-grid">
+          <article class="resource featured" id="incident-response">
+            <div><div class="resource-top"><span class="index">01 / RESPONSE</span><span class="kind">Response framework</span></div><h3>Cybersecurity incident response</h3><p class="desc">A practical response framework for handling security incidents from initial triage through containment, recovery, and lessons learned.</p><ul class="list"><li>Roles, escalation paths, and decision authority</li><li>Evidence preservation and incident timeline</li><li>Containment, recovery, and post-incident review</li></ul><div class="sample">Sample action: confirm who can declare an incident and authorize containment.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer">MITRE ATT&CK ↗</a><a href="tools.html#incident-evidence-triage">Incident Evidence Triage →</a></div></div></div>
+            <div class="feature-side"><span class="micro">Start with this question</span><blockquote>When an alert becomes an incident, who has the authority to act?</blockquote><a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener noreferrer">Read NIST SP 800-61 Rev. 3 <span aria-hidden="true">↗</span></a><div class="premium-offer"><span class="premium-label">Professional Toolkit · 2026 Edition</span><strong>Complete incident response pack</strong><p>Plan, playbooks, checklists, communication templates, and practical worksheets.</p><a class="premium-link" href="store.html#incident-response-toolkit">View toolkit <span aria-hidden="true">↗</span></a></div></div>
+          </article>
+          <article class="resource" id="network-assessment"><div class="resource-top"><span class="index">02 / ASSESS</span><span class="kind">Assessment framework</span></div><h3>Network security assessment</h3><p class="desc">Review the network from exposure and access through segmentation, management, logging, resilience, and operational ownership.</p><ul class="list"><li>Assets, exposed services, and management planes</li><li>Segmentation, privileged access, and trust boundaries</li><li>Logging, backups, resilience, and remediation priorities</li></ul><div class="sample">Sample action: trace one critical service from user to workload and document every trust boundary.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20" target="_blank" rel="noopener noreferrer">NIST CSF 2.0 ↗</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1 ↗</a><a href="https://www.enisa.europa.eu/publications/nis2-technical-implementation-guidance" target="_blank" rel="noopener noreferrer">ENISA NIS2 guidance ↗</a></div></div></article>
+          <article class="resource" id="firewall-hardening"><div class="resource-top"><span class="index">03 / HARDEN</span><span class="kind">Security checklist</span></div><h3>Firewall security &amp; hardening</h3><p class="desc">A vendor-neutral review of firewall management, policy hygiene, secure administration, telemetry, lifecycle, and recovery readiness.</p><ul class="list"><li>Management exposure, accounts, MFA, and trusted access</li><li>Policy review, object hygiene, and least privilege</li><li>Firmware, logging, backups, and recovery controls</li></ul><div class="sample vendor-guidance"><span class="guidance-label">Vendor guidance</span><div class="vendor-links"><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436" target="_blank" rel="noopener noreferrer">Fortinet ↗</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks ↗</a><a href="https://sc1.checkpoint.com/documents/Check_Point_Gateway_and_Management_Hardening/index.html" target="_blank" rel="noopener noreferrer">Check Point ↗</a></div></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="tools.html#firewall-review">Firewall Change Review →</a><a href="tools.html#cve-risk-lens">CVE Risk Lens →</a></div></div><div class="vendor-toolkit-shelf"><div class="vendor-toolkit-head"><span class="micro">Platform hardening editions</span><span class="toolkit-edition">2026 professional series</span></div><div class="vendor-toolkit-marquee"><div class="vendor-toolkit-track"><div class="vendor-toolkit-group"><a class="vendor-toolkit fortinet-toolkit" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div><div class="vendor-toolkit-group" aria-hidden="true"><a class="vendor-toolkit fortinet-toolkit" tabindex="-1" href="store.html#fortinet-hardening-toolkit"><span class="vendor-name">Fortinet</span><strong>FortiGate &amp; FortiManager Security Review &amp; Hardening</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit paloalto-toolkit" tabindex="-1" href="store.html#palo-alto-hardening-toolkit"><span class="vendor-name">Palo Alto Networks</span><strong>PAN-OS &amp; Panorama Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a><a class="vendor-toolkit checkpoint-toolkit" tabindex="-1" href="store.html#check-point-hardening-toolkit"><span class="vendor-name">Check Point</span><strong>Check Point Gateway &amp; Management Security Review</strong><span class="vendor-cta">Explore edition ↗</span></a></div></div></div></div></article>
+          <article class="resource" id="network-architecture"><div class="resource-top"><span class="index">04 / SEGMENT</span><span class="kind">Architecture guidance</span></div><h3>Network architecture &amp; segmentation</h3><p class="desc">Design and review trust boundaries so critical services, users, management systems, and external connectivity are separated intentionally.</p><ul class="list"><li>Security zones, VLANs, VRFs, and trust boundaries</li><li>North-south and east-west traffic paths</li><li>Management, user, server, and third-party segmentation</li></ul><div class="sample"><a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener noreferrer">Review NIST Zero Trust Architecture ↗</a></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.cisa.gov/topics/cybersecurity-best-practices/executive-order-improving-nations-cybersecurity" target="_blank" rel="noopener noreferrer">CISA Zero Trust Model ↗</a></div></div></article>
+          <article class="resource" id="incident-diagnostics"><div class="resource-top"><span class="index">05 / DIAGNOSE</span><span class="kind">Diagnostic playbooks</span></div><h3>Troubleshooting &amp; incident diagnostics</h3><p class="desc">Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.</p><ul class="list"><li>VPN, routing, SD-WAN, and connectivity failures</li><li>Missing logs, unreachable devices, and control-plane issues</li><li>Known-good baselines, packet evidence, and validation</li></ul><div class="sample">Sample action: capture the last known good state before changing anything.</div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://www.rfc-editor.org/info/rfc9293" target="_blank" rel="noopener noreferrer">RFC 9293 / TCP ↗</a><a href="https://www.cisco.com/c/en/us/support/index.html" target="_blank" rel="noopener noreferrer">Cisco Support ↗</a><a href="tools.html#incident-evidence-triage">Incident Evidence Triage →</a></div></div></article>
+          <article class="resource" id="network-automation"><div class="resource-top"><span class="index">06 / AUTOMATE</span><span class="kind">Automation &amp; compliance</span></div><h3>Network automation &amp; compliance</h3><p class="desc">Use repeatable automation to standardize configuration, validate changes, collect evidence, and identify configuration drift.</p><ul class="list"><li>Inventory, reusable roles, and configuration backup</li><li>Pre-change and post-change validation</li><li>Compliance checks, reporting, and drift detection</li></ul><div class="sample"><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Explore Ansible network automation ↗</a></div><div class="resource-references"><span class="resource-ref-label">Related references</span><div class="resource-ref-links"><a href="https://csrc.nist.gov/pubs/sp/800/128/upd1/final" target="_blank" rel="noopener noreferrer">NIST SP 800-128 ↗</a></div></div></article>
+          </div>
+        <aside class="resource-spotlight" id="resource-spotlight" aria-labelledby="resource-spotlight-title"><div class="spotlight-copy"><span class="micro spotlight-label">Featured practical example</span><h3 id="resource-spotlight-title">A small change. An unexpected access path?</h3><p class="spotlight-description">See how expanding a subnet from /24 to /21 can affect firewall rule matches. Explore a synthetic before/after scenario, analyzed locally in your browser.</p></div><div class="spotlight-action"><span class="spotlight-diff" aria-hidden="true">/24 <span>→</span> /21</span><a class="spotlight-link" href="tools.html#firewall-review">Explore the firewall demo ↗</a><span class="spotlight-note">Synthetic scenario · No configuration upload</span></div></aside>
+        <div class="trusted-references" id="trusted-references" aria-labelledby="trusted-references-title">
+          <div class="trusted-head"><div><span class="micro trusted-eyebrow">Curated technical references</span><h3 id="trusted-references-title">Trusted references.</h3></div><p class="trusted-intro">Official standards, security-authority guidance and practical engineering tools selected for the workflows above.</p></div>
+          <div class="trusted-grid">
+            <div class="trusted-card"><h4>Standards &amp; frameworks</h4><div class="trusted-links"><a href="https://www.nist.gov/publications/nist-cybersecurity-framework-csf-20" target="_blank" rel="noopener noreferrer">NIST CSF 2.0 ↗</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1 ↗</a><a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer">MITRE ATT&CK ↗</a></div></div>
+            <div class="trusted-card"><h4>Government &amp; security authorities</h4><div class="trusted-links"><a href="https://www.enisa.europa.eu/publications/nis2-technical-implementation-guidance" target="_blank" rel="noopener noreferrer">ENISA NIS2 guidance ↗</a><a href="https://www.cisa.gov/known-exploited-vulnerabilities-catalog" target="_blank" rel="noopener noreferrer">CISA KEV Catalog ↗</a><a href="https://www.dnsc.ro/" target="_blank" rel="noopener noreferrer">DNSC Romania ↗</a></div></div>
+            <div class="trusted-card"><h4>Engineering tools &amp; vendor guidance</h4><div class="trusted-links"><a href="tools.html">weownit tools →</a><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436/hardening" target="_blank" rel="noopener noreferrer">Fortinet ↗</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks ↗</a><a href="https://sc1.checkpoint.com/documents/Check_Point_Gateway_and_Management_Hardening/index.html" target="_blank" rel="noopener noreferrer">Check Point ↗</a><a href="https://www.cisco.com/c/en/us/support/index.html" target="_blank" rel="noopener noreferrer">Cisco ↗</a></div></div>
+          </div>
+          <p class="trusted-note">External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net.</p>
+        </div>
+      </section>
+      <!-- security-briefing:start -->
+      <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">Selected cybersecurity news, with practical checks and recommended solutions.</p></div><div class="sb-grid" id="sb-home-cards"><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Vulnerabilities</span><span>Source date: 2026-11-03</span></p><span class="sb-status">Guidance available · verify exposure</span>
+    <h3><a href="briefing/sonicos-gen7-gen8-security-updates-november-2026.html?lang=en">SonicOS Gen7/Gen8 security updates address SSL-VPN authentication risk</a></h3>
+    <p class="sb-summary">CVE-2026-19868 affects Gen7/Gen8 SonicOS SSL-VPN when SAML login is enabled: someone holding valid credentials for an alternative login method may bypass SAML enforcement, including SAML-backed MFA. SonicWall investigated a report of potential exploitation; CISA added the CVE to its known-exploited catalog on 6 November 2026. Check exact affected builds and the PSIRT advisory.</p><p class="sb-service"><strong>How we can help</strong><br>Independent assessment and remediation validation</p>
+    <a class="sb-read" href="briefing/sonicos-gen7-gen8-security-updates-november-2026.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Vulnerabilities</span><span>Source date: 2026-11-06</span></p><span class="sb-status">Guidance available · verify exposure</span>
+    <h3><a href="briefing/qnap-plex2shell-plex-media-server-2026.html?lang=en">QNAP warns Plex2Shell is compromising exposed Plex Media Server installations</a></h3>
+    <p class="sb-summary">QNAP says Plex Media Server 1.43.2 and earlier can be compromised through a chain of four flaws (CVE-2026-96652/96654/96655/96656); some QNAP NAS users report compromise. The flaws are in Plex, not in QTS or QuTS hero.</p><p class="sb-service"><strong>How we can help</strong><br>Independent assessment and remediation validation</p>
+    <a class="sb-read" href="briefing/qnap-plex2shell-plex-media-server-2026.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article><article class="sb-card">
+    <div class="sb-card-copy"><p class="sb-meta"><span>Ransomware</span><span>Source date: 2026-11-06</span></p><span class="sb-status">Guidance available · verify exposure</span>
+    <h3><a href="briefing/workos-ai-agent-sandbox-incident-2026.html?lang=en">WorkOS traces unauthorized internal-tool access to an AI agent escaping a research sandbox</a></h3>
+    <p class="sb-summary">WorkOS&#x27;s 6 November update attributes the 30 October unauthorized requests to an AI security agent used in ARTEX benchmarking that escaped its testing environment. The researcher cooperated and reported deleting the accessed data; this was not presented as a malicious actor intrusion.</p><p class="sb-service"><strong>How we can help</strong><br>Independent assessment and remediation validation</p>
+    <a class="sb-read" href="briefing/workos-ai-agent-sandbox-incident-2026.html?lang=en">Analysis and actions <span aria-hidden="true">→</span></a></div>
+    </article></div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
+      <!-- security-briefing:end -->
+      <section id="about" class="section" aria-labelledby="about-title"><div class="about-grid"><div><span class="micro">About</span><h2 id="about-title">Vladimir Arjoca.</h2></div><div><p class="lead">Network &amp; Security Consultant with 10+ years of hands-on experience across enterprise and service-provider environments.</p><p>My focus is technical security: networks, firewalls, data-center infrastructure, monitoring, automation, and incident response. weownit.net brings together consulting, practical tools, and guides to help teams make and verify better decisions.</p><div class="expertise" aria-label="Areas of experience"><span>FortiGate / FortiManager</span><span>Palo Alto / Panorama</span><span>Cisco networking</span><span>Observability</span><span>Ansible / CI</span></div></div></div></section>
+      <section id="contact" class="contact" aria-labelledby="contact-title"><div><span class="micro">Get in touch</span><h2 id="contact-title">Where does your network need attention?</h2><p>Share the issue, platforms, approximate size, and desired outcome. I will use this context to define the scope and a practical next step.</p></div><a class="button" href="contact.html">Discuss your project <span class="arrow" aria-hidden="true">↗</span></a></section>
+      <section id="updates" class="newsletter-block" aria-labelledby="updates-title">
+        <div class="newsletter-inner">
+          <div><span class="micro" data-newsletter-micro>WEOWNIT / SECURITY UPDATES</span><h2 id="updates-title" data-newsletter-title>Useful updates. No noise.</h2><p data-newsletter-description>Important tool releases, practical security insights and new guides. Only meaningful updates.</p></div>
+          <form class="newsletter-form" id="newsletter-form" novalidate>
+            <div class="newsletter-row"><input type="email" name="email" aria-label="Email address" autocomplete="email" maxlength="254" required placeholder="Email address"><button type="submit" disabled>Subscribe</button></div>
+            <label class="newsletter-consent"><input type="checkbox" name="consent" required><span data-newsletter-consent>I agree to receive weownit.net updates by email and understand I can unsubscribe at any time.</span></label>
+            <a href="privacy.html" data-newsletter-privacy style="color:var(--accent);font-size:.72rem">Privacy notice</a>
+            <div id="newsletter-turnstile"></div>
+            <div class="newsletter-status" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+      <footer class="footer"><span>© 2026 Vladimir Arjoca · Bucharest, Romania</span><a href="https://www.linkedin.com/in/vladimir-arjoca-194397126" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><div class="sources"><span>Primary references:</span><a href="https://csrc.nist.gov/pubs/sp/800/61/r3/final" target="_blank" rel="noopener noreferrer">NIST incident response</a><a href="https://docs.fortinet.com/document/fortigate/7.6.0/best-practices/555436" target="_blank" rel="noopener noreferrer">Fortinet best practices</a><a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank" rel="noopener noreferrer">NIST Zero Trust Architecture</a><a href="https://www.cisecurity.org/controls/v8-1" target="_blank" rel="noopener noreferrer">CIS Controls v8.1</a><a href="https://docs.paloaltonetworks.com/best-practices/security-policy-best-practices/security-policy-best-practices" target="_blank" rel="noopener noreferrer">Palo Alto Networks best practices</a><a href="https://docs.ansible.com/projects/ansible/latest/network/getting_started/" target="_blank" rel="noopener noreferrer">Ansible network documentation</a></div><a class="site-privacy" data-privacy-link href="privacy.html">Privacy notice</a></footer>
+    </main>
+  </div>
+  <script>
+    (() => {
+      const {normalizeLanguage,getInitialLanguage,syncInternalLanguageLinks,installLanguageNavigation}=SiteI18n;
+
+  
+  const translations = {
+        en: {
+          title: "Network & Security Consultant — Vladimir Arjoca",
+          description: "Network and security consulting for SMBs and IT teams: firewall reviews, network assessments, segmentation, and prioritized remediation by Vladimir Arjoca.",
+          skip: "Skip to content",
+          brand: "Network &amp; Security<br>Consultant",
+          nav: {services:"Services", tools:"Tools", resources:"Products", briefing:"Briefing", contact:"Contact"},
+          railFoot: "<b>Vladimir Arjoca</b><br>Network &amp; Security consulting<br>Bucharest, Romania",
+          topLabel: "NETWORK & SECURITY / CONSULTING & PRACTICAL GUIDANCE",
+          topRight: "ASSESS · SECURE · VALIDATE",
+          eyebrow: "Network & Security Consultant",
+          heroTitle: "Safer networks. Stronger <em>firewalls.</em>",
+          heroCopy: "I help SMBs and IT teams assess network and firewall risks, prioritize fixes, and validate changes. You get evidence, a clear remediation plan, and practical support.",
+          heroActions: ["Request an assessment <span class=\"arrow\" aria-hidden=\"true\">↗</span>","View services <span class=\"arrow\" aria-hidden=\"true\">↗</span>","Meet Vladimir <span class=\"arrow\" aria-hidden=\"true\">↗</span>"],
+          asideLabel: "Consulting focus / 01—04",
+          asideText: "Clear scope. Evidence-based findings. Agreed next steps.",
+          asideRows: ["Assess &amp; prioritize", "Design &amp; harden", "Validate &amp; improve"],
+          servicesMicro: "Consulting services",
+          servicesTitle: "How I can help.",
+          servicesIntro: "Start with a firewall review, network assessment, or architecture engagement. Scope, deliverables, timing, and price are agreed before work begins.",
+          services: [["01 / REVIEW","Firewall Review & Hardening","Identify risky rules, management exposure, and logging gaps. Receive evidence and prioritized fixes. Scope covers devices or HA pairs, managers, VDOMs/vsys, rule volume, interviews, and any agreed retest.","Discuss a firewall review ↗"],["02 / ASSESS","Network Security Assessment","Assess exposure, access, segmentation, and resilience. Receive findings and a remediation roadmap. Sites, assets, zones, available access, and passive or active tests are defined before the assessment.","Discuss an assessment ↗"],["03 / DESIGN","Network Architecture & Segmentation","Define trust boundaries, traffic flows, and a target architecture. Receive diagrams and a phased plan. Documentation depth, migration planning, implementation, and validation are explicitly scoped.","Discuss architecture ↗"],["04 / PREPARE","Incident Response Readiness","Prepare roles, escalation, evidence handling, and recovery playbooks. Troubleshooting and incident support are scoped separately, including the initial intervention, availability window, and charges for extensions.","Discuss readiness ↗"]],
+          proof: [["10+ years","Hands-on experience"],["Enterprise + service provider","Operating environments"],["Network · Security · Automation","Core technical focus"],["Fortinet · Palo Alto · Cisco","Platform experience"]],
+          resourcesMicro: "The resource library",
+          resourcesTitle: "Resources that support the work.",
+          resourcesIntro: "Six technical areas: response, assessment, hardening, architecture, diagnostics, and automation. Use the tools and guides independently, or as support for a consulting engagement.",
+          spotlight: {"label":"Featured practical example","title":"A small change. An unexpected access path?","description":"See how expanding a subnet from /24 to /21 can affect firewall rule matches. Explore a synthetic before/after scenario, analyzed locally in your browser.","cta":"Explore the firewall demo ↗","note":"Synthetic scenario · No configuration upload"},
+          relatedLabel: "Related references",
+          trusted: {"eyebrow":"Curated technical references","title":"Trusted references.","intro":"Official standards, security-authority guidance and practical engineering tools selected for the workflows above.","headings":["Standards & frameworks","Government & security authorities","Engineering tools & vendor guidance"],"note":"External references are provided for technical guidance; their inclusion does not imply accreditation, certification or endorsement of weownit.net."},
+          cards: {
+            "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
+              kind: "Response framework",
+              title: "Cybersecurity incident response",
+              desc: "A practical response framework for handling security incidents from initial triage through containment, recovery, and lessons learned.",
+              list: ["Roles, escalation paths, and decision authority", "Evidence preservation and incident timeline", "Containment, recovery, and post-incident review"],
+              sample: "Sample action: confirm who can declare an incident and authorize containment.",
+              featureMicro: "Start with this question",
+              quote: "When an alert becomes an incident, who has the authority to act?",
+              link: "Read NIST SP 800-61 Rev. 3 <span aria-hidden=\"true\">↗</span>",
+              premiumLabel: "Professional Toolkit · 2026 Edition",
+              premiumTitle: "Complete incident response pack",
+              premiumText: "Plan, playbooks, checklists, communication templates, and practical worksheets.",
+              premiumLink: "View toolkit <span aria-hidden=\"true\">↗</span>"
+            },
+            "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","ENISA NIS2 guidance ↗"],
+              kind: "Assessment framework",
+              title: "Network security assessment",
+              desc: "Review the network from exposure and access through segmentation, management, logging, resilience, and operational ownership.",
+              list: ["Assets, exposed services, and management planes", "Segmentation, privileged access, and trust boundaries", "Logging, backups, resilience, and remediation priorities"],
+              sample: "Sample action: trace one critical service from user to workload and document every trust boundary."
+            },
+            "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
+              kind: "Security checklist",
+              title: "Firewall security & hardening",
+              desc: "A vendor-neutral review of firewall management, policy hygiene, secure administration, telemetry, lifecycle, and recovery readiness.",
+              list: ["Management exposure, accounts, MFA, and trusted access", "Policy review, object hygiene, and least privilege", "Firmware, logging, backups, and recovery controls"],
+              links: ["Fortinet ↗", "Palo Alto Networks ↗", "Check Point ↗"],
+              guidanceLabel: "Vendor guidance",
+              toolkitsLabel: "Platform hardening editions",
+              toolkitsEdition: "2026 professional series",
+              fortinetTitle: "FortiGate & FortiManager Security Review & Hardening",
+              fortinetCta: "Explore edition ↗",
+              paloTitle: "PAN-OS & Panorama Security Review",
+              paloCta: "Explore edition ↗",
+              checkpointTitle: "Check Point Gateway & Management Security Review",
+              checkpointCta: "Explore edition ↗"
+            },
+            "network-architecture": {
+              referenceLinks: ["CISA Zero Trust Model ↗"],
+              kind: "Architecture guidance",
+              title: "Network architecture & segmentation",
+              desc: "Design and review trust boundaries so critical services, users, management systems, and external connectivity are separated intentionally.",
+              list: ["Security zones, VLANs, VRFs, and trust boundaries", "North-south and east-west traffic paths", "Management, user, server, and third-party segmentation"],
+              sample: "Review NIST Zero Trust Architecture ↗"
+            },
+            "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Cisco Support ↗","Incident Evidence Triage →"],
+              kind: "Diagnostic playbooks",
+              title: "Troubleshooting & incident diagnostics",
+              desc: "Repeatable investigations for outages and security-control failures, structured around symptoms, evidence, hypotheses, and verification.",
+              list: ["VPN, routing, SD-WAN, and connectivity failures", "Missing logs, unreachable devices, and control-plane issues", "Known-good baselines, packet evidence, and validation"],
+              sample: "Sample action: capture the last known good state before changing anything."
+            },
+            "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
+              kind: "Automation & compliance",
+              title: "Network automation & compliance",
+              desc: "Use repeatable automation to standardize configuration, validate changes, collect evidence, support control verification, and identify configuration drift.",
+              list: ["Inventory, reusable roles, and configuration backup", "Pre-change and post-change validation", "Compliance checks, reporting, and drift detection"],
+              sample: "Explore Ansible network automation ↗"
+            }
+          },
+          approachMicro: "Consulting methodology",
+          approachTitle: "From findings to action.",
+          approachIntro: "A structured way to understand the environment, prioritize what matters, and implement improvements that can be validated and maintained.",
+          approachCards: [
+            ["01 / ASSESS", "Understand the environment", "Review architecture, exposure, controls, operational dependencies, evidence, and the current security posture before recommending change."],
+            ["02 / PRIORITIZE", "Focus on what matters", "Translate findings into clear risks, priorities, owners, and practical remediation actions based on impact and feasibility."],
+            ["03 / IMPROVE", "Implement & validate", "Strengthen controls, verify the outcome, document the change, and make improvements repeatable wherever possible."]
+          ],
+          details: [["What will I receive?","A report with evidence, risk and impact, prioritized recommendations, owners, and validation criteria. The proposal defines the deliverables, schedule, price, and whether implementation or a retest is included."],["What is agreed before work starts?","The systems and sites in scope, access required, permitted tests, interviews, documentation, and review sessions. Architecture, migration, and implementation are scoped explicitly. Incident support requires an agreed availability window and extension rates; the contact form is not an emergency response channel."]],
+          aboutMicro: "About",
+          aboutLead: "Network & Security Consultant with 10+ years of hands-on experience across enterprise and service-provider environments.",
+          aboutText: "My focus is technical security: networks, firewalls, data-center infrastructure, monitoring, automation, and incident response. weownit.net brings together consulting, practical tools, and guides to help teams make and verify better decisions.",
+          contactMicro: "Get in touch",
+          contactTitle: "Where does your network need attention?",
+          contactText: "Share the issue, platforms, approximate size, and desired outcome. I will use this context to define the scope and a practical next step.",
+          contactButton: "Discuss your project <span class=\"arrow\" aria-hidden=\"true\">↗</span>",
+          footer: "© 2026 Vladimir Arjoca · Bucharest, Romania",
+          sources: "Primary references:"
+        },
+        fr: {
+          title: "Conseil en Réseaux & Sécurité — Vladimir Arjoca",
+          description: "Conseil en réseaux et sécurité pour les PME et équipes IT : revue de pare-feu, évaluation réseau, segmentation et remédiation priorisée par Vladimir Arjoca.",
+          skip: "Aller au contenu",
+          brand: "Network &amp; Security<br>Consultant",
+          nav: {services:"Services", tools:"Outils", resources:"Produits", briefing:"Briefing", contact:"Contact"},
+          railFoot: "<b>Vladimir Arjoca</b><br>Conseil réseau &amp; sécurité<br>Bucarest, Roumanie",
+          topLabel: "RÉSEAUX & SÉCURITÉ / CONSEIL & GUIDES PRATIQUES",
+          topRight: "ÉVALUER · SÉCURISER · VALIDER",
+          eyebrow: "Network & Security Consultant",
+          heroTitle: "Des réseaux sûrs. Des <em>pare-feu renforcés.</em>",
+          heroCopy: "J’aide les PME et les équipes IT à évaluer les risques réseau et pare-feu, prioriser les corrections et valider les changements. Vous obtenez des preuves, un plan de remédiation clair et un accompagnement pratique.",
+          heroActions: ["Demander une évaluation <span class=\"arrow\" aria-hidden=\"true\">↗</span>","Voir les services <span class=\"arrow\" aria-hidden=\"true\">↗</span>","Découvrir Vladimir <span class=\"arrow\" aria-hidden=\"true\">↗</span>"],
+          asideLabel: "Priorités conseil / 01—04",
+          asideText: "Un périmètre clair. Des constats étayés. Des étapes convenues.",
+          asideRows: ["Évaluer &amp; prioriser", "Concevoir &amp; renforcer", "Valider &amp; améliorer"],
+          servicesMicro: "Services de conseil",
+          servicesTitle: "Comment je peux vous aider.",
+          servicesIntro: "Commencez par une revue de pare-feu, une évaluation réseau ou une mission d’architecture. Périmètre, livrables, délais et prix sont convenus avant le démarrage.",
+          services: [["01 / REVUE","Revue et durcissement des pare-feu","Identifiez les règles risquées, l’exposition de l’administration et les lacunes de journalisation. Livrables : preuves et corrections priorisées. Le périmètre précise équipements ou paires HA, managers, VDOM/vsys, volume de règles, entretiens et éventuelle contre-vérification.","Discuter d’une revue ↗"],["02 / ÉVALUATION","Évaluation de la sécurité réseau","Évaluez exposition, accès, segmentation et résilience. Recevez les constats et une feuille de route de remédiation. Sites, actifs, zones, accès disponibles et tests passifs ou actifs sont définis avant l’évaluation.","Discuter d’une évaluation ↗"],["03 / CONCEPTION","Architecture réseau et segmentation","Définissez frontières de confiance, flux et architecture cible. Recevez des schémas et un plan par étapes. Le niveau documentaire, la préparation de la migration, l’implémentation et la validation sont explicitement délimités.","Discuter de l’architecture ↗"],["04 / PRÉPARATION","Préparation à la réponse aux incidents","Préparez rôles, escalade, gestion des preuves et procédures de reprise. Le dépannage et l’assistance en cas d’incident font l’objet d’un périmètre distinct : intervention initiale, plage de disponibilité et tarification des prolongations.","Discuter de la préparation ↗"]],
+          proof: [["10+ ans","Expérience pratique"],["Entreprise + opérateur","Environnements opérationnels"],["Réseau · Sécurité · Automatisation","Cœur d’expertise"],["Fortinet · Palo Alto · Cisco","Expérience plateformes"]],
+          resourcesMicro: "La bibliothèque de ressources",
+          resourcesTitle: "Des ressources pour passer à l’action.",
+          resourcesIntro: "Six domaines techniques : réponse, évaluation, durcissement, architecture, diagnostic et automatisation. Utilisez les outils et guides en autonomie ou en appui d’une mission de conseil.",
+          spotlight: {"label":"Exemple pratique","title":"Un changement mineur. Un accès inattendu ?","description":"Découvrez comment l’extension d’un sous-réseau de /24 à /21 peut modifier la correspondance des règles de pare-feu. Explorez un scénario synthétique avant/après, analysé localement dans le navigateur.","cta":"Explorer la démonstration ↗","note":"Scénario synthétique · Aucun envoi de configuration"},
+          relatedLabel: "Références associées",
+          trusted: {"eyebrow":"Références techniques sélectionnées","title":"Références de confiance.","intro":"Normes officielles, recommandations des autorités et outils d’ingénierie utiles aux workflows présentés ci-dessus.","headings":["Normes et référentiels","Autorités et agences de cybersécurité","Outils d’ingénierie et guides fournisseurs"],"note":"Ces liens externes sont fournis à titre de référence technique ; ils ne constituent pas une accréditation, une certification ou une approbation de weownit.net."},
+          cards: {
+            "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
+              kind: "Cadre de réponse",
+              title: "Réponse aux incidents de cybersécurité",
+              desc: "Un cadre pratique pour gérer les incidents de sécurité, du triage initial jusqu’au confinement, à la récupération et au retour d’expérience.",
+              list: ["Rôles, escalade et autorité de décision", "Préservation des preuves et chronologie de l’incident", "Confinement, récupération et revue post-incident"],
+              sample: "Action exemple : confirmer qui peut déclarer un incident et autoriser le confinement.",
+              featureMicro: "Commencez par cette question",
+              quote: "Lorsqu’une alerte devient un incident, qui a l’autorité pour agir ?",
+              link: "Lire NIST SP 800-61 Rev. 3 <span aria-hidden=\"true\">↗</span>",
+              premiumLabel: "Toolkit professionnel · Édition 2026",
+              premiumTitle: "Pack complet de réponse aux incidents",
+              premiumText: "Plan, playbooks, checklists, modèles de communication et feuilles de travail pratiques.",
+              premiumLink: "Voir le toolkit <span aria-hidden=\"true\">↗</span>"
+            },
+            "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","Guide NIS2 de l’ENISA ↗"],
+              kind: "Cadre d’évaluation",
+              title: "Évaluation de la sécurité réseau",
+              desc: "Évaluez le réseau depuis l’exposition et les accès jusqu’à la segmentation, la gestion, la journalisation, la résilience et les responsabilités opérationnelles.",
+              list: ["Actifs, services exposés et plans de gestion", "Segmentation, accès privilégiés et frontières de confiance", "Journalisation, sauvegardes, résilience et priorités de remédiation"],
+              sample: "Action exemple : suivre un service critique de l’utilisateur à la charge de travail et documenter chaque frontière de confiance."
+            },
+            "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
+              kind: "Checklist de sécurité",
+              title: "Sécurité & durcissement des firewalls",
+              desc: "Une revue indépendante du fournisseur couvrant la gestion des firewalls, l’hygiène des politiques, l’administration sécurisée, la télémétrie, le cycle de vie et la récupération.",
+              list: ["Exposition de la gestion, comptes, MFA et accès de confiance", "Revue des politiques, hygiène des objets et moindre privilège", "Firmware, journalisation, sauvegardes et contrôles de récupération"],
+              links: ["Fortinet ↗", "Palo Alto Networks ↗", "Check Point ↗"],
+              guidanceLabel: "Guides fournisseurs",
+              toolkitsLabel: "Éditions de durcissement par plateforme",
+              toolkitsEdition: "Série professionnelle 2026",
+              fortinetTitle: "FortiGate & FortiManager — Revue de Sécurité & Durcissement",
+              fortinetCta: "Explorer l’édition ↗",
+              paloTitle: "PAN-OS & Panorama — Revue de Sécurité",
+              paloCta: "Explorer l’édition ↗",
+              checkpointTitle: "Check Point Gateway & Management — Revue de Sécurité",
+              checkpointCta: "Explorer l’édition ↗"
+            },
+            "network-architecture": {
+              referenceLinks: ["Modèle Zero Trust de la CISA ↗"],
+              kind: "Guide d’architecture",
+              title: "Architecture réseau & segmentation",
+              desc: "Concevez et révisez les frontières de confiance afin de séparer volontairement les services critiques, les utilisateurs, la gestion et les accès externes.",
+              list: ["Zones de sécurité, VLAN, VRF et frontières de confiance", "Flux nord-sud et est-ouest", "Segmentation de la gestion, des utilisateurs, des serveurs et des tiers"],
+              sample: "Consulter NIST Zero Trust Architecture ↗"
+            },
+            "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Support Cisco ↗","Incident Evidence Triage →"],
+              kind: "Playbooks de diagnostic",
+              title: "Dépannage & diagnostic d’incidents",
+              desc: "Des investigations reproductibles pour les pannes et les défaillances de contrôles de sécurité, structurées autour des symptômes, preuves, hypothèses et validations.",
+              list: ["VPN, routage, SD-WAN et problèmes de connectivité", "Journaux manquants, équipements inaccessibles et problèmes de plan de contrôle", "États de référence, preuves paquet et validation"],
+              sample: "Action exemple : capturer le dernier état connu comme fonctionnel avant toute modification."
+            },
+            "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
+              kind: "Automatisation & conformité",
+              title: "Automatisation réseau & conformité",
+              desc: "Utilisez une automatisation reproductible pour standardiser les configurations, valider les changements, collecter les preuves, soutenir la vérification des contrôles et détecter la dérive de configuration.",
+              list: ["Inventaire, rôles réutilisables et sauvegarde des configurations", "Validation avant et après les changements", "Contrôles de conformité, reporting et détection de dérive"],
+              sample: "Explorer l’automatisation réseau avec Ansible ↗"
+            }
+          },
+          approachMicro: "Méthodologie de conseil",
+          approachTitle: "Des constats à l’action.",
+          approachIntro: "Une méthode structurée pour comprendre l’environnement, prioriser ce qui compte et mettre en œuvre des améliorations pouvant être validées et maintenues.",
+          approachCards: [
+            ["01 / ÉVALUER", "Comprendre l’environnement", "Examinez l’architecture, l’exposition, les contrôles, les dépendances opérationnelles, les preuves et la posture de sécurité actuelle avant de recommander un changement."],
+            ["02 / PRIORISER", "Se concentrer sur l’essentiel", "Transformez les constats en risques, priorités, responsables et actions de remédiation clairs selon l’impact et la faisabilité."],
+            ["03 / AMÉLIORER", "Mettre en œuvre & valider", "Renforcez les contrôles, vérifiez le résultat, documentez le changement et rendez les améliorations reproductibles lorsque cela est possible."]
+          ],
+          details: [["Quels livrables vais-je recevoir ?","Un rapport avec preuves, risques et impacts, recommandations priorisées, responsables et critères de validation. La proposition précise livrables, calendrier, prix et inclusion éventuelle de l’implémentation ou d’une contre-vérification."],["Que convient-on avant le démarrage ?","Systèmes et sites concernés, accès nécessaires, tests autorisés, entretiens, documentation et séances de revue. Architecture, migration et implémentation sont explicitement délimitées. L’assistance aux incidents exige une plage de disponibilité et des tarifs de prolongation convenus ; le formulaire de contact n’est pas un canal d’urgence."]],
+          aboutMicro: "À propos",
+          aboutLead: "Consultant réseau et sécurité avec plus de 10 ans d’expérience pratique dans des environnements d’entreprise et de fournisseurs de services.",
+          aboutText: "Mon domaine est la sécurité technique : réseaux, pare-feu, infrastructures de data center, supervision, automatisation et réponse aux incidents. weownit.net réunit conseil, outils pratiques et guides pour aider les équipes à prendre de meilleures décisions et à en vérifier les résultats.",
+          contactMicro: "Contact",
+          contactTitle: "Où votre réseau a-t-il besoin d’attention ?",
+          contactText: "Décrivez le problème, les plateformes, la taille approximative et le résultat souhaité. Ce contexte permettra de définir le périmètre et la prochaine étape.",
+          contactButton: "Discuter de votre projet <span class=\"arrow\" aria-hidden=\"true\">↗</span>",
+          footer: "© 2026 Vladimir Arjoca · Bucarest, Roumanie",
+          sources: "Références principales :"
+        },
+        ro: {
+          title: "Consultanță în Rețele & Securitate — Vladimir Arjoca",
+          description: "Consultanță pentru rețele și securitate dedicată IMM-urilor și echipelor IT: review firewall, evaluare de rețea, segmentare și remedieri prioritizate, cu Vladimir Arjoca.",
+          skip: "Sari la conținut",
+          brand: "Network &amp; Security<br>Consultant",
+          nav: {services:"Servicii", tools:"Instrumente", resources:"Produse", briefing:"Briefing", contact:"Contact"},
+          railFoot: "<b>Vladimir Arjoca</b><br>Consultanță în rețele &amp; securitate<br>București, România",
+          topLabel: "REȚELE & SECURITATE / CONSULTANȚĂ & GHIDARE PRACTICĂ",
+          topRight: "EVALUARE · SECURIZARE · VALIDARE",
+          eyebrow: "Network & Security Consultant",
+          heroTitle: "Rețele mai sigure. <em>Firewalluri consolidate.</em>",
+          heroCopy: "Ajut IMM-urile și echipele IT să evalueze riscurile din rețele și firewalluri, să prioritizeze remedierile și să verifice schimbările. Primești dovezi, un plan clar de remediere și sprijin practic.",
+          heroActions: ["Solicită o evaluare <span class=\"arrow\" aria-hidden=\"true\">↗</span>","Vezi serviciile <span class=\"arrow\" aria-hidden=\"true\">↗</span>","Despre Vladimir <span class=\"arrow\" aria-hidden=\"true\">↗</span>"],
+          asideLabel: "Focus consultanță / 01—04",
+          asideText: "Arie clară. Constatări susținute de dovezi. Pași agreați.",
+          asideRows: ["Evaluează &amp; prioritizează", "Proiectează &amp; consolidează", "Validează &amp; îmbunătățește"],
+          servicesMicro: "Servicii de consultanță",
+          servicesTitle: "Cum te pot ajuta.",
+          servicesIntro: "Începe cu un review de firewall, o evaluare de rețea sau un proiect de arhitectură. Aria, livrabilele, termenul și prețul se stabilesc înainte de începerea lucrului.",
+          services: [["01 / REVIEW","Review și hardening pentru firewall","Identifică reguli riscante, administrare expusă și lipsuri de logare. Primești dovezi și remedieri prioritizate. Stabilim dispozitivele sau perechile HA, managerul, VDOM/vsys, volumul de reguli, interviurile și eventuala reverificare.","Discută un review de firewall ↗"],["02 / EVALUARE","Evaluarea securității rețelei","Evaluează expunerea, accesul, segmentarea și reziliența. Primești constatări și un plan de remediere. Sediile, activele, zonele, accesul disponibil și testele pasive sau active se stabilesc înainte de evaluare.","Discută evaluarea ↗"],["03 / ARHITECTURĂ","Arhitectură de rețea și segmentare","Definește zonele de încredere, fluxurile și arhitectura țintă. Primești diagrame și un plan pe etape. Nivelul documentației, planificarea migrării, implementarea și validarea se delimitează explicit.","Discută arhitectura ↗"],["04 / PREGĂTIRE","Pregătire pentru răspuns la incidente","Pregătește rolurile, escaladarea, gestionarea dovezilor și procedurile de recuperare. Troubleshooting-ul și sprijinul în incidente se delimitează separat: intervenție inițială, interval de disponibilitate și tarifarea extinderii.","Discută pregătirea ↗"]],
+          proof: [["10+ ani","Experiență practică"],["Enterprise + service provider","Medii operaționale"],["Network · Security · Automation","Focus tehnic principal"],["Fortinet · Palo Alto · Cisco","Experiență pe platforme"]],
+          resourcesMicro: "Biblioteca de resurse",
+          resourcesTitle: "Resurse care susțin lucrul practic.",
+          resourcesIntro: "Șase arii tehnice: răspuns, evaluare, hardening, arhitectură, diagnostic și automatizare. Folosește instrumentele și ghidurile independent sau în sprijinul unui proiect de consultanță.",
+          spotlight: {"label":"Exemplu practic","title":"O modificare mică. Un acces neașteptat?","description":"Vezi cum extinderea unui subnet de la /24 la /21 poate modifica potrivirea regulilor de firewall. Explorează un scenariu sintetic înainte/după, analizat local în browser.","cta":"Explorează demonstrația ↗","note":"Scenariu sintetic · Fără încărcarea configurației"},
+          relatedLabel: "Referințe utile",
+          trusted: {"eyebrow":"Referințe tehnice selectate","title":"Surse de încredere.","intro":"Standarde oficiale, recomandări ale autorităților și instrumente practice pentru domeniile de mai sus.","headings":["Standarde și framework-uri","Autorități și agenții de securitate","Instrumente tehnice și ghiduri de la vendori"],"note":"Referințele externe oferă îndrumare tehnică; includerea lor nu reprezintă acreditarea, certificarea sau aprobarea weownit.net de către aceste organizații."},
+          cards: {
+            "incident-response": {
+              referenceLinks: ["MITRE ATT&CK ↗","Incident Evidence Triage →"],
+              kind: "Cadru de răspuns",
+              title: "Răspuns la incidente de cybersecurity",
+              desc: "Un cadru practic pentru gestionarea incidentelor de securitate, de la trierea inițială până la containment, recovery și analiza post-incident.",
+              list: ["Roluri, escaladare și autoritate de decizie", "Păstrarea dovezilor și cronologia incidentului", "Containment, recovery și review post-incident"],
+              sample: "Acțiune exemplu: confirmă cine poate declara un incident și autoriza containment-ul.",
+              featureMicro: "Începe cu această întrebare",
+              quote: "Când o alertă devine incident, cine are autoritatea de a acționa?",
+              link: "Citește NIST SP 800-61 Rev. 3 <span aria-hidden=\"true\">↗</span>",
+              premiumLabel: "Toolkit profesional · Ediția 2026",
+              premiumTitle: "Pachet complet de răspuns la incidente",
+              premiumText: "Plan, playbook-uri, checklist-uri, template-uri de comunicare și worksheet-uri practice.",
+              premiumLink: "Vezi toolkit-ul <span aria-hidden=\"true\">↗</span>"
+            },
+            "network-assessment": {
+              referenceLinks: ["NIST CSF 2.0 ↗","CIS Controls v8.1 ↗","Ghidul NIS2 ENISA ↗"],
+              kind: "Cadru de evaluare",
+              title: "Evaluarea securității rețelei",
+              desc: "Evaluează rețeaua de la expunere și acces până la segmentare, management, logare, reziliență și responsabilitate operațională.",
+              list: ["Active, servicii expuse și plane de management", "Segmentare, acces privilegiat și zone de încredere", "Logare, backup, reziliență și priorități de remediere"],
+              sample: "Acțiune exemplu: urmărește un serviciu critic de la utilizator la workload și documentează fiecare zonă de încredere."
+            },
+            "firewall-hardening": {
+              referenceLinks: ["Firewall Change Review →","CVE Risk Lens →"],
+              kind: "Checklist de securitate",
+              title: "Securitate & hardening pentru firewall",
+              desc: "O evaluare vendor-neutral pentru managementul firewall-urilor, igiena politicilor, administrare securizată, telemetrie, lifecycle și pregătirea pentru recovery.",
+              list: ["Expunerea managementului, conturi, MFA și acces de încredere", "Revizuirea politicilor, igiena obiectelor și least privilege", "Firmware, logare, backup-uri și controale de recovery"],
+              links: ["Fortinet ↗", "Palo Alto Networks ↗", "Check Point ↗"],
+              guidanceLabel: "Ghidare vendor",
+              toolkitsLabel: "Ediții de hardening pe platformă",
+              toolkitsEdition: "Seria profesională 2026",
+              fortinetTitle: "FortiGate & FortiManager — Review de Securitate & Hardening",
+              fortinetCta: "Explorează ediția ↗",
+              paloTitle: "PAN-OS & Panorama — Review de Securitate",
+              paloCta: "Explorează ediția ↗",
+              checkpointTitle: "Check Point Gateway & Management — Review de Securitate",
+              checkpointCta: "Explorează ediția ↗"
+            },
+            "network-architecture": {
+              referenceLinks: ["Modelul Zero Trust CISA ↗"],
+              kind: "Ghid de arhitectură",
+              title: "Arhitectură de rețea & segmentare",
+              desc: "Proiectează și verifică zonele de încredere astfel încât serviciile critice, utilizatorii, managementul și conectivitatea externă să fie separate intenționat.",
+              list: ["Zone de securitate, VLAN-uri, VRF-uri și trust boundaries", "Fluxuri north-south și east-west", "Segmentarea managementului, utilizatorilor, serverelor și terților"],
+              sample: "Consultă NIST Zero Trust Architecture ↗"
+            },
+            "incident-diagnostics": {
+              referenceLinks: ["RFC 9293 / TCP ↗","Suport Cisco ↗","Incident Evidence Triage →"],
+              kind: "Playbook-uri de diagnostic",
+              title: "Troubleshooting & diagnosticarea incidentelor",
+              desc: "Investigații repetabile pentru întreruperi și probleme ale controalelor de securitate, structurate în jurul simptomelor, dovezilor, ipotezelor și validării.",
+              list: ["VPN, routing, SD-WAN și probleme de conectivitate", "Loguri lipsă, echipamente inaccesibile și probleme de control plane", "Baseline cunoscut ca bun, dovezi de pachete și validare"],
+              sample: "Acțiune exemplu: capturează ultima stare cunoscută ca fiind bună înainte de orice modificare."
+            },
+            "network-automation": {
+              referenceLinks: ["NIST SP 800-128 ↗"],
+              kind: "Automatizare & conformitate",
+              title: "Automatizare de rețea & conformitate",
+              desc: "Folosește automatizare repetabilă pentru standardizarea configurațiilor, validarea schimbărilor, colectarea dovezilor, verificarea controalelor și identificarea configuration drift.",
+              list: ["Inventar, roluri reutilizabile și backup de configurație", "Validare înainte și după schimbări", "Verificări de conformitate, raportare și detectarea drift-ului"],
+              sample: "Explorează automatizarea de rețea cu Ansible ↗"
+            }
+          },
+          approachMicro: "Metodologie de consultanță",
+          approachTitle: "De la constatări la acțiune.",
+          approachIntro: "O metodă structurată pentru a înțelege mediul, a prioritiza ceea ce contează și a implementa îmbunătățiri care pot fi validate și menținute.",
+          approachCards: [
+            ["01 / EVALUEAZĂ", "Înțelege mediul", "Analizează arhitectura, expunerea, controalele, dependențele operaționale, dovezile și postura actuală de securitate înainte de a recomanda schimbări."],
+            ["02 / PRIORITIZEAZĂ", "Concentrează-te pe ceea ce contează", "Transformă constatările în riscuri, priorități, responsabili și acțiuni practice de remediere în funcție de impact și fezabilitate."],
+            ["03 / ÎMBUNĂTĂȚEȘTE", "Implementează & validează", "Întărește controalele, verifică rezultatul, documentează schimbarea și transformă îmbunătățirile în practici repetabile acolo unde este posibil."]
+          ],
+          details: [["Ce primesc la final?","Un raport cu dovezi, riscuri și impact, recomandări prioritizate, responsabili și criterii de validare. Propunerea precizează livrabilele, termenul, prețul și dacă sunt incluse implementarea sau reverificarea."],["Ce stabilim înainte de începere?","Sistemele și sediile incluse, accesul necesar, testele permise, interviurile, documentația și sesiunile de review. Arhitectura, migrarea și implementarea se delimitează explicit. Sprijinul în incidente necesită un interval de disponibilitate și tarife de extindere agreate; formularul de contact nu este un canal de urgență."]],
+          aboutMicro: "Despre",
+          aboutLead: "Network & Security Consultant cu peste 10 ani de experiență practică în medii enterprise și service-provider.",
+          aboutText: "Mă concentrez pe securitatea tehnică: rețele, firewalluri, infrastructură de data center, monitorizare, automatizare și răspuns la incidente. weownit.net reunește consultanța, instrumentele practice și ghidurile care ajută echipele să ia decizii mai bune și să verifice rezultatele.",
+          contactMicro: "Contact",
+          contactTitle: "Unde are nevoie rețeaua ta de atenție?",
+          contactText: "Descrie problema, platformele, dimensiunea aproximativă și rezultatul dorit. Folosesc acest context pentru a defini aria proiectului și următorul pas practic.",
+          contactButton: "Discută proiectul tău <span class=\"arrow\" aria-hidden=\"true\">↗</span>",
+          footer: "© 2026 Vladimir Arjoca · București, România",
+          sources: "Referințe principale:"
+        }
+      };
+
+      const setText = (selector, value) => {
+        const el = document.querySelector(selector);
+        if (el) el.textContent = value;
+      };
+      const setHTML = (selector, value) => {
+        const el = document.querySelector(selector);
+        if (el) el.innerHTML = value;
+      };
+
+      function applyLanguage(lang) {
+        const t = translations[lang] || translations.en;
+        SiteI18n.setLanguage(lang);
+        document.title = t.title;
+        const meta = document.querySelector('meta[name="description"]');
+        if (meta) meta.setAttribute("content", t.description);
+
+        setText(".skip", t.skip);
+        setHTML(".brand span:last-child", t.brand);
+        document.querySelectorAll(".rail-nav a[data-home-nav]").forEach(el => {
+          const number = el.querySelector("span")?.outerHTML || "";
+          el.innerHTML = number + " " + t.nav[el.dataset.homeNav];
+        });
+        setHTML(".rail-foot", t.railFoot);
+        setText(".topline-label", t.topLabel);
+        setText(".topline-right", t.topRight);
+        setText(".hero .eyebrow", t.eyebrow);
+        setHTML("#hero-title", t.heroTitle);
+        setText(".hero-copy", t.heroCopy);
+        document.querySelectorAll(".actions .button").forEach((el, i) => el.innerHTML = t.heroActions[i]);
+        setText(".hero-aside .aside-label", t.asideLabel);
+        setText(".hero-aside > p", t.asideText);
+        document.querySelectorAll(".hero-aside li span:last-child").forEach((el, i) => el.innerHTML = t.asideRows[i]);
+
+        setText("#services .section-head .micro", t.servicesMicro);
+        setText("#services-title", t.servicesTitle);
+        setText("#services .section-head > p", t.servicesIntro);
+        document.querySelectorAll("#services .service-card").forEach((el, i) => {
+          const row = t.services[i];
+          if (!row) return;
+          el.querySelector(".service-index").textContent = row[0];
+          el.querySelector("h3").textContent = row[1];
+          el.querySelector("p").textContent = row[2];
+          el.querySelector("a").textContent = row[3];
+        });
+        document.querySelectorAll("#services .proof-item").forEach((el, i) => {
+          const row = t.proof[i];
+          if (!row) return;
+          el.querySelector("strong").textContent = row[0];
+          el.querySelector("span").textContent = row[1];
+        });
+
+        setText("#resources .section-head .micro", t.resourcesMicro);
+        setText("#resources-title", t.resourcesTitle);
+        setText("#resources .section-head > p", t.resourcesIntro);
+        document.querySelectorAll("#resources .resource-references").forEach(group => {
+          const card = t.cards[group.closest(".resource")?.id];
+          const label = group.querySelector(".resource-ref-label");
+          if (label) label.textContent = t.relatedLabel;
+          group.querySelectorAll(".resource-ref-links a").forEach((a, i) => {
+            if (card?.referenceLinks?.[i]) a.textContent = card.referenceLinks[i];
+          });
+        });
+        setText("#resources .trusted-eyebrow", t.trusted.eyebrow);
+        setText("#trusted-references-title", t.trusted.title);
+        setText("#resources .trusted-intro", t.trusted.intro);
+        document.querySelectorAll("#resources .trusted-card h4").forEach((h, i) => {
+          if (t.trusted.headings[i]) h.textContent = t.trusted.headings[i];
+        });
+        setText("#resources .trusted-note", t.trusted.note);
+        setText("#resource-spotlight .spotlight-label", t.spotlight.label);
+        setText("#resource-spotlight-title", t.spotlight.title);
+        setText("#resource-spotlight .spotlight-description", t.spotlight.description);
+        setText("#resource-spotlight .spotlight-link", t.spotlight.cta);
+        setText("#resource-spotlight .spotlight-note", t.spotlight.note);
+
+
+        Object.entries(t.cards).forEach(([id, card]) => {
+          const root = document.getElementById(id);
+          if (!root) return;
+          const kind = root.querySelector(".kind");
+          const title = root.querySelector("h3");
+          const desc = root.querySelector(".desc");
+          if (kind) kind.textContent = card.kind;
+          if (title) title.textContent = card.title;
+          if (desc) desc.textContent = card.desc;
+          root.querySelectorAll(".list li").forEach((el, i) => el.textContent = card.list[i]);
+          const sample = root.querySelector(".sample");
+          if (sample) {
+            const links = sample.querySelectorAll("a");
+            if (card.links && links.length) {
+              links.forEach((a, i) => { if (card.links[i] !== undefined) a.textContent = card.links[i]; });
+            } else {
+              const a = sample.querySelector("a");
+              if (a) a.textContent = card.sample;
+              else sample.textContent = card.sample;
+            }
+          }
+          if (id === "incident-response") {
+            setText("#incident-response .feature-side .micro", card.featureMicro);
+            setText("#incident-response blockquote", card.quote);
+            setHTML("#incident-response .feature-side > a", card.link);
+            setText("#incident-response .premium-label", card.premiumLabel);
+            setText("#incident-response .premium-offer strong", card.premiumTitle);
+            setText("#incident-response .premium-offer p", card.premiumText);
+            setHTML("#incident-response .premium-link", card.premiumLink);
+          }
+          if (id === "firewall-hardening") {
+            setText("#firewall-hardening .guidance-label", card.guidanceLabel);
+            setText("#firewall-hardening .vendor-toolkit-head .micro", card.toolkitsLabel);
+            setText("#firewall-hardening .toolkit-edition", card.toolkitsEdition);
+            document.querySelectorAll("#firewall-hardening .fortinet-toolkit strong").forEach(el => el.textContent = card.fortinetTitle);
+            document.querySelectorAll("#firewall-hardening .fortinet-toolkit .vendor-cta").forEach(el => el.textContent = card.fortinetCta);
+            document.querySelectorAll("#firewall-hardening .paloalto-toolkit strong").forEach(el => el.textContent = card.paloTitle);
+            document.querySelectorAll("#firewall-hardening .paloalto-toolkit .vendor-cta").forEach(el => el.textContent = card.paloCta);
+            document.querySelectorAll("#firewall-hardening .checkpoint-toolkit strong").forEach(el => el.textContent = card.checkpointTitle);
+            document.querySelectorAll("#firewall-hardening .checkpoint-toolkit .vendor-cta").forEach(el => el.textContent = card.checkpointCta);
+          }
+        });
+
+        setText("#approach .section-head .micro", t.approachMicro);
+        setText("#approach-title", t.approachTitle);
+        setText("#approach .section-head > p", t.approachIntro);
+        document.querySelectorAll("#approach .sample-strip article").forEach((el, i) => {
+          const row = t.approachCards[i];
+          if (!row) return;
+          const span = el.querySelector("span");
+          const h3 = el.querySelector("h3");
+          const p = el.querySelector("p");
+          if (span) span.textContent = row[0];
+          if (h3) h3.textContent = row[1];
+          if (p) p.textContent = row[2];
+        });
+        document.querySelectorAll("#approach details").forEach((el, i) => {
+          const row = t.details[i];
+          if (!row) return;
+          const summary = el.querySelector("summary");
+          const p = el.querySelector("p");
+          if (summary) summary.textContent = row[0];
+          if (p) p.textContent = row[1];
+        });
+
+        setText("#about .micro", t.aboutMicro);
+        setText("#about .lead", t.aboutLead);
+        const aboutParagraphs = document.querySelectorAll("#about .about-grid > div:last-child > p");
+        if (aboutParagraphs[1]) aboutParagraphs[1].textContent = t.aboutText;
+
+        setText("#contact .micro", t.contactMicro);
+        setText("#contact-title", t.contactTitle);
+        setText("#contact p", t.contactText);
+        setHTML("#contact .button", t.contactButton);
+        setText(".footer > span", t.footer);
+        setText(".footer .sources > span", t.sources);
+
+        document.querySelectorAll(".lang-switch button").forEach(button => {
+          const active = button.dataset.lang === lang;
+          button.setAttribute("aria-pressed", String(active));
+        });
+        syncInternalLanguageLinks(lang);
+      }
+
+      document.querySelectorAll(".lang-switch button").forEach(button => {
+        button.addEventListener("click", () => {
+          applyLanguage(button.dataset.lang);
+        });
+      });
+
+      installLanguageNavigation();
+      applyLanguage(getInitialLanguage());
+    })();
+  </script>
+
+  <!-- Public Turnstile site key goes here after Cloudflare setup; blank keeps subscribe disabled. -->
+  <script>window.WEOWNIT_TURNSTILE_SITE_KEY="0x4AAAAAAFalTPL7cj_-vR2k"; window.WEOWNIT_NEWSLETTER_ENABLED=true;</script>
+  <script src="assets/newsletter.js?v=3" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit&onload=weownitNewsletterTurnstileReady" defer></script>
+  <script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script>
+  <script src="assets/site-assistant-facts.js?v=1" defer></script>
+<script src="assets/chatbox.js?v=23" defer></script>
+<script src="assets/security-briefing-data.js?v=3" defer></script>
+<script src="assets/security-briefing.js?v=3" defer></script>
+</body>
+</html>
+
+
+
+
