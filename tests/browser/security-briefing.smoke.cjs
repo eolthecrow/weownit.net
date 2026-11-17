@@ -44,7 +44,15 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const waveBackground=await page.locator('#rd-root .rd-wave').evaluate(el=>getComputedStyle(el).backgroundImage);
-   assert.ok(waveBackground.includes('hero-mountain-shield-fidelity.svg'),waveBackground);
+   if(width===1440&&lang==='en'){
+     assert.ok(waveBackground.includes('approved-original-hero.avif'),waveBackground);
+     const heroFile=await page.request.get(base+'/assets/approved-original-hero.avif?v=1');
+     assert.equal(heroFile.status(),200);
+     assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'0');
+   } else {
+     assert.ok(waveBackground.includes('hero-mountain-shield-fidelity.svg'),waveBackground);
+     assert.equal(await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el).opacity),'1');
+   }
    assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
    if(width===1440&&lang==='en'){
      const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
