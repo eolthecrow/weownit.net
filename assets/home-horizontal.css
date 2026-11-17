@@ -214,3 +214,69 @@ opacity:.96;pointer-events:none}
   }
   html[lang="en"] .rd-hero .rd-wave{display:none}
 }
+
+
+/* APPROVED REFERENCE — VISUAL FIDELITY (2026-11-17)
+   Source: selected 1672x941 visual. Only homepage presentation changes.
+   Logo remains the real assets/va-symbol.svg; prices, checkout and JS stay live.
+   The original mountains/shield/checklist are contained in the user-selected
+   image excerpt, with a precomputed transparent left edge (no vertical seam).
+*/
+@media (min-width:1121px) {
+  html[lang="en"] .rd-hero {
+    position:relative;
+    isolation:isolate;
+    background:radial-gradient(ellipse 78% 118% at 75% 40%, #093036 0%, #031d23 53%, #02141b 100%);
+  }
+  html[lang="en"] .rd-hero::before {
+    content:"";
+    position:absolute;
+    inset:0 0 0 auto;
+    width:60.23%;
+    z-index:0;
+    pointer-events:none;
+    background-image:url("approved-home-hero-20261117.avif?v=1");
+    background-position:right center;
+    background-size:100% 100%;
+    background-repeat:no-repeat;
+    -webkit-mask-image:none;
+    mask-image:none;
+  }
+  html[lang="en"] .rd-hero .rd-wave{display:none}
+  html[lang="en"] .rd-hero .rd-hero-right{opacity:0;pointer-events:none}
+  html[lang="en"] .rd-hero .rd-hero-right::before{display:none}
+  html[lang="en"] .rd-hero .rd-wrap{position:relative;z-index:2}
+}
+
+/* At reference desktop dimensions, keep the original composition: slim header,
+   264px hero, three balanced 408px cards and a horizontal briefing strip. */
+@media (min-width:1360px) {
+  .rd-root{background:#06151c}
+  .rd-header{background:#03151c;border-bottom-color:#35696b;box-shadow:inset 0 -1px 0 rgba(92,245,219,.28)}
+  .rd-nav{min-height:54px;padding-left:28px;padding-right:10px;gap:clamp(12px,1.8vw,28px)}
+  .rd-brand{font-size:29px}
+  .rd-brand img{width:54px;height:32px}
+  .rd-links a{padding-top:18px;padding-bottom:17px;font-size:14px}
+  .rd-links a[aria-current="page"]::after{bottom:8px}
+  .rd-meeting{padding:7px 12px}
+  .rd-hero>.rd-wrap{min-height:264px;padding-top:18px;padding-bottom:10px}
+  .rd-hero-copy{width:56%;max-width:735px;padding-left:35px}
+  .rd-eyebrow{font-size:10.5px;letter-spacing:2px;margin-bottom:9px}
+  .rd-hero h1{font-size:clamp(41px,2.78vw,47px);line-height:1.0;letter-spacing:-.047em;max-width:625px;margin-bottom:7px}
+  .rd-lead{font-size:15.5px;line-height:1.31;max-width:520px;margin-bottom:10px;color:#e3ebe8}
+  .rd-actions{gap:18px}
+  .rd-hero .rd-primary,.rd-hero .rd-ghost{min-height:39px;padding:7px 20px;font-size:14px}
+  .rd-offers{margin-top:0;margin-bottom:20px;gap:11px}
+  .rd-offer{min-height:408px;padding:18px;border-radius:12px;
+    background:linear-gradient(145deg,#0a252b 0%,#051b22 58%,#03151d 100%);
+    box-shadow:0 0 13px rgba(65,238,212,.09),inset 0 1px rgba(120,242,224,.10)}
+  .rd-offer h2{font-size:23px}
+  .rd-offer p{margin:7px 0 13px}
+  .rd-mini{min-height:121px;padding:11px}
+  .rd-briefing{min-height:121px;padding:18px 26px;background:linear-gradient(115deg,#061b22,#04242a 67%,#061b22)}
+}
+@media (min-width:1121px) and (max-width:1359px) {
+  .rd-hero h1{font-size:clamp(37px,3.2vw,45px)}
+  .rd-hero>.rd-wrap{min-height:300px}
+  .rd-hero-copy{max-width:650px}
+}
