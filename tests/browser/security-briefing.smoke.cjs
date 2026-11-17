@@ -43,6 +43,13 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
+   const expectedHeadlines={
+     en:['Stronger networks.','Smarter security.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
+     ro:['Rețele mai solide.','Securitate mai inteligentă.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
+     fr:['Des réseaux plus robustes.','Une sécurité plus intelligente.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
+   };
+   const headlineText=async()=>Promise.all(['headline','headlineAccent','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
+   assert.deepEqual(await headlineText(),expectedHeadlines[lang]);
    const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
      const deco=getComputedStyle(el,'::before');
      const overlay=el.querySelector('.rd-art-checks');
@@ -76,6 +83,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
          await page.waitForFunction(l=>document.documentElement.lang===l,next);
          assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[next]);
+         assert.deepEqual(await headlineText(),expectedHeadlines[next],'Homepage headline must translate on language switch');
          const a=await page.locator('#rd-root .rd-hero').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
          assert.ok(a.includes('hero-unified-en-ro-fr.avif'),'Artwork changed on language switch '+next);
        }
