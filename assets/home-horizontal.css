@@ -115,3 +115,27 @@
 .rd-briefing>*{position:relative;z-index:1}
 @media(max-width:900px){.rd-wave{width:92%;opacity:.65}}
 @media(max-width:700px){.rd-wave{inset:12% 0 auto auto;width:112%;height:82%;opacity:.36;background-size:cover;background-position:57% center}.rd-briefing::before{inset:35% 0 0 0;opacity:.2;background-position:65% 40%}}
+
+
+/* Approved design fidelity, 2026-11-17: mountain ridge, shield frame and halo. */
+.rd-hero{background:radial-gradient(ellipse at 73% 42%,#092b32 0%,#071c24 48%,#06151c 82%)}
+.rd-wave{inset:-3% 0 0 auto;width:min(78%,1180px);height:109%;opacity:1;
+background-image:url("hero-mountain-shield-fidelity.svg?v=1");
+background-size:100% 100%;background-position:right center;background-repeat:no-repeat}
+.rd-hero-right{isolation:isolate;position:relative}
+.rd-hero-right::before{content:"";position:absolute;z-index:-1;left:4%;top:13%;width:205px;height:230px;max-height:79%;
+background:
+linear-gradient(#65f5dc,#65f5dc) left top / 16px 1.5px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) left top / 1.5px 16px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) right top / 16px 1.5px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) right top / 1.5px 16px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) left bottom / 16px 1.5px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) left bottom / 1.5px 16px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) right bottom / 16px 1.5px no-repeat,
+linear-gradient(#65f5dc,#65f5dc) right bottom / 1.5px 16px no-repeat;
+opacity:.96;pointer-events:none}
+.rd-hero-shield{width:121px;height:141px;filter:drop-shadow(0 0 15px rgba(76,246,213,.3));stroke-width:4.7}
+.rd-briefing::before{background-image:url("hero-mountain-shield-fidelity.svg?v=1");opacity:.31}
+@media(max-width:1120px){.rd-hero-right::before{left:-4%;width:140px;height:170px;top:19%}}
+@media(max-width:900px){.rd-wave{width:96%;opacity:.78}.rd-hero-right::before{display:none}}
+@media(max-width:700px){.rd-wave{width:119%;height:90%;top:9%;opacity:.34;background-position:63% center;background-size:cover}.rd-hero-shield{width:63px;height:67px}}
