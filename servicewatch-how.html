@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta http-equiv="Content-Security-Policy" data-csp="scripts" content="script-src 'self' https://static.cloudflareinsights.com https://challenges.cloudflare.com https://app.cal.com">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0a151c">
+  <meta name="description" content="Understand how the ServiceWatch controlled pilot helps businesses discover external exposure, review evidence and prioritize improvements.">
+  <title>How ServiceWatch Works — weownit.net</title>
+  <link rel="canonical" href="https://weownit.net/servicewatch-how.html?lang=en">
+  <link rel="alternate" hreflang="en" href="https://weownit.net/servicewatch-how.html?lang=en">
+  <link rel="alternate" hreflang="ro" href="https://weownit.net/servicewatch-how.html?lang=ro">
+  <link rel="alternate" hreflang="fr" href="https://weownit.net/servicewatch-how.html?lang=fr">
+  <link rel="alternate" hreflang="x-default" href="https://weownit.net/servicewatch-how.html?lang=en">
+  <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
+  <style>
+    :root{color-scheme:dark;--bg:#0a151c;--card:#101f28;--card2:#0e2428;--ink:#f2f1e8;--muted:#a6b8ba;--teal:#6ce2c7;--line:#29404a;--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:ui-monospace,Consolas,monospace}
+    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--bg);font:15px/1.65 var(--font)}a{color:inherit;text-decoration:none}
+    .wrap{width:min(1140px,calc(100% - 44px));margin:auto}.skip{position:absolute;left:-10000px;top:0;background:var(--teal);color:#0a151c;padding:8px;z-index:10}.skip:focus{left:12px}
+    .topbar{border-bottom:1px solid var(--line);background:#0b1820}.topbar .wrap{min-height:77px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:11px;font-size:15px;font-weight:750;letter-spacing:-.025em}.brand img{width:35px;height:35px;object-fit:contain}
+    .right{display:flex;align-items:center;gap:21px;flex-wrap:wrap}.right .back{color:var(--muted);font-size:13px}.right .back:hover{color:var(--teal)}.language{display:flex;gap:5px}.language a{padding:6px 9px;border:1px solid transparent;border-radius:6px;color:var(--muted);font:700 11px var(--mono)}.language a[aria-current="true"]{border-color:#4c7873;color:var(--teal)}
+    .eyebrow{color:var(--teal);text-transform:uppercase;letter-spacing:.15em;font:700 11px var(--mono)}.hero{padding:83px 0 69px;background:radial-gradient(ellipse 65% 100% at 83% 15%,rgba(70,192,167,.15),transparent 74%),linear-gradient(135deg,#0a151c,#0d1d26);border-bottom:1px solid var(--line)}.hero-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(260px,.8fr);gap:50px;align-items:center}
+    h1{font-size:clamp(38px,5.2vw,69px);line-height:1.06;letter-spacing:-.055em;margin:16px 0 23px;max-width:800px}h1 span{color:var(--teal)}.lead{font-size:clamp(16px,1.7vw,19px);color:#c1d0cf;line-height:1.65;max-width:645px;margin:0 0 23px}.pilot-note{max-width:640px;color:var(--muted);font-size:13px;border-left:2px solid var(--teal);padding-left:14px}
+    .hero-visual{min-height:325px;display:grid;place-items:center;position:relative;isolation:isolate}.hero-visual:before{content:"";position:absolute;inset:12px;background:radial-gradient(circle at center,rgba(108,226,199,.16),transparent 67%);border:1px solid #31504c;border-radius:50%;transform:scale(.82)}.hero-visual:after{content:"";position:absolute;inset:0;border:1px dashed #31504c;border-radius:50%;transform:scale(.95)}.center-node{width:170px;height:170px;display:grid;place-items:center;align-content:center;gap:9px;border:1px solid var(--teal);border-radius:50%;background:#13312e;position:relative;z-index:1;box-shadow:0 0 70px rgba(108,226,199,.13)}.center-node svg{width:56px;height:56px;fill:none;stroke:var(--teal);stroke-width:2}.center-node strong{font-size:12px;letter-spacing:.08em}.signal{position:absolute;z-index:1;width:13px;height:13px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 8px #16332f}.signal.one{top:25%;left:11%}.signal.two{top:20%;right:13%}.signal.three{bottom:19%;right:21%}
+    .section{padding:67px 0}.section.alt{background:#0c1921;border-block:1px solid var(--line)}.section h2{font-size:clamp(27px,3vw,40px);letter-spacing:-.04em;line-height:1.15;margin:11px 0 12px}.section-intro{color:var(--muted);max-width:680px;margin:0 0 29px}
+    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.step{padding:23px 21px 24px;border:1px solid var(--line);background:var(--card);min-width:0;position:relative}.step-index{width:43px;height:43px;display:grid;place-items:center;border:1px solid #4b837a;background:#10342f;color:var(--teal);font:800 18px var(--mono);margin-bottom:28px}.step h3{font-size:17px;line-height:1.25;letter-spacing:-.02em;margin:0 0 12px}.step p{font-size:13px;color:var(--muted);margin:0}.step:before{content:"";position:absolute;left:0;top:0;width:34%;height:2px;background:var(--teal)}
+    .example{display:grid;grid-template-columns:1fr 1fr;gap:17px}.panel{background:var(--card);border:1px solid var(--line);padding:26px}.panel .overline{color:var(--teal);font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.11em;margin-bottom:15px}.panel h3{font-size:21px;line-height:1.25;margin:0 0 14px}.panel p{margin:0 0 15px;color:var(--muted);font-size:14px}.panel p:last-child{margin-bottom:0}.panel strong{color:var(--ink)}
+    .status-cols{display:grid;grid-template-columns:1fr 1fr;gap:15px}.status-card{padding:24px;border:1px solid var(--line);background:var(--card)}.status-card h3{margin:0 0 12px;font-size:19px}.status-card p{color:var(--muted);font-size:14px;margin:0}.status-card.is-current{border-top:3px solid var(--teal)}.status-card.is-future{border-top:3px solid #58707c}
+    details{border:1px solid var(--line);margin-top:18px;background:#0c1d24;padding:18px 22px}summary{cursor:pointer;font-weight:700}details p{color:var(--muted);font-size:14px;margin:11px 0 0}
+    .cta{padding:70px 0 77px;text-align:center;background:linear-gradient(155deg,#0c1c25,#0e2a29)}.cta h2{font-size:clamp(28px,3.5vw,43px);letter-spacing:-.045em;line-height:1.15;margin:12px auto;max-width:650px}.cta p{color:var(--muted);margin:0 auto 24px;max-width:620px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 24px;background:var(--teal);color:#08211c;border:1px solid var(--teal);font-size:14px;font-weight:800}.btn:hover{background:#a0f1dc}.btn.secondary{background:transparent;color:var(--teal)}.btn.secondary:hover{background:#17332e}.button-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    footer{border-top:1px solid var(--line);padding:25px 0 32px;font-size:12px;color:var(--muted)}footer .wrap{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
+    a:focus-visible,summary:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
+    @media(max-width:860px){.hero-grid{grid-template-columns:1fr}.hero-visual{display:none}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.topbar .wrap{padding:13px 0}.right{gap:7px}.right .back{font-size:11px}.brand{font-size:13px}.brand img{width:28px;height:28px}.hero{padding:54px 0 51px}.section{padding:45px 0}.steps,.example,.status-cols{grid-template-columns:1fr}.step-index{margin-bottom:15px}.panel{padding:20px}.wrap{width:min(100% - 30px,1140px)}.cta{padding:53px 0}.btn{width:100%}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  </style>
+</head>
+<body>
+<a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+<header class="topbar"><div class="wrap">
+  <a class="brand" data-preserve-lang href="store.html"><img src="assets/va-symbol.svg?v=2" alt=""><span>weownit.net <span style="color:#6ce2c7">/ ServiceWatch</span></span></a>
+  <div class="right"><a class="back" data-preserve-lang data-i18n="back" href="store.html#servicewatch-product">← Back to products</a><nav class="language" aria-label="Language"><a data-lang-link="en" href="?lang=en" lang="en">EN</a><a data-lang-link="ro" href="?lang=ro" lang="ro">RO</a><a data-lang-link="fr" href="?lang=fr" lang="fr">FR</a></nav></div>
+</div></header>
+<main id="main">
+  <section class="hero"><div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow" data-i18n="pilot">Controlled pilot · Simple explanation</div>
+      <h1 data-i18n-html="hero">Know what's exposed.<br><span>Know what to do next.</span></h1>
+      <p class="lead" data-i18n="heroDesc">Your business uses websites and online services every day. ServiceWatch helps you understand what is visible from the internet, what may need attention, and which improvements to prioritize.</p>
+      <p class="pilot-note" data-i18n="scopeNote">ServiceWatch is currently a controlled pilot. Assessments use approved targets and a restricted test environment; capabilities are still being validated.</p>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <span class="signal one"></span><span class="signal two"></span><span class="signal three"></span>
+      <div class="center-node"><svg viewBox="0 0 64 64"><path d="M32 5 52 13v18c0 13-8 23-20 28C20 54 12 44 12 31V13Z"/><path d="m22 31 7 7 14-15"/></svg><strong>SERVICEWATCH</strong></div>
+    </div>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <div class="eyebrow" data-i18n="howEyebrow">Four simple steps</div><h2 data-i18n="howTitle">How ServiceWatch works</h2>
+    <p class="section-intro" data-i18n="howIntro">Think of it as checking the digital doors and windows of your business — and turning the observations into useful decisions.</p>
+    <div class="steps">
+      <article class="step"><div class="step-index">01</div><h3 data-i18n="s1title">Choose what to protect</h3><p data-i18n="s1desc">We agree on the website or internet-facing systems to review and confirm the authorized scope.</p></article>
+      <article class="step"><div class="step-index">02</div><h3 data-i18n="s2title">See what's visible</h3><p data-i18n="s2desc">Approved checks look at externally accessible services and relevant security settings.</p></article>
+      <article class="step"><div class="step-index">03</div><h3 data-i18n="s3title">Understand the findings</h3><p data-i18n="s3desc">Observations become understandable findings, with supporting evidence and an explanation of what they may mean.</p></article>
+      <article class="step"><div class="step-index">04</div><h3 data-i18n="s4title">Decide what to fix</h3><p data-i18n="s4desc">Your team can prioritize actions, record improvements and arrange a follow-up check where supported.</p></article>
+    </div>
+  </div></section>
+  <section class="section alt"><div class="wrap">
+    <div class="eyebrow" data-i18n="exampleEyebrow">Illustrative example · Not a live customer finding</div><h2 data-i18n="exampleTitle">From a technical observation to a clear decision</h2>
+    <p class="section-intro" data-i18n="exampleIntro">A business may still have an old remote-access service visible on the internet, even though the team no longer uses it.</p>
+    <div class="example">
+      <article class="panel"><div class="overline" data-i18n="observed">What ServiceWatch might observe</div><h3 data-i18n="findingTitle">An externally reachable service</h3><p data-i18n="findingDesc">A remote-access service appears to be reachable from the internet. Exposure alone does not prove that a vulnerability exists.</p><p><strong data-i18n="whyLabel">Why it matters:</strong> <span data-i18n="whyDesc">If unnecessary or poorly secured, it could increase the opportunity for unauthorized access.</span></p></article>
+      <article class="panel"><div class="overline" data-i18n="actionLabel">What the business can do</div><h3 data-i18n="actionTitle">Review, improve, verify</h3><p data-i18n="actionDesc">Ask the IT team whether the service is still needed, check its protections and restrict or remove unnecessary access.</p><p><strong data-i18n="nextLabel">Next step:</strong> <span data-i18n="nextDesc">Use a follow-up check to confirm the change where supported.</span></p></article>
+    </div>
+  </div></section>
+  <section class="section"><div class="wrap">
+    <div class="eyebrow" data-i18n="statusEyebrow">What to expect</div><h2 data-i18n="statusTitle">What the pilot offers today — and what's next</h2>
+    <p class="section-intro" data-i18n="statusIntro">We distinguish current controlled-pilot activities from future product capabilities so you know what is and isn't included.</p>
+    <div class="status-cols">
+      <article class="status-card is-current"><h3 data-i18n="currentTitle">Current controlled pilot</h3><p data-i18n="currentDesc">Authorized external-exposure assessments, evidence collection, findings review and a customer workspace are being tested and refined. Participation and scope are agreed individually.</p></article>
+      <article class="status-card is-future"><h3 data-i18n="futureTitle">Planned next steps</h3><p data-i18n="futureDesc">Automated customer onboarding, scheduled continuous monitoring, change alerts and additional threat intelligence are development goals, not currently guaranteed pilot services.</p></article>
+    </div>
+    <details><summary data-i18n="techSummary">A little more technical detail (optional)</summary><p data-i18n="techDesc">Depending on the approved scope, ServiceWatch uses established discovery and security-check tools to observe ports, services, web behavior and security configuration. Results are kept with evidence and reviewed in context. This is not an automatic penetration test, and not every observation is a confirmed vulnerability.</p></details>
+  </div></section>
+  <section class="cta"><div class="wrap">
+    <div class="eyebrow" data-i18n="ctaEyebrow">ServiceWatch by weownit.net</div><h2 data-i18n="ctaTitle">Start with clarity about your external exposure.</h2>
+    <p data-i18n="ctaDesc">Interested in the controlled pilot? We can discuss the scope and show you what the assessment would cover.</p>
+    <div class="button-row"><a class="btn" data-preserve-lang data-i18n="ctaContact" href="contact.html">Ask about the pilot →</a><a class="btn secondary" data-preserve-lang data-i18n="ctaBack" href="store.html#servicewatch-product">Back to products</a></div>
+  </div></section>
+</main>
+<footer><div class="wrap"><span>© 2026 weownit.net · ServiceWatch</span><span data-i18n="footerNote">Controlled pilot — no automated scan starts on this page.</span></div></footer>
+<script src="assets/servicewatch-how.js?v=1" defer></script>
+</body>
+</html>
