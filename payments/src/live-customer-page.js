@@ -69,7 +69,7 @@ function liveJs(enabled) {
         return option;
       }));
       const preferred = params.get('currency');
-      currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : 'ron';
+      currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : supported.some(item => item.currency === 'usd') ? 'usd' : 'ron';
       $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;`);
   script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n    renderAssessmentPage(document, productId, product, language, assessmentCopy, toolkitLabels, toolkitDetails);\n  }");
   const detailBundle = "const toolkitDetails = " + JSON.stringify(TOOLKIT_DETAILS) + ";\nconst toolkitLabels = " + JSON.stringify(TOOLKIT_LABELS) + ";\n" + TOOLKIT_RENDER_JS + ";\n";
