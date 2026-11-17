@@ -168,3 +168,19 @@ opacity:.96;pointer-events:none}
   .rd-wave{background-image:url("hero-mountain-shield-fidelity.svg?v=1")}
 }
 /* Preserve the original graphic's aspect ratio when resized on wide screens. */
+
+/* The reference artwork contains English checklist lettering. For translated
+   views use the SVG mesh and real, translated checklist rather than showing
+   English words inside a Romanian/French homepage. */
+@media(min-width:1121px){
+  html[lang="ro"] .rd-wave,html[lang="fr"] .rd-wave{
+    background-image:url("hero-mountain-shield-fidelity.svg?v=1");
+    width:min(78%,1180px)
+  }
+  html[lang="ro"] .rd-hero-right,html[lang="fr"] .rd-hero-right{
+    opacity:1;pointer-events:auto
+  }
+  html[lang="ro"] .rd-hero-right::before,html[lang="fr"] .rd-hero-right::before{
+    display:block
+  }
+}
