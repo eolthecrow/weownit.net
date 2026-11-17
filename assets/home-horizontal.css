@@ -197,19 +197,20 @@ opacity:.96;pointer-events:none}
   html[lang="en"] .rd-hero::before{
     content:"";
     position:absolute;
-    inset:0;
+    inset:0 0 0 auto;
+    width:min(55.86vw,858px);
     z-index:0;
     pointer-events:none;
     background-image:url("approved-original-hero.avif?v=1");
-    background-size:min(55.86vw,858px) 100%;
+    background-size:100% 100%;
     background-position:right center;
     background-repeat:no-repeat;
     -webkit-mask-image:linear-gradient(to right,
-      transparent 0%,transparent 41%,rgba(0,0,0,.08) 45%,
-      rgba(0,0,0,.42) 51%,rgba(0,0,0,.82) 59%,#000 67%,#000 100%);
+      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
+      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
     mask-image:linear-gradient(to right,
-      transparent 0%,transparent 41%,rgba(0,0,0,.08) 45%,
-      rgba(0,0,0,.42) 51%,rgba(0,0,0,.82) 59%,#000 67%,#000 100%);
+      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
+      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
   }
   html[lang="en"] .rd-hero .rd-wave{display:none}
 }
