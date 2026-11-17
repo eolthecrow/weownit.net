@@ -195,6 +195,8 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
       for (const [id, entry] of Object.entries(TOOLKIT_DETAILS)) {
         await page.goto('https://checkout.weownit.net/buy/' + id + '?lang=en');
         await page.locator('#toolkitDetails').waitFor({state:'visible'});
+        assert.equal(await page.locator('#currency').inputValue(), 'usd');
+        assert.match(await page.locator('#price').textContent(), /USD|\$/);
         for (const lang of ['en','ro','fr']) {
           await page.locator('[data-lang="'+lang+'"]').click();
           assert.equal(await page.locator('#productTitle').textContent(),entry.title);
@@ -211,6 +213,11 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
           const { ASSESSMENT_COPY } = await import('../src/assessment-purchase-page.js');
           assert.equal(await page.locator('.assessment-page').count(), 1);
           assert.equal(await page.locator('.assessment-thumb').count(), 3);
+          await page.locator('.assessment-again').click();
+          assert.equal(await page.locator('#currency').evaluate(el => el === document.activeElement), true);
+          assert.ok(await page.locator('#checkoutButton').evaluate(el => {
+            const rect=el.getBoundingClientRect(); return rect.top>=0 && rect.bottom<=innerHeight;
+          }), 'return action brings the real checkout controls into view');
           assert.ok(await page.locator('.assessment-thumb img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0)));
           await page.locator('.assessment-thumb').first().click();
           assert.equal(await page.locator('#assessmentImage').isVisible(), true);
@@ -218,6 +225,12 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
           await page.getByText(ASSESSMENT_COPY.fr.usage, {exact:true}).click();
         } else await page.locator('#toolkitDetails summary').click();
         assert.equal(await page.getByText(TOOLKIT_LABELS.fr.usage,{exact:true}).isVisible(),true);
+      }
+      const firstId = Object.keys(TOOLKIT_DETAILS)[0];
+      for (const [query, expected] of [['eur','eur'],['ron','ron'],['invalid','usd']]) {
+        await page.goto('https://checkout.weownit.net/buy/' + firstId + '?currency=' + query);
+        await page.locator('#checkoutForm').waitFor({state:'visible'});
+        assert.equal(await page.locator('#currency').inputValue(), expected);
       }
       await page.goto('https://checkout.weownit.net/buy/00000000-0000-4000-8000-000000000000?lang=en');
       await page.locator('#checkoutForm').waitFor({state:'visible'});

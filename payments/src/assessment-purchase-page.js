@@ -45,7 +45,7 @@ export function assessmentPurchaseHtml(original) {
  <div class="assessment-layout"><div class="assessment-content"><div class="assessment-hero"><p class="assessment-eyebrow" data-assessment="eyebrow"></p><h1 id="productTitle">Network Security Assessment Toolkit 2026</h1><p class="assessment-lead" data-assessment="outcome"></p><p class="assessment-chips" data-assessment="edition"></p>
  <div id="assessmentPreview" hidden><div class="assessment-gallery">${gallery}</div><p class="assessment-caption" data-assessment="caption"></p><a class="assessment-sample" id="assessmentSample" href="https://weownit.net/downloads/WeOwnIT_Network_Security_Assessment_Sample_EN_2026.pdf" target="_blank" rel="noopener" data-assessment="sample"></a></div></div>
  <div class="assessment-body"><section id="toolkitDetails" aria-labelledby="toolkitDetailsHeading" hidden></section><div id="assessmentExtra" hidden></div></div></div>
- <aside class="assessment-purchase" aria-labelledby="purchaseTitle"><h2 id="purchaseTitle" data-assessment="purchase"></h2><div id="details" hidden><p id="price" aria-live="polite"></p><p class="assessment-price-note" data-assessment="oneTime"></p></div>${form}<p class="assessment-small" data-assessment="licence"></p><p class="assessment-small" data-assessment="payment"></p><p class="assessment-small" data-assessment="delivery"></p><p class="assessment-small" data-i18n="sandbox"></p></aside></div>
+ <aside id="purchaseOptions" class="assessment-purchase" aria-labelledby="purchaseTitle"><h2 id="purchaseTitle" data-assessment="purchase"></h2><div id="details" hidden><p id="price" aria-live="polite"></p><p class="assessment-price-note" data-assessment="oneTime"></p></div>${form}<p class="assessment-small" data-assessment="licence"></p><p class="assessment-small" data-assessment="payment"></p><p class="assessment-small" data-assessment="delivery"></p><p class="assessment-small" data-i18n="sandbox"></p></aside></div>
  <div class="assessment-receipt" hidden>${tail.replace('</section>','')}</div></main><footer class="assessment-footer">weownit.net · <span data-assessment="site"></span><p data-assessment="independent"></p></footer>
  <dialog id="assessmentImage"><button type="button" id="assessmentClose" data-assessment="close"></button><img id="assessmentLargeImage" alt=""></dialog></body></html>`;
 }
@@ -81,7 +81,14 @@ export const ASSESSMENT_RENDER_JS = String.raw`function renderAssessmentPage(doc
  for(const [title,body] of [[t.requirements,toolkitLabels[lang].requirements+' '+toolkitLabels[lang].validation],[t.usage,toolkitLabels[lang].usage]]) {
    const detail=add(lower,'details',''); add(detail,'summary',title); add(detail,'p',body);
  }
- const again=add(extra,'a',t.again); again.href='#checkoutButton'; again.className='assessment-again';
+ const again=add(extra,'a',t.again); again.href='#purchaseOptions'; again.className='assessment-again';
+ again.addEventListener('click', event => {
+   event.preventDefault();
+   // Reset the sticky panel to its natural position before targeting it.
+   document.defaultView.scrollTo({top:0,behavior:'instant'});
+   document.getElementById('purchaseOptions').scrollIntoView({block:'start',behavior:'instant'});
+   document.getElementById('currency').focus({preventScroll:true});
+ });
  extra.hidden=false; preview.hidden=false;
 }`;
 
