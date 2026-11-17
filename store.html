@@ -159,6 +159,12 @@
     .offer-card h3{font-size:clamp(1.45rem,2.5vw,2rem);letter-spacing:-.04em;line-height:1.12;margin:0}
     .offer-card p{margin:0;color:var(--muted);font-size:.9rem}.offer-outcome{font-size:.78rem;color:#d6e0de;margin-top:auto;padding-top:.4rem}
     .offer-card .buy{margin-top:.4rem;font-size:.86rem}.offer-card .buy:focus-visible,.catalog-archive>summary:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    /* ServiceWatch client explainer: second CTA follows the existing translated contact CTA. */
+    .offer-card .sw-how{margin-top:0}
+    .sw-how [data-sw-lang]{display:none}
+    html[lang="en"] .sw-how [data-sw-lang="en"],
+    html[lang="ro"] .sw-how [data-sw-lang="ro"],
+    html[lang="fr"] .sw-how [data-sw-lang="fr"]{display:inline}
     .catalog-archive{margin-top:1.2rem;border-top:1px solid var(--line);padding-top:1.2rem}.catalog-archive>summary{cursor:pointer;list-style:none;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.8rem 0;color:var(--accent);font-weight:700}
     .catalog-archive>summary::-webkit-details-marker{display:none}.catalog-archive>summary::after{content:"+";font-size:1.4rem;line-height:1}.catalog-archive[open]>summary::after{content:"−"}
     .catalog-archive .catalog-intro{margin-top:1.3rem}.catalog-archive .catalog-disclaimer{margin-bottom:1rem}
@@ -238,6 +244,11 @@
           <p>Track external exposure, findings and remediation evidence. The current pilot uses a restricted test environment.</p>
           <div class="offer-outcome">Outcome: evidence-led exposure review, under validation</div>
           <a class="buy is-contact" href="contact.html">Ask about the pilot →</a>
+          <a class="buy sw-how" href="servicewatch-how.html">
+            <span data-sw-lang="en">How ServiceWatch works →</span>
+            <span data-sw-lang="ro" lang="ro">Cum funcționează ServiceWatch →</span>
+            <span data-sw-lang="fr" lang="fr">Comment fonctionne ServiceWatch →</span>
+          </a>
         </article>
         <article class="offer-card" data-offer-card="2" id="advanced-validation-product">
           <span class="offer-status">Scoped enquiry</span>
