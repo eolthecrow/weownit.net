@@ -50,7 +50,7 @@ export function assessmentPurchaseHtml(original) {
  <dialog id="assessmentImage"><button type="button" id="assessmentClose" data-assessment="close"></button><img id="assessmentLargeImage" alt=""></dialog></body></html>`;
 }
 
-export function renderAssessmentPage(document, productId, product, language, copy, toolkitLabels, toolkitDetails) {
+export const ASSESSMENT_RENDER_JS = String.raw`function renderAssessmentPage(document, productId, product, language, copy, toolkitLabels, toolkitDetails) {
  if (!document.getElementById('assessmentExtra')) return;
  const lang = Object.hasOwn(copy, language) ? language : 'en', t = copy[lang];
  document.querySelectorAll('[data-assessment]').forEach(el => { el.textContent = t[el.dataset.assessment]; });
@@ -83,7 +83,7 @@ export function renderAssessmentPage(document, productId, product, language, cop
  }
  const again=add(extra,'a',t.again); again.href='#checkoutButton'; again.className='assessment-again';
  extra.hidden=false; preview.hidden=false;
-}
+}`;
 
 export const ASSESSMENT_CSS = `
 .assessment-page{--ink:#edf4f5;--muted:#a6b9c2;--line:#2b3b43;--accent:#6ce2c7;background:#0a151c;color:var(--ink);font-size:16px;line-height:1.6}
