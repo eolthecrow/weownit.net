@@ -43,6 +43,14 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
+   const waveBackground=await page.locator('#rd-root .rd-wave').evaluate(el=>getComputedStyle(el).backgroundImage);
+   assert.ok(waveBackground.includes('hero-particle-wave.svg'),waveBackground);
+   assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
+   if(width===360&&lang==='en'){
+     const waveAsset=await page.request.get(base+'/assets/hero-particle-wave.svg?v=1');
+     assert.equal(waveAsset.status(),200);
+     assert.ok((await waveAsset.text()).includes('viewBox'));
+   }
    await geometry(page);
    for(const record of data.articles){
     await page.goto(base+'/briefing/'+record.slug+'.html?lang='+lang);

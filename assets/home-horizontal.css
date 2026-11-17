@@ -105,3 +105,13 @@
 /* Keep SVG icon geometry bounded in compact header and briefing. */
 .rd-meeting svg{width:18px;height:18px;color:var(--rd-mint);flex:none}
 .rd-briefing h2 svg{width:27px;height:27px;color:var(--rd-mint);vertical-align:middle;margin-right:8px}
+
+/* Fidelity update: reference's layered particle-wave artwork, not the old flat dots. */
+.rd-hero{background:radial-gradient(ellipse at 69% 48%,#0b2930 0%,#071b22 53%,#06161e 83%)}
+.rd-wave{inset:0 0 auto auto;width:min(74%,1120px);height:100%;opacity:1;background-image:url("hero-particle-wave.svg?v=1");background-position:right center;background-size:100% 100%;background-repeat:no-repeat}
+.rd-wave svg{display:none}
+.rd-briefing{position:relative;isolation:isolate;overflow:hidden}
+.rd-briefing::before{content:"";position:absolute;z-index:0;inset:0 0 0 46%;background:url("hero-particle-wave.svg?v=1") center 36% / 1120px 340px no-repeat;opacity:.32;pointer-events:none}
+.rd-briefing>*{position:relative;z-index:1}
+@media(max-width:900px){.rd-wave{width:92%;opacity:.65}}
+@media(max-width:700px){.rd-wave{inset:12% 0 auto auto;width:112%;height:82%;opacity:.36;background-size:cover;background-position:57% center}.rd-briefing::before{inset:35% 0 0 0;opacity:.2;background-position:65% 40%}}
