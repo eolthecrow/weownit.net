@@ -44,10 +44,15 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const waveBackground=await page.locator('#rd-root .rd-wave').evaluate(el=>getComputedStyle(el).backgroundImage);
-   assert.ok(waveBackground.includes('hero-particle-wave.svg'),waveBackground);
+   assert.ok(waveBackground.includes('hero-mountain-shield-fidelity.svg'),waveBackground);
+   assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
+   if(width===1440&&lang==='en'){
+     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
+     assert.ok(frame.includes('linear-gradient'),frame);
+   }
    assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
    if(width===360&&lang==='en'){
-     const waveAsset=await page.request.get(base+'/assets/hero-particle-wave.svg?v=1');
+     const waveAsset=await page.request.get(base+'/assets/hero-mountain-shield-fidelity.svg?v=1');
      assert.equal(waveAsset.status(),200);
      assert.ok((await waveAsset.text()).includes('viewBox'));
    }
