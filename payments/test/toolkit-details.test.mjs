@@ -89,3 +89,25 @@ test('Assessment preview layout retains one real checkout form and strict same-o
   const receipt = await (await liveCustomerAsset('/complete')).text();
   assert.doesNotMatch(receipt,/assessment-page/);
 });
+
+
+test('Firewall purchase page uses its own real previews and localized guidance', async () => {
+ const {FIREWALL_ID,FIREWALL_COPY}=await import('../src/firewall-purchase-page.js');
+ const {FIREWALL_IMAGES}=await import('../src/firewall-previews.js');
+ const {ASSESSMENT_IMAGES}=await import('../src/assessment-previews.js');
+ const response=await liveCustomerAsset('/buy/'+FIREWALL_ID);
+ const html=await response.text();
+ assert.match(html,/class="assessment-page"/);
+ assert.match(html,/<title>Firewall Security & Hardening Toolkit 2026/);
+ assert.equal((html.match(/id="checkoutForm"/g)||[]).length,1);
+ for(const image of FIREWALL_IMAGES) assert.ok(html.includes(image));
+ for(const image of ASSESSMENT_IMAGES) assert.ok(!html.includes(image));
+ for(const lang of ['en','ro','fr']) {
+  assert.equal(FIREWALL_COPY[lang].sample,'');
+  assert.equal(FIREWALL_COPY[lang].inputItems.length,4);
+  assert.match(FIREWALL_COPY[lang].outcome,/firewall/i);
+ }
+ const bundle=await(await liveCustomerAsset('/customer/app.js')).text();
+ assert.ok(bundle.includes(FIREWALL_ID));
+ assert.ok(bundle.includes(FIREWALL_COPY.en.outcome));
+});
