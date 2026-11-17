@@ -1,3 +1,5 @@
+import { VENDOR_PAGES } from "./vendor-purchase-pages.js";
+import { VENDOR_IMAGES } from "./vendor-previews.js";
 import { FIREWALL_ID, FIREWALL_COPY } from "./firewall-purchase-page.js";
 import { FIREWALL_IMAGES } from "./firewall-previews.js";
 import { ASSESSMENT_ID, ASSESSMENT_COPY, ASSESSMENT_CSS, assessmentPurchaseHtml, ASSESSMENT_RENDER_JS } from "./assessment-purchase-page.js";
@@ -73,7 +75,7 @@ function liveJs(enabled) {
       const preferred = params.get('currency');
       currencySelect.value = supported.some(item => item.currency === preferred) ? preferred : supported.some(item => item.currency === 'usd') ? 'usd' : 'ron';
       $('productTitle').textContent = product.title; $('details').hidden = false; $('checkoutForm').hidden = false;`);
-  script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n    renderAssessmentPage(document, productId, product, language, productId === '8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf' ? firewallCopy : assessmentCopy, toolkitLabels, toolkitDetails);\n  }");
+  script = replaceRequired(script, "    price();\n  }", "    price();\n    renderToolkitDetails(document, productId, product, language, toolkitDetails, toolkitLabels);\n    renderAssessmentPage(document, productId, product, language, Object.hasOwn(vendorCopy, productId || '') ? vendorCopy[productId] : productId === '8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf' ? firewallCopy : assessmentCopy, toolkitLabels, toolkitDetails);\n  }");
   const detailBundle = "const toolkitDetails = " + JSON.stringify(TOOLKIT_DETAILS) + ";\nconst toolkitLabels = " + JSON.stringify(TOOLKIT_LABELS) + ";\n" + TOOLKIT_RENDER_JS + ";\n";
   script = replaceRequired(script, "  render();\n  if (productId)", `  const imageDialog = $('assessmentImage');
   if (imageDialog) {
@@ -87,7 +89,7 @@ function liveJs(enabled) {
   }
   render();
   if (productId)`);
-  const assessmentBundle = "const firewallCopy = " + JSON.stringify(FIREWALL_COPY) + ";\nconst assessmentCopy = " + JSON.stringify(ASSESSMENT_COPY) + ";\n" + ASSESSMENT_RENDER_JS + ";\n";
+  const assessmentBundle = "const vendorCopy = " + JSON.stringify(Object.fromEntries(Object.entries(VENDOR_PAGES).map(([id,page])=>[id,page.copy]))) + ";\nconst firewallCopy = " + JSON.stringify(FIREWALL_COPY) + ";\nconst assessmentCopy = " + JSON.stringify(ASSESSMENT_COPY) + ";\n" + ASSESSMENT_RENDER_JS + ";\n";
   return "'use strict';\n" + assessmentBundle + detailBundle + "const translations = " + JSON.stringify(translations(enabled)) + ";\n" + script;
 }
 
@@ -114,9 +116,11 @@ export async function liveCustomerAsset(path, env = {}) {
     .replace('<span class="badge">sandbox</span>', '<span class="badge">Stripe LIVE</span>')
     .replace('<label for="quantity" data-i18n="quantity"></label>',
       '<label for="currency" data-i18n="currency"></label><select id="currency"></select><label for="quantity" data-i18n="quantity"></label>');
-  if (path === '/buy/' + ASSESSMENT_ID || path === '/buy/' + FIREWALL_ID) {
+  const pageId = path.startsWith('/buy/') ? path.slice(5) : '';
+  const vendorPage = Object.hasOwn(VENDOR_PAGES,pageId) ? VENDOR_PAGES[pageId] : null;
+  if (path === '/buy/' + ASSESSMENT_ID || path === '/buy/' + FIREWALL_ID || vendorPage) {
     headers.set('Content-Security-Policy', headers.get('Content-Security-Policy') + "; img-src data:");
-    return new Response(assessmentPurchaseHtml(html, path === "/buy/" + FIREWALL_ID ? {images:FIREWALL_IMAGES, title:"Firewall Security & Hardening Toolkit 2026"} : {}), { headers });
+    return new Response(assessmentPurchaseHtml(html, vendorPage ? {images:VENDOR_IMAGES[pageId],title:vendorPage.title} : path === "/buy/" + FIREWALL_ID ? {images:FIREWALL_IMAGES, title:"Firewall Security & Hardening Toolkit 2026"} : {}), { headers });
   }
   return new Response(html, { headers });
 }
