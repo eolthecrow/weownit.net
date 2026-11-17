@@ -111,3 +111,31 @@ test('Firewall purchase page uses its own real previews and localized guidance',
  assert.ok(bundle.includes(FIREWALL_ID));
  assert.ok(bundle.includes(FIREWALL_COPY.en.outcome));
 });
+
+
+test('all three vendor editions use the shared purchase layout with their own copy and previews', async () => {
+ const {VENDOR_PAGES}=await import('../src/vendor-purchase-pages.js');
+ const {VENDOR_IMAGES}=await import('../src/vendor-previews.js');
+ const {ASSESSMENT_IMAGES}=await import('../src/assessment-previews.js');
+ assert.equal(Object.keys(VENDOR_PAGES).length,3);
+ const firstImages=new Set();
+ for(const [id,page] of Object.entries(VENDOR_PAGES)) {
+  assert.equal(page.title,TOOLKIT_DETAILS[id].title);
+  const response=await liveCustomerAsset('/buy/'+id);
+  const html=await response.text();
+  assert.match(html,/class="assessment-page"/);
+  assert.equal((html.match(/class="assessment-thumb"/g)||[]).length,3);
+  assert.equal((html.match(/id="checkoutForm"/g)||[]).length,1);
+  assert.ok(html.includes('<title>'+page.title));
+  assert.match(response.headers.get('Content-Security-Policy'),/img-src data:/);
+  for(const image of VENDOR_IMAGES[id]) assert.ok(html.includes(image));
+  for(const image of ASSESSMENT_IMAGES) assert.ok(!html.includes(image));
+  firstImages.add(VENDOR_IMAGES[id][0]);
+  for(const lang of ['en','ro','fr']) {
+   assert.equal(page.copy[lang].sample,'');
+   assert.equal(page.copy[lang].inputItems.length,4);
+   assert.ok(page.copy[lang].outcome.length>60);
+  }
+ }
+ assert.equal(firstImages.size,3);
+});

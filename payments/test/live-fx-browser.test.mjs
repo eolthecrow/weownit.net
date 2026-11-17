@@ -170,6 +170,7 @@ test("LIVE admin offers guarded Stripe archiving on desktop and mobile without t
 test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and language switches", { timeout: 90_000 }, async () => {
   const { liveCustomerAsset } = await import('../src/live-customer-page.js');
   const { TOOLKIT_DETAILS, TOOLKIT_LABELS } = await import('../src/toolkit-details.js');
+  const { VENDOR_PAGES } = await import('../src/vendor-purchase-pages.js');
   const browser = await chromium.launch({ headless: true,
     ...(process.env.CATALOG_CHROMIUM_PATH ? { executablePath: process.env.CATALOG_CHROMIUM_PATH } : {}),
     args: ['--no-sandbox', '--disable-dev-shm-usage'] });
@@ -209,10 +210,16 @@ test("nine LIVE buyer pages explain the correct toolkit on desktop/mobile and la
         await page.locator('#currency').selectOption('usd');
         await page.locator('#quantity').selectOption('2');
         assert.match(await page.locator('#total').textContent(),/66/);
-        if (['03e200e8-31d2-4bc8-9083-7cdffabe76df','8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf'].includes(id)) {
+        if (['03e200e8-31d2-4bc8-9083-7cdffabe76df','8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf'].includes(id) || Object.hasOwn(VENDOR_PAGES,id)) {
           const { ASSESSMENT_COPY } = await import('../src/assessment-purchase-page.js');
           assert.equal(await page.locator('.assessment-page').count(), 1);
           assert.equal(await page.locator('.assessment-thumb').count(), 3);
+          if (Object.hasOwn(VENDOR_PAGES,id)) {
+            assert.equal(await page.locator('.assessment-lead').textContent(),VENDOR_PAGES[id].copy.fr.outcome);
+            assert.equal(await page.locator('#assessmentSample').isVisible(),false);
+            const inputs=await page.locator('#assessmentExtra li').allTextContents();
+            assert.deepEqual(inputs,VENDOR_PAGES[id].copy.fr.inputItems);
+          }
           if (id === '8d1c3dbd-33a5-44d5-8ba4-eb2cae5226cf') {
             assert.match(await page.locator('.assessment-lead').textContent(), /firewall/i);
             assert.equal(await page.locator('#assessmentSample').isVisible(), false);
