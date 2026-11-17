@@ -361,3 +361,29 @@ opacity:.96;pointer-events:none}
     max-height:none;
   }
 }
+
+
+/* 2026-11-18 — subtle brand strapline and quieter hero backdrop.
+   Keep the original shield/mountain asset and the real VA SVG unchanged.
+   The foreground of the mountain and shield remains visible; the illustration
+   fades toward the headline for cleaner text/background separation. */
+.rd-enabled .rd-root .rd-eyebrow{
+  text-transform:none;
+  letter-spacing:.055em;
+  font-size:clamp(10.5px,.86vw,12px);
+  line-height:1.4;
+  color:#c9e6e1;
+}
+@media(min-width:1121px){
+  .rd-enabled .rd-root .rd-hero::before{
+    opacity:.88;
+    -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
+    mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
+  }
+}
+@media(min-width:701px) and (max-width:1120px){
+  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.68}
+}
+@media(max-width:700px){
+  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.26}
+}
