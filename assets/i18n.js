@@ -23,9 +23,9 @@
     "Contactez Vladimir Arjoca pour la sécurité réseau, la réponse aux incidents, la revue des pare-feu, le dépannage et l’automatisation."
   ],
   "privacy": [
-    "How this website handles contact details, bookings, language preferences, the AI assistant, and third-party services.",
-    "Cum gestionează acest site datele de contact, programările, preferința de limbă, asistentul AI și serviciile terților.",
-    "Comment ce site traite les coordonnées, les réservations, la préférence de langue, l’assistant IA et les services tiers."
+    "How weownit.net handles enquiries, bookings, Briefing emails, AI questions and Stripe purchases, and how to exercise your privacy rights.",
+    "Cum prelucrează weownit.net datele din solicitări, programări, abonări la Briefing, întrebări pentru AI și achiziții prin Stripe. Află ce drepturi ai.",
+    "Comment weownit.net traite vos demandes, réservations, abonnements au Briefing, questions à l’IA et achats via Stripe, et comment exercer vos droits."
   ],
   "schedule": [
     "Schedule a 30-minute Network & Security Consultation with Vladimir Arjoca.",
