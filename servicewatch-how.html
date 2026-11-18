@@ -12,93 +12,45 @@
   <link rel="alternate" hreflang="fr" href="https://weownit.net/servicewatch-how.html?lang=fr">
   <link rel="alternate" hreflang="x-default" href="https://weownit.net/servicewatch-how.html?lang=en">
   <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
-  <style>
-    :root{color-scheme:dark;--bg:#0a151c;--card:#101f28;--card2:#0e2428;--ink:#f2f1e8;--muted:#a6b8ba;--teal:#6ce2c7;--line:#29404a;--font:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;--mono:ui-monospace,Consolas,monospace}
-    *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--ink);background:var(--bg);font:15px/1.65 var(--font)}a{color:inherit;text-decoration:none}
-    .wrap{width:min(1140px,calc(100% - 44px));margin:auto}.skip{position:absolute;left:-10000px;top:0;background:var(--teal);color:#0a151c;padding:8px;z-index:10}.skip:focus{left:12px}
-    .topbar{border-bottom:1px solid var(--line);background:#0b1820}.topbar .wrap{min-height:77px;display:flex;align-items:center;justify-content:space-between;gap:18px}.brand{display:flex;align-items:center;gap:11px;font-size:15px;font-weight:750;letter-spacing:-.025em}.brand img{width:35px;height:35px;object-fit:contain}
-    .right{display:flex;align-items:center;gap:21px;flex-wrap:wrap}.right .back{color:var(--muted);font-size:13px}.right .back:hover{color:var(--teal)}.language{display:flex;gap:5px}.language a{padding:6px 9px;border:1px solid transparent;border-radius:6px;color:var(--muted);font:700 11px var(--mono)}.language a[aria-current="true"]{border-color:#4c7873;color:var(--teal)}
-    .eyebrow{color:var(--teal);text-transform:uppercase;letter-spacing:.15em;font:700 11px var(--mono)}.hero{background:radial-gradient(ellipse 57% 120% at 76% 43%,rgba(28,144,137,.12),transparent 72%),linear-gradient(118deg,#0A151C,#0B2027);border-bottom:1px solid var(--line);padding:clamp(36px,5vw,54px) 0}
-    .hero-layout{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);align-items:center;gap:clamp(18px,4vw,65px)}
-    .hero-copy{min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:15px}
-    .hero-copy h1{font-size:clamp(37px,4.2vw,56px);line-height:1.06;letter-spacing:-.045em;margin:0;font-weight:760}
-    .hero-message{font-size:clamp(20px,2.2vw,28px);line-height:1.28;letter-spacing:-.025em;margin:0;color:var(--ink);max-width:560px}
-    .hero-message span{color:var(--teal)}
-    .lead{font-size:clamp(14px,1.35vw,16px);color:#c1d0cf;line-height:1.64;max-width:570px;margin:0}
-    .pilot-note{max-width:550px;color:var(--muted);font-size:12.5px;border-left:2px solid var(--teal);padding-left:13px;margin:1px 0 0;line-height:1.65}
-    .hero-graphic{min-width:0;display:flex;align-items:center;justify-content:center;max-width:470px;width:100%;margin:auto}
-    .hero-graphic img{display:block;width:100%;max-width:470px;height:auto;aspect-ratio:800/440;object-fit:contain}
-    .section{padding:67px 0}.section.alt{background:#0c1921;border-block:1px solid var(--line)}.section h2{font-size:clamp(27px,3vw,40px);letter-spacing:-.04em;line-height:1.15;margin:11px 0 12px}.section-intro{color:var(--muted);max-width:680px;margin:0 0 29px}
-    .steps{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:13px}.step{padding:23px 21px 24px;border:1px solid var(--line);background:var(--card);min-width:0;position:relative}.step-index{width:43px;height:43px;display:grid;place-items:center;border:1px solid #4b837a;background:#10342f;color:var(--teal);font:800 18px var(--mono);margin-bottom:28px}.step h3{font-size:17px;line-height:1.25;letter-spacing:-.02em;margin:0 0 12px}.step p{font-size:13px;color:var(--muted);margin:0}.step:before{content:"";position:absolute;left:0;top:0;width:34%;height:2px;background:var(--teal)}
-    .example{display:grid;grid-template-columns:1fr 1fr;gap:17px}.panel{background:var(--card);border:1px solid var(--line);padding:26px}.panel .overline{color:var(--teal);font:700 11px var(--mono);text-transform:uppercase;letter-spacing:.11em;margin-bottom:15px}.panel h3{font-size:21px;line-height:1.25;margin:0 0 14px}.panel p{margin:0 0 15px;color:var(--muted);font-size:14px}.panel p:last-child{margin-bottom:0}.panel strong{color:var(--ink)}
-    .status-cols{display:grid;grid-template-columns:1fr 1fr;gap:15px}.status-card{padding:24px;border:1px solid var(--line);background:var(--card)}.status-card h3{margin:0 0 12px;font-size:19px}.status-card p{color:var(--muted);font-size:14px;margin:0}.status-card.is-current{border-top:3px solid var(--teal)}.status-card.is-future{border-top:3px solid #58707c}
-    details{border:1px solid var(--line);margin-top:18px;background:#0c1d24;padding:18px 22px}summary{cursor:pointer;font-weight:700}details p{color:var(--muted);font-size:14px;margin:11px 0 0}
-    .cta{padding:70px 0 77px;text-align:center;background:linear-gradient(155deg,#0c1c25,#0e2a29)}.cta h2{font-size:clamp(28px,3.5vw,43px);letter-spacing:-.045em;line-height:1.15;margin:12px auto;max-width:650px}.cta p{color:var(--muted);margin:0 auto 24px;max-width:620px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:11px 24px;background:var(--teal);color:#08211c;border:1px solid var(--teal);font-size:14px;font-weight:800}.btn:hover{background:#a0f1dc}.btn.secondary{background:transparent;color:var(--teal)}.btn.secondary:hover{background:#17332e}.button-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
-    footer{border-top:1px solid var(--line);padding:25px 0 32px;font-size:12px;color:var(--muted)}footer .wrap{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}
-    a:focus-visible,summary:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
-    @media(max-width:860px){.hero-layout{grid-template-columns:minmax(0,1fr) minmax(235px,.75fr);gap:18px}.steps{grid-template-columns:repeat(2,minmax(0,1fr))}}
-    @media(max-width:700px){.hero-layout{grid-template-columns:1fr;gap:8px}.hero-graphic{max-width:320px;justify-self:center}.hero-copy{gap:11px}.hero{padding:31px 0 26px}}
-    @media(max-width:600px){.topbar .wrap{padding:13px 0}.right{gap:7px}.right .back{font-size:11px}.brand{font-size:13px}.brand img{width:28px;height:28px}.hero-graphic{max-width:min(75vw,290px)}.section{padding:45px 0}.steps,.example,.status-cols{grid-template-columns:1fr}.step-index{margin-bottom:15px}.panel{padding:20px}.wrap{width:min(100% - 30px,1140px)}.cta{padding:53px 0}.btn{width:100%}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
-  </style>
+  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=1">
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
-<header class="topbar"><div class="wrap">
-  <a class="brand" data-preserve-lang href="store.html"><img src="assets/va-symbol.svg?v=2" alt=""><span>weownit.net <span style="color:#6ce2c7">/ ServiceWatch</span></span></a>
-  <div class="right"><a class="back" data-preserve-lang data-i18n="back" href="store.html#servicewatch-product">← Back to products</a><nav class="language" aria-label="Language"><a data-lang-link="ro" href="?lang=ro" lang="ro">RO</a><a data-lang-link="en" href="?lang=en" lang="en">EN</a><a data-lang-link="fr" href="?lang=fr" lang="fr">FR</a></nav></div>
+<header><div class="wrap bar">
+  <a class="brand" href="index.html" data-preserve-lang><img src="assets/va-symbol.svg?v=2" width="36" height="36" alt="">weownit.net</a>
+  <div class="bar-links"><a class="products" href="store.html#servicewatch-product" data-preserve-lang><span aria-hidden="true">←</span> <span data-i18n="back">Products</span></a>
+  <nav aria-label="Language" data-lang-nav><a href="?lang=ro" lang="ro" data-lang-link="ro">RO</a><a href="?lang=en" lang="en" data-lang-link="en">EN</a><a href="?lang=fr" lang="fr" data-lang-link="fr">FR</a></nav></div>
 </div></header>
 <main id="main">
-  <section class="hero" aria-labelledby="servicewatch-hero-title">
-    <div class="wrap hero-layout">
-      <div class="hero-copy">
-        <div class="eyebrow" data-i18n="pilot">Controlled pilot · Simple explanation</div>
-        <h1 id="servicewatch-hero-title">ServiceWatch</h1>
-        <p class="hero-message" data-i18n-html="hero">Know what's exposed.<br><span>Know what to do next.</span></p>
-        <p class="lead" data-i18n="heroDesc">Your business uses websites and online services every day. ServiceWatch helps you understand what is visible from the internet, what may need attention, and which improvements to prioritize.</p>
-        <p class="pilot-note" data-i18n="scopeNote">ServiceWatch is currently a controlled pilot. Assessments use approved targets and a restricted test environment; capabilities are still being validated.</p>
-      </div>
-      <div class="hero-graphic">
-        <img src="assets/servicewatch-hero-graphic.svg" width="800" height="440"
-             alt="Mint-teal vector shield and digital signals representing external security visibility."
-             decoding="async">
-      </div>
-    </div>
-  </section>
-  <section class="section"><div class="wrap">
-    <div class="eyebrow" data-i18n="howEyebrow">Four simple steps</div><h2 data-i18n="howTitle">How ServiceWatch works</h2>
-    <p class="section-intro" data-i18n="howIntro">Think of it as checking the digital doors and windows of your business — and turning the observations into useful decisions.</p>
-    <div class="steps">
-      <article class="step"><div class="step-index">01</div><h3 data-i18n="s1title">Choose what to protect</h3><p data-i18n="s1desc">We agree on the website or internet-facing systems to review and confirm the authorized scope.</p></article>
-      <article class="step"><div class="step-index">02</div><h3 data-i18n="s2title">See what's visible</h3><p data-i18n="s2desc">Approved checks look at externally accessible services and relevant security settings.</p></article>
-      <article class="step"><div class="step-index">03</div><h3 data-i18n="s3title">Understand the findings</h3><p data-i18n="s3desc">Observations become understandable findings, with supporting evidence and an explanation of what they may mean.</p></article>
-      <article class="step"><div class="step-index">04</div><h3 data-i18n="s4title">Decide what to fix</h3><p data-i18n="s4desc">Your team can prioritize actions, record improvements and arrange a follow-up check where supported.</p></article>
-    </div>
-  </div></section>
-  <section class="section alt"><div class="wrap">
-    <div class="eyebrow" data-i18n="exampleEyebrow">Illustrative example · Not a live customer finding</div><h2 data-i18n="exampleTitle">From a technical observation to a clear decision</h2>
-    <p class="section-intro" data-i18n="exampleIntro">A business may still have an old remote-access service visible on the internet, even though the team no longer uses it.</p>
-    <div class="example">
-      <article class="panel"><div class="overline" data-i18n="observed">What ServiceWatch might observe</div><h3 data-i18n="findingTitle">An externally reachable service</h3><p data-i18n="findingDesc">A remote-access service appears to be reachable from the internet. Exposure alone does not prove that a vulnerability exists.</p><p><strong data-i18n="whyLabel">Why it matters:</strong> <span data-i18n="whyDesc">If unnecessary or poorly secured, it could increase the opportunity for unauthorized access.</span></p></article>
-      <article class="panel"><div class="overline" data-i18n="actionLabel">What the business can do</div><h3 data-i18n="actionTitle">Review, improve, verify</h3><p data-i18n="actionDesc">Ask the IT team whether the service is still needed, check its protections and restrict or remove unnecessary access.</p><p><strong data-i18n="nextLabel">Next step:</strong> <span data-i18n="nextDesc">Use a follow-up check to confirm the change where supported.</span></p></article>
-    </div>
-  </div></section>
-  <section class="section"><div class="wrap">
-    <div class="eyebrow" data-i18n="statusEyebrow">What to expect</div><h2 data-i18n="statusTitle">What the pilot offers today — and what's next</h2>
-    <p class="section-intro" data-i18n="statusIntro">We distinguish current controlled-pilot activities from future product capabilities so you know what is and isn't included.</p>
-    <div class="status-cols">
-      <article class="status-card is-current"><h3 data-i18n="currentTitle">Current controlled pilot</h3><p data-i18n="currentDesc">Authorized external-exposure assessments, evidence collection, findings review and a customer workspace are being tested and refined. Participation and scope are agreed individually.</p></article>
-      <article class="status-card is-future"><h3 data-i18n="futureTitle">Planned next steps</h3><p data-i18n="futureDesc">Automated customer onboarding, scheduled continuous monitoring, change alerts and additional threat intelligence are development goals, not currently guaranteed pilot services.</p></article>
-    </div>
-    <details><summary data-i18n="techSummary">A little more technical detail (optional)</summary><p data-i18n="techDesc">Depending on the approved scope, ServiceWatch uses established discovery and security-check tools to observe ports, services, web behavior and security configuration. Results are kept with evidence and reviewed in context. This is not an automatic penetration test, and not every observation is a confirmed vulnerability.</p></details>
-  </div></section>
-  <section class="cta"><div class="wrap">
-    <div class="eyebrow" data-i18n="ctaEyebrow">ServiceWatch by weownit.net</div><h2 data-i18n="ctaTitle">Start with clarity about your external exposure.</h2>
-    <p data-i18n="ctaDesc">Interested in the controlled pilot? We can discuss the scope and show you what the assessment would cover.</p>
-    <div class="button-row"><a class="btn" data-preserve-lang data-i18n="ctaContact" href="contact.html">Ask about the pilot →</a><a class="btn secondary" data-preserve-lang data-i18n="ctaBack" href="store.html#servicewatch-product">Back to products</a></div>
-  </div></section>
-</main>
-<footer><div class="wrap"><span>© 2026 weownit.net · ServiceWatch</span><span data-i18n="footerNote">Controlled pilot — no automated scan starts on this page.</span></div></footer>
-<script src="assets/servicewatch-how.js?v=1" defer></script>
-</body>
-</html>
+<section class="hero"><div class="wrap hero-grid">
+  <div class="intro"><div class="product"><b>ServiceWatch</b><span class="status" data-i18n="pilot">Private pilot</span></div>
+  <h1><span data-i18n="title">Your network,</span> <em data-i18n="accent">seen from outside.</em></h1><p class="lead" data-i18n="intro">ServiceWatch reviews the systems you authorize, shows what someone on the internet can see, and helps your team decide what to fix first.</p>
+  <div class="actions"><a class="btn" href="contact.html" data-preserve-lang><span data-i18n="contact">Discuss a pilot review</span> <span aria-hidden="true">↗</span></a>
+  <a href="#checks" class="jump"><span data-i18n="explore">Explore the checks</span> ↓</a></div></div>
+  <article class="record"><div class="record-head"><b data-i18n="sample">Example finding</b><span data-i18n="synthetic">Illustrative data</span></div>
+  <div class="record-body"><h2 data-i18n="finding">A remote-access service is reachable</h2>
+  <div class="network"><div><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3 12h18"/></svg><span data-i18n="internet">Internet</span></div>
+  <div class="connection" aria-hidden="true"></div>
+  <div><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M7 8h2m-2 9h2"/></svg><span data-i18n="gateway">Remote access</span></div></div>
+  <dl><dt data-i18n="observed">Evidence</dt><dd data-i18n="evidence">The gateway answered an external connection.</dd><dt data-i18n="decision">Team decision</dt><dd data-i18n="action">Confirm who needs access, then restrict it and recheck.</dd></dl></div></article>
+</div></section>
+<section class="wrap workflow"><h2 data-i18n="flow">How a review works</h2><ol><li><h3 data-i18n="scope">Agree the scope</h3><p data-i18n="scopeBody">Choose the domains and systems your team owns and approve the checks.</p></li>
+<li><h3 data-i18n="collect">Collect evidence</h3><p data-i18n="collectBody">Record which services respond and what they return at the time of the check.</p></li>
+<li><h3 data-i18n="review">Choose an action</h3><p data-i18n="reviewBody">Review the evidence with the system owner and decide what to keep, restrict or retest.</p></li>
+</ol></section>
+<section class="catalog" id="checks"><div class="wrap split">
+  <div><h2 data-i18n="checks">What the pilot checks</h2><p data-i18n="coverage">Individual checks have been tested in the private pilot. Coverage depends on the agreed scope.</p></div>
+  <dl class="checks"><div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-5 5-5 13 0 18 5-5 5-13 0-18Z"/></svg><span data-i18n="dns">Domains &amp; DNS</span></dt><dd data-i18n="dnsBody">See which approved names resolve and where their records point.</dd></div>
+<div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="6" rx="1"/><path d="M12 9v5M5 17v-3h14v3M3 20h4m10 0h4"/></svg><span data-i18n="ports">Reachable services</span></dt><dd data-i18n="portsBody">Identify which TCP ports answer from outside your network.</dd></div>
+<div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18m-15-2h1"/></svg><span data-i18n="web">Web responses</span></dt><dd data-i18n="webBody">See which websites and endpoints respond, redirect or return an error.</dd></div>
+<div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 11V8a6 6 0 0 1 12 0v3"/><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M12 15v3"/></svg><span data-i18n="tls">Certificates</span></dt><dd data-i18n="tlsBody">Check the hostname and expiry date on the certificate a service presents.</dd></div>
+<div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2 4 5v6c0 5 4 8 8 11 4-3 8-6 8-11V5zM8 12l3 3 5-6"/></svg><span data-i18n="signals">Security settings</span></dt><dd data-i18n="signalsBody">Flag specific responses, such as a publicly visible status page, for an engineer to verify.</dd></div>
+</dl></div></section>
+<section class="wrap outlook"><h2 data-i18n="advanced">Beyond the external review</h2><div class="next-grid"><article><span class="phase prototype" data-i18n="prototype">Tested prototype</span><h3 data-i18n="import">Exercise evidence</h3><p data-i18n="importBody">A reviewer selects findings from a synthetic exercise report before importing them into the workspace for follow-up.</p></article>
+<article><span class="phase planned" data-i18n="planned">Proposed</span><h3 data-i18n="intel">Threat intelligence</h3><p data-i18n="intelBody">Compare an approved domain or IP with threat reports and breach mentions. A reviewer would check the source and date of each match.</p></article>
+<article><span class="phase planned" data-i18n="planned">Proposed</span><h3 data-i18n="sim">Internal resilience exercises</h3><p data-i18n="simBody">A separately authorized lab exercise would show whether network boundaries and alerts detect or contain movement between systems.</p></article>
+<article><span class="phase planned" data-i18n="planned">Proposed</span><h3 data-i18n="monitor">Continuous monitoring</h3><p data-i18n="monitorBody">Scheduled rechecks would highlight newly exposed services and notify the team when a previously reviewed asset changes.</p></article>
+</div></section></main>
+<footer><div class="wrap bar"><b>weownit.net / ServiceWatch</b><a href="contact.html" data-preserve-lang class="jump"><span data-i18n="contact">Discuss a pilot review</span> ↗</a></div></footer>
+<script src="assets/servicewatch-how.js?v=2" defer></script>
+</body></html>
