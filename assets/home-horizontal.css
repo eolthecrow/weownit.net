@@ -319,3 +319,6 @@
 @media(max-width:700px){.rd-root .rd-hero>.rd-wrap{grid-template-columns:1fr;min-height:0}.rd-root .rd-hero .rd-hero-right{grid-template-columns:132px 150px;justify-content:center;margin:8px auto 0;min-height:145px}
 .rd-root .rd-hero .rd-wave{height:168px;background-size:auto 115%;background-position:72% center;inset:auto 0 0;mask-image:linear-gradient(transparent,#000 31%);opacity:.85}.rd-root .rd-shield-frame{width:112px}
 .rd-root .rd-hero h1{font-size:clamp(32px,8.1vw,43px)}.rd-root .rd-checks li{margin:2px 0}.rd-root .rd-hero .rd-checks{width:150px}}
+/* A wrapped checklist label must not recenter the shield. */
+.rd-root .rd-hero .rd-checks { display:grid; grid-template-columns:1fr; grid-template-rows:repeat(4,29px) 40px; align-items:start; }
+.rd-root .rd-hero .rd-checks li { margin:0; }

@@ -105,10 +105,13 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[next]);
          assert.deepEqual(await headlineText(),expectedHeadlines[next]);
          await checkVectorHero();await geometry(page);
-         const shield = await page.locator('.rd-hero-shield').boundingBox();
+         const shield = await page.locator('.rd-hero-shield').evaluate(el => {
+           const b = el.getBoundingClientRect(), hero = el.closest('.rd-hero').getBoundingClientRect();
+           return {x:b.x-hero.x,y:b.y-hero.y};
+         });
          if (previousShield) {
            assert.ok(Math.abs(shield.x - previousShield.x) < 1 && Math.abs(shield.y - previousShield.y) < 1,
-             'Shield moved on language change at width ' + size);
+             JSON.stringify({size,next,previousShield,shield}));
          }
          previousShield = shield;
        }
