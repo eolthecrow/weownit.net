@@ -11,3 +11,9 @@ Certificatul TLS corespunde numelui și expiră în 12 zile.
 
 00:00:18.000 --> 00:00:24.000
 Echipa de rețea planifică reînnoirea și o nouă verificare.
+
+00:00:24.000 --> 00:00:30.000
+Monitorizarea propusă compară cele 12 zile de valabilitate cu cele 365 de după reînnoire.
+
+00:00:30.000 --> 00:00:36.000
+Într-un exercițiu autorizat separat, un inginer ar verifica blocarea și alerta.

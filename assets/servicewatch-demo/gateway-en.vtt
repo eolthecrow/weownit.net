@@ -11,3 +11,9 @@ The TLS certificate matches the hostname and expires in 12 days.
 
 00:00:18.000 --> 00:00:24.000
 The network team plans a renewal and a follow-up check.
+
+00:00:24.000 --> 00:00:30.000
+Proposed monitoring compares 12 days of validity with 365 after renewal.
+
+00:00:30.000 --> 00:00:36.000
+In a separately approved exercise, an engineer would verify the block and the alert.

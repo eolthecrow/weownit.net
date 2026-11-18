@@ -12,7 +12,7 @@
   <link rel="alternate" hreflang="fr" href="https://weownit.net/servicewatch-how.html?lang=fr">
   <link rel="alternate" hreflang="x-default" href="https://weownit.net/servicewatch-how.html?lang=en">
   <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
-  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=e833dacd0ac4">
+  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=d1075f865ffa">
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -40,19 +40,31 @@
 </ol></div>
   <div class="demo-player">
     <h3 id="demo-title" data-i18n="watchDemo">Watch the demo</h3>
-    <p data-i18n="videoMeta">24 seconds · Fictional gateway · Silent video</p>
+    <p data-i18n="videoMeta">36 seconds · Fictional gateway · Silent video</p>
     <video controls playsinline preload="none" width="960" height="540"
            aria-labelledby="demo-title" poster="assets/servicewatch-demo/gateway-poster.webp"
-           src="assets/servicewatch-demo/gateway-en.mp4">
-      <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/gateway-en.vtt" default>
+           src="assets/servicewatch-demo/gateway-en.mp4?v=2">
+      <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/gateway-en.vtt?v=2" default>
     </video>
     <details><summary data-i18n="transcript">Read the walkthrough</summary><ul>
       <li data-i18n="videoStep1">The owner approves an external check of gateway.example.</li>
       <li data-i18n="videoStep2">The gateway accepts a connection on TCP port 443.</li>
       <li data-i18n="videoStep3">The TLS certificate matches the hostname and expires in 12 days.</li>
       <li data-i18n="videoStep4">The network team plans a renewal and a follow-up check.</li>
+      <li data-i18n="videoStep5">Proposed monitoring compares 12 days of validity with 365 after renewal.</li>
+      <li data-i18n="videoStep6">In a separately approved exercise, an engineer would verify the block and the alert.</li>
     </ul></details>
   </div>
+</section>
+<section id="review-paths" class="wrap review-paths">
+  <h2 data-i18n="pathsTitle">Which review fits your question?</h2>
+  <div class="path-grid">
+    <article><small data-i18n="pilot">Private pilot</small><h3 data-i18n="essentialName">Essential Exposure Review</h3><h4 data-i18n="essentialQ">What is reachable today?</h4><p data-i18n="essentialA">Start with an approved asset. Record the responding service, time and original evidence. The owner can then confirm which exposure is intended and which finding needs action.</p><aside data-i18n="essentialOut">Example decision · Renew the gateway certificate before expiry.</aside></article>
+    <article><small data-i18n="planned">Proposed</small><h3 data-i18n="monitor">Continuous monitoring</h3><h4 data-i18n="monitorQ">What changed since the last review?</h4><p data-i18n="monitorA">Compare the same asset and check across two dated observations. A new public service, a removed exposure or a renewed certificate would create one change record for the owner. Identical results would stay quiet.</p><aside data-i18n="monitorOut">Example comparison · Certificate validity rises from 12 to 365 days after renewal.</aside></article>
+    <article><small data-i18n="importOnly">Reviewed import prototype</small><h3 data-i18n="advancedName">Advanced Validation</h3><h4 data-i18n="advancedQ">Did the control work as intended?</h4><p data-i18n="advancedA">The prototype supports human-reviewed imports from synthetic exercises. A proposed internal engagement would require its own written scope. An engineer would compare the expected boundary with observed traffic and the alert received.</p><aside data-i18n="advancedOut">Example decision · Confirm the block and check that the alert reached the right team.</aside></article>
+  </div>
+  <details><summary data-i18n="archTitle">How would an assessment run?</summary><p data-i18n="archBody">In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck.</p></details>
+  <details><summary data-i18n="priorityTitle">How would a finding be prioritized?</summary><p data-i18n="priorityBody">A public port establishes reachability. A suspected software weakness needs more evidence: the affected version, the applicable advisory and a reviewer’s confidence. For a matched CVE, proposed enrichment would show the source and date of known exploitation reports alongside an exploitation-likelihood estimate. The owner would weigh that context against business impact.</p></details>
 </section>
 <section class="catalog" id="checks"><div class="wrap split">
   <div><h2 data-i18n="checks">What the pilot checks</h2><p data-i18n="coverage">Follow one fictional gateway through five checks tested individually in the pilot. The evidence changes with each check.</p><div class="asset-ref"><small data-i18n="exampleHost">Example asset</small><code>gateway.example</code></div></div>
@@ -68,5 +80,5 @@
 <details class="route"><summary><span class="phase research" data-i18n="research">Research only</span><strong data-i18n="sources">Security data connectors</strong></summary><div class="route-body"><p data-i18n="sourcesBody">A curated directory helps identify candidate sources for IP reputation, vulnerability advisories and asset history. Each connector needs separate evaluation before use in the pilot.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="sourcesIn">A reviewer needs context for a reported software version.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="sourcesMid">Identify a candidate advisory source. Check its permissions, coverage and update date.</span></li><li><b data-i18n="result">Result</b><span data-i18n="sourcesOut">A connector shortlist for technical evaluation.</span></li></ol></div></details>
 <details class="route"><summary><span class="phase planned" data-i18n="planned">Proposed</span><strong data-i18n="monitor">Continuous monitoring</strong></summary><div class="route-body"><p data-i18n="monitorBody">Scheduled rechecks would highlight newly exposed services and notify the team when a previously reviewed asset changes.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="monitorIn">A previously reviewed gateway and its last recorded state.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="monitorMid">Repeat the approved check and compare the two observations.</span></li><li><b data-i18n="result">Result</b><span data-i18n="monitorOut">A change notice for the owner showing what appeared or disappeared.</span></li></ol></div></details></div></section></main>
 <footer><div class="wrap bar"><b>weownit.net / ServiceWatch</b><a href="contact.html" data-preserve-lang class="jump"><span data-i18n="contact">Discuss a pilot review</span> ↗</a></div></footer>
-<script src="assets/servicewatch-how.js?v=103f783baee9" defer></script>
+<script src="assets/servicewatch-how.js?v=7999a1285c71" defer></script>
 </body></html>
