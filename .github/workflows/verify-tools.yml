@@ -50,7 +50,16 @@ jobs:
       - name: Verify Security Briefing, articles and homepage in EN RO FR
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
+          HOME_HERO_SCREENSHOT_DIR: ${{ runner.temp }}/home-hero-previews
         run: node tests/browser/security-briefing.smoke.cjs
+      - name: Save homepage desktop and mobile rendering evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: home-hero-previews
+          path: ${{ runner.temp }}/home-hero-previews
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Load every page with its hash-based script CSP and fail on any violation
         env:
           WIT_PLAYWRIGHT_MODULE: ${{ runner.temp }}/wit-browser/node_modules/playwright
