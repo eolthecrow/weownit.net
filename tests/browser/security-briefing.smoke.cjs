@@ -66,56 +66,68 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      fr:'CONSEIL RÉSEAU ET SÉCURITÉ / PRODUITS NUMÉRIQUES / OUTILS'
    };
    assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[lang]);
+   const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+     const deco=getComputedStyle(el,'::before');
+     const overlay=el.querySelector('.rd-art-checks');
+     return {image:deco.backgroundImage,background:getComputedStyle(el).backgroundImage,
+       wave:getComputedStyle(el.querySelector('.rd-wave')).display,
+       hiddenShield:getComputedStyle(el.querySelector('.rd-hero-right')).opacity,
+       overlay:getComputedStyle(overlay).display,
+       overlayText:overlay.textContent};
+   });
+   assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
    const labels={en:['Assess','Harden','Monitor','Respond','Reduce Risk'],
      ro:['Evaluează','Securizează','Monitorizează','Răspunde','Reduce riscul'],
      fr:['Évaluer','Renforcer','Surveiller','Réagir','Réduire les risques']};
-   async function checkEmblem(){
-     const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
-       const svg=el.querySelector('.rd-hero-shield'),symbol=svg.querySelector('.rd-shield-symbol');
-       const frame=svg.querySelector('.rd-shield-frame').getBoundingClientRect(),shield=symbol.getBoundingClientRect();
-       const copy=el.querySelector('.rd-hero-copy').getBoundingClientRect(),right=el.querySelector('.rd-hero-right').getBoundingClientRect();
-       return {display:getComputedStyle(svg).display,width:svg.getBoundingClientRect().width,height:svg.getBoundingClientRect().height,
-         dx:Math.abs(frame.x+frame.width/2-shield.x-shield.width/2),dy:Math.abs(frame.y+frame.height/2-shield.y-shield.height/2),
-         contained:shield.left>frame.left&&shield.right<frame.right&&shield.top>frame.top&&shield.bottom<frame.bottom,
-         separate:copy.bottom<=right.top||copy.right<=right.left,
-         bg:getComputedStyle(el.querySelector('.rd-wave')).backgroundImage,
-         bitmap:getComputedStyle(el,'::before').content};
+   assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[lang]);
+   if(width>=1121){
+     assert.ok(art.image.includes('hero-unified-en-ro-fr.avif'),JSON.stringify(art));
+     assert.equal(art.wave,'none');
+     assert.equal(art.hiddenShield,'0');
+     assert.equal(art.overlay,'grid');
+     const heroStyle=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const style=getComputedStyle(el,'::before');
+       return {opacity:parseFloat(style.opacity),mask:style.maskImage};
      });
-     assert.equal(art.display,'block');assert.ok(Math.abs(art.width-art.height)<1,JSON.stringify(art));
-     assert.ok(art.dx<1&&art.dy<1&&art.contained,'Shield/frame centering '+JSON.stringify(art));
-     assert.ok(art.separate,'Hero text must not overlap emblem/checklist '+JSON.stringify(art));
-     assert.ok(art.bg.includes('hero-mountain-shield-fidelity.svg'));
-     assert.ok(art.bitmap==='none'||art.bitmap==='normal','No duplicate bitmap foreground');
-   }
-   assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[lang]);
-   await checkEmblem();
-   if(width===1440&&lang==='en'){
-     for(const next of ['ro','fr','en']){
-       await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
-       await page.waitForFunction(l=>document.documentElement.lang===l,next);
-       assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[next]);
-       assert.deepEqual(await headlineText(),expectedHeadlines[next]);
-       await checkEmblem();
-     }
-     // Check breakpoints independently of editorial content. Includes narrow phones,
-     // landscape/tablet and both sides of the former bitmap breakpoint.
-     for(const size of [320,360,430,700,760,768,900,1024,1120,1121,1440]){
-       await page.setViewportSize({width:size,height:900});
-       for(const next of ['en','ro','fr']){
+     assert.ok(heroStyle.opacity>.85&&heroStyle.opacity<.92,'Hero should be subtly muted: '+JSON.stringify(heroStyle));
+     assert.ok(heroStyle.mask.includes('linear-gradient'),'Keep mountain fade for contrast: '+JSON.stringify(heroStyle));
+     const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
+     assert.equal(asset.status(),200);
+     const magic=await asset.body();assert.ok(magic.length>12000 && magic.toString('ascii',4,12).startsWith('ftypavif'), 'AVIF bytes must be served, not an error page');
+     const desktop=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const b=el.getBoundingClientRect(),shieldFrame={left:b.width*.762,center:b.width*.658};
+       return {w:b.width,h:b.height,frame:shieldFrame};
+     });
+     assert.ok(desktop.h>=263&&desktop.h<430,'Hero keeps shared desktop dimensions '+JSON.stringify(desktop));
+     if(width===1440&&lang==='en'){
+       // Check switching languages in-place: no different shield/background or layout.
+       for(const next of ['ro','fr','en']){
          await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
          await page.waitForFunction(l=>document.documentElement.lang===l,next);
-         await checkEmblem();await geometry(page);
+         assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[next]);
+         assert.deepEqual(await headlineText(),expectedHeadlines[next],'Homepage headline must translate on language switch');
+         assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[next]);
+         const a=await page.locator('#rd-root .rd-hero').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
+         assert.ok(a.includes('hero-unified-en-ro-fr.avif'),'Artwork changed on language switch '+next);
        }
      }
-     await page.setViewportSize({width:1440,height:900});
-     await page.locator('#rd-root [data-rd-lang="en"]').click();
+   }else{
+     assert.equal(art.hiddenShield,'1');
+     assert.equal(art.overlay,'none');
+     const waveOpacity=await page.locator('#rd-root .rd-wave').evaluate(el=>parseFloat(getComputedStyle(el).opacity));
+     assert.ok(waveOpacity<=.72,'Mobile/tablet illustration should be subtle: '+waveOpacity);
+     assert.equal(await page.locator('#rd-root .rd-hero-shield').isVisible(),width<=700||width>=701);
+     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>{
+       const style=getComputedStyle(el,'::before'),shield=el.querySelector('.rd-hero-shield').getBoundingClientRect();
+       const parent=el.getBoundingClientRect();
+       return {display:style.display,frameCenter:parent.left+parseFloat(style.left)+parseFloat(style.width)/2,shieldCenter:shield.left+shield.width/2};
+     });
+     assert.equal(frame.display,'block','Shield frame missing on '+width+'px in '+lang);
+     assert.ok(Math.abs(frame.frameCenter-frame.shieldCenter)<16,
+       'Shield must be centered in corner frame '+JSON.stringify(frame));
    }
+   assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
    await geometry(page);
-   if(process.env.HOME_HERO_SCREENSHOT_DIR){
-     await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});
-     await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
-     await page.screenshot({path:path.join(process.env.HOME_HERO_SCREENSHOT_DIR,'hero-'+width+'-'+lang+'.png'),fullPage:false});
-   }
    for(const record of data.articles){
     await page.goto(base+'/briefing/'+record.slug+'.html?lang='+lang);
     await page.waitForFunction(l=>document.documentElement.lang===l,lang);
