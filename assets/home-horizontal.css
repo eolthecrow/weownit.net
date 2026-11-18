@@ -256,7 +256,7 @@
   .rd-hero h1 .rd-heading-accent > span { display: inline; }
   .rd-eyebrow { margin-bottom: 15px; }
   .rd-lead { font-size: clamp(16px,1.23vw,19px); line-height: 1.16; max-width: 490px; margin-bottom: 14px; }
-  .rd-hero .rd-hero-right { width: 40.4%; justify-content: flex-start; gap: .6vw; }
+  .rd-hero .rd-hero-right { width: 40.4%; justify-content: flex-end; gap: .6vw; }
   .rd-shield-frame { width: clamp(170px,16.15vw,248px); }
   .rd-hero .rd-hero-shield { width: 42%; }
   .rd-hero .rd-primary, .rd-hero .rd-ghost { min-height: 44px; padding-inline: 21px; font-size: 15px; }
