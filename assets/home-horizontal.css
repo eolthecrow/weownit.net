@@ -124,7 +124,7 @@
   height: 100%;
   z-index: 0;
   opacity: 1;
-  background: url("hero-reference-wave.svg?v=2") center / cover no-repeat;
+  background: url("hero-reference-wave.svg?v=813ee1b9") center / cover no-repeat;
   mask-image: linear-gradient(to right, transparent 32%, #000 41%);
 }
 .rd-hero h1 .rd-heading-primary, .rd-heading-accent, .rd-heading-accent > span { display: block; }
@@ -170,7 +170,7 @@
 .rd-briefing { position: relative; isolation: isolate; overflow: hidden; }
 .rd-briefing::before {
   content: ""; position: absolute; inset: 0 0 0 47%; z-index: -1;
-  background: url("hero-reference-wave.svg?v=2") center 49% / cover no-repeat;
+  background: url("hero-reference-wave.svg?v=813ee1b9") center 49% / cover no-repeat;
   opacity: .2; pointer-events: none;
 }
 @media (min-width:1121px) {
