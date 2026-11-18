@@ -66,67 +66,49 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      fr:'CONSEIL RÉSEAU ET SÉCURITÉ / PRODUITS NUMÉRIQUES / OUTILS'
    };
    assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[lang]);
-   const art=await page.locator('#rd-root .rd-hero').evaluate(el=>{
-     const deco=getComputedStyle(el,'::before');
-     const overlay=el.querySelector('.rd-art-checks');
-     return {image:deco.backgroundImage,background:getComputedStyle(el).backgroundImage,
-       wave:getComputedStyle(el.querySelector('.rd-wave')).display,
-       hiddenShield:getComputedStyle(el.querySelector('.rd-hero-right')).opacity,
-       overlay:getComputedStyle(overlay).display,
-       overlayText:overlay.textContent};
-   });
-   assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
    const labels={en:['Assess','Harden','Monitor','Respond','Reduce Risk'],
      ro:['Evaluează','Securizează','Monitorizează','Răspunde','Reduce riscul'],
      fr:['Évaluer','Renforcer','Surveiller','Réagir','Réduire les risques']};
-   assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[lang]);
-   if(width>=1121){
-     assert.ok(art.image.includes('hero-unified-en-ro-fr.avif'),JSON.stringify(art));
-     assert.equal(art.wave,'none');
-     assert.equal(art.hiddenShield,'0');
-     assert.equal(art.overlay,'grid');
-     const heroStyle=await page.locator('#rd-root .rd-hero').evaluate(el=>{
-       const style=getComputedStyle(el,'::before');
-       return {opacity:parseFloat(style.opacity),mask:style.maskImage};
+   async function checkVectorHero(){
+     const state=await page.locator('#rd-root .rd-hero').evaluate(el=>{
+       const wave=el.querySelector('.rd-wave'),shield=el.querySelector('.rd-hero-shield');
+       const svg=shield.getBoundingClientRect(),copy=el.querySelector('.rd-hero-copy').getBoundingClientRect(),right=el.querySelector('.rd-hero-right').getBoundingClientRect();
+       return {image:getComputedStyle(wave).backgroundImage,
+         foreground:Number(getComputedStyle(el.querySelector('.rd-hero-copy')).zIndex),background:Number(getComputedStyle(wave).zIndex),
+         ratio:svg.width/svg.height,visible:getComputedStyle(el.querySelector('.rd-hero-right')).opacity,
+         noBitmap:getComputedStyle(el,'::before').content,
+         separate:copy.right<=right.left+1||copy.bottom<=right.top+1};
      });
-     assert.ok(heroStyle.opacity>.85&&heroStyle.opacity<.92,'Hero should be subtly muted: '+JSON.stringify(heroStyle));
-     assert.ok(heroStyle.mask.includes('linear-gradient'),'Keep mountain fade for contrast: '+JSON.stringify(heroStyle));
-     const asset=await page.request.get(base+'/assets/hero-unified-en-ro-fr.avif?v=1');
-     assert.equal(asset.status(),200);
-     const magic=await asset.body();assert.ok(magic.length>12000 && magic.toString('ascii',4,12).startsWith('ftypavif'), 'AVIF bytes must be served, not an error page');
-     const desktop=await page.locator('#rd-root .rd-hero').evaluate(el=>{
-       const b=el.getBoundingClientRect(),shieldFrame={left:b.width*.762,center:b.width*.658};
-       return {w:b.width,h:b.height,frame:shieldFrame};
-     });
-     assert.ok(desktop.h>=263&&desktop.h<430,'Hero keeps shared desktop dimensions '+JSON.stringify(desktop));
-     if(width===1440&&lang==='en'){
-       // Check switching languages in-place: no different shield/background or layout.
-       for(const next of ['ro','fr','en']){
+     assert.ok(state.image.includes('hero-canva-vector.svg'),JSON.stringify(state));
+     assert.ok(state.foreground>state.background,'Writing must be above decorative art');
+     assert.ok(Math.abs(state.ratio-100/112)<.01,'Shield proportions must survive resizing');
+     assert.equal(state.visible,'1');assert.ok(state.separate,'Hero writing overlaps the illustration');
+     assert.ok(state.noBitmap==='none'||state.noBitmap==='normal');
+   }
+   assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[lang]);
+   await checkVectorHero();
+   const vector=await(await page.request.get(base+'/assets/hero-canva-vector.svg?v=1')).text();
+   assert.match(vector,/viewBox="0 0 1000 340"/);
+   assert.doesNotMatch(vector,/<image\b|data:image|foreignObject|<script/i,'Artwork must be vector shapes, not an embedded bitmap');
+   if(width===1440&&lang==='en'){
+     for(const size of [320,390,700,768,900,1024,1120,1121,1440]){
+       await page.setViewportSize({width:size,height:900});
+       for(const next of ['en','ro','fr']){
          await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
          await page.waitForFunction(l=>document.documentElement.lang===l,next);
-         assert.deepEqual(await page.locator('#rd-root .rd-art-checks li').allTextContents(),labels[next]);
-         assert.deepEqual(await headlineText(),expectedHeadlines[next],'Homepage headline must translate on language switch');
-         assert.equal(await page.locator('#rd-root [data-rd-text="eyebrow"]').innerText(),expectedTaglines[next]);
-         const a=await page.locator('#rd-root .rd-hero').evaluate(el=>getComputedStyle(el,'::before').backgroundImage);
-         assert.ok(a.includes('hero-unified-en-ro-fr.avif'),'Artwork changed on language switch '+next);
+         assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[next]);
+         assert.deepEqual(await headlineText(),expectedHeadlines[next]);
+         await checkVectorHero();await geometry(page);
        }
      }
-   }else{
-     assert.equal(art.hiddenShield,'1');
-     assert.equal(art.overlay,'none');
-     const waveOpacity=await page.locator('#rd-root .rd-wave').evaluate(el=>parseFloat(getComputedStyle(el).opacity));
-     assert.ok(waveOpacity<=.72,'Mobile/tablet illustration should be subtle: '+waveOpacity);
-     assert.equal(await page.locator('#rd-root .rd-hero-shield').isVisible(),width<=700||width>=701);
-     const frame=await page.locator('#rd-root .rd-hero-right').evaluate(el=>{
-       const style=getComputedStyle(el,'::before'),shield=el.querySelector('.rd-hero-shield').getBoundingClientRect();
-       const parent=el.getBoundingClientRect();
-       return {display:style.display,frameCenter:parent.left+parseFloat(style.left)+parseFloat(style.width)/2,shieldCenter:shield.left+shield.width/2};
-     });
-     assert.equal(frame.display,'block','Shield frame missing on '+width+'px in '+lang);
-     assert.ok(Math.abs(frame.frameCenter-frame.shieldCenter)<16,
-       'Shield must be centered in corner frame '+JSON.stringify(frame));
+     await page.setViewportSize({width:1440,height:900});
+     await page.locator('#rd-root [data-rd-lang="en"]').click();
    }
-   assert.equal(await page.locator('#rd-root .rd-wave svg').count(),0);
+   if(process.env.HOME_HERO_SCREENSHOT_DIR){
+     await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});
+     await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+     await page.screenshot({path:path.join(process.env.HOME_HERO_SCREENSHOT_DIR,'hero-'+width+'-'+lang+'.png')});
+   }
    await geometry(page);
    for(const record of data.articles){
     await page.goto(base+'/briefing/'+record.slug+'.html?lang='+lang);
@@ -138,6 +120,15 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
     await geometry(page);
    }
    assert.deepEqual(errors,[]);await context.close();journeys++;
+  }
+  for(const [width,scale] of [[1800,.8],[1152,1.25],[720,2]]){
+    const zoom=await browser.newContext({viewport:{width,height:900},deviceScaleFactor:scale});
+    await zoom.route('**/*',r=>r.request().url().startsWith(base+'/')?r.continue():r.abort());
+    const page=await zoom.newPage();await page.goto(base+'/index.html?lang=en');
+    await page.locator('.rd-hero-shield').waitFor();await geometry(page);
+    const ratio=await page.locator('.rd-hero-shield').evaluate(el=>{const b=el.getBoundingClientRect();return b.width/b.height;});
+    assert.ok(Math.abs(ratio-100/112)<.01,'Shield distorted at zoom scale '+scale);
+    await zoom.close();
   }
   const offline=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:900}});await offline.route('**/*',r=>r.request().url().startsWith(base+'/')?r.continue():r.abort());const page=await offline.newPage();await page.goto(base+'/briefing/php-critical-vulnerabilities.html');assert.ok((await page.locator('main').innerText()).includes('CVE-2026-109618'));assert.equal(await page.locator('.sb-support .sb-button').isVisible(),true);await offline.close();
   console.log(JSON.stringify({briefingJourneys:journeys,widths:[360,390,430,1440],languages:['en','ro','fr'],filters:'pass',search:'pass',nestedArticle:'pass',languageLinks:'pass',menu:'pass',home:'pass',overflow:'none',noJavaScriptArticle:'pass'}));
