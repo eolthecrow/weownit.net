@@ -21,6 +21,30 @@ async function pages(){
   return [...top,...briefing].sort();
 }
 
+// Keep the newsletter deep link and the translated notice usable after a language switch.
+async function checkPrivacyNotice(page, base) {
+  const titles = { en: 'Privacy notice', ro: 'Informare privind confidențialitatea', fr: 'Notice de confidentialité' };
+  for (const width of [360, 430, 1366]) {
+    await page.setViewportSize({ width, height: 900 });
+    for (const [lang, title] of Object.entries(titles)) {
+      await page.goto(base + '/privacy.html?lang=' + lang + '#newsletter-privacy');
+      assert.equal(await page.locator('h1').innerText(), title);
+      assert.equal(await page.locator('#newsletter-privacy').count(), 1);
+      assert.match(await page.locator('main').innerText(), /Stripe/);
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), true);
+      assert.equal(await page.locator('link[rel=canonical]').getAttribute('href'), 'https://weownit.net/privacy.html?lang=' + lang);
+    }
+    for (const lang of ['ro', 'en', 'fr']) {
+      const button = page.locator('.langs button[data-lang="' + lang + '"]');
+      await button.click();
+      assert.equal(await page.locator('h1').innerText(), titles[lang]);
+      assert.equal(await button.getAttribute('aria-pressed'), 'true');
+      assert.equal(new URL(page.url()).hash, '#newsletter-privacy');
+      assert.equal(await page.locator('main a[href="mailto:contact@weownit.net"]').count(), 1);
+    }
+  }
+}
+
 async function main(){
   await new Promise(r=>server.listen(0,'127.0.0.1',r));
   const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({headless:true});
@@ -38,6 +62,7 @@ async function main(){
       page.on('console',m=>{if(/Content Security Policy/i.test(m.text()))consoleCsp.push(m.text());});
       await page.goto(base+'/'+file+'?lang=en',{waitUntil:'load'});
       await page.waitForTimeout(800);
+      if (file === 'privacy.html') await checkPrivacyNotice(page, base);
       const violations=await page.evaluate(()=>window.__cspViolations);
       assert.deepEqual(violations,[],file+' CSP violations');
       assert.deepEqual(consoleCsp,[],file+' CSP console errors');
