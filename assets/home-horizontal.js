@@ -4,6 +4,8 @@
 var shell=document.querySelector('.shell');
 if(!shell||!document.querySelector('.rail')||document.getElementById('rd-root'))return;
 var icons={
+target:'<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v5m0 12v5M1 12h5m12 0h5"/>',
+display:'<rect x="2" y="3" width="20" height="15" rx="2"/><path d="M8 22h8m-4-4v4M5 11h3l2-3 3 5 2-3h4"/>',
 layers:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/>',
 shield:'<path d="M12 22s8-4 8-11V5l-8-3-8 3v6c0 7 8 11 8 11Z"/><path d="m8 12 3 3 5-6"/>',
 network:'<rect x="9" y="2" width="6" height="5" rx="1"/><rect x="2" y="17" width="6" height="5" rx="1"/><rect x="16" y="17" width="6" height="5" rx="1"/><path d="M12 7v6M5 17v-4h14v4"/>',
@@ -41,7 +43,7 @@ var html=[
 '<h1 id="rd-h1"><span class="rd-heading-primary" data-rd-text="headline">Network expertise.</span> <em class="rd-heading-accent"><span data-rd-text="headlineAccent">Security insights.</span> <span data-rd-text="headlineThird">Practical tools.</span></em></h1>',
 '<p class="rd-lead" data-rd-text="lead">Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.</p>',
 '<div class="rd-actions"><a class="rd-primary" href="contact.html#book"><span data-rd-text="assessment">Request an Assessment</span> →</a><a class="rd-ghost" href="store.html"><span data-rd-text="explore">Explore Products</span> →</a></div></div>',
-'<div class="rd-hero-right"><svg class="rd-hero-shield" viewBox="0 0 100 112" fill="none" stroke="currentColor" stroke-width="5"><path d="M50 6 86 21v31c0 25-15 42-36 53C29 94 14 77 14 52V21L50 6Z"/><path d="m31 54 13 13 26-29"/></svg>',
+'<div class="rd-hero-right"><div class="rd-shield-frame" aria-hidden="true"><svg class="rd-corners" viewBox="0 0 218 200" fill="none" stroke="currentColor"><path stroke-width="1.5" vector-effect="non-scaling-stroke" d="M1 16V1h15m186 0h15v15M1 184v15h15m186 0h15v-15"/></svg><svg class="rd-hero-shield" viewBox="0 0 100 112" fill="none" stroke="currentColor" stroke-width="5"><path d="M50 6 86 21v31c0 25-15 42-36 53C29 94 14 77 14 52V21L50 6Z"/><path d="m31 54 13 13 26-29"/></svg></div>',
 '<ul class="rd-checks"><li data-rd-text="assess">Assess</li><li data-rd-text="harden">Harden</li><li data-rd-text="monitor">Monitor</li><li data-rd-text="respond">Respond</li><li data-rd-text="reduce">Reduce Risk</li></ul></div></div></section>',
 '<div class="rd-wrap"><section class="rd-offers" aria-label="Featured solutions"><article class="rd-offer">',
 '<div class="rd-offer-head">'+icon('layers')+'<h2 data-rd-text="toolkits">Digital Toolkits</h2><span class="rd-count">9 <span data-rd-text="toolkitsCount">toolkits</span></span></div>',
@@ -52,14 +54,17 @@ html.push('</div><a class="rd-card-end" href="store.html"><span data-rd-text="al
 '<article class="rd-offer"><div class="rd-offer-head">'+icon('activity')+'<h2 style="color:var(--rd-mint)">ServiceWatch</h2><span class="rd-pilot" data-rd-text="pilot">Controlled pilot</span></div>',
 '<p data-rd-text="swIntro">External exposure review and validation for your public assets.</p>',
 '<div class="rd-paths" role="group" aria-label="ServiceWatch paths">',
-'<button type="button" class="rd-path" data-rd-path="essential" aria-pressed="true"><i>◎</i><strong data-rd-text="essential">Essential Exposure Review</strong><small data-rd-text="essentialDesc">Initial view of external exposure.</small></button>',
-'<button type="button" class="rd-path" data-rd-path="monitoring" aria-pressed="false"><i>⌁</i><strong data-rd-text="monitoring">Continuous Monitoring</strong><small data-rd-text="monitoringDesc">Proposed recurring monitoring.</small></button>',
-'<button type="button" class="rd-path" data-rd-path="advanced" aria-pressed="false"><i>▱</i><strong data-rd-text="advanced">Advanced Validation</strong><small data-rd-text="advancedDesc">Scoped engineer-led validation.</small></button></div>',
-'<div class="rd-sw-visual"><div class="rd-dashboard-head">VA &nbsp; ServiceWatch <span id="rd-sw-label">Essential Exposure Review · pilot</span></div>',
+'<button type="button" class="rd-path" data-rd-path="essential" aria-pressed="true"><i>'+icon('target')+'</i><strong data-rd-text="essential">Essential Exposure Review</strong><small data-rd-text="essentialDesc">Initial view of external exposure.</small></button>',
+'<button type="button" class="rd-path" data-rd-path="monitoring" aria-pressed="false"><i>'+icon('display')+'</i><strong data-rd-text="monitoring">Continuous Monitoring</strong><small data-rd-text="monitoringDesc">Proposed recurring monitoring.</small></button>',
+'<button type="button" class="rd-path" data-rd-path="advanced" aria-pressed="false"><i>'+icon('layers')+'</i><strong data-rd-text="advanced">Advanced Validation</strong><small data-rd-text="advancedDesc">Scoped engineer-led validation.</small></button></div>',
+'<div class="rd-sw-visual"><div class="rd-dashboard-head"><img src="assets/va-symbol.svg?v=2" alt="">ServiceWatch <span id="rd-sw-label">Essential Exposure Review · pilot</span></div>',
 '<div class="rd-metrics"><div><span data-rd-text="findings">Findings</span><b>12</b></div><div><span data-rd-text="assets">Assets</span><b>28</b></div><div><span data-rd-text="risk">Risk</span><b style="font-size:15px;color:#f4bc79" data-rd-text="medium">Medium</b></div></div>',
-'<div class="rd-bars" aria-hidden="true"><span style="--v:80%"></span><span style="--v:55%"></span><span style="--v:42%"></span><span style="--v:60%"></span><span style="--v:35%"></span><span style="--v:48%"></span><span style="--v:30%"></span></div>',
+'<svg class="rd-trend" viewBox="0 0 360 38" preserveAspectRatio="none" aria-hidden="true">',
+'<defs><linearGradient id="rd-trend-fill" x2="0" y2="1"><stop stop-color="#4fdec1" stop-opacity=".34"/><stop offset="1" stop-color="#4fdec1" stop-opacity="0"/></linearGradient></defs>',
+'<path d="M0 6L36 6 78 19 118 24 170 22 222 22 274 29 318 25 360 18V38H0Z" fill="url(#rd-trend-fill)"/>',
+'<path d="M0 6L36 6 78 19 118 24 170 22 222 22 274 29 318 25 360 18" fill="none" stroke="#6ce2c7" vector-effect="non-scaling-stroke"/></svg>',
 '<span class="rd-demo" data-rd-text="demo">Illustrative figures — not live monitoring data</span></div>',
-'<div class="rd-sw-actions"><a class="rd-primary" href="contact.html"><span data-rd-text="askPilot">Ask about the pilot</span> →</a><a class="rd-ghost" href="store.html"><span data-rd-text="howWorks">See how it works</span> →</a></div></article>',
+'<div class="rd-sw-actions"><a class="rd-primary" href="contact.html"><span data-rd-text="askPilot">Ask about the pilot</span> →</a><a class="rd-ghost" href="servicewatch-how.html"><span data-rd-text="howWorks">See how it works</span> →</a></div></article>',
 '<article class="rd-offer"><div class="rd-offer-head">'+icon('briefcase')+'<h2 data-rd-text="consultingTitle">Consulting Services</h2></div><p data-rd-text="consultingIntro">Hands-on cybersecurity expertise, from assessment to design and implementation.</p>',
 '<div class="rd-service-list">');
 services.forEach(function(s){html.push('<a class="rd-service" href="contact.html#book">'+icon(s[2])+'<span><strong>'+s[0]+'</strong><small>'+s[1]+'</small></span><b>→</b></a>')});

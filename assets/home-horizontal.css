@@ -75,8 +75,7 @@
 .rd-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}
 .rd-metrics div{background:#10242d;border:1px solid #344c55;border-radius:5px;padding:7px;font-size:11px}
 .rd-metrics b{display:block;font-size:18px;color:var(--rd-mint)}
-.rd-bars{height:25px;display:flex;align-items:end;gap:8px}
-.rd-bars span{flex:1;height:var(--v);background:linear-gradient(0deg,#174c45,#6ce2c7);border-radius:2px 2px 0 0}
+
 .rd-demo{display:block;font:10px ui-monospace,monospace;color:#a7c3bc;margin-top:6px}
 .rd-pilot{margin-left:auto;font:11px ui-monospace,monospace;border:1px solid #56757b;color:#c5d6d3;padding:4px 7px;border-radius:5px}
 .rd-sw-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -106,337 +105,111 @@
 .rd-meeting svg{width:18px;height:18px;color:var(--rd-mint);flex:none}
 .rd-briefing h2 svg{width:27px;height:27px;color:var(--rd-mint);vertical-align:middle;margin-right:8px}
 
-/* Fidelity update: reference's layered particle-wave artwork, not the old flat dots. */
-.rd-hero{background:radial-gradient(ellipse at 69% 48%,#0b2930 0%,#071b22 53%,#06161e 83%)}
-.rd-wave{inset:0 0 auto auto;width:min(74%,1120px);height:100%;opacity:1;background-image:url("hero-particle-wave.svg?v=1");background-position:right center;background-size:100% 100%;background-repeat:no-repeat}
-.rd-wave svg{display:none}
-.rd-briefing{position:relative;isolation:isolate;overflow:hidden}
-.rd-briefing::before{content:"";position:absolute;z-index:0;inset:0 0 0 46%;background:url("hero-particle-wave.svg?v=1") center 36% / 1120px 340px no-repeat;opacity:.32;pointer-events:none}
-.rd-briefing>*{position:relative;z-index:1}
-@media(max-width:900px){.rd-wave{width:92%;opacity:.65}}
-@media(max-width:700px){.rd-wave{inset:12% 0 auto auto;width:112%;height:82%;opacity:.36;background-size:cover;background-position:57% center}.rd-briefing::before{inset:35% 0 0 0;opacity:.2;background-position:65% 40%}}
-
-
-/* Approved design fidelity, 2026-11-17: mountain ridge, shield frame and halo. */
-.rd-hero{background:radial-gradient(ellipse at 73% 42%,#092b32 0%,#071c24 48%,#06151c 82%)}
-.rd-wave{inset:-3% 0 0 auto;width:min(78%,1180px);height:109%;opacity:1;
-background-image:url("hero-mountain-shield-fidelity.svg?v=1");
-background-size:100% 100%;background-position:right center;background-repeat:no-repeat}
-.rd-hero-right{isolation:isolate;position:relative}
-.rd-hero-right::before{content:"";position:absolute;z-index:-1;left:4%;top:13%;width:205px;height:230px;max-height:79%;
-background:
-linear-gradient(#65f5dc,#65f5dc) left top / 16px 1.5px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) left top / 1.5px 16px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) right top / 16px 1.5px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) right top / 1.5px 16px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) left bottom / 16px 1.5px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) left bottom / 1.5px 16px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) right bottom / 16px 1.5px no-repeat,
-linear-gradient(#65f5dc,#65f5dc) right bottom / 1.5px 16px no-repeat;
-opacity:.96;pointer-events:none}
-.rd-hero-shield{width:121px;height:141px;filter:drop-shadow(0 0 15px rgba(76,246,213,.3));stroke-width:4.7}
-.rd-briefing::before{background-image:url("hero-mountain-shield-fidelity.svg?v=1");opacity:.31}
-@media(max-width:1120px){.rd-hero-right::before{left:-4%;width:140px;height:170px;top:19%}}
-@media(max-width:900px){.rd-wave{width:96%;opacity:.78}.rd-hero-right::before{display:none}}
-@media(max-width:700px){.rd-wave{width:119%;height:90%;top:9%;opacity:.34;background-position:63% center;background-size:cover}.rd-hero-shield{width:63px;height:67px}}
-
-/* 2026-11-17 — approved ORIGINAL hero art, cropped directly from the owner's
-   reference screenshot. Unlike the earlier procedural meshes, this keeps the
-   exact mountains, shield, checkmark, checklist and corner brackets.
-   The top-left brand mark remains the unchanged assets/va-symbol.svg. */
-@media(min-width:1121px){
-  .rd-hero{background:#06171e}
-  .rd-wave{
-    inset:0 0 auto auto;
-    width:min(55.86vw,858px);
-    height:100%;
-    min-height:320px;
-    opacity:1;
-    background-image:url("approved-original-hero.avif?v=1");
-    background-size:100% 100%;
-    background-repeat:no-repeat;
-    background-position:right center
-  }
-  /* The approved illustration contains the shield and checklist as pixels.
-     Preserve the existing semantic checklist in the document for assistive
-     technology without drawing another shield over the same image. */
-  .rd-hero-right{opacity:0;pointer-events:none}
-  .rd-hero-right::before{display:none}
+/* The decorative SVG and foreground have independent coordinate systems.
+   Each locale can wrap naturally without moving the shield inside its frame. */
+.rd-root {
+  --rd-line: #41666c;
+  background: #031319;
 }
-@media(max-width:1120px){
-  .rd-hero-right{opacity:1}
-  .rd-wave{background-image:url("hero-mountain-shield-fidelity.svg?v=1")}
+.rd-header { background: #04151c; }
+.rd-hero {
+  isolation: isolate;
+  background: radial-gradient(ellipse at 64% 42%, #07252b, #04161d 60%, #03141b);
 }
-/* Preserve the original graphic's aspect ratio when resized on wide screens. */
-
-/* The reference artwork contains English checklist lettering. For translated
-   views use the SVG mesh and real, translated checklist rather than showing
-   English words inside a Romanian/French homepage. */
-@media(min-width:1121px){
-  html[lang="ro"] .rd-wave,html[lang="fr"] .rd-wave{
-    background-image:url("hero-mountain-shield-fidelity.svg?v=1");
-    width:min(78%,1180px)
-  }
-  html[lang="ro"] .rd-hero-right,html[lang="fr"] .rd-hero-right{
-    opacity:1;pointer-events:auto
-  }
-  html[lang="ro"] .rd-hero-right::before,html[lang="fr"] .rd-hero-right::before{
-    display:block
-  }
+.rd-hero > .rd-wrap { align-items: center; }
+.rd-hero-copy { z-index: 5; }
+.rd-hero .rd-wave {
+  inset: 0 0 0 auto;
+  width: 73%;
+  height: 100%;
+  z-index: 0;
+  opacity: .95;
+  background: url("hero-reference-wave.svg") center / cover no-repeat;
+  mask-image: linear-gradient(to right, transparent, #000 21%);
 }
-
-
-/* Continuous hero fix — retain the approved bitmap at its natural proportions,
-   but blend its left boundary into ONE hero backdrop. No split image panel.
-   This only affects English desktop; existing localized/mobile layouts remain. */
-@media (min-width:1121px){
-  html[lang="en"] .rd-hero{
-    background:radial-gradient(ellipse 75% 115% at 75% 47%, #0b2b30 0%, #071e25 46%, #06171e 90%);
-    isolation:isolate;
-  }
-  html[lang="en"] .rd-hero::before{
-    content:"";
-    position:absolute;
-    inset:0 0 0 auto;
-    width:min(55.86vw,858px);
-    z-index:0;
-    pointer-events:none;
-    background-image:url("approved-original-hero.avif?v=1");
-    background-size:100% 100%;
-    background-position:right center;
-    background-repeat:no-repeat;
-    -webkit-mask-image:linear-gradient(to right,
-      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
-      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
-    mask-image:linear-gradient(to right,
-      transparent 0%,rgba(0,0,0,.07) 6%,rgba(0,0,0,.36) 17%,
-      rgba(0,0,0,.76) 30%,#000 43%,#000 100%);
-  }
-  html[lang="en"] .rd-hero .rd-wave{display:none}
+.rd-hero h1 .rd-heading-primary, .rd-heading-accent, .rd-heading-accent > span { display: block; }
+.rd-hero h1 .rd-heading-accent { color: var(--rd-mint); font-style: italic; }
+.rd-hero .rd-hero-right { width: 46%; min-width: 0; gap: clamp(10px,1.6vw,26px); }
+.rd-shield-frame {
+  position: relative;
+  width: clamp(108px,15vw,232px);
+  aspect-ratio: 1.09;
+  flex: none;
+  display: grid;
+  place-items: center;
 }
-
-
-/* APPROVED REFERENCE — VISUAL FIDELITY (2026-11-17)
-   Source: selected 1672x941 visual. Only homepage presentation changes.
-   Logo remains the real assets/va-symbol.svg; prices, checkout and JS stay live.
-   The original mountains/shield/checklist are contained in the user-selected
-   image excerpt, with a precomputed transparent left edge (no vertical seam).
-*/
+.rd-corners { position: absolute; inset: 0; width: 100%; height: 100%; color: #6ce2c7; }
+.rd-hero .rd-hero-shield { display: block; width: 50%; height: auto; aspect-ratio: 100/112; filter: none; }
+.rd-checks { min-width: 0; font-size: clamp(14px,1.16vw,18px); }
+.rd-checks li { gap: .7em; line-height: 1.35; text-shadow: 0 1px 5px #031319; }
+.rd-checks li::before {
+  content: "";
+  width: 1em; height: .55em;
+  flex: none;
+  border: solid var(--rd-mint); border-width: 0 0 2px 2px;
+  transform: translateY(-.12em) rotate(-45deg);
+}
+.rd-eyebrow { font-size: clamp(10px,.75vw,12px); letter-spacing: .12em; line-height: 1.45; }
+.rd-offer, .rd-briefing { background: linear-gradient(128deg,#091c22,#04151c 68%,#041a20); }
+.rd-mini, .rd-service-list, .rd-sw-visual { background: linear-gradient(145deg,#0d2128,#06171e); }
+.rd-offer-head { flex-wrap: wrap; }
+.rd-offer-head h2 { flex: 1 1 min-content; }
+.rd-paths { position: relative; }
+.rd-paths::before {
+  content: ""; position: absolute; inset: 24px 15% auto; height: 1px;
+  background: linear-gradient(90deg,transparent,#398079 30%,#398079 70%,transparent);
+  pointer-events: none;
+}
+.rd-path i { position: relative; background: #06191f; }
+.rd-path i svg { width: 25px; height: 25px; }
+.rd-dashboard-head { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.rd-dashboard-head img { width: 24px; height: 15px; }
+.rd-dashboard-head span { margin-left: auto; }
+.rd-trend { display: block; width: 100%; height: 35px; }
+.rd-sw-actions .rd-ghost { background: transparent; border-color: transparent; text-decoration: underline; text-underline-offset: 3px; }
+.rd-briefing { position: relative; isolation: isolate; overflow: hidden; }
+.rd-briefing::before {
+  content: ""; position: absolute; inset: 0 0 0 47%; z-index: -1;
+  background: url("hero-reference-wave.svg") center 49% / cover no-repeat;
+  opacity: .2; pointer-events: none;
+}
 @media (min-width:1121px) {
-  html[lang="en"] .rd-hero {
-    position:relative;
-    isolation:isolate;
-    background:radial-gradient(ellipse 78% 118% at 75% 40%, #093036 0%, #031d23 53%, #02141b 100%);
+  .rd-nav { padding-inline: clamp(22px,3.1vw,50px); }
+  .rd-links { gap: clamp(14px,1.8vw,30px); }
+  .rd-hero > .rd-wrap {
+    min-height: 320px;
+    padding: 24px clamp(28px,4.35vw,70px);
   }
-  html[lang="en"] .rd-hero::before {
-    content:"";
-    position:absolute;
-    inset:0 0 0 auto;
-    width:60.23%;
-    z-index:0;
-    pointer-events:none;
-    background-image:url("approved-home-hero-20261117.avif?v=1");
-    background-position:right center;
-    background-size:100% 100%;
-    background-repeat:no-repeat;
-    -webkit-mask-image:none;
-    mask-image:none;
-  }
-  html[lang="en"] .rd-hero .rd-wave{display:none}
-  html[lang="en"] .rd-hero .rd-hero-right{opacity:0;pointer-events:none}
-  html[lang="en"] .rd-hero .rd-hero-right::before{display:none}
-  html[lang="en"] .rd-hero .rd-wrap{position:relative;z-index:2}
+  .rd-hero-copy { width: 52%; }
+  .rd-eyebrow { margin-bottom: 11px; }
+  .rd-hero h1 { font-size: clamp(39px,3.05vw,52px); line-height: 1.02; letter-spacing: -.05em; }
+  .rd-lead { max-width: 560px; font-size: clamp(15px,1.14vw,18px); margin-bottom: 14px; }
+  .rd-offers { grid-template-columns: minmax(0,1.12fr) minmax(0,1.1fr) minmax(0,.98fr); gap: 15px; margin: 14px 0 22px; }
+  .rd-offer { min-height: 454px; padding: clamp(15px,1.35vw,22px); }
+  .rd-offer h2 { font-size: clamp(20px,1.65vw,26px); }
+  .rd-mini { min-height: 130px; gap: 12px; }
+  .rd-mini strong, .rd-service strong { font-size: 13px; }
+  .rd-mini small, .rd-service small, .rd-path small { font-size: 11.5px; }
+  .rd-service { min-height: 61px; padding-inline: 14px; }
+  .rd-briefing { min-height: 126px; padding-inline: clamp(24px,3vw,46px); }
 }
-
-/* At reference desktop dimensions, keep the original composition: slim header,
-   264px hero, three balanced 408px cards and a horizontal briefing strip. */
-@media (min-width:1360px) {
-  .rd-root{background:#06151c}
-  .rd-header{background:#03151c;border-bottom-color:#35696b;box-shadow:inset 0 -1px 0 rgba(92,245,219,.28)}
-  .rd-nav{min-height:54px;padding-left:28px;padding-right:10px;gap:clamp(12px,1.8vw,28px)}
-  .rd-brand{font-size:29px}
-  .rd-brand img{width:54px;height:32px}
-  .rd-links a{padding-top:18px;padding-bottom:17px;font-size:14px}
-  .rd-links a[aria-current="page"]::after{bottom:8px}
-  .rd-meeting{padding:7px 12px}
-  .rd-hero>.rd-wrap{min-height:264px;padding-top:18px;padding-bottom:10px}
-  .rd-hero-copy{width:56%;max-width:735px;padding-left:35px}
-  .rd-eyebrow{font-size:10.5px;letter-spacing:2px;margin-bottom:9px}
-  .rd-hero h1{font-size:clamp(41px,2.78vw,47px);line-height:1.0;letter-spacing:-.047em;max-width:625px;margin-bottom:7px}
-  .rd-lead{font-size:15.5px;line-height:1.31;max-width:520px;margin-bottom:10px;color:#e3ebe8}
-  .rd-actions{gap:18px}
-  .rd-hero .rd-primary,.rd-hero .rd-ghost{min-height:39px;padding:7px 20px;font-size:14px}
-  .rd-offers{margin-top:0;margin-bottom:20px;gap:11px}
-  .rd-offer{min-height:408px;padding:18px;border-radius:12px;
-    background:linear-gradient(145deg,#0a252b 0%,#051b22 58%,#03151d 100%);
-    box-shadow:0 0 13px rgba(65,238,212,.09),inset 0 1px rgba(120,242,224,.10)}
-  .rd-offer h2{font-size:23px}
-  .rd-offer p{margin:7px 0 13px}
-  .rd-mini{min-height:121px;padding:11px}
-  .rd-briefing{min-height:121px;padding:18px 26px;background:linear-gradient(115deg,#061b22,#04242a 67%,#061b22)}
+@media (min-width:701px) and (max-width:1120px) {
+  .rd-hero-copy { width: 54%; }
+  .rd-hero .rd-hero-right { width: 43%; }
+  .rd-hero h1 { font-size: clamp(32px,3.9vw,43px); }
 }
-@media (min-width:1121px) and (max-width:1359px) {
-  .rd-hero h1{font-size:clamp(37px,3.2vw,45px)}
-  .rd-hero>.rd-wrap{min-height:300px}
-  .rd-hero-copy{max-width:650px}
+@media (max-width:700px) {
+  .rd-hero h1 { font-size: clamp(32px,8.5vw,44px); }
+  .rd-hero .rd-wave { width: 100%; height: 51%; inset: auto 0 0; opacity: .54; mask-image: linear-gradient(transparent,#000 42%); }
+  .rd-hero .rd-hero-right { width: 100%; justify-content: center; gap: 18px; margin-top: 16px; }
+  .rd-shield-frame { width: 108px; }
+  .rd-checks { display: block; font-size: 14px; }
+  .rd-checks li { margin: 3px 0; }
+  .rd-briefing::before { inset: 30% 0 0; }
 }
-
-
-/* One approved hero composition in EN, RO and FR.
-   Shield, mountain crests, frame and checkmarks share the same artwork.
-   Only the five labels are HTML text, localised using the existing i18n flow. */
-.rd-art-checks{display:none}
-@media(min-width:1121px){
-  .rd-enabled .rd-root .rd-hero{
-    isolation:isolate;
-    background:radial-gradient(ellipse 78% 118% at 75% 40%,#093036 0%,#031d23 53%,#02141b 100%);
-  }
-  .rd-enabled .rd-root .rd-hero::before{
-    content:"";
-    position:absolute;
-    inset:0 0 0 auto;
-    z-index:0;
-    width:60.23%;
-    pointer-events:none;
-    background:url("hero-unified-en-ro-fr.avif?v=1") right center / 100% 100% no-repeat;
-    -webkit-mask-image:none;
-    mask-image:none;
-  }
-  .rd-enabled .rd-root .rd-hero .rd-wave{display:none}
-  .rd-enabled .rd-root .rd-hero .rd-hero-right{
-    opacity:0;
-    pointer-events:none;
-  }
-  .rd-enabled .rd-root .rd-hero .rd-hero-right::before{display:none}
-  .rd-enabled .rd-root .rd-hero>.rd-wrap{position:relative;z-index:2}
-  .rd-enabled .rd-root .rd-art-checks{
-    display:grid;
-    grid-template-rows:repeat(5,minmax(0,1fr));
-    list-style:none;
-    position:absolute;
-    left:76.2%;
-    top:26.3%;
-    width:22%;
-    height:50%;
-    z-index:4;
-    padding:0;
-    margin:0;
-    pointer-events:none;
-    font-size:clamp(12px,1.06vw,18px);
-    line-height:1.35;
-    color:#f2f1e8;
-    font-weight:400;
-    text-shadow:0 0 8px #06171e;
-  }
-  .rd-enabled .rd-root .rd-art-checks li{list-style:none;margin:0;padding:0;white-space:nowrap}
-  .rd-enabled .rd-root .rd-art-checks li::before{content:none}
-  .rd-enabled .rd-root .rd-art-checks li:last-child{color:#6ce2c7;font-weight:650}
-  html[lang="ro"] .rd-hero h1,html[lang="fr"] .rd-hero h1{
-    font-size:clamp(35px,2.65vw,44px);
-  }
-}
-@media(min-width:701px) and (max-width:1120px){
-  .rd-enabled .rd-root .rd-hero-shield{
-    display:block;
-    width:88px;
-    height:98px;
-    flex:none;
-  }
-  .rd-enabled .rd-root .rd-hero-right::before{
-    display:block;
-    left:0;
-    top:calc(50% - 59px);
-    width:110px;
-    height:116px;
-  }
-}
-@media(max-width:700px){
-  /* The mobile SVG shield stays centred in its corner brackets in all locales. */
-  .rd-enabled .rd-root .rd-hero-right::before{
-    display:block;
-    top:-7px;
-    left:-13px;
-    width:89px;
-    height:80px;
-    max-height:none;
-  }
-}
-
-
-/* 2026-11-18 — subtle brand strapline and quieter hero backdrop.
-   Keep the original shield/mountain asset and the real VA SVG unchanged.
-   The foreground of the mountain and shield remains visible; the illustration
-   fades toward the headline for cleaner text/background separation. */
-.rd-enabled .rd-root .rd-eyebrow{
-  text-transform:none;
-  letter-spacing:.055em;
-  font-size:clamp(10.5px,.86vw,12px);
-  line-height:1.4;
-  color:#c9e6e1;
-}
-@media(min-width:1121px){
-  .rd-enabled .rd-root .rd-hero::before{
-    opacity:.88;
-    -webkit-mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
-    mask-image:linear-gradient(to right,transparent 0%,rgba(0,0,0,.70) 18%,#000 44%,#000 100%);
-  }
-}
-@media(min-width:701px) and (max-width:1120px){
-  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.68}
-}
-@media(max-width:700px){
-  .rd-enabled .rd-root .rd-hero .rd-wave{opacity:.26}
-}
-
-
-/* Three-part hero positioning: the approved brand message is now the H1,
-   not duplicated in the smaller category label above it. */
-.rd-enabled .rd-root .rd-eyebrow{
-  text-transform:uppercase;
-  letter-spacing:.12em;
-  font-size:clamp(9px,.75vw,11px);
-  color:#c9e6e1;
-}
-.rd-enabled .rd-root .rd-hero h1 .rd-heading-primary,
-.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent,
-.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent>span{display:block}
-.rd-enabled .rd-root .rd-hero h1 .rd-heading-accent{font-style:normal;color:#6ce2c7}
-@media(min-width:1121px){
-  .rd-enabled .rd-root .rd-hero h1{
-    font-size:clamp(32px,2.55vw,42px);
-    line-height:1.045;
-    letter-spacing:-.045em;
-  }
-  .rd-enabled .rd-root .rd-hero>.rd-wrap{min-height:294px}
-}
-@media(max-width:700px){
-  .rd-enabled .rd-root .rd-hero h1{font-size:clamp(29px,7.4vw,40px);line-height:1.06}
-}
-
-/* Canva Modern Page Redesign: retain the compact approved format, use real
-   vector artwork and keep all localized writing above the decorative layer. */
-.rd-enabled .rd-root .rd-hero{isolation:isolate;background:radial-gradient(ellipse at 72% 42%,#082b31 0%,#061c23 57%,#03151c 100%)}
-.rd-enabled .rd-root .rd-hero::before{content:none;display:none;background-image:none}
-.rd-enabled .rd-root .rd-hero .rd-wave{display:block;inset:0 0 0 auto;width:66%;height:100%;background:url("hero-canva-vector.svg?v=1") right center / cover no-repeat;opacity:.9;z-index:0;mask-image:linear-gradient(to right,transparent,#000 22%);pointer-events:none}
-.rd-enabled .rd-root .rd-hero>.rd-wrap{position:relative;z-index:1}
-.rd-enabled .rd-root .rd-hero-copy{position:relative;z-index:5}
-.rd-enabled .rd-root .rd-hero .rd-hero-right{position:relative;z-index:3;opacity:1;pointer-events:auto;gap:24px}
-.rd-enabled .rd-root .rd-hero .rd-hero-right::before{content:none;display:none}
-.rd-enabled .rd-root .rd-hero-shield{display:block;width:106px;height:auto;aspect-ratio:100/112;filter:drop-shadow(0 0 5px #3ce5c522);flex:none}
-.rd-enabled .rd-root .rd-checks{position:relative;z-index:5;min-width:0;line-height:1.4}
-.rd-enabled .rd-root .rd-checks li{position:relative;margin:7px 0;gap:10px}
-.rd-enabled .rd-root .rd-art-checks{display:none}
-@media(min-width:701px) and (max-width:1120px){
- .rd-enabled .rd-root .rd-hero-copy{width:57%}
- .rd-enabled .rd-root .rd-hero .rd-hero-right{width:40%;gap:16px}
- .rd-enabled .rd-root .rd-hero-shield{width:78px}
- .rd-enabled .rd-root .rd-checks{font-size:14px}
-}
-@media(max-width:700px){
- .rd-enabled .rd-root .rd-hero .rd-wave{width:100%;height:55%;inset:auto 0 0;opacity:.28;mask-image:linear-gradient(to bottom,transparent,#000 30%)}
- .rd-enabled .rd-root .rd-hero-copy{width:100%}
- .rd-enabled .rd-root .rd-hero .rd-hero-right{width:100%;max-width:360px;justify-content:center;margin:24px auto 0;gap:28px}
- .rd-enabled .rd-root .rd-hero-shield{width:80px}
- .rd-enabled .rd-root .rd-checks{display:grid;grid-template-columns:1fr;font-size:14px}
- .rd-enabled .rd-root .rd-checks li{margin:3px 0}
+@media (max-width:430px) {
+  .rd-mini { display: grid; grid-template-columns: 1fr; align-content: start; padding: 12px; }
+  .rd-mini strong { font-size: 13px; }
+  .rd-mini small { font-size: 11.5px; }
+  .rd-mini .rd-price { margin-top: 5px; }
 }
