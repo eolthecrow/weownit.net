@@ -85,6 +85,13 @@ async function main(){
       assert.equal(await page.locator('#checks h2').innerText(), guideTitle[lang]);
       assert.equal(await page.locator('.checks dt').count(), 5);
       assert.equal(await page.locator('.phase.prototype').count(), 1);
+      assert.equal(await page.locator('.checks samp').count(), 5);
+      assert.equal(await page.locator('.phase.research').count(), 1);
+      for (const route of await page.locator('details.route').all()) {
+        if (!(await route.evaluate(el => el.open))) await route.locator('summary').click();
+        assert.equal(await route.locator('.route-map li:visible').count(), 3);
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1));
+      }
       assert.equal(await page.locator('.phase.planned').count(), 3);
       await page.locator('a[href="#checks"]').click();
       assert.equal(new URL(page.url()).hash, '#checks');
