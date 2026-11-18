@@ -12,7 +12,7 @@
   <link rel="alternate" hreflang="fr" href="https://weownit.net/servicewatch-how.html?lang=fr">
   <link rel="alternate" hreflang="x-default" href="https://weownit.net/servicewatch-how.html?lang=en">
   <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
-  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=2&amp;rev=70f1122">
+  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=e833dacd0ac4">
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -34,10 +34,26 @@
   <div><svg aria-hidden="true" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="2"/><rect x="4" y="14" width="16" height="6" rx="2"/><path d="M7 8h2m-2 9h2"/></svg><span data-i18n="gateway">Remote access</span></div></div>
   <dl><dt data-i18n="observed">Evidence</dt><dd data-i18n="evidence">The gateway answered an external connection.</dd><dt data-i18n="decision">Team decision</dt><dd data-i18n="action">Confirm who needs access, then restrict it and recheck.</dd></dl></div></article>
 </div></section>
-<section class="wrap workflow"><h2 data-i18n="flow">How a review works</h2><ol><li><h3 data-i18n="scope">Agree the scope</h3><p data-i18n="scopeBody">Choose the domains and systems your team owns and approve the checks.</p></li>
+<section class="wrap workflow demo-layout" id="demo"><div><h2 data-i18n="flow">How a review works</h2><ol><li><h3 data-i18n="scope">Agree the scope</h3><p data-i18n="scopeBody">Choose the domains and systems your team owns and approve the checks.</p></li>
 <li><h3 data-i18n="collect">Collect evidence</h3><p data-i18n="collectBody">Record which services respond and what they return at the time of the check.</p></li>
 <li><h3 data-i18n="review">Choose an action</h3><p data-i18n="reviewBody">Review the evidence with the system owner and decide what to keep, restrict or retest.</p></li>
-</ol></section>
+</ol></div>
+  <div class="demo-player">
+    <h3 id="demo-title" data-i18n="watchDemo">Watch the demo</h3>
+    <p data-i18n="videoMeta">24 seconds · Fictional gateway · Silent video</p>
+    <video controls playsinline preload="none" width="960" height="540"
+           aria-labelledby="demo-title" poster="assets/servicewatch-demo/gateway-poster.webp"
+           src="assets/servicewatch-demo/gateway-en.mp4">
+      <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/gateway-en.vtt" default>
+    </video>
+    <details><summary data-i18n="transcript">Read the walkthrough</summary><ul>
+      <li data-i18n="videoStep1">The owner approves an external check of gateway.example.</li>
+      <li data-i18n="videoStep2">The gateway accepts a connection on TCP port 443.</li>
+      <li data-i18n="videoStep3">The TLS certificate matches the hostname and expires in 12 days.</li>
+      <li data-i18n="videoStep4">The network team plans a renewal and a follow-up check.</li>
+    </ul></details>
+  </div>
+</section>
 <section class="catalog" id="checks"><div class="wrap split">
   <div><h2 data-i18n="checks">What the pilot checks</h2><p data-i18n="coverage">Follow one fictional gateway through five checks tested individually in the pilot. The evidence changes with each check.</p><div class="asset-ref"><small data-i18n="exampleHost">Example asset</small><code>gateway.example</code></div></div>
   <dl class="checks"><div><dt><svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c-5 5-5 13 0 18 5-5 5-13 0-18Z"/></svg><span data-i18n="dns">Domains &amp; DNS</span></dt><dd><span data-i18n="dnsBody">Resolve the approved hostname and record the returned address. Confirm that the address belongs in scope before checking it.</span><samp data-i18n="dnsEx">A record → 192.0.2.18</samp></dd></div>
@@ -52,5 +68,5 @@
 <details class="route"><summary><span class="phase research" data-i18n="research">Research only</span><strong data-i18n="sources">Security data connectors</strong></summary><div class="route-body"><p data-i18n="sourcesBody">A curated directory helps identify candidate sources for IP reputation, vulnerability advisories and asset history. Each connector needs separate evaluation before use in the pilot.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="sourcesIn">A reviewer needs context for a reported software version.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="sourcesMid">Identify a candidate advisory source. Check its permissions, coverage and update date.</span></li><li><b data-i18n="result">Result</b><span data-i18n="sourcesOut">A connector shortlist for technical evaluation.</span></li></ol></div></details>
 <details class="route"><summary><span class="phase planned" data-i18n="planned">Proposed</span><strong data-i18n="monitor">Continuous monitoring</strong></summary><div class="route-body"><p data-i18n="monitorBody">Scheduled rechecks would highlight newly exposed services and notify the team when a previously reviewed asset changes.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="monitorIn">A previously reviewed gateway and its last recorded state.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="monitorMid">Repeat the approved check and compare the two observations.</span></li><li><b data-i18n="result">Result</b><span data-i18n="monitorOut">A change notice for the owner showing what appeared or disappeared.</span></li></ol></div></details></div></section></main>
 <footer><div class="wrap bar"><b>weownit.net / ServiceWatch</b><a href="contact.html" data-preserve-lang class="jump"><span data-i18n="contact">Discuss a pilot review</span> ↗</a></div></footer>
-<script src="assets/servicewatch-how.js?v=3&amp;rev=70f1122" defer></script>
+<script src="assets/servicewatch-how.js?v=103f783baee9" defer></script>
 </body></html>

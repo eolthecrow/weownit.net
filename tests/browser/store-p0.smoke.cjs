@@ -6,7 +6,7 @@ const http=require('node:http');
 const assert=require('node:assert/strict');
 const {chromium}=require(process.env.WIT_PLAYWRIGHT_MODULE||'playwright');
 const root=path.resolve(__dirname,'../..');
-const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.pdf':'application/pdf'};
+const types={'.html':'text/html','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.pdf':'application/pdf','.mp4':'video/mp4','.vtt':'text/vtt','.webp':'image/webp'};
 const labels={
   en:{intro:'Security, with a clear next step.',catalog:'Browse toolkit prices',note:'Online checkout is not active',sample:'PREVIEW SAMPLE REPORT',currency:'€29'},
   ro:{intro:'Securitate, cu un pas următor clar.',catalog:'Explorează prețurile',note:'Checkout-ul online nu este activ',sample:'VEZI UN RAPORT EXEMPLU',currency:'149 RON'},
@@ -84,6 +84,17 @@ async function main(){
       const guideTitle = { en: 'What the pilot checks', ro: 'Ce verificăm în pilot', fr: 'Les contrôles du pilote' };
       assert.equal(await page.locator('#checks h2').innerText(), guideTitle[lang]);
       assert.equal(await page.locator('.checks dt').count(), 5);
+      const demo = page.locator('#demo video');
+      assert.ok(await demo.evaluate(v => v.paused && v.controls && !v.autoplay));
+      assert.match(await demo.getAttribute('src'), new RegExp('gateway-' + lang + '\\.mp4$'));
+      assert.equal(await demo.locator('track').getAttribute('srclang'), lang);
+      await demo.evaluate(v => { v.muted = true; return v.play(); });
+      await page.waitForFunction(() => document.querySelector('#demo video').currentTime > 0.1);
+      const seconds = await demo.evaluate(v => { v.pause(); return v.duration; });
+      assert.equal(seconds, 24);
+      await page.waitForFunction(() => document.querySelector('#demo track').track.cues?.length === 4);
+      await page.locator('#demo summary').click();
+      assert.equal(await page.locator('#demo details li:visible').count(), 4);
       assert.equal(await page.locator('.phase.prototype').count(), 1);
       assert.equal(await page.locator('.checks samp').count(), 5);
       assert.equal(await page.locator('.phase.research').count(), 1);
