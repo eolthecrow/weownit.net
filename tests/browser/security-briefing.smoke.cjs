@@ -42,7 +42,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    const pilotPath=page.locator('#rd-root [data-rd-path="monitoring"]');
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
-   assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
+   assert.equal(await page.locator('#rd-root #rd-h1').isVisible(),true);
    const expectedHeadlines={
      en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and security tools to assess, harden and monitor your network, infrastructure and external exposure.'],
      ro:['Expertiză în rețele.','Perspective de securitate.','Instrumente practice.','Consultanță, kituri digitale și instrumente pentru evaluarea, securizarea și monitorizarea rețelei, infrastructurii și expunerii externe.'],
@@ -79,7 +79,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          noBitmap:getComputedStyle(el,'::before').content,
          separate:copy.right<=right.left+1||copy.bottom<=right.top+1};
      });
-     assert.ok(state.image.includes('hero-reference-wave.svg'),JSON.stringify(state));
+     assert.ok(state.image.includes('home-ridges.svg'),JSON.stringify(state));
      assert.ok(state.foreground>state.background,'Writing must be above decorative art');
      const offsets=await page.locator('.rd-shield-frame').evaluate(frame=>{
        const f=frame.getBoundingClientRect(),s=frame.querySelector('.rd-hero-shield').getBoundingClientRect();
@@ -92,18 +92,25 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    }
    assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[lang]);
    await checkVectorHero();
-   const vector=await(await page.request.get(base+'/assets/hero-reference-wave.svg')).text();
-   assert.match(vector,/viewBox="0 0 1536 320"/);
+   const vector=await(await page.request.get(base+'/assets/home-ridges.svg')).text();
+   assert.match(vector,/viewBox="0 0 1536 380"/);
    assert.doesNotMatch(vector,/<image\b|data:image|foreignObject|<script/i,'Artwork must be vector shapes, not an embedded bitmap');
    if(width===1440&&lang==='en'){
      for(const size of [320,390,700,768,900,1024,1120,1121,1440]){
        await page.setViewportSize({width:size,height:900});
+       let previousShield;
        for(const next of ['en','ro','fr']){
          await page.locator('#rd-root [data-rd-lang="'+next+'"]').click();
          await page.waitForFunction(l=>document.documentElement.lang===l,next);
          assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[next]);
          assert.deepEqual(await headlineText(),expectedHeadlines[next]);
          await checkVectorHero();await geometry(page);
+         const shield = await page.locator('.rd-hero-shield').boundingBox();
+         if (previousShield) {
+           assert.ok(Math.abs(shield.x - previousShield.x) < 1 && Math.abs(shield.y - previousShield.y) < 1,
+             'Shield moved on language change at width ' + size);
+         }
+         previousShield = shield;
        }
      }
      await page.setViewportSize({width:1440,height:900});
@@ -121,8 +128,8 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          cardTop:rect('.rd-offers').top,cardBottom:rect('.rd-offers').bottom,briefingTop:rect('.rd-briefing').top};
      });
      assert.ok(bounds.headlineOffset<2,'The desktop accent must fit on one line');
-     assert.ok(Math.abs(bounds.heroBottom-383)<14 && Math.abs(bounds.cardTop-398)<14 &&
-       Math.abs(bounds.cardBottom-858)<24 && Math.abs(bounds.briefingTop-882)<24,JSON.stringify(bounds));
+     assert.ok(Math.abs(bounds.heroBottom-428)<14 && Math.abs(bounds.cardTop-448)<14 &&
+       Math.abs(bounds.cardBottom-908)<24 && Math.abs(bounds.briefingTop-932)<24,JSON.stringify(bounds));
      if(process.env.HOME_HERO_SCREENSHOT_DIR){
        await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});
        await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
