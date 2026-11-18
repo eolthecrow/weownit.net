@@ -313,6 +313,7 @@
 .rd-hero .rd-lead{line-height:1.4;color:#d0dfdd}.rd-offers .rd-offer{border-color:#34565c;border-radius:12px;background:linear-gradient(145deg,#0d242b,#06181f 69%);box-shadow:inset 0 1px #55928b22}
 .rd-offers .rd-offer:nth-child(2){background:radial-gradient(ellipse at 50% 0%,#123a3a,#081e24 60%);border-color:#497774}
 .rd-offer .rd-mini,.rd-service-list{border-color:#28474e}.rd-offer .rd-mini{background:#0a1e24}
+.rd-root .rd-briefing::before{background-image:none}
 .rd-root .rd-briefing{border-color:#34565c;background:linear-gradient(100deg,#0a242c,#06181e)}
 @media(min-width:1121px){.rd-root .rd-hero h1{font-size:clamp(36px,3.05vw,49px);letter-spacing:-.05em}.rd-offers{margin-top:20px}.rd-root .rd-hero h1 .rd-heading-accent{font-size:.9em}.rd-root .rd-hero h1 .rd-heading-primary{font-size:1.12em}}
 @media(max-width:700px){.rd-root .rd-hero>.rd-wrap{grid-template-columns:1fr;min-height:0}.rd-root .rd-hero .rd-hero-right{grid-template-columns:132px 150px;justify-content:center;margin:8px auto 0;min-height:145px}

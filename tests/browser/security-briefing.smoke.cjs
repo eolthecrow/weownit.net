@@ -41,7 +41,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    }else assert.equal(await page.locator('#rd-links').isVisible(),true);
    const pilotPath=page.locator('#rd-root [data-rd-path="monitoring"]');
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
-   assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
+   assert.equal(await page.locator('#rd-sw-label').innerText(),await pilotPath.locator('strong').innerText());
    assert.equal(await page.locator('#rd-root #rd-h1').isVisible(),true);
    const expectedHeadlines={
      en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and security tools to assess, harden and monitor your network, infrastructure and external exposure.'],

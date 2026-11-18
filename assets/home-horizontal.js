@@ -57,7 +57,7 @@ html.push('</div><a class="rd-card-end" href="store.html"><span data-rd-text="al
 '<button type="button" class="rd-path" data-rd-path="essential" aria-pressed="true"><i>'+icon('target')+'</i><strong data-rd-text="essential">Essential Exposure Review</strong><small data-rd-text="essentialDesc">Initial view of external exposure.</small></button>',
 '<button type="button" class="rd-path" data-rd-path="monitoring" aria-pressed="false"><i>'+icon('display')+'</i><strong data-rd-text="monitoring">Continuous Monitoring</strong><small data-rd-text="monitoringDesc">Proposed recurring monitoring.</small></button>',
 '<button type="button" class="rd-path" data-rd-path="advanced" aria-pressed="false"><i>'+icon('layers')+'</i><strong data-rd-text="advanced">Advanced Validation</strong><small data-rd-text="advancedDesc">Scoped engineer-led validation.</small></button></div>',
-'<div class="rd-sw-visual"><div class="rd-dashboard-head"><img src="assets/va-symbol.svg?v=2" alt="">ServiceWatch <span id="rd-sw-label">Essential Exposure Review · pilot</span></div>',
+'<div class="rd-sw-visual"><div class="rd-dashboard-head"><img src="assets/va-symbol.svg?v=2" alt="">ServiceWatch <span id="rd-sw-label" data-rd-text="essential">Essential Exposure Review · pilot</span></div>',
 '<div class="rd-preview-body"><div class="rd-preview-nav" aria-hidden="true">',
 '<span>'+icon('display')+'<b data-rd-text="overview">Overview</b></span><span>'+icon('search')+'<b data-rd-text="findings">Findings</b></span>',
 '<span>'+icon('layers')+'<b data-rd-text="assets">Assets</b></span><span>'+icon('activity')+'<b data-rd-text="monitorLabel">Monitoring</b></span></div><div class="rd-preview-content">',
@@ -121,7 +121,15 @@ menu.addEventListener('click',function(){var open=!nav.classList.contains('rd-op
 nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',close)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape')close()});
 document.addEventListener('click',function(e){if(!nav.contains(e.target)&&!menu.contains(e.target))close()});
-var names={essential:'Essential Exposure Review · pilot',monitoring:'Continuous Monitoring · proposed',advanced:'Advanced Validation · scoped enquiry'};
-root.querySelectorAll('[data-rd-path]').forEach(function(btn){btn.addEventListener('click',function(){root.querySelectorAll('[data-rd-path]').forEach(function(b){b.setAttribute('aria-pressed',String(b===btn))});root.querySelector('#rd-sw-label').textContent=names[btn.dataset.rdPath]})});
+const pathLabel = root.querySelector('#rd-sw-label');
+for (const button of root.querySelectorAll('[data-rd-path]')) {
+  button.addEventListener('click', function () {
+    for (const choice of root.querySelectorAll('[data-rd-path]')) {
+      choice.setAttribute('aria-pressed', String(choice === button));
+    }
+    pathLabel.dataset.rdText = button.dataset.rdPath;
+    pathLabel.textContent = txt[current()][button.dataset.rdPath];
+  });
+}
 // Decorative particle waves are now a reusable external SVG; no 2,000-node runtime SVG.
 })();
