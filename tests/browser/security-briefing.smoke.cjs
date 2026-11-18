@@ -44,9 +44,9 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.ok((await page.locator('#rd-sw-label').innerText()).includes('proposed'));
    assert.equal(await page.locator('#rd-root .rd-hero h1').isVisible(),true);
    const expectedHeadlines={
-     en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and practical tools to help teams assess, improve and secure their networks and infrastructure.'],
-     ro:['Expertiză în rețele.','Perspective de securitate.','Instrumente practice.','Consultanță de specialitate, kituri digitale și instrumente practice care ajută echipele să evalueze, să îmbunătățească și să securizeze rețelele și infrastructura.'],
-     fr:['Expertise réseau.','Analyses de sécurité.','Outils pratiques.','Conseil spécialisé, kits numériques et outils pratiques pour aider les équipes à évaluer, améliorer et sécuriser leurs réseaux et infrastructures.']
+     en:['Network expertise.','Security insights.','Practical tools.','Expert consulting, digital toolkits and security tools to assess, harden and monitor your network, infrastructure and external exposure.'],
+     ro:['Expertiză în rețele.','Perspective de securitate.','Instrumente practice.','Consultanță, kituri digitale și instrumente pentru evaluarea, securizarea și monitorizarea rețelei, infrastructurii și expunerii externe.'],
+     fr:['Expertise réseau.','Analyses de sécurité.','Outils pratiques.','Conseil, kits numériques et outils pour évaluer, renforcer et surveiller votre réseau, votre infrastructure et votre exposition externe.']
    };
    const headlineText=async()=>Promise.all(['headline','headlineAccent','headlineThird','lead'].map(k=>page.locator('#rd-root [data-rd-text="'+k+'"]').innerText()));
    assert.deepEqual(await headlineText(),expectedHeadlines[lang]);
@@ -58,7 +58,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    });
    assert.equal(h1Lines.p,'block');
    assert.equal(h1Lines.a,'block');
-   assert.equal(h1Lines.third,'block');
+   assert.equal(h1Lines.third,width>=1121?'inline':'block');
 
    const expectedTaglines={
      en:'NETWORK & SECURITY CONSULTING / DIGITAL PRODUCTS / PRACTICAL TOOLS',
@@ -93,7 +93,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[lang]);
    await checkVectorHero();
    const vector=await(await page.request.get(base+'/assets/hero-reference-wave.svg')).text();
-   assert.match(vector,/viewBox="0 0 1000 340"/);
+   assert.match(vector,/viewBox="0 0 1536 320"/);
    assert.doesNotMatch(vector,/<image\b|data:image|foreignObject|<script/i,'Artwork must be vector shapes, not an embedded bitmap');
    if(width===1440&&lang==='en'){
      for(const size of [320,390,700,768,900,1024,1120,1121,1440]){
@@ -108,6 +108,25 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      }
      await page.setViewportSize({width:1440,height:900});
      await page.locator('#rd-root [data-rd-lang="en"]').click();
+   }
+   if(width===1440 && lang==='en'){
+     await page.setViewportSize({width:1536,height:1024});
+     const bounds=await page.evaluate(()=>{
+       const rect=selector=>document.querySelector(selector).getBoundingClientRect();
+       const headlineEnd=rect('[data-rd-text="headlineThird"]');
+       const headlineStart=rect('[data-rd-text="headlineAccent"]');
+       return {headlineOffset:Math.abs(headlineEnd.y-headlineStart.y),heroBottom:rect('.rd-hero').bottom,
+         cardTop:rect('.rd-offers').top,cardBottom:rect('.rd-offers').bottom,briefingTop:rect('.rd-briefing').top};
+     });
+     assert.ok(bounds.headlineOffset<2,'The desktop accent must fit on one line');
+     assert.ok(Math.abs(bounds.heroBottom-383)<14 && Math.abs(bounds.cardTop-398)<14 &&
+       Math.abs(bounds.cardBottom-858)<24 && Math.abs(bounds.briefingTop-882)<24,JSON.stringify(bounds));
+     if(process.env.HOME_HERO_SCREENSHOT_DIR){
+       await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});
+       await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+       await page.screenshot({path:path.join(process.env.HOME_HERO_SCREENSHOT_DIR,'home-reference-1536.png')});
+     }
+     await page.setViewportSize({width:1440,height:900});
    }
    if(process.env.HOME_HERO_SCREENSHOT_DIR){
      await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});

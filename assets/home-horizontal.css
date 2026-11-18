@@ -120,12 +120,12 @@
 .rd-hero-copy { z-index: 5; }
 .rd-hero .rd-wave {
   inset: 0 0 0 auto;
-  width: 73%;
+  width: 100%;
   height: 100%;
   z-index: 0;
-  opacity: .95;
-  background: url("hero-reference-wave.svg") center / cover no-repeat;
-  mask-image: linear-gradient(to right, transparent, #000 21%);
+  opacity: 1;
+  background: url("hero-reference-wave.svg?v=2") center / cover no-repeat;
+  mask-image: linear-gradient(to right, transparent 32%, #000 41%);
 }
 .rd-hero h1 .rd-heading-primary, .rd-heading-accent, .rd-heading-accent > span { display: block; }
 .rd-hero h1 .rd-heading-accent { color: var(--rd-mint); font-style: italic; }
@@ -170,7 +170,7 @@
 .rd-briefing { position: relative; isolation: isolate; overflow: hidden; }
 .rd-briefing::before {
   content: ""; position: absolute; inset: 0 0 0 47%; z-index: -1;
-  background: url("hero-reference-wave.svg") center 49% / cover no-repeat;
+  background: url("hero-reference-wave.svg?v=2") center 49% / cover no-repeat;
   opacity: .2; pointer-events: none;
 }
 @media (min-width:1121px) {
@@ -200,7 +200,7 @@
 }
 @media (max-width:700px) {
   .rd-hero h1 { font-size: clamp(32px,8.5vw,44px); }
-  .rd-hero .rd-wave { width: 100%; height: 51%; inset: auto 0 0; opacity: .54; mask-image: linear-gradient(transparent,#000 42%); }
+  .rd-hero .rd-wave { width: 100%; height: 51%; inset: auto 0 0; background-size: auto 100%; background-position: 74% center; opacity: .7; mask-image: linear-gradient(transparent,#000 42%); }
   .rd-hero .rd-hero-right { width: 100%; justify-content: center; gap: 18px; margin-top: 16px; }
   .rd-shield-frame { width: 108px; }
   .rd-checks { display: block; font-size: 14px; }
@@ -212,4 +212,76 @@
   .rd-mini strong { font-size: 13px; }
   .rd-mini small { font-size: 11.5px; }
   .rd-mini .rd-price { margin-top: 5px; }
+}
+
+/* Use the reference's text measures, mock dashboard columns and desktop
+   coordinates. Narrow layouts keep their own reading order. */
+.rd-root {
+  --rd-bg: #02141b;
+  --rd-mint: #62efd0;
+  --rd-line: #58868c;
+  font-family: Arial, "Segoe UI", sans-serif;
+  background: #021219;
+}
+.rd-hero { background: radial-gradient(ellipse at 35% 34%,#061b23,#021118 75%); }
+.rd-offer { background: linear-gradient(122deg,#091b21,#04151c 59%,#021219); }
+.rd-mini { background: linear-gradient(135deg,#0b1f25,#071820); }
+.rd-primary, .rd-price { background: linear-gradient(105deg,#54efd0,#78f3d7); }
+.rd-path i { border: 2px solid #258c79; }
+.rd-path i svg { stroke-width: 1.4; }
+.rd-sw-visual { padding: 0; overflow: hidden; background: #04171c; }
+.rd-dashboard-head { padding: 7px 12px; font-weight: 700; color: var(--rd-text); }
+.rd-dashboard-head span { font-weight: 400; }
+.rd-preview-body { display: grid; grid-template-columns: 26% minmax(0,1fr); }
+.rd-preview-nav { display: grid; align-content: start; padding: 5px; border-right: 1px solid #25434a; }
+.rd-preview-nav span { display: flex; align-items: center; gap: 5px; padding: 5px; font-size: 10px; }
+.rd-preview-nav span:first-child { background: #0e3436; border-radius: 4px; color: var(--rd-mint); }
+.rd-preview-nav svg { width: 12px; height: 12px; flex: none; }
+.rd-preview-nav b { font-weight: 400; }
+.rd-preview-content { padding: 0 6px; min-width: 0; }
+.rd-metrics { gap: 4px; }
+.rd-metrics div { padding: 5px; background: linear-gradient(135deg,#0e2228,#08191e); }
+.rd-metrics b { color: var(--rd-text); }
+.rd-demo { font: 10px/1.2 Arial,sans-serif; padding: 3px 8px; margin: 0; }
+.rd-briefing { background: #03161c; }
+.rd-briefing::before { inset: 0 0 0 40%; background-position: 74% center; background-size: auto 140%; opacity: .3; }
+.rd-briefing .rd-sw-status { display: inline-block; border: 1px solid var(--rd-mint); border-radius: 6px; padding: 3px 7px; margin-bottom: 5px; }
+@media (min-width:1121px) {
+  .rd-nav { min-height: 62px; }
+  .rd-links { justify-content: flex-end; gap: clamp(14px,2.4vw,39px); }
+  .rd-links a { font-size: 14px; }
+  .rd-hero > .rd-wrap { padding-block: 22px 16px; min-height: 320px; }
+  .rd-hero-copy { width: 59%; max-width: none; }
+  .rd-hero h1 { font-size: clamp(38px,3.2vw,51px); letter-spacing: -.045em; max-width: none; margin-bottom: 9px; }
+  .rd-hero h1 .rd-heading-accent > span { display: inline; }
+  .rd-eyebrow { margin-bottom: 15px; }
+  .rd-lead { font-size: clamp(16px,1.23vw,19px); line-height: 1.16; max-width: 490px; margin-bottom: 14px; }
+  .rd-hero .rd-hero-right { width: 40.4%; justify-content: flex-start; gap: .6vw; }
+  .rd-shield-frame { width: clamp(170px,16.15vw,248px); }
+  .rd-hero .rd-hero-shield { width: 42%; }
+  .rd-hero .rd-primary, .rd-hero .rd-ghost { min-height: 44px; padding-inline: 21px; font-size: 15px; }
+  .rd-offers { grid-template-columns: minmax(0,514fr) minmax(0,510fr) minmax(0,442fr); margin-bottom: 23px; }
+  .rd-offer { min-height: 460px; padding: 15px 18px; }
+  .rd-offer h2 { font-size: clamp(21px,1.55vw,25px); }
+  .rd-offer p { min-height: 2.8em; margin: 6px 0 7px; font-size: 14px; line-height: 1.35; }
+  .rd-offer:nth-child(2) > p { min-height: auto; }
+  .rd-mini { min-height: 132px; padding: 13px 14px; gap: clamp(10px,1.35vw,21px); }
+  .rd-mini svg { width: 34px; height: 34px; }
+  .rd-mini strong, .rd-service strong { font-size: 14px; line-height: 1.2; }
+  .rd-mini small, .rd-service small { font-size: 12px; }
+  .rd-mini-grid { gap: 13px; }
+  .rd-service { min-height: 62px; gap: 20px; }
+  .rd-service svg { width: 33px; height: 33px; }
+  .rd-paths { margin-top: 5px; }
+  .rd-path i { width: 54px; height: 54px; }
+  .rd-path strong { max-width: 106px; font-size: 14px; }
+  .rd-path small { font-size: 12px; max-width: 124px; }
+  .rd-briefing { min-height: 130px; grid-template-columns: 1fr 1.6fr auto; }
+  .rd-briefing h2 { font-size: 24px; }
+  .rd-briefing p { font-size: 15px; max-width: 425px; }
+  .rd-briefing strong { font-size: 20px; }
+  .rd-briefing .rd-briefing-focus { padding-left: clamp(24px,3.2vw,50px); }
+}
+@media (max-width:700px) {
+  .rd-preview-nav span { padding: 4px 2px; font-size: 9px; }
 }
