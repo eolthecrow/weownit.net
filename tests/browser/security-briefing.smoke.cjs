@@ -32,6 +32,12 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    assert.equal(await page.locator('#rd-root .rd-mini').count(),4);
    assert.equal(await page.locator('#rd-root .rd-path').count(),3);
    assert.equal(await page.locator('#rd-root .rd-demo').isVisible(),true);
+   const menuLabels = {
+     en: ['Home','Services','Tools','Products','Briefing','Contact'],
+     ro: ['Acasă','Servicii','Instrumente','Produse','Briefing','Contact'],
+     fr: ['Accueil','Services','Outils','Produits','Briefing','Contact']
+   };
+   assert.deepEqual(await page.locator('#rd-links a').allTextContents(), menuLabels[lang]);
    if(width<=430){
      assert.equal(await page.locator('#rd-links').isVisible(),false);
      await page.locator('#rd-menu').click();
