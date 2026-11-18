@@ -111,6 +111,8 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    }
    if(width===1440 && lang==='en'){
      await page.setViewportSize({width:1536,height:1024});
+     await page.locator('[data-rd-path="essential"]').click();
+     await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
      const bounds=await page.evaluate(()=>{
        const rect=selector=>document.querySelector(selector).getBoundingClientRect();
        const headlineEnd=rect('[data-rd-text="headlineThird"]');

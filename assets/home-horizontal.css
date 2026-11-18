@@ -285,3 +285,16 @@
 @media (max-width:700px) {
   .rd-preview-nav span { padding: 4px 2px; font-size: 9px; }
 }
+@media (min-width:1121px) {
+  .rd-hero h1 .rd-heading-primary { font-size: 1.09em; font-weight: 800; letter-spacing: -.035em; }
+  .rd-hero h1 .rd-heading-accent { font-size: .91em; }
+  .rd-hero .rd-checks { transform: translateY(15px); }
+  .rd-offer-head { gap: 16px; }
+  .rd-offer-head > svg { width: 40px; }
+  .rd-sw-actions a { min-height: 34px; padding-block: 5px; }
+  .rd-sw-actions .rd-primary { padding-inline: 16px; font-size: 14px; }
+  .rd-path strong { max-width: 120px; }
+  .rd-service-list + .rd-card-end { margin-bottom: 18px; }
+  .rd-briefing h2 svg { width: 37px; height: 37px; margin-right: 16px; }
+  .rd-briefing::before { inset: 0 0 0 63%; background-size: auto 125%; }
+}
