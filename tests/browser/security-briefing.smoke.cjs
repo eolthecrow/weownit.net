@@ -113,6 +113,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await geometry(page);
    if(process.env.HOME_HERO_SCREENSHOT_DIR){
      await fs.mkdir(process.env.HOME_HERO_SCREENSHOT_DIR,{recursive:true});
+     await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
      await page.screenshot({path:path.join(process.env.HOME_HERO_SCREENSHOT_DIR,'hero-'+width+'-'+lang+'.png'),fullPage:false});
    }
    for(const record of data.articles){
