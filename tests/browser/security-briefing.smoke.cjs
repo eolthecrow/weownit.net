@@ -79,15 +79,20 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
          noBitmap:getComputedStyle(el,'::before').content,
          separate:copy.right<=right.left+1||copy.bottom<=right.top+1};
      });
-     assert.ok(state.image.includes('hero-canva-vector.svg'),JSON.stringify(state));
+     assert.ok(state.image.includes('hero-reference-wave.svg'),JSON.stringify(state));
      assert.ok(state.foreground>state.background,'Writing must be above decorative art');
+     const offsets=await page.locator('.rd-shield-frame').evaluate(frame=>{
+       const f=frame.getBoundingClientRect(),s=frame.querySelector('.rd-hero-shield').getBoundingClientRect();
+       return [s.left+s.width/2-f.left-f.width/2,s.top+s.height/2-f.top-f.height/2];
+     });
+     assert.ok(offsets.every(n=>Math.abs(n)<1),'Shield must be centered within its four corners');
      assert.ok(Math.abs(state.ratio-100/112)<.01,'Shield proportions must survive resizing');
      assert.equal(state.visible,'1');assert.ok(state.separate,'Hero writing overlaps the illustration');
      assert.ok(state.noBitmap==='none'||state.noBitmap==='normal');
    }
    assert.deepEqual(await page.locator('#rd-root .rd-checks li').allTextContents(),labels[lang]);
    await checkVectorHero();
-   const vector=await(await page.request.get(base+'/assets/hero-canva-vector.svg?v=1')).text();
+   const vector=await(await page.request.get(base+'/assets/hero-reference-wave.svg')).text();
    assert.match(vector,/viewBox="0 0 1000 340"/);
    assert.doesNotMatch(vector,/<image\b|data:image|foreignObject|<script/i,'Artwork must be vector shapes, not an embedded bitmap');
    if(width===1440&&lang==='en'){
