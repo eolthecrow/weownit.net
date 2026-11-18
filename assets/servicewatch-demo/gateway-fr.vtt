@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+Le responsable autorise un contrôle externe de gateway.example.
+
+00:00:06.000 --> 00:00:12.000
+La passerelle accepte une connexion sur le port TCP 443.
+
+00:00:12.000 --> 00:00:18.000
+Le certificat TLS correspond au nom et expire dans 12 jours.
+
+00:00:18.000 --> 00:00:24.000
+L’équipe réseau prévoit le renouvellement et un nouveau contrôle.

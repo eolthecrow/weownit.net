@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+The owner approves an external check of gateway.example.
+
+00:00:06.000 --> 00:00:12.000
+The gateway accepts a connection on TCP port 443.
+
+00:00:12.000 --> 00:00:18.000
+The TLS certificate matches the hostname and expires in 12 days.
+
+00:00:18.000 --> 00:00:24.000
+The network team plans a renewal and a follow-up check.

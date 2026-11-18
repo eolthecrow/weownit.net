@@ -1,0 +1,13 @@
+WEBVTT
+
+00:00:00.000 --> 00:00:06.000
+Responsabilul aprobă verificarea externă a sistemului gateway.example.
+
+00:00:06.000 --> 00:00:12.000
+Gateway-ul acceptă o conexiune pe portul TCP 443.
+
+00:00:12.000 --> 00:00:18.000
+Certificatul TLS corespunde numelui și expiră în 12 zile.
+
+00:00:18.000 --> 00:00:24.000
+Echipa de rețea planifică reînnoirea și o nouă verificare.

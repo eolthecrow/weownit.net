@@ -76,7 +76,14 @@
     "sourcesOut": "A connector shortlist for technical evaluation.",
     "monitorIn": "A previously reviewed gateway and its last recorded state.",
     "monitorMid": "Repeat the approved check and compare the two observations.",
-    "monitorOut": "A change notice for the owner showing what appeared or disappeared."
+    "monitorOut": "A change notice for the owner showing what appeared or disappeared.",
+    "watchDemo": "Watch the demo",
+    "videoMeta": "24 seconds · Fictional gateway · Silent video",
+    "transcript": "Read the walkthrough",
+    "videoStep1": "The owner approves an external check of gateway.example.",
+    "videoStep2": "The gateway accepts a connection on TCP port 443.",
+    "videoStep3": "The TLS certificate matches the hostname and expires in 12 days.",
+    "videoStep4": "The network team plans a renewal and a follow-up check."
   },
   "ro": {
     "skip": "Sari la conținut",
@@ -154,7 +161,14 @@
     "sourcesOut": "O listă scurtă de conectori pentru evaluare tehnică.",
     "monitorIn": "Un gateway deja evaluat și ultima sa stare înregistrată.",
     "monitorMid": "Repetăm verificarea aprobată și comparăm observațiile.",
-    "monitorOut": "O notificare care îi arată responsabilului ce a apărut sau a dispărut."
+    "monitorOut": "O notificare care îi arată responsabilului ce a apărut sau a dispărut.",
+    "watchDemo": "Vezi demonstrația",
+    "videoMeta": "24 de secunde · Gateway fictiv · Fără sunet",
+    "transcript": "Citește pașii",
+    "videoStep1": "Responsabilul aprobă verificarea externă a sistemului gateway.example.",
+    "videoStep2": "Gateway-ul acceptă o conexiune pe portul TCP 443.",
+    "videoStep3": "Certificatul TLS corespunde numelui și expiră în 12 zile.",
+    "videoStep4": "Echipa de rețea planifică reînnoirea și o nouă verificare."
   },
   "fr": {
     "skip": "Aller au contenu",
@@ -232,7 +246,14 @@
     "sourcesOut": "Une présélection de connecteurs à évaluer techniquement.",
     "monitorIn": "Une passerelle déjà examinée et son dernier état enregistré.",
     "monitorMid": "Répéter le contrôle autorisé et comparer les deux observations.",
-    "monitorOut": "Une notification indiquant au responsable ce qui est apparu ou a disparu."
+    "monitorOut": "Une notification indiquant au responsable ce qui est apparu ou a disparu.",
+    "watchDemo": "Voir la démo",
+    "videoMeta": "24 secondes · Passerelle fictive · Vidéo sans son",
+    "transcript": "Lire les étapes",
+    "videoStep1": "Le responsable autorise un contrôle externe de gateway.example.",
+    "videoStep2": "La passerelle accepte une connexion sur le port TCP 443.",
+    "videoStep3": "Le certificat TLS correspond au nom et expire dans 12 jours.",
+    "videoStep4": "L’équipe réseau prévoit le renouvellement et un nouveau contrôle."
   }
 };
   const titles = {en:"How ServiceWatch Works — weownit.net",ro:"Cum funcționează ServiceWatch — weownit.net",fr:"Comment fonctionne ServiceWatch — weownit.net"};
@@ -244,6 +265,14 @@
   if (!["en","ro","fr"].includes(lang)) lang="en";
   document.documentElement.lang=lang;
   document.title=titles[lang];
+  const video = document.querySelector("#demo video");
+  if (lang !== "en") {
+    const track = video.querySelector("track");
+    track.srclang = lang;
+    track.label = {ro:"Română", fr:"Français"}[lang];
+    track.src = "assets/servicewatch-demo/gateway-" + lang + ".vtt";
+    video.src = "assets/servicewatch-demo/gateway-" + lang + ".mp4";
+  }
   const copy=translations[lang] || {};
   document.querySelectorAll("[data-i18n]").forEach(el=>{const val=copy[el.dataset.i18n];if(val)el.textContent=val;});
   document.querySelector("[data-lang-nav]").setAttribute("aria-label", copy.language);
