@@ -76,14 +76,32 @@
     "sourcesOut": "A connector shortlist for technical evaluation.",
     "monitorIn": "A previously reviewed gateway and its last recorded state.",
     "monitorMid": "Repeat the approved check and compare the two observations.",
-    "monitorOut": "A change notice for the owner showing what appeared or disappeared.",
+    "monitorOut": "Example comparison · Certificate validity rises from 12 to 365 days after renewal.",
     "watchDemo": "Watch the demo",
-    "videoMeta": "24 seconds · Fictional gateway · Silent video",
+    "videoMeta": "36 seconds · Fictional gateway · Silent video",
     "transcript": "Read the walkthrough",
     "videoStep1": "The owner approves an external check of gateway.example.",
     "videoStep2": "The gateway accepts a connection on TCP port 443.",
     "videoStep3": "The TLS certificate matches the hostname and expires in 12 days.",
-    "videoStep4": "The network team plans a renewal and a follow-up check."
+    "videoStep4": "The network team plans a renewal and a follow-up check.",
+    "pathsTitle": "Which review fits your question?",
+    "essentialName": "Essential Exposure Review",
+    "essentialQ": "What is reachable today?",
+    "essentialA": "Start with an approved asset. Record the responding service, time and original evidence. The owner can then confirm which exposure is intended and which finding needs action.",
+    "essentialOut": "Example decision · Renew the gateway certificate before expiry.",
+    "monitorQ": "What changed since the last review?",
+    "monitorA": "Compare the same asset and check across two dated observations. A new public service, a removed exposure or a renewed certificate would create one change record for the owner. Identical results would stay quiet.",
+    "advancedName": "Advanced Validation",
+    "advancedQ": "Did the control work as intended?",
+    "advancedA": "The prototype supports human-reviewed imports from synthetic exercises. A proposed internal engagement would require its own written scope. An engineer would compare the expected boundary with observed traffic and the alert received.",
+    "advancedOut": "Example decision · Confirm the block and check that the alert reached the right team.",
+    "importOnly": "Reviewed import prototype",
+    "priorityTitle": "How would a finding be prioritized?",
+    "priorityBody": "A public port establishes reachability. A suspected software weakness needs more evidence: the affected version, the applicable advisory and a reviewer’s confidence. For a matched CVE, proposed enrichment would show the source and date of known exploitation reports alongside an exploitation-likelihood estimate. The owner would weigh that context against business impact.",
+    "videoStep5": "Proposed monitoring compares 12 days of validity with 365 after renewal.",
+    "videoStep6": "In a separately approved exercise, an engineer would verify the block and the alert.",
+    "archTitle": "How would an assessment run?",
+    "archBody": "In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck."
   },
   "ro": {
     "skip": "Sari la conținut",
@@ -161,14 +179,32 @@
     "sourcesOut": "O listă scurtă de conectori pentru evaluare tehnică.",
     "monitorIn": "Un gateway deja evaluat și ultima sa stare înregistrată.",
     "monitorMid": "Repetăm verificarea aprobată și comparăm observațiile.",
-    "monitorOut": "O notificare care îi arată responsabilului ce a apărut sau a dispărut.",
+    "monitorOut": "Exemplu de comparație · După reînnoire, valabilitatea certificatului crește de la 12 la 365 de zile.",
     "watchDemo": "Vezi demonstrația",
-    "videoMeta": "24 de secunde · Gateway fictiv · Fără sunet",
+    "videoMeta": "36 de secunde · Gateway fictiv · Fără sunet",
     "transcript": "Citește pașii",
     "videoStep1": "Responsabilul aprobă verificarea externă a sistemului gateway.example.",
     "videoStep2": "Gateway-ul acceptă o conexiune pe portul TCP 443.",
     "videoStep3": "Certificatul TLS corespunde numelui și expiră în 12 zile.",
-    "videoStep4": "Echipa de rețea planifică reînnoirea și o nouă verificare."
+    "videoStep4": "Echipa de rețea planifică reînnoirea și o nouă verificare.",
+    "pathsTitle": "Ce evaluare îți răspunde la întrebare?",
+    "essentialName": "Evaluarea expunerii externe",
+    "essentialQ": "Ce este accesibil astăzi?",
+    "essentialA": "Pornim de la un sistem autorizat. Înregistrăm serviciul care răspunde, ora și dovada originală. Responsabilul confirmă ce expunere este intenționată și ce constatare necesită o intervenție.",
+    "essentialOut": "Exemplu de decizie · Reînnoiește certificatul gateway-ului înainte de expirare.",
+    "monitorQ": "Ce s-a schimbat de la ultima evaluare?",
+    "monitorA": "Comparăm același sistem și aceeași verificare la două momente. Un serviciu public nou, o expunere eliminată sau un certificat reînnoit ar genera o singură înregistrare a schimbării. Rezultatele identice nu ar genera alerte.",
+    "advancedName": "Validare avansată",
+    "advancedQ": "A funcționat controlul conform așteptărilor?",
+    "advancedA": "Prototipul permite importul rezultatelor din exerciții fictive după verificarea lor de către un specialist. O evaluare internă propusă ar necesita un acord scris separat. Un inginer ar compara izolarea prevăzută cu traficul observat și cu alerta primită.",
+    "advancedOut": "Exemplu de decizie · Confirmă blocarea și verifică dacă alerta a ajuns la echipa potrivită.",
+    "importOnly": "Prototip de import cu verificare umană",
+    "priorityTitle": "Cum s-ar stabili prioritatea unei constatări?",
+    "priorityBody": "Un port public confirmă accesibilitatea. Pentru o vulnerabilitate suspectată sunt necesare versiunea afectată, buletinul aplicabil și nivelul de încredere al specialistului. Pentru un CVE identificat, propunem afișarea sursei și datei rapoartelor de exploatare cunoscută, alături de o estimare a probabilității de exploatare. Responsabilul ar ține cont și de impactul asupra activității.",
+    "videoStep5": "Monitorizarea propusă compară cele 12 zile de valabilitate cu cele 365 de după reînnoire.",
+    "videoStep6": "Într-un exercițiu autorizat separat, un inginer ar verifica blocarea și alerta.",
+    "archTitle": "Cum ar decurge o evaluare?",
+    "archBody": "În arhitectura propusă, aprobarea sistemelor declanșează o sarcină cu verificări prestabilite. Un proces izolat trimite observațiile. Fiecare constatare trimite la dovezi cu dată, oră și versiune. Un specialist poate verifica sursa raportului și poate decide dacă solicită o nouă verificare."
   },
   "fr": {
     "skip": "Aller au contenu",
@@ -246,14 +282,32 @@
     "sourcesOut": "Une présélection de connecteurs à évaluer techniquement.",
     "monitorIn": "Une passerelle déjà examinée et son dernier état enregistré.",
     "monitorMid": "Répéter le contrôle autorisé et comparer les deux observations.",
-    "monitorOut": "Une notification indiquant au responsable ce qui est apparu ou a disparu.",
+    "monitorOut": "Exemple de comparaison · Après renouvellement, la validité du certificat passe de 12 à 365 jours.",
     "watchDemo": "Voir la démo",
-    "videoMeta": "24 secondes · Passerelle fictive · Vidéo sans son",
+    "videoMeta": "36 secondes · Passerelle fictive · Vidéo sans son",
     "transcript": "Lire les étapes",
     "videoStep1": "Le responsable autorise un contrôle externe de gateway.example.",
     "videoStep2": "La passerelle accepte une connexion sur le port TCP 443.",
     "videoStep3": "Le certificat TLS correspond au nom et expire dans 12 jours.",
-    "videoStep4": "L’équipe réseau prévoit le renouvellement et un nouveau contrôle."
+    "videoStep4": "L’équipe réseau prévoit le renouvellement et un nouveau contrôle.",
+    "pathsTitle": "Quelle évaluation répond à votre question ?",
+    "essentialName": "Évaluation de l’exposition externe",
+    "essentialQ": "Qu’est-ce qui est joignable aujourd’hui ?",
+    "essentialA": "Partir d’un système autorisé. Consigner le service qui répond, l’heure et la preuve d’origine. Le responsable peut alors préciser quelle exposition est voulue et quel constat nécessite une action.",
+    "essentialOut": "Exemple de décision · Renouveler le certificat de la passerelle avant son expiration.",
+    "monitorQ": "Qu’est-ce qui a changé depuis la dernière évaluation ?",
+    "monitorA": "Comparer le même contrôle sur le même actif à deux dates. Un nouveau service public, une exposition supprimée ou un certificat renouvelé donnerait lieu à un seul relevé de changement. Un résultat identique ne déclencherait aucune alerte.",
+    "advancedName": "Validation avancée",
+    "advancedQ": "Le contrôle a-t-il fonctionné comme prévu ?",
+    "advancedA": "Le prototype permet d’importer les résultats d’exercices fictifs après examen humain. Une mission interne envisagée nécessiterait un périmètre écrit distinct. Un ingénieur comparerait le cloisonnement prévu au trafic observé et à l’alerte reçue.",
+    "advancedOut": "Exemple de décision · Confirmer le blocage et vérifier que l’alerte est parvenue à la bonne équipe.",
+    "importOnly": "Prototype d’import après examen",
+    "priorityTitle": "Comment établir la priorité d’un constat ?",
+    "priorityBody": "Un port public établit qu’un service est joignable. Une vulnérabilité présumée demande d’autres éléments, dont la version affectée, l’avis applicable et le degré de confiance du spécialiste. Pour une CVE correspondante, l’enrichissement envisagé indiquerait la source et la date des signalements d’exploitation, ainsi qu’une estimation de sa probabilité. Le responsable tiendrait aussi compte de l’impact métier.",
+    "videoStep5": "Le suivi envisagé compare les 12 jours de validité aux 365 jours après renouvellement.",
+    "videoStep6": "Lors d’un exercice autorisé séparément, un ingénieur vérifierait le blocage et l’alerte.",
+    "archTitle": "Comment se déroulerait une évaluation ?",
+    "archBody": "Dans le modèle envisagé, un périmètre approuvé donne lieu à une tâche avec des contrôles prédéfinis. Un environnement isolé renvoie les observations. Chaque constat renvoie à une preuve horodatée et versionnée. Un spécialiste peut retrouver la preuve à l’origine du rapport et décider si un nouveau contrôle est utile."
   }
 };
   const titles = {en:"How ServiceWatch Works — weownit.net",ro:"Cum funcționează ServiceWatch — weownit.net",fr:"Comment fonctionne ServiceWatch — weownit.net"};
@@ -270,8 +324,8 @@
     const track = video.querySelector("track");
     track.srclang = lang;
     track.label = {ro:"Română", fr:"Français"}[lang];
-    track.src = "assets/servicewatch-demo/gateway-" + lang + ".vtt";
-    video.src = "assets/servicewatch-demo/gateway-" + lang + ".mp4";
+    track.src = "assets/servicewatch-demo/gateway-" + lang + ".vtt?v=2";
+    video.src = "assets/servicewatch-demo/gateway-" + lang + ".mp4?v=2";
   }
   const copy=translations[lang] || {};
   document.querySelectorAll("[data-i18n]").forEach(el=>{const val=copy[el.dataset.i18n];if(val)el.textContent=val;});

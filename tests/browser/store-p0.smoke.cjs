@@ -84,17 +84,22 @@ async function main(){
       const guideTitle = { en: 'What the pilot checks', ro: 'Ce verificăm în pilot', fr: 'Les contrôles du pilote' };
       assert.equal(await page.locator('#checks h2').innerText(), guideTitle[lang]);
       assert.equal(await page.locator('.checks dt').count(), 5);
+      assert.equal(await page.locator('#review-paths article').count(), 3);
+      for (const detail of await page.locator('#review-paths details').all()) {
+        await detail.locator('summary').click();
+        assert.equal(await detail.locator('p').isVisible(), true);
+      }
       const demo = page.locator('#demo video');
       assert.ok(await demo.evaluate(v => v.paused && v.controls && !v.autoplay));
-      assert.match(await demo.getAttribute('src'), new RegExp('gateway-' + lang + '\\.mp4$'));
+      assert.match(await demo.getAttribute('src'), new RegExp('gateway-' + lang + '\\.mp4[?]v=2$'));
       assert.equal(await demo.locator('track').getAttribute('srclang'), lang);
       await demo.evaluate(v => { v.muted = true; return v.play(); });
       await page.waitForFunction(() => document.querySelector('#demo video').currentTime > 0.1);
       const seconds = await demo.evaluate(v => { v.pause(); return v.duration; });
-      assert.equal(seconds, 24);
-      await page.waitForFunction(() => document.querySelector('#demo track').track.cues?.length === 4);
+      assert.equal(seconds, 36);
+      await page.waitForFunction(() => document.querySelector('#demo track').track.cues?.length === 6);
       await page.locator('#demo summary').click();
-      assert.equal(await page.locator('#demo details li:visible').count(), 4);
+      assert.equal(await page.locator('#demo details li:visible').count(), 6);
       assert.equal(await page.locator('.phase.prototype').count(), 1);
       assert.equal(await page.locator('.checks samp').count(), 5);
       assert.equal(await page.locator('.phase.research').count(), 1);

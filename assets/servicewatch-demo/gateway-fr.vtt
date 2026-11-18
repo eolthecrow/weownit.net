@@ -11,3 +11,9 @@ Le certificat TLS correspond au nom et expire dans 12 jours.
 
 00:00:18.000 --> 00:00:24.000
 L’équipe réseau prévoit le renouvellement et un nouveau contrôle.
+
+00:00:24.000 --> 00:00:30.000
+Le suivi envisagé compare les 12 jours de validité aux 365 jours après renouvellement.
+
+00:00:30.000 --> 00:00:36.000
+Lors d’un exercice autorisé séparément, un ingénieur vérifierait le blocage et l’alerte.
