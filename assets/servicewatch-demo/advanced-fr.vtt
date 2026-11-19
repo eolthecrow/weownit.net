@@ -1,0 +1,43 @@
+WEBVTT
+
+00:00.550 --> 00:08.690
+Un compte fournisseur est mentionné dans un rapport externe. Si une personne ayant ce rôle atteignait la frontière de la zone financière, l’analyste d’astreinte en serait-il informé ?
+
+00:08.930 --> 00:11.565
+Il s’agit d’un cas simulé pour ServiceWatch.
+
+00:12.900 --> 00:18.415
+La seconde mention reprend la première. L’analyste relie les deux références et conserve une seule piste à confirmer.
+
+00:18.655 --> 00:22.690
+L’équipe chargée des identités doit encore vérifier si le compte a été compromis.
+
+00:24.000 --> 00:31.495
+L’analyste examine un export synthétique de campagne ARES. L’exercice utilise un compte de test ayant le rôle de fournisseur.
+
+00:31.735 --> 00:38.870
+Deux critères sont retenus. L’accès à la zone financière doit être bloqué et l’alerte doit parvenir à la file d’astreinte dans les cinq minutes.
+
+00:40.200 --> 00:47.305
+Le rapport simulé d’Infection Monkey indique que le portail fournisseur répond comme prévu et que le service financier est inaccessible.
+
+00:47.545 --> 00:52.435
+Un refus correspondant dans le journal du pare-feu confirme que le contrôle a bloqué cet accès.
+
+00:53.750 --> 00:59.660
+Le pare-feu a consigné le blocage à dix heures. Huit secondes plus tard, le système de détection a créé une alerte.
+
+00:59.900 --> 01:05.115
+À dix heures cinq, la file d’astreinte était toujours vide. L’alerte avait été envoyée à la mauvaise file.
+
+01:06.450 --> 01:12.235
+Après correction de l’acheminement des alertes, l’analyste répète le contrôle. L’accès à la zone financière reste bloqué.
+
+01:12.475 --> 01:18.080
+Cette fois, l’alerte arrive dans la file d’astreinte en 42 secondes, dans le délai convenu de cinq minutes.
+
+01:19.400 --> 01:26.825
+L’analyste peut clore les deux vérifications pour ce trajet. L’équipe chargée des identités poursuit l’examen du signalement initial.
+
+01:27.065 --> 01:32.485
+Le client voit ainsi ce que l’exercice a démontré et ce qui reste à examiner.

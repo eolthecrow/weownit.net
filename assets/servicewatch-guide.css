@@ -148,3 +148,5 @@ footer { border-width: 1px 0 0; color: var(--muted); font-size: .85rem; }
 .review-paths summary { cursor:pointer; width:fit-content; font-weight:650; color:var(--mint); }
 .review-paths details p { max-width:82ch; margin-top:10px; }
 @media(max-width:760px) { .path-grid { grid-template-columns:1fr; } }
+
+.av-demo-link { align-self: flex-start; margin-top: 12px; color: var(--mint); }
