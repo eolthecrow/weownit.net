@@ -91,15 +91,18 @@ async function main(){
       }
       const demo = page.locator('#demo video');
       assert.ok(await demo.evaluate(v => v.paused && v.controls && !v.autoplay));
-      assert.match(await demo.getAttribute('src'), new RegExp('gateway-' + lang + '\\.mp4[?]v=2$'));
-      assert.equal(await demo.locator('track').getAttribute('srclang'), lang);
+      assert.equal(await demo.getAttribute('src'), 'assets/servicewatch-demo/evidence-to-decision.mp4');
+      assert.deepEqual(await demo.locator('track').evaluateAll(tracks => tracks.map(t => t.srclang)), ['en', 'ro', 'fr']);
+      assert.equal(await demo.locator('track[default]').getAttribute('srclang'), lang);
       await demo.evaluate(v => { v.muted = true; return v.play(); });
       await page.waitForFunction(() => document.querySelector('#demo video').currentTime > 0.1);
       const seconds = await demo.evaluate(v => { v.pause(); return v.duration; });
-      assert.equal(seconds, 36);
-      await page.waitForFunction(() => document.querySelector('#demo track').track.cues?.length === 6);
+      assert.equal(seconds, 55);
+      await page.waitForFunction(() => document.querySelector('#demo track[default]').track.cues?.length === 6);
       await page.locator('#demo summary').click();
-      assert.equal(await page.locator('#demo details li:visible').count(), 6);
+      const transcript = page.locator('#demo details li:visible');
+      assert.equal(await transcript.count(), 6);
+      assert.deepEqual(await transcript.allTextContents(), await demo.locator('track[default]').evaluate(t => Array.from(t.track.cues, c => c.text)));
       assert.equal(await page.locator('.phase.prototype').count(), 1);
       assert.equal(await page.locator('.checks samp').count(), 5);
       assert.equal(await page.locator('.phase.research').count(), 1);

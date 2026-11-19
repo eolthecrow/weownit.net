@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+În pilotul anterior pe weownit.net, Naabu a observat porturile TCP 80 și 443. O verificare Nuclei a identificat Cloudflare.
+
+00:08.000 --> 00:17.000
+Exemplu simulat: portal.example expune în mod normal portul 443. La verificarea externă răspunde și 8443.
+
+00:17.000 --> 00:27.000
+Pe aceeași gazdă și același port, Nuclei identifică titlul „Release Preview”. Responsabilul aplicației confirmă destinația serviciului.
+
+00:27.000 --> 00:36.000
+Responsabilul confirmă că previzualizarea este pentru angajați. Echipa platformei restricționează accesul și păstrează portalul clienților public.
+
+00:36.000 --> 00:46.000
+La reverificarea din același punct extern, portul 443 răspunde în continuare. Pe 8443 nu se observă nicio conexiune.
+
+00:46.000 --> 00:55.000
+Echipa închide constatarea pentru acest punct de acces și păstrează decizia responsabilului, dovezile și rezultatul reverificării.

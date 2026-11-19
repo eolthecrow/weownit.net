@@ -77,13 +77,13 @@
     "monitorIn": "A previously reviewed gateway and its last recorded state.",
     "monitorMid": "Repeat the approved check and compare the two observations.",
     "monitorOut": "Example comparison · Certificate validity rises from 12 to 365 days after renewal.",
-    "watchDemo": "Watch the demo",
-    "videoMeta": "36 seconds · Fictional gateway · Silent video",
+    "watchDemo": "From an open port to a verified fix",
+    "videoMeta": "55 seconds · Earlier pilot results and an illustrative case · Silent video",
     "transcript": "Read the walkthrough",
-    "videoStep1": "The owner approves an external check of gateway.example.",
-    "videoStep2": "The gateway accepts a connection on TCP port 443.",
-    "videoStep3": "The TLS certificate matches the hostname and expires in 12 days.",
-    "videoStep4": "The network team plans a renewal and a follow-up check.",
+    "videoStep1": "Earlier weownit.net pilot: Naabu recorded TCP 80 and 443. A Nuclei technology check identified Cloudflare.",
+    "videoStep2": "Illustrative case: portal.example usually exposes 443. An external check also observes 8443.",
+    "videoStep3": "A Nuclei page-title check identifies “Release Preview” on the same host and port. The owner must confirm its purpose.",
+    "videoStep4": "The owner confirms this preview is for employees. The platform team restricts access and keeps the customer portal public.",
     "pathsTitle": "Which review fits your question?",
     "essentialName": "Essential Exposure Review",
     "essentialQ": "What is reachable today?",
@@ -98,8 +98,8 @@
     "importOnly": "Reviewed import prototype",
     "priorityTitle": "How would a finding be prioritized?",
     "priorityBody": "A public port establishes reachability. A suspected software weakness needs more evidence: the affected version, the applicable advisory and a reviewer’s confidence. For a matched CVE, proposed enrichment would show the source and date of known exploitation reports alongside an exploitation-likelihood estimate. The owner would weigh that context against business impact.",
-    "videoStep5": "Proposed monitoring compares 12 days of validity with 365 after renewal.",
-    "videoStep6": "In a separately approved exercise, an engineer would verify the block and the alert.",
+    "videoStep5": "The same external check still reaches port 443. It observes no connection on port 8443.",
+    "videoStep6": "The team closes the finding for this endpoint and retains the owner decision, evidence and retest result.",
     "archTitle": "How would an assessment run?",
     "archBody": "In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck."
   },
@@ -180,13 +180,13 @@
     "monitorIn": "Un gateway deja evaluat și ultima sa stare înregistrată.",
     "monitorMid": "Repetăm verificarea aprobată și comparăm observațiile.",
     "monitorOut": "Exemplu de comparație · După reînnoire, valabilitatea certificatului crește de la 12 la 365 de zile.",
-    "watchDemo": "Vezi demonstrația",
-    "videoMeta": "36 de secunde · Gateway fictiv · Fără sunet",
+    "watchDemo": "De la un port deschis la o remediere verificată",
+    "videoMeta": "55 de secunde · Rezultate din pilotul anterior și un caz ilustrativ · Fără sunet",
     "transcript": "Citește pașii",
-    "videoStep1": "Responsabilul aprobă verificarea externă a sistemului gateway.example.",
-    "videoStep2": "Gateway-ul acceptă o conexiune pe portul TCP 443.",
-    "videoStep3": "Certificatul TLS corespunde numelui și expiră în 12 zile.",
-    "videoStep4": "Echipa de rețea planifică reînnoirea și o nouă verificare.",
+    "videoStep1": "În pilotul anterior pe weownit.net, Naabu a observat porturile TCP 80 și 443. O verificare Nuclei a identificat Cloudflare.",
+    "videoStep2": "Exemplu simulat: portal.example expune în mod normal portul 443. La verificarea externă răspunde și 8443.",
+    "videoStep3": "Pe aceeași gazdă și același port, Nuclei identifică titlul „Release Preview”. Responsabilul aplicației confirmă destinația serviciului.",
+    "videoStep4": "Responsabilul confirmă că previzualizarea este pentru angajați. Echipa platformei restricționează accesul și păstrează portalul clienților public.",
     "pathsTitle": "Ce evaluare îți răspunde la întrebare?",
     "essentialName": "Evaluarea expunerii externe",
     "essentialQ": "Ce este accesibil astăzi?",
@@ -201,8 +201,8 @@
     "importOnly": "Prototip de import cu verificare umană",
     "priorityTitle": "Cum s-ar stabili prioritatea unei constatări?",
     "priorityBody": "Un port public confirmă accesibilitatea. Pentru o vulnerabilitate suspectată sunt necesare versiunea afectată, buletinul aplicabil și nivelul de încredere al specialistului. Pentru un CVE identificat, propunem afișarea sursei și datei rapoartelor de exploatare cunoscută, alături de o estimare a probabilității de exploatare. Responsabilul ar ține cont și de impactul asupra activității.",
-    "videoStep5": "Monitorizarea propusă compară cele 12 zile de valabilitate cu cele 365 de după reînnoire.",
-    "videoStep6": "Într-un exercițiu autorizat separat, un inginer ar verifica blocarea și alerta.",
+    "videoStep5": "La reverificarea din același punct extern, portul 443 răspunde în continuare. Pe 8443 nu se observă nicio conexiune.",
+    "videoStep6": "Echipa închide constatarea pentru acest punct de acces și păstrează decizia responsabilului, dovezile și rezultatul reverificării.",
     "archTitle": "Cum ar decurge o evaluare?",
     "archBody": "În arhitectura propusă, aprobarea sistemelor declanșează o sarcină cu verificări prestabilite. Un proces izolat trimite observațiile. Fiecare constatare trimite la dovezi cu dată, oră și versiune. Un specialist poate verifica sursa raportului și poate decide dacă solicită o nouă verificare."
   },
@@ -283,13 +283,13 @@
     "monitorIn": "Une passerelle déjà examinée et son dernier état enregistré.",
     "monitorMid": "Répéter le contrôle autorisé et comparer les deux observations.",
     "monitorOut": "Exemple de comparaison · Après renouvellement, la validité du certificat passe de 12 à 365 jours.",
-    "watchDemo": "Voir la démo",
-    "videoMeta": "36 secondes · Passerelle fictive · Vidéo sans son",
+    "watchDemo": "D’un port ouvert à une correction vérifiée",
+    "videoMeta": "55 secondes · Résultats du pilote précédent et cas illustratif · Vidéo sans son",
     "transcript": "Lire les étapes",
-    "videoStep1": "Le responsable autorise un contrôle externe de gateway.example.",
-    "videoStep2": "La passerelle accepte une connexion sur le port TCP 443.",
-    "videoStep3": "Le certificat TLS correspond au nom et expire dans 12 jours.",
-    "videoStep4": "L’équipe réseau prévoit le renouvellement et un nouveau contrôle.",
+    "videoStep1": "Lors du pilote sur weownit.net, Naabu a relevé les ports TCP 80 et 443. Un contrôle Nuclei a identifié Cloudflare.",
+    "videoStep2": "Cas fictif : le portail expose habituellement le port 443. Le port 8443 répond aussi au contrôle externe.",
+    "videoStep3": "Sur le même hôte et le même port, Nuclei relève le titre « Release Preview ». Le responsable doit confirmer son usage.",
+    "videoStep4": "Le responsable confirme que cet aperçu est réservé au personnel. L’équipe plateforme en restreint l’accès et maintient le portail client public.",
     "pathsTitle": "Quelle évaluation répond à votre question ?",
     "essentialName": "Évaluation de l’exposition externe",
     "essentialQ": "Qu’est-ce qui est joignable aujourd’hui ?",
@@ -304,8 +304,8 @@
     "importOnly": "Prototype d’import après examen",
     "priorityTitle": "Comment établir la priorité d’un constat ?",
     "priorityBody": "Un port public établit qu’un service est joignable. Une vulnérabilité présumée demande d’autres éléments, dont la version affectée, l’avis applicable et le degré de confiance du spécialiste. Pour une CVE correspondante, l’enrichissement envisagé indiquerait la source et la date des signalements d’exploitation, ainsi qu’une estimation de sa probabilité. Le responsable tiendrait aussi compte de l’impact métier.",
-    "videoStep5": "Le suivi envisagé compare les 12 jours de validité aux 365 jours après renouvellement.",
-    "videoStep6": "Lors d’un exercice autorisé séparément, un ingénieur vérifierait le blocage et l’alerte.",
+    "videoStep5": "Depuis le même point externe, le port 443 reste joignable. Aucune connexion n’est observée sur le port 8443.",
+    "videoStep6": "L’équipe clôt le constat pour ce point d’accès et conserve la décision, les preuves et le résultat du contrôle.",
     "archTitle": "Comment se déroulerait une évaluation ?",
     "archBody": "Dans le modèle envisagé, un périmètre approuvé donne lieu à une tâche avec des contrôles prédéfinis. Un environnement isolé renvoie les observations. Chaque constat renvoie à une preuve horodatée et versionnée. Un spécialiste peut retrouver la preuve à l’origine du rapport et décider si un nouveau contrôle est utile."
   }
@@ -321,11 +321,11 @@
   document.title=titles[lang];
   const video = document.querySelector("#demo video");
   if (lang !== "en") {
-    const track = video.querySelector("track");
-    track.srclang = lang;
-    track.label = {ro:"Română", fr:"Français"}[lang];
-    track.src = "assets/servicewatch-demo/gateway-" + lang + ".vtt?v=2";
-    video.src = "assets/servicewatch-demo/gateway-" + lang + ".mp4?v=2";
+    for (const captions of video.querySelectorAll("track")) {
+      const selected = captions.srclang === lang;
+      captions.default = selected;
+      captions.track.mode = selected ? "showing" : "disabled";
+    }
   }
   const copy=translations[lang] || {};
   document.querySelectorAll("[data-i18n]").forEach(el=>{const val=copy[el.dataset.i18n];if(val)el.textContent=val;});

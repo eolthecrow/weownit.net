@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+Earlier weownit.net pilot: Naabu recorded TCP 80 and 443. A Nuclei technology check identified Cloudflare.
+
+00:08.000 --> 00:17.000
+Illustrative case: portal.example usually exposes 443. An external check also observes 8443.
+
+00:17.000 --> 00:27.000
+A Nuclei page-title check identifies “Release Preview” on the same host and port. The owner must confirm its purpose.
+
+00:27.000 --> 00:36.000
+The owner confirms this preview is for employees. The platform team restricts access and keeps the customer portal public.
+
+00:36.000 --> 00:46.000
+The same external check still reaches port 443. It observes no connection on port 8443.
+
+00:46.000 --> 00:55.000
+The team closes the finding for this endpoint and retains the owner decision, evidence and retest result.

@@ -1,0 +1,19 @@
+WEBVTT
+
+00:00.000 --> 00:08.000
+Lors du pilote sur weownit.net, Naabu a relevé les ports TCP 80 et 443. Un contrôle Nuclei a identifié Cloudflare.
+
+00:08.000 --> 00:17.000
+Cas fictif : le portail expose habituellement le port 443. Le port 8443 répond aussi au contrôle externe.
+
+00:17.000 --> 00:27.000
+Sur le même hôte et le même port, Nuclei relève le titre « Release Preview ». Le responsable doit confirmer son usage.
+
+00:27.000 --> 00:36.000
+Le responsable confirme que cet aperçu est réservé au personnel. L’équipe plateforme en restreint l’accès et maintient le portail client public.
+
+00:36.000 --> 00:46.000
+Depuis le même point externe, le port 443 reste joignable. Aucune connexion n’est observée sur le port 8443.
+
+00:46.000 --> 00:55.000
+L’équipe clôt le constat pour ce point d’accès et conserve la décision, les preuves et le résultat du contrôle.

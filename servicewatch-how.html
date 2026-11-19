@@ -39,20 +39,22 @@
 <li><h3 data-i18n="review">Choose an action</h3><p data-i18n="reviewBody">Review the evidence with the system owner and decide what to keep, restrict or retest.</p></li>
 </ol></div>
   <div class="demo-player">
-    <h3 id="demo-title" data-i18n="watchDemo">Watch the demo</h3>
-    <p data-i18n="videoMeta">36 seconds · Fictional gateway · Silent video</p>
+    <h3 id="demo-title" data-i18n="watchDemo">From an open port to a verified fix</h3>
+    <p data-i18n="videoMeta">55 seconds · Earlier pilot results and an illustrative case · Silent video</p>
     <video controls playsinline preload="none" width="960" height="540"
-           aria-labelledby="demo-title" poster="assets/servicewatch-demo/gateway-poster.webp"
-           src="assets/servicewatch-demo/gateway-en.mp4?v=2">
-      <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/gateway-en.vtt?v=2" default>
+           aria-labelledby="demo-title" poster="assets/servicewatch-demo/evidence-poster.webp"
+           src="assets/servicewatch-demo/evidence-to-decision.mp4">
+      <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/evidence-en.vtt" default>
+      <track kind="captions" srclang="ro" label="Română" src="assets/servicewatch-demo/evidence-ro.vtt">
+      <track kind="captions" srclang="fr" label="Français" src="assets/servicewatch-demo/evidence-fr.vtt">
     </video>
     <details><summary data-i18n="transcript">Read the walkthrough</summary><ul>
-      <li data-i18n="videoStep1">The owner approves an external check of gateway.example.</li>
-      <li data-i18n="videoStep2">The gateway accepts a connection on TCP port 443.</li>
-      <li data-i18n="videoStep3">The TLS certificate matches the hostname and expires in 12 days.</li>
-      <li data-i18n="videoStep4">The network team plans a renewal and a follow-up check.</li>
-      <li data-i18n="videoStep5">Proposed monitoring compares 12 days of validity with 365 after renewal.</li>
-      <li data-i18n="videoStep6">In a separately approved exercise, an engineer would verify the block and the alert.</li>
+      <li data-i18n="videoStep1">Earlier weownit.net pilot: Naabu recorded TCP 80 and 443. A Nuclei technology check identified Cloudflare.</li>
+      <li data-i18n="videoStep2">Illustrative case: portal.example usually exposes 443. An external check also observes 8443.</li>
+      <li data-i18n="videoStep3">A Nuclei page-title check identifies “Release Preview” on the same host and port. The owner must confirm its purpose.</li>
+      <li data-i18n="videoStep4">The owner confirms this preview is for employees. The platform team restricts access and keeps the customer portal public.</li>
+      <li data-i18n="videoStep5">The same external check still reaches port 443. It observes no connection on port 8443.</li>
+      <li data-i18n="videoStep6">The team closes the finding for this endpoint and retains the owner decision, evidence and retest result.</li>
     </ul></details>
   </div>
 </section>
@@ -80,5 +82,5 @@
 <details class="route"><summary><span class="phase research" data-i18n="research">Research only</span><strong data-i18n="sources">Security data connectors</strong></summary><div class="route-body"><p data-i18n="sourcesBody">A curated directory helps identify candidate sources for IP reputation, vulnerability advisories and asset history. Each connector needs separate evaluation before use in the pilot.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="sourcesIn">A reviewer needs context for a reported software version.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="sourcesMid">Identify a candidate advisory source. Check its permissions, coverage and update date.</span></li><li><b data-i18n="result">Result</b><span data-i18n="sourcesOut">A connector shortlist for technical evaluation.</span></li></ol></div></details>
 <details class="route"><summary><span class="phase planned" data-i18n="planned">Proposed</span><strong data-i18n="monitor">Continuous monitoring</strong></summary><div class="route-body"><p data-i18n="monitorBody">Scheduled rechecks would highlight newly exposed services and notify the team when a previously reviewed asset changes.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="monitorIn">A previously reviewed gateway and its last recorded state.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="monitorMid">Repeat the approved check and compare the two observations.</span></li><li><b data-i18n="result">Result</b><span data-i18n="monitorOut">A change notice for the owner showing what appeared or disappeared.</span></li></ol></div></details></div></section></main>
 <footer><div class="wrap bar"><b>weownit.net / ServiceWatch</b><a href="contact.html" data-preserve-lang class="jump"><span data-i18n="contact">Discuss a pilot review</span> ↗</a></div></footer>
-<script src="assets/servicewatch-how.js?v=7999a1285c71" defer></script>
+<script src="assets/servicewatch-how.js?v=dd8573f8fb64" defer></script>
 </body></html>
