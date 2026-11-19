@@ -9,6 +9,21 @@ const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'h
 async function geometry(page){const s=await page.evaluate(()=>({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth}));assert.ok(s.scroll<=s.width+1,JSON.stringify(s));}
 async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port,browser=await chromium.launch({headless:true});let journeys=0;
  try{
+  // The initial document must display the current design even if enhancement never runs.
+  for (const width of [390, 1440]) {
+    const context = await browser.newContext({javaScriptEnabled:false, viewport:{width,height:900}});
+    await context.route('**/*', route => route.request().url().startsWith(base + '/') ? route.continue() : route.abort());
+    const page = await context.newPage();
+    await page.goto(base + '/index.html');
+    const heading = page.getByRole('heading', {level:1});
+    assert.equal(await heading.count(), 1);
+    assert.match(await heading.innerText(), /Network expertise\./);
+    assert.equal(await page.locator('.rail, #hero-title').count(), 0);
+    assert.equal(await page.locator('.rd-hero-shield').isVisible(), true);
+    assert.equal(await page.locator('#rd-links a[href="store.html"]').isVisible(), true);
+    await geometry(page);
+    await context.close();
+  }
   for(const width of [360,390,430,1440])for(const lang of ['en','ro','fr']){
    const context=await browser.newContext({viewport:{width,height:900}});await context.route('**/*',r=>r.request().url().startsWith(base+'/')?r.continue():r.abort());
    const page=await context.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));page.setDefaultTimeout(15000);
@@ -25,7 +40,7 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
    await page.locator('#sb-results a[href*="briefing/gheist-github-actions.html"]').first().click();await page.waitForURL('**/briefing/gheist-github-actions.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('h1').innerText(),gheist[lang].title);await geometry(page);
    const next=lang==='fr'?'ro':'fr';await page.locator('[data-lang="'+next+'"]').click();assert.equal(await page.locator('h1').innerText(),gheist[next].title);assert.ok((await page.locator('.sb-support .sb-button').getAttribute('href')).includes('lang='+next));assert.ok((await page.locator('link[rel=canonical]').getAttribute('href')).includes('/briefing/gheist-github-actions.html?lang='+next));await geometry(page);
    const menu=page.locator('[data-nav-toggle]');if(await menu.isVisible()){await menu.click();assert.equal(await menu.getAttribute('aria-expanded'),'true');await geometry(page);await page.keyboard.press('Escape');assert.equal(await menu.getAttribute('aria-expanded'),'false');}
-   await page.goto(base+'/index.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('#sb-home-cards .sb-card').count(),3);assert.equal(await page.locator('#sb-home-title').innerText(),data.ui[lang].homeNews);assert.ok(!(await page.locator('#sb-home-cards').innerText()).includes('Akira'));assert.ok(!(await page.locator('.rail-nav').innerText()).includes('undefined'));
+   await page.goto(base+'/index.html?lang='+lang);await page.waitForFunction(l=>document.documentElement.lang===l,lang);assert.equal(await page.locator('#sb-home-cards .sb-card').count(),3);assert.equal(await page.locator('#sb-home-title').innerText(),data.ui[lang].homeNews);assert.ok(!(await page.locator('#sb-home-cards').innerText()).includes('Akira'));assert.equal(await page.locator('#rd-root').count(),1);
    // Approved horizontal homepage integration: real VA SVG, responsive nav, safe product links.
    assert.equal(await page.locator('#rd-root .rd-brand img').getAttribute('src'),'assets/va-symbol.svg?v=2');
    assert.equal(await page.locator('#rd-root .rd-offer').count(),3);
