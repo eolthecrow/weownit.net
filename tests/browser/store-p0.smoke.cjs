@@ -108,6 +108,15 @@ async function main(){
       const film = advanced.locator('video');
       const expectedTitle = { en: 'Advanced Validation', ro: 'Validare avansată', fr: 'Validation avancée' };
       assert.equal(await advanced.locator('h2').innerText(), expectedTitle[lang]);
+      assert.deepEqual(await advanced.locator('.av-evidence dt').allTextContents(), ['Darknet MCP', 'ARES', 'Infection Monkey', 'ServiceWatch']);
+      const timeline = await advanced.locator('[data-i18n="avServiceWatch"]').innerText();
+      assert.match(timeline, { en: /wrong queue/, ro: /coada greșită/, fr: /mauvaise file/ }[lang]);
+      assert.match(timeline, /\b8\b.*\b42\b/);
+      const decision = await advanced.locator('.av-decision').innerText();
+      assert.match(decision, { en: /investigation open/, ro: /deschisă investigația/, fr: /enquête sur le compte reste ouverte/ }[lang]);
+      if (width <= 430) {
+        assert.ok(await advanced.evaluate(section => section.querySelector('video').getBoundingClientRect().bottom < section.querySelector('.av-summary').getBoundingClientRect().top));
+      }
       assert.equal(await film.getAttribute('src'), 'assets/servicewatch-demo/advanced-validation.mp4');
       assert.deepEqual(await film.locator('track').evaluateAll(ts => ts.map(t => t.srclang)), ['en', 'ro', 'fr']);
       const captions = film.locator('track[default]');

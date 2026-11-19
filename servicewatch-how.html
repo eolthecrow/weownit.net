@@ -12,7 +12,7 @@
   <link rel="alternate" hreflang="fr" href="https://weownit.net/servicewatch-how.html?lang=fr">
   <link rel="alternate" hreflang="x-default" href="https://weownit.net/servicewatch-how.html?lang=en">
   <link rel="icon" type="image/svg+xml" href="assets/va-symbol.svg">
-  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=0a8262011b2b">
+  <link rel="stylesheet" href="assets/servicewatch-guide.css?v=dc3f72505200">
 </head>
 <body>
 <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
@@ -68,13 +68,13 @@
   <details><summary data-i18n="archTitle">How would an assessment run?</summary><p data-i18n="archBody">In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck.</p></details>
   <details><summary data-i18n="priorityTitle">How would a finding be prioritized?</summary><p data-i18n="priorityBody">A public port establishes reachability. A suspected software weakness needs more evidence: the affected version, the applicable advisory and a reviewer’s confidence. For a matched CVE, proposed enrichment would show the source and date of known exploitation reports alongside an exploitation-likelihood estimate. The owner would weigh that context against business impact.</p></details>
 </section>
-<section class="wrap workflow demo-layout" id="advanced-validation-demo" aria-labelledby="av-title">
-  <div><h2 id="av-title" data-i18n="avTitle">Advanced Validation</h2>
+<section class="wrap workflow demo-layout av-layout" id="advanced-validation-demo" aria-labelledby="av-title">
+  <div class="av-heading"><h2 id="av-title" data-i18n="avTitle">Advanced Validation</h2>
     <p data-i18n="avIntro">Follow a synthetic supplier-access exercise from an external report to a firewall decision, a missing alert and a retest.</p>
   </div>
   <div class="demo-player">
     <h3 id="av-question" data-i18n="avQuestion">Would the on-call analyst receive the alert?</h3>
-    <p data-i18n="avMeta">1 min 33 sec · Simulated case · English narration</p>
+    <p data-i18n="avMeta">1 min 33 sec · Simulated case · English narration and captions</p>
     <video aria-labelledby="av-title av-question" controls playsinline preload="none" width="1440" height="810"
            poster="assets/servicewatch-demo/advanced-poster.webp" src="assets/servicewatch-demo/advanced-validation.mp4">
       <track kind="captions" srclang="en" label="English" src="assets/servicewatch-demo/advanced-en.vtt" default>
@@ -91,6 +91,16 @@
       <li data-i18n="avText7">The review can now close both control checks for this path. The identity team keeps the original exposure lead open. That distinction tells the customer what was demonstrated, and what still needs investigation.</li>
     </ul></details>
   </div>
+  <div class="av-summary">
+    <dl class="av-evidence">
+      <div><dt>Darknet MCP</dt><dd data-i18n="avDarknet">Two mentions of a supplier account trace back to one report. The identity team takes one unconfirmed lead.</dd></div>
+      <div><dt>ARES</dt><dd data-i18n="avAres">A synthetic campaign record sets two criteria for the supplier test role. Finance access must be blocked and the duty queue must receive an alert within five minutes.</dd></div>
+      <div><dt>Infection Monkey</dt><dd data-i18n="avMonkey">The illustrative report shows the supplier portal responding while the finance service is unreachable. A matching firewall denial explains the block.</dd></div>
+      <div><dt>ServiceWatch</dt><dd data-i18n="avServiceWatch">Detection created an alert in 8 seconds, but sent it to the wrong queue. After the routing fix, the duty queue received the retest alert in 42 seconds.</dd></div>
+    </dl>
+    <p class="av-decision" data-i18n="avDecision">Close the control exercise for this path. Keep the identity investigation open while the team looks for independent evidence.</p>
+    <p data-i18n="avPilot">A customer pilot could show a redacted exercise export, the matching firewall event and a SOC queue receipt from the same approved test.</p>
+  </div>
 </section>
 <section class="catalog" id="checks"><div class="wrap split">
   <div><h2 data-i18n="checks">What the pilot checks</h2><p data-i18n="coverage">Follow one fictional gateway through five checks tested individually in the pilot. The evidence changes with each check.</p><div class="asset-ref"><small data-i18n="exampleHost">Example asset</small><code>gateway.example</code></div></div>
@@ -106,5 +116,5 @@
 <details class="route"><summary><span class="phase research" data-i18n="research">Research only</span><strong data-i18n="sources">Security data connectors</strong></summary><div class="route-body"><p data-i18n="sourcesBody">A curated directory helps identify candidate sources for IP reputation, vulnerability advisories and asset history. Each connector needs separate evaluation before use in the pilot.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="sourcesIn">A reviewer needs context for a reported software version.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="sourcesMid">Identify a candidate advisory source. Check its permissions, coverage and update date.</span></li><li><b data-i18n="result">Result</b><span data-i18n="sourcesOut">A connector shortlist for technical evaluation.</span></li></ol></div></details>
 <details class="route"><summary><span class="phase planned" data-i18n="planned">Proposed</span><strong data-i18n="monitor">Continuous monitoring</strong></summary><div class="route-body"><p data-i18n="monitorBody">Scheduled rechecks would highlight newly exposed services and notify the team when a previously reviewed asset changes.</p><ol class="route-map"><li><b data-i18n="input">Input</b><span data-i18n="monitorIn">A previously reviewed gateway and its last recorded state.</span></li><li><b data-i18n="reviewStep">Review</b><span data-i18n="monitorMid">Repeat the approved check and compare the two observations.</span></li><li><b data-i18n="result">Result</b><span data-i18n="monitorOut">A change notice for the owner showing what appeared or disappeared.</span></li></ol></div></details></div></section></main>
 <footer><div class="wrap bar"><b>weownit.net / ServiceWatch</b><a href="contact.html" data-preserve-lang class="jump"><span data-i18n="contact">Discuss a pilot review</span> ↗</a></div></footer>
-<script src="assets/servicewatch-how.js?v=41cef66a77d7" defer></script>
+<script src="assets/servicewatch-how.js?v=986e2d470520" defer></script>
 </body></html>
