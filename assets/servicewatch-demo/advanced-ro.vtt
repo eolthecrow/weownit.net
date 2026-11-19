@@ -1,0 +1,43 @@
+WEBVTT
+
+00:00.550 --> 00:08.690
+Un cont de furnizor apare într-un raport extern. Dacă cineva cu acest rol ar ajunge la limita de acces către zona financiară, ar afla analistul de gardă?
+
+00:08.930 --> 00:11.565
+Acesta este un caz simulat pentru ServiceWatch.
+
+00:12.900 --> 00:18.415
+A doua mențiune o reproduce pe prima. Analistul corelează cele două referințe și păstrează un singur indiciu neconfirmat.
+
+00:18.655 --> 00:22.690
+Echipa de administrare a identităților verifică în continuare dacă acel cont a fost afectat.
+
+00:24.000 --> 00:31.495
+Analistul examinează un export sintetic dintr-o campanie ARES. Exercițiul folosește un cont de test cu rol de furnizor.
+
+00:31.735 --> 00:38.870
+Sunt două criterii de acceptare. Accesul la zona financiară trebuie blocat, iar alerta trebuie să ajungă la echipa de gardă în cel mult cinci minute.
+
+00:40.200 --> 00:47.305
+Raportul simulat din Infection Monkey arată că portalul furnizorilor răspunde, conform așteptărilor, iar serviciul financiar este inaccesibil.
+
+00:47.545 --> 00:52.435
+O înregistrare de refuz din jurnalul firewallului confirmă că accesul a fost blocat la această limită.
+
+00:53.750 --> 00:59.660
+Firewallul a înregistrat blocarea la ora zece. Opt secunde mai târziu, sistemul de detecție a generat o alertă.
+
+00:59.900 --> 01:05.115
+La zece și cinci minute, coada de alerte a echipei de gardă era încă goală. Alerta ajunsese în altă coadă.
+
+01:06.450 --> 01:12.235
+După corectarea rutării alertei, analistul repetă aceeași verificare. Accesul la zona financiară rămâne blocat.
+
+01:12.475 --> 01:18.080
+De această dată, alerta ajunge la echipa de gardă în 42 de secunde, în intervalul stabilit de cinci minute.
+
+01:19.400 --> 01:26.825
+Analistul poate închide ambele verificări pentru acest traseu. Echipa de administrare a identităților continuă investigarea indiciului inițial.
+
+01:27.065 --> 01:32.485
+Clientul poate vedea ce a demonstrat exercițiul și ce mai trebuie investigat.

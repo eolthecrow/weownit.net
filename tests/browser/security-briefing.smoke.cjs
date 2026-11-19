@@ -60,8 +60,13 @@ async function main(){await new Promise(r=>server.listen(0,'127.0.0.1',r));const
      await page.keyboard.press('Escape');
      assert.equal(await page.locator('#rd-links').isVisible(),false);
    }else assert.equal(await page.locator('#rd-links').isVisible(),true);
+   const demoLink = page.locator('[data-sw-demo-link]');
+   await page.locator('[data-rd-path="advanced"]').click();
+   assert.equal(await demoLink.evaluate(a => a.hash), '#advanced-validation-demo');
+   assert.equal(await demoLink.evaluate(a => new URL(a.href).searchParams.get('lang')), lang);
    const pilotPath=page.locator('#rd-root [data-rd-path="monitoring"]');
    await pilotPath.click();assert.equal(await pilotPath.getAttribute('aria-pressed'),'true');
+   assert.equal(await demoLink.evaluate(a => a.hash), '#demo');
    assert.equal(await page.locator('#rd-sw-label').innerText(),await pilotPath.locator('strong').innerText());
    assert.equal(await page.locator('#rd-root #rd-h1').isVisible(),true);
    const expectedHeadlines={

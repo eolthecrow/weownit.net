@@ -1,0 +1,43 @@
+WEBVTT
+
+00:00.550 --> 00:08.690
+A supplier identity appears in an external report. If someone using that role reached the finance boundary, would the on-call analyst know?
+
+00:08.930 --> 00:11.565
+This is a simulated ServiceWatch case.
+
+00:12.900 --> 00:18.415
+The second mention repeats the first. An analyst links the duplicate and keeps one unconfirmed lead.
+
+00:18.655 --> 00:22.690
+The identity team still has to verify whether the account was affected.
+
+00:24.000 --> 00:31.495
+The analyst reviews a synthetic ARES campaign export. The exercise uses a test identity with the supplier role.
+
+00:31.735 --> 00:38.870
+Two criteria matter. Finance access must be blocked, and the alert must reach the on-call queue within five minutes.
+
+00:40.200 --> 00:47.305
+The simulated Infection Monkey report shows the expected supplier portal responding, while finance is unreachable.
+
+00:47.545 --> 00:52.435
+A matching firewall denial supports the conclusion that this boundary blocked the test.
+
+00:53.750 --> 00:59.660
+The firewall logged the block at ten. Eight seconds later, the detection system created an alert.
+
+00:59.900 --> 01:05.115
+At ten oh five the on-call queue was still empty. The alert had been routed to the wrong queue.
+
+01:06.450 --> 01:12.235
+After the routing correction, the analyst repeats the same check. Finance remains blocked.
+
+01:12.475 --> 01:18.080
+This time the on-call queue receives the alert in forty-two seconds, inside the five-minute window.
+
+01:19.400 --> 01:26.825
+The review can now close both control checks for this path. The identity team keeps the original exposure lead open.
+
+01:27.065 --> 01:32.485
+That distinction tells the customer what was demonstrated, and what still needs investigation.

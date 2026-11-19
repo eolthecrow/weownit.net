@@ -148,3 +148,15 @@ footer { border-width: 1px 0 0; color: var(--muted); font-size: .85rem; }
 .review-paths summary { cursor:pointer; width:fit-content; font-weight:650; color:var(--mint); }
 .review-paths details p { max-width:82ch; margin-top:10px; }
 @media(max-width:760px) { .path-grid { grid-template-columns:1fr; } }
+
+.av-demo-link { align-self: flex-start; margin-top: 12px; color: var(--mint); }
+.av-layout { row-gap: 18px; }
+.av-evidence { display: grid; gap: 12px; margin-bottom: 18px; font-size: .95rem; }
+.av-evidence dt { color: var(--mint); font-weight: 680; }
+.workflow .av-decision { color: var(--ink); font-weight: 650; }
+@media (min-width: 761px) {
+  .av-layout { grid-template: "heading player" auto "evidence player" 1fr / minmax(0,1fr) minmax(0,.96fr); }
+  .av-heading { grid-area: heading; }
+  .av-layout .demo-player { grid-area: player; }
+  .av-summary { grid-area: evidence; }
+}

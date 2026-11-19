@@ -1,6 +1,25 @@
 (() => {
   const translations = {
   "en": {
+    "avTitle": "Advanced Validation",
+    "avLink": "Watch the Advanced Validation demo",
+    "avQuestion": "Would the on-call analyst receive the alert?",
+    "avIntro": "Follow a synthetic supplier-access exercise from an external report to a firewall decision, a missing alert and a retest.",
+    "avDarknet": "Two mentions of a supplier account trace back to one report. The identity team takes one unconfirmed lead.",
+    "avAres": "A synthetic campaign record sets two criteria for the supplier test role. Finance access must be blocked and the duty queue must receive an alert within five minutes.",
+    "avMonkey": "The illustrative report shows the supplier portal responding while the finance service is unreachable. A matching firewall denial explains the block.",
+    "avServiceWatch": "Detection created an alert in 8 seconds, but sent it to the wrong queue. After the routing fix, the duty queue received the retest alert in 42 seconds.",
+    "avDecision": "Close the control exercise for this path. Keep the identity investigation open while the team looks for independent evidence.",
+    "avPilot": "A customer pilot could show a redacted exercise export, the matching firewall event and a SOC queue receipt from the same approved test.",
+    "avMeta": "1 min 33 sec · Simulated case · English narration and captions",
+    "avTranscript": "Read the transcript",
+    "avText1": "A supplier identity appears in an external report. If someone using that role reached the finance boundary, would the on-call analyst know? This is a simulated ServiceWatch case.",
+    "avText2": "The second mention repeats the first. An analyst links the duplicate and keeps one unconfirmed lead. The identity team still has to verify whether the account was affected.",
+    "avText3": "The analyst reviews a synthetic ARES campaign export. The exercise uses a test identity with the supplier role. Two criteria matter. Finance access must be blocked, and the alert must reach the on-call queue within five minutes.",
+    "avText4": "The simulated Infection Monkey report shows the expected supplier portal responding, while finance is unreachable. A matching firewall denial supports the conclusion that this boundary blocked the test.",
+    "avText5": "The firewall logged the block at ten. Eight seconds later, the detection system created an alert. At ten oh five the on-call queue was still empty. The alert had been routed to the wrong queue.",
+    "avText6": "After the routing correction, the analyst repeats the same check. Finance remains blocked. This time the on-call queue receives the alert in forty-two seconds, inside the five-minute window.",
+    "avText7": "The review can now close both control checks for this path. The identity team keeps the original exposure lead open. That distinction tells the customer what was demonstrated, and what still needs investigation.",
     "skip": "Skip to content",
     "back": "Products",
     "language": "Language",
@@ -104,6 +123,25 @@
     "archBody": "In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck."
   },
   "ro": {
+    "avTitle": "Validare avansată",
+    "avLink": "Vezi demonstrația de validare avansată",
+    "avQuestion": "Ar primi analistul de gardă alerta?",
+    "avIntro": "Urmărește un exercițiu simulat de acces al unui furnizor, de la o mențiune externă la blocarea în firewall, alerta lipsă și reverificare.",
+    "avDarknet": "Două mențiuni despre un cont de furnizor provin din același raport. Echipa responsabilă de identități preia un singur indiciu neconfirmat.",
+    "avAres": "O campanie simulată stabilește două criterii pentru rolul de test al furnizorului. Accesul la zona financiară trebuie blocat, iar alerta trebuie să ajungă în coada echipei de gardă în cel mult cinci minute.",
+    "avMonkey": "Raportul ilustrativ arată că portalul furnizorilor răspunde, iar serviciul financiar este inaccesibil. Înregistrarea refuzului în jurnalul firewallului explică blocarea.",
+    "avServiceWatch": "Sistemul de detecție a generat alerta în 8 secunde, dar a trimis-o în coada greșită. După corectarea rutării, alerta de la reverificare a ajuns în coada echipei de gardă în 42 de secunde.",
+    "avDecision": "Închide exercițiul de validare a controalelor pentru acest traseu. Menține deschisă investigația privind contul în timp ce echipa caută dovezi independente.",
+    "avPilot": "Într-un pilot cu un client am putea arăta un export al exercițiului cu datele sensibile mascate, evenimentul corespondent din firewall și dovada primirii alertei în coada SOC, toate din același test aprobat.",
+    "avMeta": "1 min 33 s · Caz simulat · Narațiune în engleză, subtitrare în română",
+    "avTranscript": "Citește transcrierea",
+    "avText1": "Un cont de furnizor apare într-un raport extern. Dacă cineva cu acest rol ar ajunge la limita de acces către zona financiară, ar afla analistul de gardă? Acesta este un caz simulat pentru ServiceWatch.",
+    "avText2": "A doua mențiune o reproduce pe prima. Analistul corelează cele două referințe și păstrează un singur indiciu neconfirmat. Echipa de administrare a identităților verifică în continuare dacă acel cont a fost afectat.",
+    "avText3": "Analistul examinează un export sintetic dintr-o campanie ARES. Exercițiul folosește un cont de test cu rol de furnizor. Sunt două criterii de acceptare. Accesul la zona financiară trebuie blocat, iar alerta trebuie să ajungă la echipa de gardă în cel mult cinci minute.",
+    "avText4": "Raportul simulat din Infection Monkey arată că portalul furnizorilor răspunde, conform așteptărilor, iar serviciul financiar este inaccesibil. O înregistrare de refuz din jurnalul firewallului confirmă că accesul a fost blocat la această limită.",
+    "avText5": "Firewallul a înregistrat blocarea la ora zece. Opt secunde mai târziu, sistemul de detecție a generat o alertă. La zece și cinci minute, coada de alerte a echipei de gardă era încă goală. Alerta ajunsese în altă coadă.",
+    "avText6": "După corectarea rutării alertei, analistul repetă aceeași verificare. Accesul la zona financiară rămâne blocat. De această dată, alerta ajunge la echipa de gardă în 42 de secunde, în intervalul stabilit de cinci minute.",
+    "avText7": "Analistul poate închide ambele verificări pentru acest traseu. Echipa de administrare a identităților continuă investigarea indiciului inițial. Clientul poate vedea ce a demonstrat exercițiul și ce mai trebuie investigat.",
     "skip": "Sari la conținut",
     "back": "Produse",
     "language": "Limbă",
@@ -207,6 +245,25 @@
     "archBody": "În arhitectura propusă, aprobarea sistemelor declanșează o sarcină cu verificări prestabilite. Un proces izolat trimite observațiile. Fiecare constatare trimite la dovezi cu dată, oră și versiune. Un specialist poate verifica sursa raportului și poate decide dacă solicită o nouă verificare."
   },
   "fr": {
+    "avTitle": "Validation avancée",
+    "avLink": "Voir la démonstration de validation avancée",
+    "avQuestion": "L’analyste d’astreinte recevrait-il l’alerte ?",
+    "avIntro": "Suivez un exercice simulé sur les accès d’un fournisseur, du signalement externe au refus du pare-feu, puis de l’alerte manquante au nouveau contrôle.",
+    "avDarknet": "Deux mentions d’un compte fournisseur remontent au même rapport. L’équipe chargée des identités reprend une seule piste à confirmer.",
+    "avAres": "Une campagne simulée fixe deux critères pour le rôle fournisseur utilisé lors du test. L’accès à la zone financière doit être bloqué et l’alerte doit parvenir à la file d’astreinte dans les cinq minutes.",
+    "avMonkey": "Le rapport illustratif indique que le portail fournisseur répond tandis que le service financier reste inaccessible. Un refus correspondant dans le journal du pare-feu explique le blocage.",
+    "avServiceWatch": "Le système de détection a créé une alerte en 8 secondes, mais l’a envoyée à la mauvaise file. Après correction de l’acheminement, l’alerte du nouveau test est arrivée en 42 secondes dans la file d’astreinte.",
+    "avDecision": "Clore l’exercice de validation des contrôles pour ce trajet. L’enquête sur le compte reste ouverte pendant que l’équipe recherche des éléments indépendants.",
+    "avPilot": "Un pilote client pourrait présenter un export d’exercice dont les données sensibles ont été masquées, l’événement correspondant du pare-feu et la preuve de réception dans la file du SOC, tous issus du même test approuvé.",
+    "avMeta": "1 min 33 s · Cas simulé · Narration en anglais, sous-titres en français",
+    "avTranscript": "Lire la transcription",
+    "avText1": "Un compte fournisseur est mentionné dans un rapport externe. Si une personne ayant ce rôle atteignait la frontière de la zone financière, l’analyste d’astreinte en serait-il informé ? Il s’agit d’un cas simulé pour ServiceWatch.",
+    "avText2": "La seconde mention reprend la première. L’analyste relie les deux références et conserve une seule piste à confirmer. L’équipe chargée des identités doit encore vérifier si le compte a été compromis.",
+    "avText3": "L’analyste examine un export synthétique de campagne ARES. L’exercice utilise un compte de test ayant le rôle de fournisseur. Deux critères sont retenus. L’accès à la zone financière doit être bloqué et l’alerte doit parvenir à la file d’astreinte dans les cinq minutes.",
+    "avText4": "Le rapport simulé d’Infection Monkey indique que le portail fournisseur répond comme prévu et que le service financier est inaccessible. Un refus correspondant dans le journal du pare-feu confirme que le contrôle a bloqué cet accès.",
+    "avText5": "Le pare-feu a consigné le blocage à dix heures. Huit secondes plus tard, le système de détection a créé une alerte. À dix heures cinq, la file d’astreinte était toujours vide. L’alerte avait été envoyée à la mauvaise file.",
+    "avText6": "Après correction de l’acheminement des alertes, l’analyste répète le contrôle. L’accès à la zone financière reste bloqué. Cette fois, l’alerte arrive dans la file d’astreinte en 42 secondes, dans le délai convenu de cinq minutes.",
+    "avText7": "L’analyste peut clore les deux vérifications pour ce trajet. L’équipe chargée des identités poursuit l’examen du signalement initial. Le client voit ainsi ce que l’exercice a démontré et ce qui reste à examiner.",
     "skip": "Aller au contenu",
     "back": "Produits",
     "language": "Langue",
@@ -319,9 +376,8 @@
   if (!["en","ro","fr"].includes(lang)) lang="en";
   document.documentElement.lang=lang;
   document.title=titles[lang];
-  const video = document.querySelector("#demo video");
   if (lang !== "en") {
-    for (const captions of video.querySelectorAll("track")) {
+    for (const captions of document.querySelectorAll(".demo-player track")) {
       const selected = captions.srclang === lang;
       captions.default = selected;
       captions.track.mode = selected ? "showing" : "disabled";
@@ -330,7 +386,13 @@
   const copy=translations[lang] || {};
   document.querySelectorAll("[data-i18n]").forEach(el=>{const val=copy[el.dataset.i18n];if(val)el.textContent=val;});
   document.querySelector("[data-lang-nav]").setAttribute("aria-label", copy.language);
-  document.querySelectorAll("[data-lang-link]").forEach(link=>link.setAttribute("aria-current",String(link.dataset.langLink===lang)));
+  const languageLinks = document.querySelectorAll("[data-lang-link]");
+  function keepSection() {
+    for (const link of languageLinks) link.hash = window.location.hash;
+  }
+  for (const link of languageLinks) link.setAttribute("aria-current", String(link.dataset.langLink === lang));
+  keepSection();
+  window.addEventListener("hashchange", keepSection);
   document.querySelectorAll("[data-preserve-lang]").forEach(link=>{
     const url=new URL(link.getAttribute("href"),window.location.href);
     url.searchParams.set("lang",lang);
