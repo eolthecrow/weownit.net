@@ -38,11 +38,13 @@ function localize(lang){var t=txt[lang]||txt.en;root.querySelectorAll('[data-rd-
 document.addEventListener('site:languagechange',function(e){localize(e.detail&&e.detail.language||current())});
 localize(current());
 const pathLabel = root.querySelector('#rd-sw-label');
+const demoLink = root.querySelector('[data-sw-demo-link]');
 for (const button of root.querySelectorAll('[data-rd-path]')) {
   button.addEventListener('click', function () {
     for (const choice of root.querySelectorAll('[data-rd-path]')) {
       choice.setAttribute('aria-pressed', String(choice === button));
     }
+    demoLink.hash = button.dataset.rdPath === 'advanced' ? 'advanced-validation-demo' : 'demo';
     pathLabel.dataset.rdText = button.dataset.rdPath;
     pathLabel.textContent = txt[current()][button.dataset.rdPath];
   });
