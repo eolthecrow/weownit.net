@@ -77,7 +77,7 @@ test("product catalog has exactly nine standalone ZIP prices and no payment CTA"
   assert.match(store, /window\.WeOwnITStorePricing\.render\(lang\)/);
   assert.doesNotMatch(code, /checkout\.stripe\.com|payment_link|createCheckout|\/stripe\/webhook/);
   assert.doesNotMatch(store, /2026 v2\.1/);
-  assert.match(store, /href="#planned-catalog">Browse nine toolkit prices/);
+  assert.match(store, /href="#network-security-assessment-toolkit">Browse nine toolkit prices/);
 });
 
 test("RON, EUR and USD values agree with the approved 2026-11-12 grid", () => {

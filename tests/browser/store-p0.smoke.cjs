@@ -73,8 +73,15 @@ async function main(){
       await page.locator('#store-currency-picker button:has-text("RON")').click();
       assert.equal(await page.locator('#network-security-assessment-toolkit .price').innerText(),'149 RON');
       await page.locator('#planned-catalog > summary').click();
+      assert.equal(await page.locator('#security-toolkits-product .offer-outcome').count(),0);
       await page.locator('#security-toolkits-product .buy').click();
+      assert.equal(new URL(page.url()).hash,'#network-security-assessment-toolkit');
       await page.waitForFunction(()=>document.querySelector('#planned-catalog').open);
+      await page.waitForFunction(()=>{
+        const top=document.querySelector('#network-security-assessment-toolkit').getBoundingClientRect().top;
+        const headerBottom=document.querySelector('header').getBoundingClientRect().bottom;
+        return top>=headerBottom&&top<=100;
+      });
       assert.equal(await page.locator('#network-security-assessment-sample').evaluate(el=>el.open),false);
       await page.locator('#network-security-assessment-sample > summary').click();
       assert.ok((await page.locator('[data-sample-download]').getAttribute('href')).includes('_'+lang.toUpperCase()+'_2026.pdf'));
