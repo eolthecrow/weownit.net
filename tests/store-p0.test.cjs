@@ -28,9 +28,10 @@ test('all offer content is explicitly localized in EN, RO and FR',()=>{
   const blocks=[...store.matchAll(/offerCards:\[([\s\S]*?)\],\s*plannedCatalogSummary:/g)];
   assert.equal(blocks.length,3);
   for(const [,content] of blocks){
-    for(const key of ['status','title','description','outcome','action']){
+    for(const key of ['status','title','description','action']){
       assert.equal((content.match(new RegExp('\\b'+key+':','g'))||[]).length,4,key);
     }
+    assert.equal((content.match(/\boutcome:/g)||[]).length,3);
   }
   assert.equal((store.match(/offerIntro:\{/g)||[]).length,3);
   assert.equal((store.match(/availabilityNote:/g)||[]).length,3);
