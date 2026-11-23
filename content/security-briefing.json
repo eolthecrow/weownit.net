@@ -217,6 +217,342 @@
   },
   "articles": [
     {
+      "id": "20261122-vmware-vcenter-cve-2026-123890",
+      "cat": 1,
+      "date": "2026-11-19",
+      "sources": [
+        [
+          "Broadcom VMSA-2026-0009",
+          "https://support.broadcom.com/web/ecx/support-content-notification/-/external/content/SecurityAdvisories/0/39495"
+        ]
+      ],
+      "en": {
+        "title": "Broadcom fixes critical vCenter authentication bypass CVE-2026-123890",
+        "desc": "Broadcom rates CVE-2026-123890 CVSS 9.8; network access to affected vCenter may permit unauthenticated authentication bypass.",
+        "status": "Source verified · assess applicability",
+        "tech": "Broadcom VMSA-2026-0009 · 19 Nov 2026 (updated 20 Nov)",
+        "step": "Apply Broadcom's product-specific fixed releases; no workaround is listed for this CVE.",
+        "facts": "Broadcom VMSA-2026-0009 recommends applying applicable fixed releases and lists no workaround.",
+        "context": "Broadcom rates CVE-2026-123890 CVSS 9.8; network access to affected vCenter may permit unauthenticated authentication bypass.",
+        "checks": [
+          "Inventory vCenter 8.0, 9.x and Cloud Foundation versions and management network exposure.",
+          "Apply Broadcom's product-specific fixed releases; no workaround is listed for this CVE.",
+          "Verify fixed build, authentication logs, management access and administrative functionality."
+        ],
+        "take": "Validate applicability and retain evidence of corrective actions.",
+        "help": "Independent risk review and validation",
+        "support": "Independent proposal: restrict Tier-0 management reachability, inspect authentication logs and preserve patch validation evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Prioritized actions and change plan",
+          "Verification evidence and residual risk"
+        ]
+      },
+      "ro": {
+        "title": "Broadcom corectează ocolirea critică a autentificării vCenter CVE-2026-123890",
+        "desc": "Broadcom evaluează CVE-2026-123890 la CVSS 9,8; accesul de rețea la un vCenter afectat poate permite ocolirea autentificării.",
+        "status": "Sursă verificată · verifică aplicabilitatea",
+        "tech": "Broadcom VMSA-2026-0009 · 19 Nov 2026 (updated 20 Nov)",
+        "step": "Aplică versiunile corectate specifice produsului, conform Broadcom; nu este indicat workaround.",
+        "facts": "Broadcom VMSA-2026-0009 recomandă versiunile corectate și nu indică workaround.",
+        "context": "Broadcom evaluează CVE-2026-123890 la CVSS 9,8; accesul de rețea la un vCenter afectat poate permite ocolirea autentificării.",
+        "checks": [
+          "Inventariază versiunile vCenter 8.0, 9.x și Cloud Foundation și expunerea managementului.",
+          "Aplică versiunile corectate specifice produsului, conform Broadcom; nu este indicat workaround.",
+          "Confirmă versiunea, logurile de autentificare, accesul și funcționalitatea administrativă."
+        ],
+        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "help": "Evaluare independentă și validare",
+        "support": "Propunere independentă: limitează accesul la management Tier-0, verifică logurile și păstrează dovezile validării.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Acțiuni prioritizate și plan de schimbare",
+          "Dovezi de validare și risc rezidual"
+        ]
+      },
+      "fr": {
+        "title": "Broadcom corrige un contournement critique de l’authentification vCenter (CVE-2026-123890)",
+        "desc": "Broadcom attribue un score CVSS de 9,8 à un contournement de l’authentification dans VMware Directory Service, exploitable avec un accès réseau à un vCenter vulnérable.",
+        "status": "Source vérifiée · évaluer l’applicabilité",
+        "tech": "Broadcom VMSA-2026-0009 · 19 Nov 2026 (updated 20 Nov)",
+        "step": "Appliquer les versions corrigées indiquées dans la matrice Broadcom ; aucun contournement n’est fourni.",
+        "facts": "La source originale présente les faits et les recommandations applicables ; aucune recommandation supplémentaire du fournisseur n’est présumée.",
+        "context": "Broadcom attribue un score CVSS de 9,8 à un contournement de l’authentification dans VMware Directory Service, exploitable avec un accès réseau à un vCenter vulnérable.",
+        "checks": [
+          "Inventorier les versions vCenter et Cloud Foundation et contrôler l’exposition des interfaces d’administration.",
+          "Appliquer les versions corrigées indiquées dans la matrice Broadcom ; aucun contournement n’est fourni.",
+          "Vérifier la version installée, les journaux d’authentification et l’accès au réseau d’administration."
+        ],
+        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
+        "deliverables": [
+          "Inventaire des actifs et de l’exposition",
+          "Actions priorisées et plan de changement",
+          "Preuves de validation et risque résiduel"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-23",
+      "reviewedAt": "2026-11-23",
+      "archive": false,
+      "slug": "vcenter-authentication-bypass-cve-2026-123890",
+      "cves": [
+        "CVE-2026-123890"
+      ]
+    },
+    {
+      "id": "20261122-checkpoint-ransomware-q3",
+      "cat": 3,
+      "date": "2026-11-18",
+      "sources": [
+        [
+          "Check Point Research",
+          "https://research.checkpoint.com/2026/the-state-of-ransomware-q3-2026/"
+        ]
+      ],
+      "en": {
+        "title": "Check Point: Q3 ransomware leak-site activity reaches 2,830 listed victims",
+        "desc": "Check Point Research reports 2,830 victims posted to ransomware leak sites during Q3 2026 and increasing fragmentation; leak-site postings are not equivalent to independently confirmed compromises.",
+        "status": "Source verified · assess applicability",
+        "tech": "Check Point Research · 18 Nov 2026",
+        "step": "This Check Point Research report describes ransomware trends, not a product vulnerability; it does not prescribe a single vendor patch.",
+        "facts": "Check Point Research provides observed ransomware ecosystem analysis, not a product-specific security fix; no vendor-specific patch applies to this trend report.",
+        "context": "Check Point Research reports 2,830 victims posted to ransomware leak sites during Q3 2026 and increasing fragmentation; leak-site postings are not equivalent to independently confirmed compromises.",
+        "checks": [
+          "Review backup isolation, recovery exercises, privileged access and incident response readiness against ransomware and extortion.",
+          "This Check Point Research report describes ransomware trends, not a product vulnerability; it does not prescribe a single vendor patch.",
+          "Validate offline or immutable restore tests, incident escalation and detection coverage with documented evidence."
+        ],
+        "take": "Validate applicability and retain evidence of corrective actions.",
+        "help": "Independent risk review and validation",
+        "support": "Independent weownit proposal: perform recovery-readiness and segmentation reviews, test immutable backup restoration, and capture evidence of response effectiveness.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Prioritized actions and change plan",
+          "Verification evidence and residual risk"
+        ]
+      },
+      "ro": {
+        "title": "Check Point: 2.830 victime listate pe site-uri de scurgere ransomware în T3",
+        "desc": "Check Point Research raportează 2.830 de victime publicate pe site-uri de scurgere în T3 2026 și fragmentarea ecosistemului; listările nu confirmă independent fiecare incident.",
+        "status": "Sursă verificată · verifică aplicabilitatea",
+        "tech": "Check Point Research · 18 Nov 2026",
+        "step": "Raportul Check Point descrie tendințe ransomware, nu o vulnerabilitate de produs; nu există un patch unic indicat.",
+        "facts": "Check Point Research prezintă analiza ecosistemului ransomware, nu o corecție de securitate specifică unui produs; nu se aplică un patch unic.",
+        "context": "Check Point Research raportează 2.830 de victime publicate pe site-uri de scurgere în T3 2026 și fragmentarea ecosistemului; listările nu confirmă independent fiecare incident.",
+        "checks": [
+          "Verifică izolarea copiilor de siguranță, exercițiile de restaurare, accesul privilegiat și pregătirea pentru extorcare.",
+          "Raportul Check Point descrie tendințe ransomware, nu o vulnerabilitate de produs; nu există un patch unic indicat.",
+          "Validează restaurarea din copii offline sau imuabile, escaladarea incidentelor și detecțiile, cu dovezi."
+        ],
+        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "help": "Evaluare independentă și validare",
+        "support": "Propunere independentă weownit: evaluarea recuperării și segmentării, testarea restaurării din backup imuabil și colectarea dovezilor.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Acțiuni prioritizate și plan de schimbare",
+          "Dovezi de validare și risc rezidual"
+        ]
+      },
+      "fr": {
+        "title": "Check Point : 2 830 victimes revendiquées sur des sites de fuite au T3 2026",
+        "desc": "Check Point Research recense 2 830 victimes affichées sur les sites de fuite au troisième trimestre 2026. Ces revendications ne constituent pas une confirmation indépendante de chaque intrusion.",
+        "status": "Source vérifiée · évaluer l’applicabilité",
+        "tech": "Check Point Research · 18 Nov 2026",
+        "step": "Il s’agit d’une étude des tendances ransomware, et non d’un avis de correctif pour un produit.",
+        "facts": "La source originale présente les faits et les recommandations applicables ; aucune recommandation supplémentaire du fournisseur n’est présumée.",
+        "context": "Check Point Research recense 2 830 victimes affichées sur les sites de fuite au troisième trimestre 2026. Ces revendications ne constituent pas une confirmation indépendante de chaque intrusion.",
+        "checks": [
+          "Examiner l’isolation des sauvegardes, les tests de restauration, les accès privilégiés et la préparation à l’extorsion.",
+          "Il s’agit d’une étude des tendances ransomware, et non d’un avis de correctif pour un produit.",
+          "Tester les restaurations hors ligne ou immuables et documenter les contrôles de détection et d’intervention."
+        ],
+        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
+        "deliverables": [
+          "Inventaire des actifs et de l’exposition",
+          "Actions priorisées et plan de changement",
+          "Preuves de validation et risque résiduel"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-23",
+      "reviewedAt": "2026-11-23",
+      "archive": false,
+      "slug": "checkpoint-ransomware-q3-2026",
+      "cves": []
+    },
+    {
+      "id": "20261122-gtig-agentic",
+      "cat": 2,
+      "date": "2026-11-16",
+      "sources": [
+        [
+          "Google Threat Intelligence Group",
+          "https://cloud.google.com/blog/topics/threat-intelligence/agentic-threat-activity-crosses-a-significant-threshold"
+        ]
+      ],
+      "en": {
+        "title": "GTIG reports a significant threshold in agentic threat activity",
+        "desc": "Google Threat Intelligence Group published new first-hand analysis of agentic threat activity; this is a threat-intelligence assessment, not a vendor software vulnerability or proof that every AI agent is compromised.",
+        "status": "Source verified · assess applicability",
+        "tech": "Google Threat Intelligence Group · 16 Nov 2026",
+        "step": "The linked GTIG research is threat intelligence rather than a product-specific patch advisory; no single vendor-specific fix is prescribed.",
+        "facts": "GTIG provides threat research rather than a product-specific remediation advisory; no universal vendor patch is identified.",
+        "context": "Google Threat Intelligence Group published new first-hand analysis of agentic threat activity; this is a threat-intelligence assessment, not a vendor software vulnerability or proof that every AI agent is compromised.",
+        "checks": [
+          "Review permitted AI-agent identities, tool permissions, external access, logging and human approval boundaries.",
+          "The linked GTIG research is threat intelligence rather than a product-specific patch advisory; no single vendor-specific fix is prescribed.",
+          "Test least-privilege agent operations, audit tool calls and verify containment and alerting controls."
+        ],
+        "take": "Validate applicability and retain evidence of corrective actions.",
+        "help": "Independent risk review and validation",
+        "support": "Independent weownit proposal: model agent trust boundaries, require approval for high-impact actions, and validate auditability and containment.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Prioritized actions and change plan",
+          "Verification evidence and residual risk"
+        ]
+      },
+      "ro": {
+        "title": "GTIG analizează o nouă etapă a activității ostile cu agenți AI",
+        "desc": "Google Threat Intelligence Group a publicat o analiză proprie despre amenințări care folosesc agenți AI; nu este un advisory pentru o vulnerabilitate software specifică.",
+        "status": "Sursă verificată · verifică aplicabilitatea",
+        "tech": "Google Threat Intelligence Group · 16 Nov 2026",
+        "step": "Cercetarea GTIG nu indică un patch unic sau o remediere specifică unui produs.",
+        "facts": "GTIG prezintă cercetare de amenințări, nu un advisory de remediere pentru un produs; nu indică un patch universal.",
+        "context": "Google Threat Intelligence Group a publicat o analiză proprie despre amenințări care folosesc agenți AI; nu este un advisory pentru o vulnerabilitate software specifică.",
+        "checks": [
+          "Verifică identitățile agenților AI, permisiunile instrumentelor, accesul extern, jurnalizarea și aprobările umane.",
+          "Cercetarea GTIG nu indică un patch unic sau o remediere specifică unui produs.",
+          "Testează privilegiile minime, auditarea apelurilor către instrumente și controalele de izolare."
+        ],
+        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "help": "Evaluare independentă și validare",
+        "support": "Propunere independentă weownit: modelarea limitelor de încredere, aprobări pentru acțiuni cu impact și validarea jurnalizării și izolării.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Acțiuni prioritizate și plan de schimbare",
+          "Dovezi de validare și risc rezidual"
+        ]
+      },
+      "fr": {
+        "title": "GTIG : les menaces utilisant des agents IA franchissent un seuil",
+        "desc": "Google Threat Intelligence Group analyse des usages offensifs d’agents IA et des flux autonomes. Il s’agit d’une étude de menace, non d’une vulnérabilité affectant tous les agents IA.",
+        "status": "Source vérifiée · évaluer l’applicabilité",
+        "tech": "Google Threat Intelligence Group · 16 Nov 2026",
+        "step": "Cette étude ne prescrit aucun correctif universel ni correctif propre à un produit.",
+        "facts": "La source originale présente les faits et les recommandations applicables ; aucune recommandation supplémentaire du fournisseur n’est présumée.",
+        "context": "Google Threat Intelligence Group analyse des usages offensifs d’agents IA et des flux autonomes. Il s’agit d’une étude de menace, non d’une vulnérabilité affectant tous les agents IA.",
+        "checks": [
+          "Examiner les identités des agents, les droits des outils, les accès externes, les journaux et les approbations humaines.",
+          "Cette étude ne prescrit aucun correctif universel ni correctif propre à un produit.",
+          "Tester le moindre privilège, la traçabilité des appels d’outils et les mécanismes de confinement."
+        ],
+        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
+        "deliverables": [
+          "Inventaire des actifs et de l’exposition",
+          "Actions priorisées et plan de changement",
+          "Preuves de validation et risque résiduel"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-23",
+      "reviewedAt": "2026-11-23",
+      "archive": false,
+      "slug": "gtig-agentic-threat-activity-november-2026",
+      "cves": []
+    },
+    {
+      "id": "20261122-drupal-installer",
+      "cat": 1,
+      "date": "2026-11-18",
+      "sources": [
+        [
+          "Drupal Security Team",
+          "https://www.drupal.org/sa-core-2026-017"
+        ]
+      ],
+      "en": {
+        "title": "Drupal core installer flaw CVE-2026-132165: takeover and RCE risk",
+        "desc": "Drupal reports that specific uncommon configurations can permit an unauthenticated installer path to cause takeover or code execution; its advisory subsequently notes a report of exploitation on live sites.",
+        "status": "Source verified · assess applicability",
+        "tech": "Drupal Security Team · 18 Nov 2026 (subsequent exploitation update)",
+        "step": "Upgrade affected Drupal core branches to their security-fixed releases and secure the installer after installation, per Drupal Security Team.",
+        "facts": "Drupal Security Team recommends upgrading affected core releases and securing the installer after installation.",
+        "context": "Drupal reports that specific uncommon configurations can permit an unauthenticated installer path to cause takeover or code execution; its advisory subsequently notes a report of exploitation on live sites.",
+        "checks": [
+          "Check Drupal core branch and installed patch level; assess installer exposure and whether the web server can modify settings.php.",
+          "Upgrade affected Drupal core branches to their security-fixed releases and secure the installer after installation, per Drupal Security Team.",
+          "Verify installed security release, installer protections, settings.php permissions and web access logs."
+        ],
+        "take": "Validate applicability and retain evidence of corrective actions.",
+        "help": "Independent risk review and validation",
+        "support": "Independent weownit proposal: review installer reachability, configuration file write permissions, and web logs; preserve before/after evidence.",
+        "deliverables": [
+          "Affected asset and exposure register",
+          "Prioritized actions and change plan",
+          "Verification evidence and residual risk"
+        ]
+      },
+      "ro": {
+        "title": "Drupal core: vulnerabilitatea instalatorului CVE-2026-132165",
+        "desc": "Drupal raportează că anumite configurații mai puțin comune permit preluarea site-ului sau executarea de cod prin instalator; advisory-ul menționează ulterior exploatare raportată pe site-uri active.",
+        "status": "Sursă verificată · verifică aplicabilitatea",
+        "tech": "Drupal Security Team · 18 Nov 2026 (subsequent exploitation update)",
+        "step": "Actualizează la versiunea corectată pentru ramura instalată și securizează instalatorul după instalare, conform echipei Drupal.",
+        "facts": "Echipa Drupal recomandă actualizarea versiunilor afectate și securizarea instalatorului după instalare.",
+        "context": "Drupal raportează că anumite configurații mai puțin comune permit preluarea site-ului sau executarea de cod prin instalator; advisory-ul menționează ulterior exploatare raportată pe site-uri active.",
+        "checks": [
+          "Verifică ramura și versiunea Drupal, expunerea instalatorului și drepturile de modificare pentru settings.php.",
+          "Actualizează la versiunea corectată pentru ramura instalată și securizează instalatorul după instalare, conform echipei Drupal.",
+          "Confirmă versiunea, protecția instalatorului, permisiunile și logurile web."
+        ],
+        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "help": "Evaluare independentă și validare",
+        "support": "Propunere independentă weownit: verificarea accesului la instalator, permisiunilor de scriere și logurilor, cu dovezi înainte și după.",
+        "deliverables": [
+          "Inventar active și expunere",
+          "Acțiuni prioritizate și plan de schimbare",
+          "Dovezi de validare și risc rezidual"
+        ]
+      },
+      "fr": {
+        "title": "Drupal : faille critique de l’installateur CVE-2026-132165",
+        "desc": "Dans certaines configurations peu courantes, l’installateur Drupal peut permettre une prise de contrôle ou une exécution de code. L’équipe de sécurité a reçu un signalement d’exploitation sur des sites actifs.",
+        "status": "Source vérifiée · évaluer l’applicabilité",
+        "tech": "Drupal Security Team · 18 Nov 2026 (subsequent exploitation update)",
+        "step": "Mettre à jour vers les versions corrigées et sécuriser l’installateur après installation, conformément à l’avis Drupal.",
+        "facts": "La source originale présente les faits et les recommandations applicables ; aucune recommandation supplémentaire du fournisseur n’est présumée.",
+        "context": "Dans certaines configurations peu courantes, l’installateur Drupal peut permettre une prise de contrôle ou une exécution de code. L’équipe de sécurité a reçu un signalement d’exploitation sur des sites actifs.",
+        "checks": [
+          "Identifier les versions Drupal, l’exposition de install.php et les droits d’écriture sur settings.php.",
+          "Mettre à jour vers les versions corrigées et sécuriser l’installateur après installation, conformément à l’avis Drupal.",
+          "Contrôler les versions corrigées, les permissions, l’accès à l’installateur et les journaux web."
+        ],
+        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "help": "Évaluation indépendante et validation",
+        "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
+        "deliverables": [
+          "Inventaire des actifs et de l’exposition",
+          "Actions priorisées et plan de changement",
+          "Preuves de validation et risque résiduel"
+        ]
+      },
+      "status": "published",
+      "publishedAt": "2026-11-23",
+      "reviewedAt": "2026-11-23",
+      "archive": false,
+      "slug": "drupal-installer-cve-2026-132165",
+      "cves": [
+        "CVE-2026-132165"
+      ]
+    },
+    {
       "id": "20261101-fortinet-fortios-dos",
       "cat": 1,
       "date": "2026-10-27",
