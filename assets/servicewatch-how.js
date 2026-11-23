@@ -1,7 +1,7 @@
 (() => {
   const translations = {
   "en": {
-    "sampleReport": "View a sample report",
+    "sampleReport": "Open the hybrid infrastructure audit report",
     "avTitle": "Advanced Validation",
     "avLink": "Watch the Advanced Validation demo",
     "avQuestion": "Would the on-call analyst receive the alert?",
@@ -124,7 +124,7 @@
     "archBody": "In the proposed design, an approved scope creates a job with a fixed set of checks. An isolated runner returns observations. Each finding links to its timestamped, versioned evidence. A reviewer can trace a report back to that evidence and decide whether to request a recheck."
   },
   "ro": {
-    "sampleReport": "Vezi un exemplu de raport",
+    "sampleReport": "Deschide raportul de audit al infrastructurii hibride",
     "avTitle": "Validare avansată",
     "avLink": "Vezi demonstrația de validare avansată",
     "avQuestion": "Ar primi analistul de gardă alerta?",
@@ -247,7 +247,7 @@
     "archBody": "În arhitectura propusă, aprobarea sistemelor declanșează o sarcină cu verificări prestabilite. Un proces izolat trimite observațiile. Fiecare constatare trimite la dovezi cu dată, oră și versiune. Un specialist poate verifica sursa raportului și poate decide dacă solicită o nouă verificare."
   },
   "fr": {
-    "sampleReport": "Voir un exemple de rapport",
+    "sampleReport": "Ouvrir le rapport d’audit d’infrastructure hybride",
     "avTitle": "Validation avancée",
     "avLink": "Voir la démonstration de validation avancée",
     "avQuestion": "L’analyste d’astreinte recevrait-il l’alerte ?",
