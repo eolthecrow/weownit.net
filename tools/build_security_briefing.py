@@ -24,11 +24,20 @@ _csp_spec.loader.exec_module(csp_meta)
 def data_cache_key():
     """Content-address the generated client data so caches cannot serve a stale edition."""
     canonical = json.dumps(DATA, ensure_ascii=False, sort_keys=True, separators=(',', ':'))
-    return hashlib.sha256(canonical.encode('utf-8')).hexdigest()[:12]
+    return hashlib.sha256(canonical.encode('utf-8') + Path(__file__).read_bytes()).hexdigest()[:12]
 
 
 LANGUAGES = ('en', 'ro', 'fr')
 PUBLIC = 'https://weownit.net/'
+ACTION_LABELS = {
+    'en': dict(priorities='This week’s priorities', audience='Who should check', firstAction='First action', verifyFix='Verify the fix', verifyControl='Verify the control'),
+    'ro': dict(priorities='Prioritățile săptămânii', audience='Cine ar trebui să verifice', firstAction='Prima acțiune', verifyFix='Verifică remedierea', verifyControl='Verifică măsura de protecție'),
+    'fr': dict(priorities='Priorités de la semaine', audience='Équipes concernées', firstAction='Première action', verifyFix='Vérifier le correctif', verifyControl='Vérifier la mesure de protection'),
+}
+
+
+def verification_label(article, lang):
+    return ACTION_LABELS[lang]['verifyFix' if article['cat'] == 1 else 'verifyControl']
 
 
 def published_articles(data, today=None):
@@ -95,15 +104,23 @@ def source_links(article):
     return ' · '.join(f'<a href="{e(url, quote=True)}" target="_blank" rel="noopener noreferrer">{e(name)} ↗</a>' for name, url in article['sources'])
 
 
-def card(article, lang='en', prefix='', featured=False):
+def card(article, lang='en', prefix='', featured=False, editorial=True):
     t, c = DATA['ui'][lang], article[lang]
     href = f'{prefix}briefing/{article["slug"]}.html?lang={lang}'
-    return f'''<article class="sb-card{' sb-feature' if featured else ''}">
+    if editorial:
+        audience = c.get('audience')
+        scope_label = ACTION_LABELS[lang]['audience'] if audience else t['scope']
+        guidance = f"""<p class="sb-card-action"><strong>{e(scope_label)}</strong><br>{e(audience or c['tech'])}</p>
+    <p class="sb-card-action"><strong>{e(ACTION_LABELS[lang]['firstAction'])}</strong><br>{e(c['checks'][0])}</p>
+    <details class="sb-card-action"><summary>{e(verification_label(article, lang))}</summary><p>{e(c['take'])}</p></details>"""
+    else:
+        guidance = f"""<p class="sb-service"><strong>{e(t['help'])}</strong><br>{e(c['help'])}</p>"""
+    return f'''<article class="sb-card{' sb-feature' if featured else ''}"{f' id="story-{article["slug"]}"' if editorial else ''}>
     <div class="sb-card-copy">{meta(article,lang)}<span class="sb-status">{e(c['status'])}</span>
     <h{'2' if featured else '3'}><a href="{href}">{e(c['title'])}</a></h{'2' if featured else '3'}>
-    <p class="sb-summary">{e(c['desc'])}</p><p class="sb-service"><strong>{e(t['help'])}</strong><br>{e(c['help'])}</p>
+    <p class="sb-summary">{e(c['desc'])}</p>{guidance}
     <a class="sb-read" href="{href}">{e(t['read'])} <span aria-hidden="true">→</span></a></div>
-    {f'<aside class="sb-feature-aside"><span class="sb-micro">{e(t["scope"])}</span><p>{e(c["tech"])}</p><span class="sb-micro">{e(t["action"])}</span><p>{e(c["step"])}</p><span class="sb-micro">{e(t["source"])}</span><p>{source_links(article)}</p></aside>' if featured else ''}</article>'''
+    {f'<aside class="sb-feature-aside"><span class="sb-micro">{e(t["source"])}</span><p>{source_links(article)}</p></aside>' if featured else ''}</article>'''
 
 
 def listing(articles, lang='en'):
@@ -122,7 +139,11 @@ def listing(articles, lang='en'):
                         '<span class="sb-archive-count">'+str(len(archive))+'</span>'
                         '<span class="sb-archive-chevron" aria-hidden="true"></span></summary>'
                         '<div class="sb-grid">'+cards+'</div></details>')
-    return (section(t['currentEdition']+' · '+latest, current, True) if latest else '')+archive_html
+    priorities = ''
+    if current:
+        items = ''.join(f'<li><a href="#story-{a["slug"]}">{e(a[lang]["title"])}</a></li>' for a in current[:3])
+        priorities = f'<section class="sb-priorities"><h2 class="sb-edition-title">{e(ACTION_LABELS[lang]["priorities"])}</h2><ul>{items}</ul></section>'
+    return priorities + (section(t['currentEdition']+' · '+latest, current, True) if latest else '')+archive_html
 
 
 
@@ -135,7 +156,7 @@ def article_body(article, lang='en'):
     <div class="sb-article-layout"><article class="sb-prose"><h2 id="reported">{e(t['problem'])}</h2><p>{e(c['facts'])}</p>
     <h2 id="impact">{e(t['context'])}</h2><p>{e(c['context'])}</p><h2 id="actions">{e(t['checks'])}</h2><ol>{''.join('<li>'+e(s)+'</li>' for s in c['checks'])}</ol>
     {f'<p><a class="sb-read" href="../tools.html?lang={lang}#cve-risk-lens">{e(t["tool"])}</a></p>' if article.get('cves') else ''}
-    <div class="sb-takeaway"><span class="sb-micro">{e(t['takeaway'])}</span><p>{e(c['take'])}</p></div>
+    <div class="sb-takeaway"><span class="sb-micro">{e(verification_label(article, lang))}</span><p>{e(c['take'])}</p></div>
     <section class="sb-support" id="support"><span class="sb-micro">{e(t['help'])}</span><h2>{e(t['supportTitle'])}</h2><p>{e(c['support'])}</p><strong>{e(t['deliverables'])}</strong><ul>{''.join('<li>'+e(s)+'</li>' for s in c.get('deliverables', t['deliverableList']))}</ul><a class="sb-button" href="../contact.html?lang={lang}">{e(t['supportCta'])}</a><p class="sb-small">{e(t['supportNote'])}</p></section>
     <section class="sb-sources" id="sources"><h2>{e(t['references'])}</h2><p>{source_links(article)}</p><p class="sb-small">{e(t['sourceNote'])}</p></section></article>
     <nav class="sb-toc" aria-label="{e(t['article'])}">{''.join(f'<a href="#{anchor}">{e(t[key])}</a>' for anchor,key in [('reported','problem'),('impact','context'),('actions','checks'),('support','help'),('sources','references')])}</nav></div>'''.replace('\n    \n','\n\n')
@@ -157,8 +178,8 @@ def shell(path, content, title, description, article=None):
     alternatives=''.join(f'<link rel="alternate" hreflang="{lang}" href="{PUBLIC+path}?lang={lang}">' for lang in LANGUAGES)
     structured_json = json.dumps(schema,ensure_ascii=False).replace('<','\\u003c')
     return f'''<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=3"><link rel="stylesheet" href="{prefix}assets/site.css?v=23"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
-<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v={data_cache_key()}" defer></script><script src="{prefix}assets/security-briefing.js?v=4" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#0a151c"><title>{e(title)}</title><meta name="description" content="{e(description,quote=True)}"><link rel="icon" href="{prefix}assets/va-symbol.svg" type="image/svg+xml"><link rel="canonical" href="{canonical}">{alternatives}<link rel="alternate" hreflang="x-default" href="{canonical}"><meta property="og:type" content="{'article' if article else 'website'}"><meta property="og:site_name" content="weownit.net"><meta property="og:title" content="{e(title,quote=True)}"><meta property="og:description" content="{e(description,quote=True)}"><meta property="og:url" content="{canonical}"><meta property="og:image" content="https://weownit.net/assets/og-card.png"><meta name="twitter:card" content="summary_large_image"><link rel="alternate" type="application/rss+xml" title="Security Briefing — weownit.net" href="{prefix}briefing/feed-en.xml" id="sb-feed"><link rel="stylesheet" href="{prefix}assets/security-briefing.css?v=4"><link rel="stylesheet" href="{prefix}assets/site.css?v=23"><link rel="stylesheet" href="{prefix}assets/chatbox.css?v=8"><script src="{prefix}assets/i18n.js?v=10"></script><script type="application/ld+json">{structured_json}</script></head>
+<body class="briefing-page" data-sb-view="{'article' if article else 'listing'}" data-sb-slug="{article['slug'] if article else ''}"><a class="site-skip" href="#main">Skip to content</a>{header}<noscript><style>.briefing-page .global-nav-panel{{display:block}}.briefing-page .global-nav-toggle,.briefing-page .global-nav-actions,.briefing-page .sb-toolbar{{display:none}}</style></noscript><main class="sb-wrap" id="main" tabindex="-1">{content}</main><footer class="sb-footer sb-wrap"><span>© 2026 Vladimir Arjoca · weownit.net</span><a data-privacy-link href="{prefix}privacy.html">Privacy notice</a></footer><script src="{prefix}assets/security-briefing-data.js?v={data_cache_key()}" defer></script><script src="{prefix}assets/security-briefing.js?v=5" defer></script><script>window.NETWORK_SECURITY_CHAT_ENDPOINT="https://network-security-assistant.vlad-network-security.workers.dev/chat";</script><script src="{prefix}assets/site-assistant-facts.js?v=1" defer></script><script src="{prefix}assets/chatbox.js?v=23" defer></script></body></html>
 '''
 
 
@@ -174,7 +195,7 @@ def outputs(data, today=None):
     for article in articles:
         path = 'briefing/'+article['slug']+'.html'
         out[path] = shell(path,'<div id="sb-article">'+article_body(article)+'</div>',article['en']['title']+' — weownit.net',article['en']['desc'],article)
-    public_data = {'ui':data['ui'],'articles':articles,'currentEdition':latest,'markup':{a['slug']:{lang:{'card':card(a,lang),'featured':card(a,lang,featured=True),'article':article_body(a,lang)} for lang in LANGUAGES} for a in articles}}
+    public_data = {'ui':{lang: {**data['ui'][lang], **ACTION_LABELS[lang]} for lang in LANGUAGES},'articles':articles,'currentEdition':latest,'markup':{a['slug']:{lang:{'card':card(a,lang,editorial=False),'listing':card(a,lang),'featured':card(a,lang,featured=True),'article':article_body(a,lang)} for lang in LANGUAGES} for a in articles}}
     out['assets/security-briefing-data.js'] = '/* Generated from content/security-briefing.json; published records only. */\nwindow.SecurityBriefingData='+json.dumps(public_data,ensure_ascii=False,separators=(',',':')).replace('<','\\u003c')+';\n'
     for lang in LANGUAGES:
         rss=ET.Element('rss',version='2.0');channel=ET.SubElement(rss,'channel')
@@ -187,7 +208,7 @@ def outputs(data, today=None):
     home='''<!-- security-briefing:start -->
       <section id="security-briefing" class="section sb-home" aria-labelledby="sb-home-title"><div class="section-head"><div><span class="micro">Security Briefing</span><h2 id="sb-home-title">What deserves your attention.</h2></div><p id="sb-home-intro">'''+e(t['homeNewsIntro'])+'''</p></div><div class="sb-grid" id="sb-home-cards">'''+'''</div><p class="sb-home-all"><a id="sb-home-all" href="briefing.html?lang=en">All briefings →</a></p></section>
       <!-- security-briefing:end -->'''
-    home=home.replace('<div class="sb-grid" id="sb-home-cards"></div>','<div class="sb-grid" id="sb-home-cards">'+''.join(card(a) for a in current[:3])+'</div>')
+    home=home.replace('<div class="sb-grid" id="sb-home-cards"></div>','<div class="sb-grid" id="sb-home-cards">'+''.join(card(a,editorial=False) for a in current[:3])+'</div>')
     index=(ROOT/'index.html').read_text()
     if '<!-- security-briefing:start -->' in index:
         index=re.sub(r'<!-- security-briefing:start -->.*?<!-- security-briefing:end -->',lambda _:home,index,flags=re.S)

@@ -24,11 +24,30 @@
       const heading=document.createElement('h2');heading.className='sb-edition-title';heading.textContent=title;group.append(heading);
       if(featured)group.insertAdjacentHTML('beforeend',data.markup[records[0].slug][language].featured);
       const grid=document.createElement('div');grid.className='sb-grid';
-      grid.innerHTML=(featured?records.slice(1):records).map(a=>data.markup[a.slug][language].card).join('');group.append(grid);results.append(group);
+      grid.innerHTML=(featured?records.slice(1):records).map(a=>data.markup[a.slug][language].listing || data.markup[a.slug][language].card).join('');group.append(grid);results.append(group);
     }
     if(!selected.length){const p=document.createElement('p');p.className='sb-small';p.textContent=t.empty;results.append(p);}
     else {
-      section(t.currentEdition+' · '+data.currentEdition,selected.filter(isCurrent),true);
+      const currentRecords = selected.filter(isCurrent);
+      if (currentRecords.length && !category && !query.trim()) {
+        const priorities = document.createElement('section');
+        priorities.className = 'sb-priorities';
+        const heading = document.createElement('h2');
+        heading.className = 'sb-edition-title';
+        heading.textContent = t.priorities;
+        const list = document.createElement('ul');
+        for (const record of currentRecords.slice(0, 3)) {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = '#story-' + record.slug;
+          link.textContent = record[language].title;
+          item.append(link);
+          list.append(item);
+        }
+        priorities.append(heading, list);
+        results.append(priorities);
+      }
+      section(t.currentEdition+' · '+data.currentEdition,currentRecords,true);
       const older=selected.filter(a=>!isCurrent(a));
       if(older.length){
         const details=document.createElement('details');
@@ -40,7 +59,7 @@
         const chevron=document.createElement('span');chevron.className='sb-archive-chevron';chevron.setAttribute('aria-hidden','true');
         summary.append(label,count,chevron);
         const grid=document.createElement('div');grid.className='sb-grid';
-        grid.innerHTML=older.map(a=>data.markup[a.slug][language].card).join('');
+        grid.innerHTML=older.map(a=>data.markup[a.slug][language].listing || data.markup[a.slug][language].card).join('');
         details.append(summary,grid);results.append(details);
       }
     }

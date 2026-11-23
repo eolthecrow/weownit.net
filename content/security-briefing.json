@@ -239,14 +239,15 @@
           "Apply Broadcom's product-specific fixed releases; no workaround is listed for this CVE.",
           "Verify fixed build, authentication logs, management access and administrative functionality."
         ],
-        "take": "Validate applicability and retain evidence of corrective actions.",
+        "take": "Verify fixed build, authentication logs, management access and administrative functionality.",
         "help": "Independent risk review and validation",
         "support": "Independent proposal: restrict Tier-0 management reachability, inspect authentication logs and preserve patch validation evidence.",
         "deliverables": [
           "Affected asset and exposure register",
           "Prioritized actions and change plan",
           "Verification evidence and residual risk"
-        ]
+        ],
+        "audience": "Teams operating vCenter or using a provider that manages vCenter for them."
       },
       "ro": {
         "title": "Broadcom corectează ocolirea critică a autentificării vCenter CVE-2026-123890",
@@ -261,14 +262,15 @@
           "Aplică versiunile corectate specifice produsului, conform Broadcom; nu este indicat workaround.",
           "Confirmă versiunea, logurile de autentificare, accesul și funcționalitatea administrativă."
         ],
-        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "take": "Confirmă versiunea, logurile de autentificare, accesul și funcționalitatea administrativă.",
         "help": "Evaluare independentă și validare",
         "support": "Propunere independentă: limitează accesul la management Tier-0, verifică logurile și păstrează dovezile validării.",
         "deliverables": [
           "Inventar active și expunere",
           "Acțiuni prioritizate și plan de schimbare",
           "Dovezi de validare și risc rezidual"
-        ]
+        ],
+        "audience": "Echipele care administrează vCenter sau folosesc un furnizor care îl administrează pentru ele."
       },
       "fr": {
         "title": "Broadcom corrige un contournement critique de l’authentification vCenter (CVE-2026-123890)",
@@ -283,14 +285,15 @@
           "Appliquer les versions corrigées indiquées dans la matrice Broadcom ; aucun contournement n’est fourni.",
           "Vérifier la version installée, les journaux d’authentification et l’accès au réseau d’administration."
         ],
-        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "take": "Vérifier la version installée, les journaux d’authentification et l’accès au réseau d’administration.",
         "help": "Évaluation indépendante et validation",
         "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
         "deliverables": [
           "Inventaire des actifs et de l’exposition",
           "Actions priorisées et plan de changement",
           "Preuves de validation et risque résiduel"
-        ]
+        ],
+        "audience": "Équipes qui exploitent vCenter ou en confient la gestion à un prestataire."
       },
       "status": "published",
       "publishedAt": "2026-11-23",
@@ -324,14 +327,15 @@
           "This Check Point Research report describes ransomware trends, not a product vulnerability; it does not prescribe a single vendor patch.",
           "Validate offline or immutable restore tests, incident escalation and detection coverage with documented evidence."
         ],
-        "take": "Validate applicability and retain evidence of corrective actions.",
+        "take": "Validate offline or immutable restore tests, incident escalation and detection coverage with documented evidence.",
         "help": "Independent risk review and validation",
         "support": "Independent weownit proposal: perform recovery-readiness and segmentation reviews, test immutable backup restoration, and capture evidence of response effectiveness.",
         "deliverables": [
           "Affected asset and exposure register",
           "Prioritized actions and change plan",
           "Verification evidence and residual risk"
-        ]
+        ],
+        "audience": "Teams responsible for backups, recovery and incident response."
       },
       "ro": {
         "title": "Check Point: 2.830 victime listate pe site-uri de scurgere ransomware în T3",
@@ -346,14 +350,15 @@
           "Raportul Check Point descrie tendințe ransomware, nu o vulnerabilitate de produs; nu există un patch unic indicat.",
           "Validează restaurarea din copii offline sau imuabile, escaladarea incidentelor și detecțiile, cu dovezi."
         ],
-        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "take": "Validează restaurarea din copii offline sau imuabile, escaladarea incidentelor și detecțiile, cu dovezi.",
         "help": "Evaluare independentă și validare",
         "support": "Propunere independentă weownit: evaluarea recuperării și segmentării, testarea restaurării din backup imuabil și colectarea dovezilor.",
         "deliverables": [
           "Inventar active și expunere",
           "Acțiuni prioritizate și plan de schimbare",
           "Dovezi de validare și risc rezidual"
-        ]
+        ],
+        "audience": "Echipele responsabile de copii de siguranță, restaurare și răspuns la incidente."
       },
       "fr": {
         "title": "Check Point : 2 830 victimes revendiquées sur des sites de fuite au T3 2026",
@@ -368,14 +373,15 @@
           "Il s’agit d’une étude des tendances ransomware, et non d’un avis de correctif pour un produit.",
           "Tester les restaurations hors ligne ou immuables et documenter les contrôles de détection et d’intervention."
         ],
-        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "take": "Tester les restaurations hors ligne ou immuables et documenter les contrôles de détection et d’intervention.",
         "help": "Évaluation indépendante et validation",
         "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
         "deliverables": [
           "Inventaire des actifs et de l’exposition",
           "Actions priorisées et plan de changement",
           "Preuves de validation et risque résiduel"
-        ]
+        ],
+        "audience": "Équipes responsables des sauvegardes, de la restauration et de la réponse aux incidents."
       },
       "status": "published",
       "publishedAt": "2026-11-23",
@@ -407,14 +413,15 @@
           "The linked GTIG research is threat intelligence rather than a product-specific patch advisory; no single vendor-specific fix is prescribed.",
           "Test least-privilege agent operations, audit tool calls and verify containment and alerting controls."
         ],
-        "take": "Validate applicability and retain evidence of corrective actions.",
+        "take": "Test least-privilege agent operations, audit tool calls and verify containment and alerting controls.",
         "help": "Independent risk review and validation",
         "support": "Independent weownit proposal: model agent trust boundaries, require approval for high-impact actions, and validate auditability and containment.",
         "deliverables": [
           "Affected asset and exposure register",
           "Prioritized actions and change plan",
           "Verification evidence and residual risk"
-        ]
+        ],
+        "audience": "Teams that give AI agents access to tools, systems or external services."
       },
       "ro": {
         "title": "GTIG analizează o nouă etapă a activității ostile cu agenți AI",
@@ -429,14 +436,15 @@
           "Cercetarea GTIG nu indică un patch unic sau o remediere specifică unui produs.",
           "Testează privilegiile minime, auditarea apelurilor către instrumente și controalele de izolare."
         ],
-        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "take": "Testează privilegiile minime, auditarea apelurilor către instrumente și controalele de izolare.",
         "help": "Evaluare independentă și validare",
         "support": "Propunere independentă weownit: modelarea limitelor de încredere, aprobări pentru acțiuni cu impact și validarea jurnalizării și izolării.",
         "deliverables": [
           "Inventar active și expunere",
           "Acțiuni prioritizate și plan de schimbare",
           "Dovezi de validare și risc rezidual"
-        ]
+        ],
+        "audience": "Echipele care acordă agenților AI acces la instrumente, sisteme sau servicii externe."
       },
       "fr": {
         "title": "GTIG : les menaces utilisant des agents IA franchissent un seuil",
@@ -451,14 +459,15 @@
           "Cette étude ne prescrit aucun correctif universel ni correctif propre à un produit.",
           "Tester le moindre privilège, la traçabilité des appels d’outils et les mécanismes de confinement."
         ],
-        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "take": "Tester le moindre privilège, la traçabilité des appels d’outils et les mécanismes de confinement.",
         "help": "Évaluation indépendante et validation",
         "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
         "deliverables": [
           "Inventaire des actifs et de l’exposition",
           "Actions priorisées et plan de changement",
           "Preuves de validation et risque résiduel"
-        ]
+        ],
+        "audience": "Équipes qui donnent aux agents IA accès à des outils, systèmes ou services externes."
       },
       "status": "published",
       "publishedAt": "2026-11-23",
@@ -490,14 +499,15 @@
           "Upgrade affected Drupal core branches to their security-fixed releases and secure the installer after installation, per Drupal Security Team.",
           "Verify installed security release, installer protections, settings.php permissions and web access logs."
         ],
-        "take": "Validate applicability and retain evidence of corrective actions.",
+        "take": "Verify installed security release, installer protections, settings.php permissions and web access logs.",
         "help": "Independent risk review and validation",
         "support": "Independent weownit proposal: review installer reachability, configuration file write permissions, and web logs; preserve before/after evidence.",
         "deliverables": [
           "Affected asset and exposure register",
           "Prioritized actions and change plan",
           "Verification evidence and residual risk"
-        ]
+        ],
+        "audience": "Teams maintaining Drupal core installations."
       },
       "ro": {
         "title": "Drupal core: vulnerabilitatea instalatorului CVE-2026-132165",
@@ -512,14 +522,15 @@
           "Actualizează la versiunea corectată pentru ramura instalată și securizează instalatorul după instalare, conform echipei Drupal.",
           "Confirmă versiunea, protecția instalatorului, permisiunile și logurile web."
         ],
-        "take": "Validează aplicabilitatea și păstrează dovezile măsurilor.",
+        "take": "Confirmă versiunea, protecția instalatorului, permisiunile și logurile web.",
         "help": "Evaluare independentă și validare",
         "support": "Propunere independentă weownit: verificarea accesului la instalator, permisiunilor de scriere și logurilor, cu dovezi înainte și după.",
         "deliverables": [
           "Inventar active și expunere",
           "Acțiuni prioritizate și plan de schimbare",
           "Dovezi de validare și risc rezidual"
-        ]
+        ],
+        "audience": "Echipele care întrețin instalări Drupal core."
       },
       "fr": {
         "title": "Drupal : faille critique de l’installateur CVE-2026-132165",
@@ -534,14 +545,15 @@
           "Mettre à jour vers les versions corrigées et sécuriser l’installateur après installation, conformément à l’avis Drupal.",
           "Contrôler les versions corrigées, les permissions, l’accès à l’installateur et les journaux web."
         ],
-        "take": "Vérifier l’applicabilité et conserver les preuves des actions.",
+        "take": "Contrôler les versions corrigées, les permissions, l’accès à l’installateur et les journaux web.",
         "help": "Évaluation indépendante et validation",
         "support": "Approche indépendante proposée par weownit.net : examiner l’exposition, prioriser les actions et conserver les preuves de validation.",
         "deliverables": [
           "Inventaire des actifs et de l’exposition",
           "Actions priorisées et plan de changement",
           "Preuves de validation et risque résiduel"
-        ]
+        ],
+        "audience": "Équipes qui maintiennent des installations Drupal core."
       },
       "status": "published",
       "publishedAt": "2026-11-23",
@@ -1809,6 +1821,98 @@
       "archive": true,
       "slug": "akira-ransomware-intrusion",
       "cves": []
+    },
+    {
+      "id": "20261122-cisco-expressway-cve-2026-76466",
+      "slug": "cisco-expressway-cve-2026-76466",
+      "cat": 1,
+      "date": "2026-10-21",
+      "reviewedAt": "2026-11-23",
+      "publishedAt": "2026-11-23",
+      "archive": false,
+      "status": "published",
+      "cves": [
+        "CVE-2026-76466"
+      ],
+      "sources": [
+        [
+          "Cisco PSIRT advisory",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t"
+        ],
+        [
+          "CISA KEV alert",
+          "https://www.cisa.gov/news-events/alerts/2026/11/20/cisa-adds-four-known-exploited-vulnerabilities-catalog"
+        ]
+      ],
+      "en": {
+        "title": "Cisco Expressway critical command execution CVE-2026-76466",
+        "desc": "Cisco PSIRT identifies vulnerable clustered Expressway-C and Expressway-E installations and provides fixed software. Cisco’s advisory says its PSIRT was unaware of malicious use. CISA added this CVE to KEV on 20 November based on evidence of active exploitation.",
+        "status": "Vendor fix available · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Cisco provides fixed software and states no workaround is available; consult its fixed-software table.",
+        "facts": "Cisco PSIRT identifies vulnerable clustered Expressway-C and Expressway-E installations and provides fixed software. Cisco’s advisory says its PSIRT was unaware of malicious use. CISA added this CVE to KEV on 20 November based on evidence of active exploitation.",
+        "context": "Teams running Expressway-C or Expressway-E in a cluster.",
+        "checks": [
+          "Identify Expressway-C/E versions, database-service reachability and clustering configuration.",
+          "Cisco provides fixed software and states no workaround is available; consult its fixed-software table.",
+          "Confirm patch release, management connectivity, logs and communications services."
+        ],
+        "take": "Confirm patch release, management connectivity, logs and communications services.",
+        "help": "Exposure review and patch verification",
+        "support": "Independent proposal: assess management/database reachability, preserve logs and verify segmentation and patches.",
+        "audience": "Teams running Expressway-C or Expressway-E in a cluster.",
+        "deliverables": [
+          "Agreed scope and access before work starts",
+          "Documented findings and remediation priorities",
+          "Evidence from checks after the change"
+        ]
+      },
+      "ro": {
+        "title": "Cisco Expressway: execuție critică de comenzi CVE-2026-76466",
+        "desc": "Cisco PSIRT identifică instalările Expressway-C și Expressway-E vulnerabile configurate în cluster și publică versiuni corectate. În aviz, Cisco PSIRT declară că nu cunoaște cazuri de utilizare malițioasă. CISA a adăugat CVE-ul în KEV pe 20 noiembrie pe baza dovezilor de exploatare activă.",
+        "status": "Remediere disponibilă · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Cisco oferă versiuni corectate și nu indică workaround; consultă tabelul oficial.",
+        "facts": "Cisco PSIRT identifică instalările Expressway-C și Expressway-E vulnerabile configurate în cluster și publică versiuni corectate. În aviz, Cisco PSIRT declară că nu cunoaște cazuri de utilizare malițioasă. CISA a adăugat CVE-ul în KEV pe 20 noiembrie pe baza dovezilor de exploatare activă.",
+        "context": "Echipele care operează Expressway-C sau Expressway-E în cluster.",
+        "checks": [
+          "Identifică versiunile Expressway-C/E, accesul la serviciul de baze de date și configurarea clusterului.",
+          "Cisco oferă versiuni corectate și nu indică workaround; consultă tabelul oficial.",
+          "Confirmă actualizarea, conectivitatea de management, logurile și serviciile de comunicații."
+        ],
+        "take": "Confirmă actualizarea, conectivitatea de management, logurile și serviciile de comunicații.",
+        "help": "Evaluarea expunerii și verificarea remedierii",
+        "support": "Propunere independentă: evaluează accesul la management/baze de date, păstrează logurile și verifică segmentarea și actualizările.",
+        "audience": "Echipele care operează Expressway-C sau Expressway-E în cluster.",
+        "deliverables": [
+          "Arie și acces agreate înainte de intervenție",
+          "Constatări documentate și priorități de remediere",
+          "Dovezi ale verificării după schimbare"
+        ]
+      },
+      "fr": {
+        "title": "Cisco Expressway : exécution de commandes critique (CVE-2026-76466)",
+        "desc": "Cisco attribue à cette faille un score CVSS de 9,8. Elle concerne les versions vulnérables d’Expressway-C et Expressway-E configurées en cluster. Le PSIRT de Cisco indique ignorer tout usage malveillant. La CISA a ajouté la faille à son catalogue KEV le 20 novembre sur la base de preuves d’exploitation active.",
+        "status": "Correctif disponible · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Mettre à niveau vers la version corrigée applicable indiquée par Cisco. Cisco ne prévoit aucun contournement.",
+        "facts": "Cisco attribue à cette faille un score CVSS de 9,8. Elle concerne les versions vulnérables d’Expressway-C et Expressway-E configurées en cluster. Le PSIRT de Cisco indique ignorer tout usage malveillant. La CISA a ajouté la faille à son catalogue KEV le 20 novembre sur la base de preuves d’exploitation active.",
+        "context": "Équipes exploitant Expressway-C ou Expressway-E en cluster.",
+        "checks": [
+          "Recenser les versions d’Expressway-C et Expressway-E et confirmer les configurations en cluster.",
+          "Mettre à niveau vers la version corrigée applicable indiquée par Cisco. Cisco ne prévoit aucun contournement.",
+          "Confirmer la version installée, vérifier les journaux, la connectivité de gestion et les services de communication."
+        ],
+        "take": "Confirmer la version installée, vérifier les journaux, la connectivité de gestion et les services de communication.",
+        "help": "Évaluation de l’exposition et vérification du correctif",
+        "support": "Évaluer l’accès aux interfaces de gestion et aux services de base de données, conserver les journaux et vérifier la segmentation et les mises à jour.",
+        "audience": "Équipes exploitant Expressway-C ou Expressway-E en cluster.",
+        "deliverables": [
+          "Périmètre et accès convenus avant intervention",
+          "Constats documentés et priorités de remédiation",
+          "Preuves des vérifications après changement"
+        ]
+      }
     }
   ]
 }
