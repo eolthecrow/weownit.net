@@ -1809,6 +1809,98 @@
       "archive": true,
       "slug": "akira-ransomware-intrusion",
       "cves": []
+    },
+    {
+      "id": "20261122-cisco-expressway-cve-2026-76466",
+      "slug": "cisco-expressway-cve-2026-76466",
+      "cat": 1,
+      "date": "2026-10-21",
+      "reviewedAt": "2026-11-23",
+      "publishedAt": "2026-11-23",
+      "archive": false,
+      "status": "published",
+      "cves": [
+        "CVE-2026-76466"
+      ],
+      "sources": [
+        [
+          "Cisco PSIRT advisory",
+          "https://sec.cloudapps.cisco.com/security/center/content/CiscoSecurityAdvisory/cisco-sa-vcs-static-cred-hr7EWZ8t"
+        ],
+        [
+          "CISA KEV alert",
+          "https://www.cisa.gov/news-events/alerts/2026/11/20/cisa-adds-four-known-exploited-vulnerabilities-catalog"
+        ]
+      ],
+      "en": {
+        "title": "Cisco Expressway critical command execution CVE-2026-76466",
+        "desc": "Cisco PSIRT identifies vulnerable clustered Expressway-C and Expressway-E installations and provides fixed software. Cisco’s advisory says its PSIRT was unaware of malicious use. CISA added this CVE to KEV on 20 November based on evidence of active exploitation.",
+        "status": "Vendor fix available · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Cisco provides fixed software and states no workaround is available; consult its fixed-software table.",
+        "facts": "Cisco PSIRT identifies vulnerable clustered Expressway-C and Expressway-E installations and provides fixed software. Cisco’s advisory says its PSIRT was unaware of malicious use. CISA added this CVE to KEV on 20 November based on evidence of active exploitation.",
+        "context": "Teams running Expressway-C or Expressway-E in a cluster.",
+        "checks": [
+          "Identify Expressway-C/E versions, database-service reachability and clustering configuration.",
+          "Cisco provides fixed software and states no workaround is available; consult its fixed-software table.",
+          "Confirm patch release, management connectivity, logs and communications services."
+        ],
+        "take": "Confirm patch release, management connectivity, logs and communications services.",
+        "help": "Exposure review and patch verification",
+        "support": "Independent proposal: assess management/database reachability, preserve logs and verify segmentation and patches.",
+        "audience": "Teams running Expressway-C or Expressway-E in a cluster.",
+        "deliverables": [
+          "Agreed scope and access before work starts",
+          "Documented findings and remediation priorities",
+          "Evidence from checks after the change"
+        ]
+      },
+      "ro": {
+        "title": "Cisco Expressway: execuție critică de comenzi CVE-2026-76466",
+        "desc": "Cisco PSIRT identifică instalările Expressway-C și Expressway-E vulnerabile configurate în cluster și publică versiuni corectate. În aviz, Cisco PSIRT declară că nu cunoaște cazuri de utilizare malițioasă. CISA a adăugat CVE-ul în KEV pe 20 noiembrie pe baza dovezilor de exploatare activă.",
+        "status": "Remediere disponibilă · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Cisco oferă versiuni corectate și nu indică workaround; consultă tabelul oficial.",
+        "facts": "Cisco PSIRT identifică instalările Expressway-C și Expressway-E vulnerabile configurate în cluster și publică versiuni corectate. În aviz, Cisco PSIRT declară că nu cunoaște cazuri de utilizare malițioasă. CISA a adăugat CVE-ul în KEV pe 20 noiembrie pe baza dovezilor de exploatare activă.",
+        "context": "Echipele care operează Expressway-C sau Expressway-E în cluster.",
+        "checks": [
+          "Identifică versiunile Expressway-C/E, accesul la serviciul de baze de date și configurarea clusterului.",
+          "Cisco oferă versiuni corectate și nu indică workaround; consultă tabelul oficial.",
+          "Confirmă actualizarea, conectivitatea de management, logurile și serviciile de comunicații."
+        ],
+        "take": "Confirmă actualizarea, conectivitatea de management, logurile și serviciile de comunicații.",
+        "help": "Evaluarea expunerii și verificarea remedierii",
+        "support": "Propunere independentă: evaluează accesul la management/baze de date, păstrează logurile și verifică segmentarea și actualizările.",
+        "audience": "Echipele care operează Expressway-C sau Expressway-E în cluster.",
+        "deliverables": [
+          "Arie și acces agreate înainte de intervenție",
+          "Constatări documentate și priorități de remediere",
+          "Dovezi ale verificării după schimbare"
+        ]
+      },
+      "fr": {
+        "title": "Cisco Expressway : exécution de commandes critique (CVE-2026-76466)",
+        "desc": "Cisco attribue à cette faille un score CVSS de 9,8. Elle concerne les versions vulnérables d’Expressway-C et Expressway-E configurées en cluster. Le PSIRT de Cisco indique ignorer tout usage malveillant. La CISA a ajouté la faille à son catalogue KEV le 20 novembre sur la base de preuves d’exploitation active.",
+        "status": "Correctif disponible · CISA KEV",
+        "tech": "Cisco Expressway-C / Expressway-E",
+        "step": "Mettre à niveau vers la version corrigée applicable indiquée par Cisco. Cisco ne prévoit aucun contournement.",
+        "facts": "Cisco attribue à cette faille un score CVSS de 9,8. Elle concerne les versions vulnérables d’Expressway-C et Expressway-E configurées en cluster. Le PSIRT de Cisco indique ignorer tout usage malveillant. La CISA a ajouté la faille à son catalogue KEV le 20 novembre sur la base de preuves d’exploitation active.",
+        "context": "Équipes exploitant Expressway-C ou Expressway-E en cluster.",
+        "checks": [
+          "Recenser les versions d’Expressway-C et Expressway-E et confirmer les configurations en cluster.",
+          "Mettre à niveau vers la version corrigée applicable indiquée par Cisco. Cisco ne prévoit aucun contournement.",
+          "Confirmer la version installée, vérifier les journaux, la connectivité de gestion et les services de communication."
+        ],
+        "take": "Confirmer la version installée, vérifier les journaux, la connectivité de gestion et les services de communication.",
+        "help": "Évaluation de l’exposition et vérification du correctif",
+        "support": "Évaluer l’accès aux interfaces de gestion et aux services de base de données, conserver les journaux et vérifier la segmentation et les mises à jour.",
+        "audience": "Équipes exploitant Expressway-C ou Expressway-E en cluster.",
+        "deliverables": [
+          "Périmètre et accès convenus avant intervention",
+          "Constats documentés et priorités de remédiation",
+          "Preuves des vérifications après changement"
+        ]
+      }
     }
   ]
 }
